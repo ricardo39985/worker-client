@@ -75,6 +75,8 @@ for about 24 hours from attempt creation. No GPU/inference adapter is included.
 `-NoLaunch` are maintenance opt-outs. Noninteractive installs require explicit
 license/host consent flags described in `docs/setup.md`. An existing worker's
 resource limits are retained; setup reports free memory after the Windows reserve.
+Fresh installations use available physical RAM with `reserve_ram_mb: 0`.
+An existing configured reserve is retained until the operator changes it.
 The server's initial offers require 512 MiB for video or 256 MiB for images, one
 CPU and sufficient scratch. Paused/disabled/busy machines do not receive starts.
 
