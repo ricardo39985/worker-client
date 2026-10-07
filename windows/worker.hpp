@@ -15,7 +15,7 @@ struct Config {
  std::uint64_t reserve_ram_mb{0};std::size_t max_jobs{4};
 };
 Config load_config(const std::filesystem::path& root);
-struct Probe {bool video{},image{};std::string reason;};
+struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};};
 Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={});
 class Worker {
  struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::atomic_bool cancel{},done{};ProgressCounter progress;};
@@ -25,7 +25,7 @@ class Worker {
  mutable std::mutex mutex_;std::unordered_map<std::string,std::unique_ptr<Running>> running_;
  std::atomic_bool paused_{},exit_requested_{},stop_{};
  std::atomic<Priority> priority_{Priority::normal};
- std::atomic_bool verified_video_{},verified_image_{};std::string status_{"STARTING"};
+ std::atomic_bool verified_video_{},verified_image_{},verified_media_video_{},verified_media_image_{};std::string status_{"STARTING"};
  std::unordered_map<std::string,JobSpec> offered_; // network thread only
  std::atomic<Preference> video_{Preference::allowed},image_{Preference::allowed};
  void network();void watchdog();void execute(std::shared_ptr<TaskData>);
@@ -45,3 +45,4 @@ public:
  std::string status() const;std::size_t active_count() const;
 };
 }
+
