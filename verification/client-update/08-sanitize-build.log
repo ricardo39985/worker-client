@@ -1,0 +1,16 @@
+[  7%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[ 15%] Linking CXX static library libow_json.a
+[ 15%] Built target ow_json
+[ 23%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 30%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 38%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 46%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 53%] Linking CXX static library libow_core.a
+[ 53%] Built target ow_core
+[ 61%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[ 69%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[ 76%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[ 84%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[ 92%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/pairing_test.cpp.o
+[100%] Linking CXX executable ow_contract_tests
+[100%] Built target ow_contract_tests

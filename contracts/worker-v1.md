@@ -1,7 +1,8 @@
-# Worker protocol v1 — client implemented, server integration pending
+# Native worker protocol v1 — source candidate; live integration unverified
 
-This document specifies the endpoints that a new Lightsail gateway must provide.
-It does not assert those endpoints or the example approval CLI already exist.
+This is the native client/server contract, not the earlier draft raw-WebSocket
+pairing protocol. A separate companion Lightsail implementation has been authored
+against these endpoints, but its full build and live/native acceptance remain unverified.
 Implement the server in the Organizer repo behind a disabled-by-default rollout
 flag, preserving current app save behavior. Reconcile with the current server
 schema before adding migrations; don't duplicate existing job/lease concepts.
@@ -20,7 +21,7 @@ No network message can provide an executable, command line or shell script.
 
 ## Pairing
 
-`GET /v1/worker/protocol` -> HTTP 200, `{"protocol":1}`. No user data in this
+`GET /v1/worker/protocol` -> HTTP 200, protocol=1, optional job_dispatch boolean and storage_hosts array. Setup approves exact advertised HTTPS hosts before job transfers. No user data in this
 public readiness response. Missing endpoint is a configuration/server-deployment
 problem, not a reason to disable certificate checking.
 
@@ -30,10 +31,20 @@ problem, not a reason to disable certificate checking.
 {
   "protocol": 1,
   "name": "operator-readable-hostname",
+  "platform": "windows",
+  "request_id": "durable-random-identifier-at-least-16-ascii-characters",
   "public_key_format": "bcrypt-ecdsa-p256-public-blob-base64",
   "public_key": "base64 public blob"
 }
 ```
+
+The client durably saves request_id, origin, public key and the local expiry bound
+before enrollment. A lost POST reply is retried with the same key/request_id.
+The server must return the same user_code/device_code/challenge for identical
+metadata while live; changed metadata must conflict, not silently create another
+identity. The private enrollment response is durably protected before showing
+the code. After a restart, the same proof redeems the pending request. No automatic
+new enrollment follows explicit denial, expiry or credential rejection.
 
 The public blob is a BCRYPT_ECCKEY_BLOB header followed by X and Y, each 32 bytes
 big-endian. The header contains the ECDSA P-256 public magic and cbKey=32 as
@@ -172,3 +183,13 @@ worker reconnect, offer/BEGIN uncertainty, renew sequencing, worker loss,
 lease-expired completion, forged worker IDs, invalid storage references, duplicate
 result ACKs and per-attempt publication fencing. Use synthetic storage/jobs and
 a fake clock; none of these tests may contact production accounts.
+
+## Endpoint and journal isolation (0.1.1)
+
+The endpoint is requested at setup, normalized as an HTTPS port-443 origin and
+persisted. No hostname is built in. A credential, pending request or journal bound
+to another origin fails before network use; a legacy unbound journal containing
+work requires matching protected credential provenance. Endpoint changes require
+explicit re-pair and quarantine the previous scope's identity, key, outbox and job
+files. Same-origin re-pair retains job state. No old bearer, lease token or result
+is transferred merely because the configuration was edited.

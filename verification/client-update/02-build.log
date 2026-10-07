@@ -1,0 +1,6 @@
+[ 15%] Built target ow_json
+[ 23%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 30%] Linking CXX static library libow_core.a
+[ 53%] Built target ow_core
+[ 61%] Linking CXX executable ow_contract_tests
+[100%] Built target ow_contract_tests

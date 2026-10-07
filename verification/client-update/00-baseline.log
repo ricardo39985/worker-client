@@ -1,0 +1,19 @@
+CMake Warning at CMakeLists.txt:24 (message):
+  Using installed Boost headers for development only; release builds use the
+  locked archive.
+
+
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /mnt/data/work/organizer-worker/build-tests
+[ 18%] Built target ow_json
+[ 54%] Built target ow_core
+[100%] Built target ow_contract_tests
+Internal ctest changing into directory: /mnt/data/work/organizer-worker/build-tests
+Test project /mnt/data/work/organizer-worker/build-tests
+    Start 1: worker_contracts
+1/1 Test #1: worker_contracts .................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec

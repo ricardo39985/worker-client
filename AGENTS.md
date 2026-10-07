@@ -1,7 +1,7 @@
 # Organizer Worker: agent entry point
 
 Read README.md, docs/architecture.md, contracts/worker-v1.md, and docs/testing.md
-before changing this repository. Read docs/status.md to distinguish implemented
+before changing this repository. Read CONTRIBUTING.md and docs/status.md to distinguish implemented
 source from verified execution and production integration.
 
 This is a separate Windows compute-worker repository, not the Organizer app or

@@ -1,6 +1,7 @@
 #include "test.hpp"
 #include "platform.hpp"
 #include "process.hpp"
+#include "pairing_adapter.hpp"
 #include <fstream>
 using namespace ow;using namespace ow::win;
 namespace {
@@ -37,4 +38,26 @@ TEST("stopping a contained job terminates both root and descendant"){
  CHECK(rootHandle&&leafHandle);child.stop();
  CHECK(WaitForSingleObject(rootHandle.get(),1000)==WAIT_OBJECT_0);
  CHECK(WaitForSingleObject(leafHandle.get(),1000)==WAIT_OBJECT_0);
+}
+
+TEST("protected enrollment and credentials remain readable after adapter reopen"){
+ Temp t;
+ {ProtectedPairingSecrets s(t.path);s.write(SecretSlot::pending_pairing,"synthetic pending");s.write(SecretSlot::credential,"synthetic credential");}
+ ProtectedPairingSecrets reopened(t.path);
+ CHECK(reopened.read(SecretSlot::pending_pairing)=="synthetic pending");
+ CHECK(reopened.read(SecretSlot::credential)=="synthetic credential");
+ reopened.erase(SecretSlot::pending_pairing);
+ CHECK(!reopened.read(SecretSlot::pending_pairing));
+ CHECK(reopened.read(SecretSlot::credential)=="synthetic credential");
+}
+
+TEST("runtime readiness identifies this process and is removed on shutdown"){
+ Temp t;publish_runtime_ready(t.path);
+ auto value=parse(read_file(t.path/"runtime.json")).as_object();
+ CHECK(number(value,"schema",1)==1);
+ CHECK(number(value,"process_id",UINT32_MAX)==GetCurrentProcessId());
+ CHECK(number(value,"process_started_filetime",INT64_MAX)>0);
+ CHECK(text(value,"state")=="running");
+ clear_runtime_ready(t.path);
+ CHECK(!std::filesystem::exists(t.path/"runtime.json"));
 }

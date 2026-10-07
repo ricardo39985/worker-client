@@ -1,5 +1,6 @@
 #include "test.hpp"
 #include "ow/store.hpp"
+#include "ow/pairing.hpp"
 #include <chrono>
 using ow::Store;
 struct Temp {
@@ -36,4 +37,24 @@ TEST("pending counter follows durable results and acknowledgements"){
  Store s(":memory:");CHECK(s.pending_count()==0);
  CHECK(s.reserve("a","ja","p"));s.result("a","r");CHECK(s.pending_count()==1);
  auto row=s.pending()[0];CHECK(s.acknowledge(row.sequence,"a"));CHECK(s.pending_count()==0);
+}
+
+TEST("journal coordinator binding survives reopen and rejects a different server"){
+ Temp t;{Store s(t.path/"j.db");ow::bind_journal_origin(s,"https://first.test");}
+ Store reopened(t.path/"j.db");ow::bind_journal_origin(reopened,"https://FIRST.test:443/");
+ THROWS(ow::bind_journal_origin(reopened,"https://second.test"));
+}
+TEST("legacy pending results cannot be adopted without endpoint provenance"){
+ Store s(":memory:");CHECK(s.reserve("a","job-a","p"));s.result("a","private-result-token");
+ THROWS(ow::bind_journal_origin(s,"https://second.test"));
+ CHECK(s.pending()[0].body=="private-result-token");
+ ow::bind_journal_origin(s,"https://first.test",std::string("https://first.test"));
+ THROWS(ow::bind_journal_origin(s,"https://second.test",std::string("https://second.test")));
+ CHECK(s.pending_count()==1);
+}
+TEST("legacy interrupted attempt needs the same protected coordinator origin"){
+ Store s(":memory:");CHECK(s.reserve("a","job-a","p"));
+ THROWS(ow::bind_journal_origin(s,"https://first.test",std::string("https://other.test")));
+ CHECK(s.interrupted()==std::vector<std::string>{"a"});
+ ow::bind_journal_origin(s,"https://first.test",std::string("https://first.test"));
 }

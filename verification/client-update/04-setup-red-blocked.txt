@@ -1,0 +1,5 @@
+Setup behavior contracts were written before their implementation.
+Execution is blocked: no powershell.exe or pwsh is installed in this Linux workspace.
+A request to provision a test runtime failed due to unavailable container DNS/network.
+No PowerShell red-stage pass/fail result or native Windows behavior is claimed.
+The registered Windows CTest setup_contracts suite must execute before local installation.
