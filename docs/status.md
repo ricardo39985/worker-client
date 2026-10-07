@@ -40,3 +40,20 @@ Windows source only. Operator-queued test results are separate temporary objects
 automatic app rendition offload, inference and GPU processing are outside scope.
 No new production deployment, compiled/signed release, paid CI activation or
 repository settings change has been performed for this candidate.
+
+## Terminal progress draft — October 7, 2026
+
+The newer operator deployment logs confirm Organizer commit
+`0f694d0720d37b79258d43c3c1988727df53acb4` deployed with migration 013 and
+healthy services. Windows setup reported job dispatch enabled and received
+explicit storage-host approval. A later operator screenshot at 18:20 UTC shows
+DESKTOP-3FR54CB online and paired. This supersedes the earlier deployment
+boundary above; it does not prove a successful conversion or complete native
+acceptance.
+
+This draft adds live setup/worker progress and removes the second Boost tree
+copy. Eight isolated portable progress contracts passed, including ASan/UBSan
+with leak inspection disabled due to a runtime limitation. Fifteen new
+PowerShell progress cases, Windows syntax/MSVC integration and a real job remain
+unrun for this change. See docs/testing.md for exact evidence. Production and
+the operator's running installation have not been changed by this draft.

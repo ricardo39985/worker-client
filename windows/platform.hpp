@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <filesystem>
 #include <string>
+#include <functional>
 #include <vector>
 #include <mutex>
 #include <atomic>
@@ -34,7 +35,7 @@ void atomic_write(const std::filesystem::path&,const std::string&);
 std::string random_hex(std::size_t bytes);
 void publish_runtime_ready(const std::filesystem::path&);
 void clear_runtime_ready(const std::filesystem::path&) noexcept;
-std::string sha256_file(const std::filesystem::path&);
+std::string sha256_file(const std::filesystem::path&,const std::function<void(std::uint64_t)>& progress={});
 std::string protect(const std::string&);std::string unprotect(const std::string&);
 std::string public_pairing_key(const std::filesystem::path& private_file);
 std::string sign_pairing_challenge(const std::filesystem::path& private_file,const std::string& challenge);

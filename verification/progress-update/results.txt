@@ -1,0 +1,29 @@
+Terminal progress draft — 2026-10-07
+Base: worker-client main dc741078e1aa99b237625045ee299ddf36513dfc
+
+Executed:
+g++ -std=c++20 -Wall -Wextra -Werror -pthread -I worker-progress/include worker-progress/tests/progress_test.cpp -o /tmp/ow-progress-contracts
+/tmp/ow-progress-contracts
+Result: 8 portable progress contracts passed.
+An initial compile caught misleading indentation in the new test; corrected before this pass.
+
+g++ -std=c++20 -Wall -Wextra -Werror -pthread -fsanitize=address,undefined -fno-omit-frame-pointer -I worker-progress/include worker-progress/tests/progress_test.cpp -o /tmp/ow-progress-sanitize
+ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 /tmp/ow-progress-sanitize
+Result: runtime limitation: LeakSanitizer cannot inspect /proc/2/task. No leak-detection pass claimed.
+ASAN_OPTIONS=detect_leaks=0 UBSAN_OPTIONS=halt_on_error=1 /tmp/ow-progress-sanitize
+Result: 8 portable progress contracts passed with ASan/UBSan; leak inspection disabled.
+
+Blocked:
+Windows PowerShell 5.1 and pwsh are unavailable. The 15 new progress behavior cases,
+existing setup suite and actual PowerShell parser checks did not execute here.
+No executed PowerShell red or green stage is claimed.
+MSVC, Windows SDK and CMake are unavailable. Native Windows build, WinHTTP/crypto
+callbacks, process streaming/quoting/timeouts, dependency setup and tray launch
+are authored but unrun for this change. The existing core suite was not rerun.
+
+Required before release:
+Windows syntax checks, setup_policy_test.ps1, setup_progress_test.ps1;
+all five registered CTest suites, native doctor/sample conversions;
+real setup/network failure/recovery and a targeted coordinator conversion with ACK.
+
+The paired machine and production deployment were not changed by this draft.

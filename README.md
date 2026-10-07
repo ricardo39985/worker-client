@@ -51,9 +51,9 @@ On Lightsail, run `python3 /opt/organizer/scripts/worker_tui.py`, choose P, ente
 Enter. Look for `PAIRING APPROVED: protected identity saved` and `CONNECTED` on
 Windows. A code shown earlier is not reusable after its expiry.
 
-The current server deployment advertises `job_dispatch:false`. Remote conversion
-needs the companion Organizer job PR built, verified, merged and deployed through
-the existing GitHub release flow. No server overlay is included in this ZIP.
+Remote conversion requires `job_dispatch:true` from the selected coordinator.
+Deploy server changes through the companion Organizer GitHub release flow.
+No server overlay is included in this Windows package.
 See the companion `docs/native-worker-jobs.md` for exact deployment and first-job
 commands. A successful job shows Windows START, RESULT PENDING ACK and RESULT
 ACKNOWLEDGED; confirm `state:done` and inspect its separate downloaded output on
@@ -85,6 +85,8 @@ Windows OS components require Windows repair; setup never obtains random DLLs.
 
 Installation lives under `%LOCALAPPDATA%\OrganizerWorker`. Reports are written
 to `verification/windows-setup.json` and the installed `logs/setup-report.json`.
+Live setup progress is also written to `logs/setup-progress.log`; see
+`docs/setup.md` for stage counters, quiet warnings and timeouts.
 Candidate configuration is staged before publication. Files publish atomically
 one at a time; the complete installation is not a transactional rollback.
 
@@ -96,3 +98,16 @@ doctor. That evidence does not verify this 0.1.2 candidate. Its MSVC/native buil
 23 PowerShell setup contracts, clean-machine/bootstrap/reboot paths and actual
 Windows-to-Lightsail conversion remain required. See `docs/status.md`,
 `docs/testing.md`, `docs/setup.md` and `contracts/worker-v1.md`.
+
+## Terminal progress candidate
+
+Setup now streams native output, counts download/checksum bytes and dependency
+files, labels prompts, and reports elapsed time in quiet native stages. Boost
+extraction moves the generated tree into staging instead of copying it again.
+The worker console reports job stages, measured transfer/checksum bytes,
+conversion output bytes and quiet time. It periodically reports active jobs and
+durable results awaiting acknowledgment. Unknown totals have no percentage.
+
+Eight isolated portable progress contracts passed on Linux. Fifteen new
+PowerShell progress contracts and the updated native Windows integration are
+authored but unrun here. This is a draft source change, not a verified release.

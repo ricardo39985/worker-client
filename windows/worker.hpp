@@ -2,6 +2,7 @@
 #include "http.hpp"
 #include "process.hpp"
 #include "ow/store.hpp"
+#include "ow/progress.hpp"
 #include <thread>
 #include <atomic>
 #include <unordered_map>
@@ -17,7 +18,7 @@ Config load_config(const std::filesystem::path& root);
 struct Probe {bool video{},image{};std::string reason;};
 Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={});
 class Worker {
- struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::atomic_bool cancel{},done{};};
+ struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::atomic_bool cancel{},done{};ProgressCounter progress;};
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
  Config config_;Store store_;Log log_;Admission admission_;
  std::jthread network_,watchdog_;
