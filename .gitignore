@@ -1,0 +1,12 @@
+/build*/
+/.cache/
+/.vs/
+/out/
+*.user
+*.dpapi
+*.sqlite3*
+*.db*
+worker.json
+current.json
+verification/windows-setup.json
+verification/windows-runtime*.json
