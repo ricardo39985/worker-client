@@ -113,3 +113,14 @@ durable results awaiting acknowledgment. Unknown totals have no percentage.
 Eight isolated portable progress contracts passed on Linux. Fifteen new
 PowerShell progress contracts and the updated native Windows integration are
 authored but unrun here. This is a draft source change, not a verified release.
+
+
+
+### Automatic app media candidate
+
+This branch adds fixed full-size H.264/HEVC/WebP rendition capabilities for the
+Organizer background coordinator. It retains the installed identity and operator
+preferences. Direct R2 transfers still require explicit approved hosts. The
+companion server feature defaults to off; old diagnostic capability names do not
+qualify a PC for ordinary app jobs. Read contracts/worker-v1.md and the new
+verification section in docs/testing.md before treating this as a release.

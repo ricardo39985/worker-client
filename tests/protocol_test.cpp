@@ -56,3 +56,20 @@ TEST("lease duration and monotonic addition cannot overflow"){
  THROWS(lease_deadline(100000,160000,100000,INT64_MAX-1000));
  CHECK(lease_deadline(100000,400000,100000,0)==298000);
 }
+TEST("app rendition contract requires every fixed output and budgets all simultaneous files"){
+ auto m=offer_message();m["capability"]="media.video.renditions.v1";
+ m["parameters"]=json::object{{"copy_audio",true}};
+ m["output"]=json::object{{"max_bytes",100000},{"artifacts",{{"feed",{{"put_url","https://media.example.test/a"},{"content_type","video/mp4"}}},{"feed_optimized",{{"put_url","https://media.example.test/b"},{"content_type","video/mp4"}}},{"thumbnail",{{"put_url","https://media.example.test/c"},{"content_type","image/webp"}}}}}};
+ auto s=decode_offer(m,0,{"media.example.test"});CHECK(s.artifacts.size()==3 && s.copy_audio);
+ m["output"].as_object()["artifacts"].as_object()["feed"].as_object()["put_url"]="https://evil.example.test/out";THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["output"].as_object()["artifacts"].as_object().erase("feed");THROWS(decode_offer(m,0,{"media.example.test"}));
+}
+TEST("app jobs refuse arbitrary output roles and mixed media type declarations"){
+ auto m=offer_message();m["capability"]="media.image.renditions.v1";
+ m["output"]=json::object{{"max_bytes",100000},{"artifacts",{{"feed",{{"put_url","https://media.example.test/a"},{"content_type","image/jpeg"}}},{"thumbnail",{{"put_url","https://media.example.test/b"},{"content_type","image/webp"}}}}}};
+ THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["output"].as_object()["artifacts"].as_object()["feed"].as_object()["content_type"]="image/webp";
+ CHECK(decode_offer(m,0,{"media.example.test"}).artifacts.size()==2);
+ m["output"].as_object()["artifacts"].as_object()["execute"]=json::object{};THROWS(decode_offer(m,0,{"media.example.test"}));
+}
+

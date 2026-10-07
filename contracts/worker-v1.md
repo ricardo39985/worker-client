@@ -193,3 +193,35 @@ work requires matching protected credential provenance. Endpoint changes require
 explicit re-pair and quarantine the previous scope's identity, key, outbox and job
 files. Same-origin re-pair retains job state. No old bearer, lease token or result
 is transferred merely because the configuration was edited.
+
+
+
+## Automatic app rendition profiles — review candidate
+
+The server remains the authoritative background scheduler. Ordinary upload
+optimization can request `media.video.renditions.v1` (H.264 feed, HEVC optimized
+feed and WebP poster) or `media.image.renditions.v1` (full-size WebP and poster).
+These are separate capabilities from diagnostic converters, which can resize.
+The app profiles preserve full delivery dimensions and video frame timing.
+They inherit the operator's video/image preference and advertise verified only
+when their actual pinned converter probes pass.
+
+The canonical server contract is `contracts/media-worker-v1.md` in Organizer.
+For app profiles the offer's `output` is `{max_bytes, artifacts}`; artifacts is
+an exact map of `feed`, `thumbnail` and, for video, `feed_optimized` to
+`{put_url, content_type}`. All destinations must be distinct and approved HTTPS
+storage URLs. Video has one typed `parameters.copy_audio` boolean; no shell or
+arbitrary converter options are accepted. Scratch includes the source and every
+simultaneous output. Each file is limited to 100 MiB. The server's overall job
+limit is 600 seconds with 180/240/30-second encoder limits.
+
+The successful report uses `outputs`, the same fixed role map, with
+`{bytes, sha256, content_type}` per output. Each file transfers directly to R2;
+media is never sent over the coordinator WebSocket. The durable app report ACK
+precedes separate server quality validation/publication. It means received,
+not published. Server state done is the completed app outcome. Lost ACKs retain
+normal journal replay; stale/failed attempts cannot overwrite newer results.
+
+Existing diagnostic single-output messages and pairing protocol 1 are unchanged.
+Older clients lack the new probed capability and receive no app-profile offer;
+the server uses local fallback instead. No inference/GPU adapters are added.

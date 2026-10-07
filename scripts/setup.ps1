@@ -236,7 +236,7 @@ try {
     catch { throw 'Worker is running. Use its tray Exit before installing or updating.' }
     $sid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
     $icacls = Join-Path $env:SystemRoot 'System32\icacls.exe'
-    Native $icacls @($Root,'/inheritance:r','/grant:r',('*'+$sid+':(OI)(CI)F'),'*S-1-5-18:(OI)(CI)F') -Name 'Protect per-user worker files' -TimeoutSeconds 30
+    Native $icacls @($Root,'/inheritance:r','/grant:r',('*'+$sid+':(OI)(CI)F'),'*S-1-5-18:(OI)(CI)F') -Name 'Protect per-user worker files' -TimeoutSeconds 900
     foreach ($sub in 'versions','jobs','probes','logs') { New-Item -ItemType Directory -Force -Path (Join-Path $Root $sub) | Out-Null }
     $script:WorkerSetupProgressLog=Join-Path $Root 'logs\setup-progress.log'
     Write-WorkerSetupLine ('[INFO] Live progress log: '+$script:WorkerSetupProgressLog)

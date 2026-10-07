@@ -133,3 +133,14 @@ cache reuse, quiet extraction, native failure/timeout and normal-user launch,
 then a small real conversion through the coordinator. Do not replace source
 files while an older setup is running. An existing paired identity is retained
 when rerunning against the same endpoint without `-RePair`.
+
+## Existing-tree permission propagation
+
+The per-user root ACL remains restricted to the signed-in user and SYSTEM.
+Windows can propagate its inheritable ACL across an existing dependency/build
+cache even when icacls is invoked only for the root. That stage now has a bounded
+15-minute deadline with the existing elapsed/activity feedback. A reported
+30-second timeout on the operator's populated installation stopped setup before
+compilation; no successful Windows run is claimed for the revised deadline yet.
+Re-running against the same coordinator retains credentials, journals, settings
+and verified caches. Permission failures and deadline expiry still stop setup.

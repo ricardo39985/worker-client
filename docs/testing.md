@@ -106,3 +106,30 @@ Required: Windows syntax checks, both PowerShell suites, all five registered CTe
 suites with MSVC, the real converter doctor and setup/bootstrap/network/timeout
 observations. The portable counter tests do not establish WinHTTP transfer,
 PowerShell process streaming, tray behavior or a successful remote conversion.
+
+
+
+## App rendition candidate (October 7, 2026)
+
+Three standalone fixed-profile behavior contracts passed with installed GCC:
+
+```sh
+g++ -std=c++20 -Wall -Wextra -Werror -Iinclude -Itests tests/main.cpp tests/media_rendition_test.cpp -o /tmp/ow-rendition-contracts
+/tmp/ow-rendition-contracts
+g++ -std=c++20 -Wall -Wextra -Werror -Iinclude tests/media_rendition_probe.cpp -o /tmp/ow-rendition-probe
+python3 tests/media_rendition_smoke.py --probe /tmp/ow-rendition-probe
+```
+
+The smoke run executes the actual command factory with synthetic media, then
+probes/decodes full-size H.264, HEVC and WebP. Video dimensions, duration and
+frame rate were preserved. It uses installed Linux FFmpeg, not the Windows
+pinned binary; no packages or SDKs are installed by these tests.
+
+Two new protocol cases were authored before the parser update. The full portable
+protocol/admission/journal suite is blocked here by missing Boost.JSON headers;
+its attempted compilation reported `boost/json.hpp: No such file or directory`.
+No executed protocol red/green stage or Windows compilation is claimed. Native
+Windows/MSVC/PowerShell tests, probes, cancellation across multiple renditions,
+ordinary app uploads and computer-loss/local-fallback acceptance remain required.
+Setup now registers an additional standalone rendition suite (six CTest suites
+on Windows). Passing old diagnostic probes is not proof of these new capabilities.

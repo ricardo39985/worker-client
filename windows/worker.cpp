@@ -1,5 +1,6 @@
 #include <cctype>
 #include "worker.hpp"
+#include "ow/media_renditions.hpp"
 #include "pairing_adapter.hpp"
 #include <algorithm>
 #include <cstdlib>
@@ -40,7 +41,10 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled){
  std::filesystem::copy_file(workspace/"sample.mp4",workspace/"source.bin");
  JobSpec spec;spec.offer.capability="conversion.video.h264";spec.offer.resources={512,0,128,1};run_probe(c.ffmpeg,ffmpeg_arguments(spec,workspace),workspace,cancelled);p.video=std::filesystem::file_size(workspace/"result.mp4")>0;
  spec.offer.capability="conversion.image.jpeg";run_probe(c.ffmpeg,ffmpeg_arguments(spec,workspace),workspace,cancelled);p.image=std::filesystem::file_size(workspace/"result.jpg")>0;
- p.reason="CPU conversion probes passed; GPU and inference are not advertised";
+ try{for(const auto& rendition:rendition_plan(true,false,workspace)){run_probe(c.ffmpeg,rendition.arguments,workspace,cancelled);if(!std::filesystem::file_size(workspace/rendition.filename))throw std::runtime_error("App video probe produced no output");run_probe(c.ffmpeg,{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",(workspace/rendition.filename).wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,cancelled);}p.media_video=true;}catch(const std::exception&){p.media_video=false;}
+ std::filesystem::copy_file(workspace/"result.jpg",workspace/"source.bin",std::filesystem::copy_options::overwrite_existing);
+ try{for(const auto& rendition:rendition_plan(false,false,workspace)){run_probe(c.ffmpeg,rendition.arguments,workspace,cancelled);if(!std::filesystem::file_size(workspace/rendition.filename))throw std::runtime_error("App image probe produced no output");run_probe(c.ffmpeg,{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",(workspace/rendition.filename).wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,cancelled);}p.media_image=true;}catch(const std::exception&){p.media_image=false;}
+ p.reason=std::string("CPU conversion probes passed; app video=")+(p.media_video?"verified":"unavailable")+" app image="+(p.media_image?"verified":"unavailable")+"; GPU and inference are not advertised";
  }catch(const std::exception& e){p.reason=e.what();}
  std::error_code error;std::filesystem::remove_all(workspace,error);return p;
 }
@@ -67,7 +71,7 @@ std::string Worker::status() const{std::lock_guard lock(mutex_);return status_;}
 std::size_t Worker::active_count() const{return admission_.active().size();}
 void Worker::pause(bool p){if(exit_requested_&&!p)throw std::runtime_error("Worker is exiting; restart it to resume");paused_=p;admission_.pause(p);store_.set("paused",p?"true":"false");safe_log(p?"Paused: no new jobs will start":"Resumed");}
 void Worker::priority(Priority p){priority_=p;store_.set("priority",priority_name(p));safe_log("Machine priority: "+priority_name(p));}
-void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);}
+void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);}
 void Worker::preference(bool video,Preference value){if(video)video_=value;else image_=value;store_.set(video?"video_preference":"image_preference",pref_name(value));apply_preferences();safe_log("Task preference changed; active jobs are not interrupted");}
 void Worker::exit(bool kill){pause(true);exit_requested_=true;{std::lock_guard lock(mutex_);if(kill)for(auto& [_,r]:running_)r->data->cancel=true;}state(kill?"EXITING: stopping jobs; pending results remain in journal":"DRAINING: finish active jobs, then exit");}
 bool Worker::ready_to_exit() const{if(!exit_requested_)return false;std::lock_guard lock(mutex_);return running_.empty();}
@@ -77,7 +81,7 @@ json::object Worker::heartbeat(){
  return {{"protocol",1},{"type","heartbeat"},{"status",paused_?"paused":"ready"},{"priority",priority_name(priority_)},{"active",std::move(active)},
  {"available",{{"ram_mb",free.ram_mb},{"vram_mb",0},{"scratch_mb",free.scratch_mb},{"cpu_threads",free.cpu_threads}}},
  {"reserved",{{"ram_mb",used.ram_mb},{"scratch_mb",used.scratch_mb},{"cpu_threads",used.cpu_threads}}},
- {"capabilities",{{"conversion.video.h264",{{"verified",verified_video_.load()},{"preference",pref_name(video_)}}},{"conversion.image.jpeg",{{"verified",verified_image_.load()},{"preference",pref_name(image_)}}}}}};
+ {"capabilities",{{"conversion.video.h264",{{"verified",verified_video_.load()},{"preference",pref_name(video_)}}},{"conversion.image.jpeg",{{"verified",verified_image_.load()},{"preference",pref_name(image_)}}},{"media.video.renditions.v1",{{"verified",verified_media_video_.load()},{"preference",pref_name(video_)}}},{"media.image.renditions.v1",{{"verified",verified_media_image_.load()},{"preference",pref_name(image_)}}}}}};
 }
 std::string Worker::paired_token(){
  ProtectedPairingSecrets secrets(config_.root);
@@ -107,7 +111,7 @@ void Worker::network(){
  try{auto probe=probe_ffmpeg(config_,[this,probe_started,&next_probe_status]{
   auto now=monotonic_ms();if(now>=next_probe_status){safe_log("PROBE | elapsed "+std::to_string((now-probe_started)/1000)+"s | sample process running; percentage unavailable");next_probe_status=now+2000;}
   return stop_||exit_requested_;
- });verified_video_=probe.video;verified_image_=probe.image;safe_log(probe.reason);apply_preferences();}catch(const std::exception& e){state(e.what());}
+ });verified_video_=probe.video;verified_image_=probe.image;verified_media_video_=probe.media_video;verified_media_image_=probe.media_image;safe_log(probe.reason);apply_preferences();}catch(const std::exception& e){state(e.what());}
  if(config_.coordinator.empty()){state("UNCONFIGURED: set coordinator_url after Lightsail worker endpoints are deployed");while(!stop_)sleep_until_stop(stop_,500);return;}
  unsigned backoff=1000;
  while(!stop_){
@@ -181,17 +185,36 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   if(std::filesystem::exists(workspace))throw std::runtime_error("Attempt workspace already exists; refusing unsafe reuse");std::filesystem::create_directories(workspace);
   Http http;phase("download input",s.input_bytes);http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);
   phase("verify input SHA-256",s.input_bytes);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");if(cancelled())throw std::runtime_error("Job cancelled before conversion");
-  phase("convert (output bytes; percentage unavailable)");
-  {
-   auto current=priority_.load();Child child(config_.ffmpeg,ffmpeg_arguments(s,workspace),workspace,s.offer.resources,current);
-   for(;;){if(cancelled())throw std::runtime_error("Job cancelled or timed out");if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Conversion process failed; see per-job log");break;}
+  auto convert=[&](const std::vector<std::wstring>& arguments,const std::string& filename,unsigned seconds){
+   auto label="convert "+filename+" (output bytes; percentage unavailable)";phase(label.c_str());
+   const auto started=monotonic_ms();auto current=priority_.load();Child child(config_.ffmpeg,arguments,workspace,s.offer.resources,current);
+   for(;;){if(cancelled()||monotonic_ms()-started>=static_cast<Tick>(seconds)*1000)throw std::runtime_error("Job cancelled or conversion timed out");if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Conversion process failed; see per-job log");break;}
     auto latest=priority_.load();if(latest!=current){child.priority(latest);current=latest;}
-    std::error_code error;auto size=std::filesystem::file_size(workspace/output_name(s),error);if(!error)data->progress.update(size,monotonic_ms());if(!error&&size>s.output_max_bytes)throw std::runtime_error("Output exceeded declared byte limit");
+    std::error_code error;auto size=std::filesystem::file_size(workspace/filename,error);if(!error)data->progress.update(size,monotonic_ms());if(!error&&size>s.output_max_bytes)throw std::runtime_error("Output exceeded declared byte limit");
     auto log_bytes=std::filesystem::file_size(workspace/"process.log",error);if(!error&&log_bytes>5*1024*1024)throw std::runtime_error("Child output exceeded log budget");Sleep(100);
    }
+  };
+  auto upload=[&](const std::string& filename,const std::string& url,const std::string& mime){
+   auto output=workspace/filename;auto bytes=std::filesystem::file_size(output);if(!bytes||bytes>s.output_max_bytes)throw std::runtime_error("Invalid output size");
+   auto label="verify "+filename+" SHA-256";phase(label.c_str(),bytes);auto hash=sha256_file(output,bytes_progress);
+   label="upload "+filename;phase(label.c_str(),bytes);http.upload(url,output,mime,cancelled,bytes_progress);
+   data->progress.finish(true,monotonic_ms());return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
+  };
+  if(!s.artifacts.empty()){
+   auto plan=rendition_plan(s.offer.capability=="media.video.renditions.v1",s.copy_audio,workspace);json::object outputs;
+   for(const auto& rendition:plan){
+    if(cancelled())throw std::runtime_error("Job cancelled before next rendition");
+    convert(rendition.arguments,rendition.filename,rendition.timeout_seconds);
+    const auto target=std::find_if(s.artifacts.begin(),s.artifacts.end(),[&](const auto& t){return t.role==rendition.role;});
+    if(target==s.artifacts.end())throw std::runtime_error("Rendition target missing");
+    outputs[rendition.role]=upload(rendition.filename,target->url,rendition.mime);
+   }
+   result["outputs"]=std::move(outputs);
+  }else{
+   convert(ffmpeg_arguments(s,workspace),output_name(s),static_cast<unsigned>(s.timeout_ms/1000));
+   result["output"]=upload(output_name(s),s.output_url,s.offer.capability=="conversion.video.h264"?"video/mp4":"image/jpeg");
   }
-  auto output=workspace/output_name(s);auto bytes=std::filesystem::file_size(output);if(!bytes||bytes>s.output_max_bytes)throw std::runtime_error("Invalid output size");phase("verify output SHA-256",bytes);auto hash=sha256_file(output,bytes_progress);auto mime=s.offer.capability=="conversion.video.h264"?"video/mp4":"image/jpeg";
-  phase("upload result",bytes);http.upload(s.output_url,output,mime,cancelled,bytes_progress);data->progress.finish(true,monotonic_ms());result["status"]="succeeded";result["output"]={{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
+  result["status"]="succeeded";
  }catch(const std::exception& e){data->progress.finish(false,monotonic_ms());result["status"]="failed";result["reason"]=std::string(e.what());safe_log("END "+id+": "+e.what());}
  phase("persist durable result");
  try{store_.result(id,json::serialize(result));safe_log("RESULT PENDING ACK "+id);}catch(...){paused_=true;admission_.pause(true);safe_log("JOURNAL FAILURE: admissions paused; coordinator must recover unacknowledged attempt");}
@@ -238,3 +261,4 @@ void Worker::watchdog(){
  }
 }
 }
+

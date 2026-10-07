@@ -57,3 +57,23 @@ with leak inspection disabled due to a runtime limitation. Fifteen new
 PowerShell progress cases, Windows syntax/MSVC integration and a real job remain
 unrun for this change. See docs/testing.md for exact evidence. Production and
 the operator's running installation have not been changed by this draft.
+
+
+
+## Automatic app rendition review candidate
+
+The operator subsequently confirmed a real diagnostic image conversion,
+acknowledgment, server state done and a visually correct JPEG. That confirms
+that deployed diagnostic path, not ordinary upload offload or this new source.
+
+This candidate adds separate probed `media.video.renditions.v1` and
+`media.image.renditions.v1` capabilities, fixed full-size app encoders and
+per-artifact direct storage uploads/progress. The current server companion
+routes ordinary optimization jobs outside the API and validates/publishes in
+an isolated background worker. Unsupported PCs use local fallback.
+
+Three standalone command-profile tests and a Linux synthetic media smoke run
+pass. Full Boost-dependent core tests and actual Windows/MSVC/PowerShell builds
+are unavailable in this authoring runtime. This source is not installed on the
+operator's machine and neither repository's new feature is merged or deployed.
+See docs/testing.md for commands and required native acceptance.

@@ -1,4 +1,5 @@
 #include "ow/protocol.hpp"
+#include "ow/media_renditions.hpp"
 #include <algorithm>
 #include <cctype>
 #include <cstdint>
@@ -26,15 +27,27 @@ JobSpec decode_offer(const json::object& m,Tick now,const std::vector<std::strin
  if(number(m,"protocol",1)!=1||text(m,"type",32)!="offer")throw std::runtime_error("unsupported protocol message");
  JobSpec s;s.offer.job_id=text(m,"job_id",128);s.offer.attempt_id=text(m,"attempt_id",128);s.offer.capability=text(m,"capability",128);
  if(!safe_id(s.offer.job_id)||!safe_id(s.offer.attempt_id))throw std::runtime_error("invalid job identity");
- if(s.offer.capability!="conversion.video.h264"&&s.offer.capability!="conversion.image.jpeg")throw std::runtime_error("capability is not installed in this build");
+ const bool media_video=s.offer.capability=="media.video.renditions.v1",media_image=s.offer.capability=="media.image.renditions.v1";
+ if(!media_video&&!media_image&&s.offer.capability!="conversion.video.h264"&&s.offer.capability!="conversion.image.jpeg")throw std::runtime_error("capability is not installed in this build");
  auto r=m.at("resources").as_object();s.offer.resources={number(r,"ram_mb",1024*1024),number(r,"vram_mb",1024*1024),number(r,"scratch_mb",1024*1024),number(r,"cpu_threads",64)};
- if(s.offer.resources.ram_mb<(s.offer.capability=="conversion.video.h264"?512u:256u)||s.offer.resources.vram_mb!=0||!s.offer.resources.cpu_threads)throw std::runtime_error("resource declaration incompatible with adapter");
+ if(s.offer.resources.ram_mb<((media_video||s.offer.capability=="conversion.video.h264")?512u:256u)||s.offer.resources.vram_mb!=0||!s.offer.resources.cpu_threads)throw std::runtime_error("resource declaration incompatible with adapter");
  auto ttl=number(m,"offer_ttl_ms",60000);if(ttl<1000)throw std::runtime_error("invalid offer TTL");s.offer.reserve_until=now+static_cast<Tick>(ttl);
  const auto& in=m.at("input").as_object();s.input_url=text(in,"url");s.input_sha256=text(in,"sha256",64);s.input_bytes=number(in,"bytes",1024ull*1024*1024);
- const auto& out=m.at("output").as_object();s.output_url=text(out,"put_url");s.output_max_bytes=number(out,"max_bytes",1024ull*1024*1024);
- if(!s.input_bytes||!s.output_max_bytes||!allowed_url(s.input_url,hosts)||!allowed_url(s.output_url,hosts))throw std::runtime_error("unapproved media endpoint or byte limit");
+ const auto& out=m.at("output").as_object();s.output_max_bytes=number(out,"max_bytes",1024ull*1024*1024);
+ if(!s.input_bytes||!s.output_max_bytes||!allowed_url(s.input_url,hosts))throw std::runtime_error("unapproved input endpoint or byte limit");
+ if(media_video||media_image){
+  if(s.input_bytes>104857600||s.output_max_bytes>104857600)throw std::runtime_error("app media exceeds installed profile bounds");
+  if(media_video){auto& parameters=m.at("parameters").as_object();auto* audio=parameters.if_contains("copy_audio");if(!audio||!audio->is_bool()||parameters.size()!=1)throw std::runtime_error("invalid typed app parameters");s.copy_audio=audio->as_bool();}
+  auto plan=rendition_plan(media_video,s.copy_audio,"workspace");auto& artifacts=out.at("artifacts").as_object();
+  if(artifacts.size()!=plan.size())throw std::runtime_error("invalid rendition output set");
+  for(const auto& item:plan){auto& target=artifacts.at(item.role).as_object();auto url=text(target,"put_url");auto mime=text(target,"content_type",64);
+   if(!allowed_url(url,hosts)||mime!=item.mime)throw std::runtime_error("unapproved rendition output");
+   for(const auto& prior:s.artifacts)if(prior.url==url)throw std::runtime_error("rendition outputs must be independent");
+   s.artifacts.push_back({item.role,url,mime});
+  }
+ }else{s.output_url=text(out,"put_url");if(!allowed_url(s.output_url,hosts))throw std::runtime_error("unapproved output endpoint");}
  if(s.input_sha256.size()!=64||!std::all_of(s.input_sha256.begin(),s.input_sha256.end(),[](unsigned char c){return(c>='0'&&c<='9')||(c>='a'&&c<='f');}))throw std::runtime_error("invalid input SHA-256");
- if((s.input_bytes+s.output_max_bytes+1024*1024-1)/(1024*1024)>s.offer.resources.scratch_mb)throw std::runtime_error("insufficient declared scratch disk");
+ if((s.input_bytes+s.output_max_bytes*(s.artifacts.empty()?1:s.artifacts.size())+1024*1024-1)/(1024*1024)>s.offer.resources.scratch_mb)throw std::runtime_error("insufficient declared scratch disk");
  s.timeout_ms=number(m,"timeout_ms",3600000);if(s.timeout_ms<1000)throw std::runtime_error("invalid task timeout");
  // Identity fingerprint excludes time-limited offer delivery metadata, but includes
  // every execution-affecting field. The coordinator must retry with the same spec.
@@ -60,3 +73,4 @@ std::wstring quote_windows_argument(const std::wstring& a){
  out.append(slashes*2,L'\\');out+=L'\"';return out;
 }
 }
+
