@@ -1,0 +1,54 @@
+[1/11] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[2/11] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[3/11] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[4/11] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[5/11] Linking CXX static library libow_json.a
+[6/11] Linking CXX static library libow_core.a
+[7/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[8/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[9/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[10/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[11/11] Linking CXX executable ow_contract_tests
+In function 'relocate',
+    inlined from 'reserve_impl' at /usr/include/boost/json/impl/array.ipp:655:13,
+    inlined from 'reserve' at /usr/include/boost/json/impl/array.hpp:486:17,
+    inlined from 'make_array' at /usr/include/boost/json/impl/value_ref.ipp:149:16,
+    inlined from 'make_value' at /usr/include/boost/json/impl/value_ref.ipp:121:22,
+    inlined from 'make_value' at /usr/include/boost/json/impl/value_ref.ipp:95:26:
+/usr/include/boost/json/impl/array.hpp:123:17: warning: '__builtin_memmove' reading between 24 and 103079215080 bytes from a region of size 0 [-Wstringop-overread]
+  123 |     std::memmove(
+      |                 ^
+/usr/include/boost/json/impl/array.ipp: In member function 'make_value':
+/usr/include/boost/json/impl/array.ipp:31:14: note: at offset 8 into source object 'empty_' of size 8
+   31 | array::table array::empty_;
+      |              ^
+In member function 'do_deallocate',
+    inlined from 'deallocate' at /usr/include/boost/container/pmr/memory_resource.hpp:54:33,
+    inlined from 'deallocate' at /usr/include/boost/json/impl/array.ipp:66:19,
+    inlined from 'reserve_impl' at /usr/include/boost/json/impl/array.ipp:661:22,
+    inlined from 'reserve' at /usr/include/boost/json/impl/array.hpp:486:17,
+    inlined from 'make_array' at /usr/include/boost/json/impl/value_ref.ipp:149:16,
+    inlined from 'make_value' at /usr/include/boost/json/impl/value_ref.ipp:121:22,
+    inlined from 'make_value' at /usr/include/boost/json/impl/value_ref.ipp:95:26:
+/usr/include/boost/json/detail/impl/default_resource.ipp:53:22: warning: 'operator delete' called on unallocated object 'empty_' [-Wfree-nonheap-object]
+   53 |     ::operator delete(p);
+      |                      ^
+/usr/include/boost/json/impl/array.ipp: In member function 'make_value':
+/usr/include/boost/json/impl/array.ipp:31:14: note: declared here
+   31 | array::table array::empty_;
+      |              ^
+In member function 'do_deallocate',
+    inlined from 'deallocate' at /usr/include/boost/container/pmr/memory_resource.hpp:54:33,
+    inlined from 'deallocate' at /usr/include/boost/json/impl/array.ipp:66:19,
+    inlined from 'reserve_impl' at /usr/include/boost/json/impl/array.ipp:661:22,
+    inlined from 'reserve' at /usr/include/boost/json/impl/array.hpp:486:17,
+    inlined from 'make_array' at /usr/include/boost/json/impl/value_ref.ipp:149:16,
+    inlined from 'make_value' at /usr/include/boost/json/impl/value_ref.ipp:121:22,
+    inlined from 'make_value' at /usr/include/boost/json/impl/value_ref.ipp:95:26:
+/usr/include/boost/json/detail/impl/default_resource.ipp:53:22: warning: 'operator delete' called on unallocated object 'empty_' [-Wfree-nonheap-object]
+   53 |     ::operator delete(p);
+      |                      ^
+/usr/include/boost/json/impl/array.ipp: In member function 'make_value':
+/usr/include/boost/json/impl/array.ipp:31:14: note: declared here
+   31 | array::table array::empty_;
+      |              ^

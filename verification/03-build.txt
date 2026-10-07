@@ -1,0 +1,20 @@
+[1/11] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[2/11] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[3/11] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+In file included from /mnt/data/organizer-worker/include/ow/protocol.hpp:3,
+                 from /mnt/data/organizer-worker/src/protocol.cpp:1:
+/mnt/data/organizer-worker/include/ow/json.hpp: In function 'uint64_t ow::number(const boost::json::object&, const char*, uint64_t)':
+/mnt/data/organizer-worker/include/ow/json.hpp:22:2: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+   22 |  if(n>max)throw std::runtime_error(std::string("integer out of bounds: ")+key);return n;
+      |  ^~
+/mnt/data/organizer-worker/include/ow/json.hpp:22:80: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+   22 |  if(n>max)throw std::runtime_error(std::string("integer out of bounds: ")+key);return n;
+      |                                                                                ^~~~~~
+[4/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[5/11] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[6/11] Linking CXX static library libow_json.a
+[7/11] Linking CXX static library libow_core.a
+[8/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[9/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[10/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[11/11] Linking CXX executable ow_contract_tests

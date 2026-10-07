@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "boost": {
+    "version": "1.89.0",
+    "url": "https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.gz",
+    "sha256": "9de758db755e8330a01d995b0a24d09798048400ac25c03fc5ea9be364b13c93",
+    "directory": "boost_1_89_0",
+    "used_libraries": ["Boost.JSON", "its header dependencies"]
+  },
+  "compiler": {
+    "family": "MSVC",
+    "visual_studio_major": 17,
+    "minimum_version": "17.10",
+    "installer_url": "https://aka.ms/vs/17/release/vs_BuildTools.exe",
+    "required_signer_organization": "Microsoft Corporation",
+    "workload": "Microsoft.VisualStudio.Workload.VCTools",
+    "cmake_component": "Microsoft.VisualStudio.Component.VC.CMake.Project"
+  },
+  "native_libraries": ["WinHTTP", "BCrypt", "DPAPI", "WinSQLite", "Shell32", "User32"],
+  "models": [],
+  "ffmpeg": "Not downloaded automatically. Supply an explicitly approved executable and its SHA-256. Functional probes must pass."
+}

@@ -1,0 +1,17 @@
+[0/1] Re-running CMake...
+CMake Warning at CMakeLists.txt:18 (message):
+  Using installed Boost headers for development only; release builds use the
+  locked archive.
+
+
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /mnt/data/organizer-worker/build
+[1/9] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[2/9] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[3/9] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[4/9] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[5/9] Linking CXX static library libow_core.a
+[6/9] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[7/9] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[8/9] Linking CXX executable ow_contract_tests

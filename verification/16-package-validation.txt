@@ -1,0 +1,8 @@
+JSON OK config/worker.example.json
+JSON OK config/dependencies.lock.json
+JSON OK contracts/examples/offer.json
+YAML OK: manual-only workflow with read-only repository permission
+bash -n scripts/test.sh: PASS
+Markdown relative links: PASS
+PowerShell parsing: NOT RUN (PowerShell is not installed in this Linux environment)
+Windows C++ compilation/runtime: NOT RUN (Windows SDK/MSVC are unavailable)

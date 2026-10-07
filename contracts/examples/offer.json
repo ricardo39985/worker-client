@@ -1,0 +1,19 @@
+{
+  "protocol": 1,
+  "type": "offer",
+  "job_id": "example-video-job",
+  "attempt_id": "example-video-attempt-1",
+  "capability": "conversion.video.h264",
+  "offer_ttl_ms": 10000,
+  "timeout_ms": 60000,
+  "resources": {"ram_mb": 1024, "vram_mb": 0, "scratch_mb": 128, "cpu_threads": 2},
+  "input": {
+    "url": "https://storage.example.test/input?signature=illustration-only",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "bytes": 1048576
+  },
+  "output": {
+    "put_url": "https://storage.example.test/staging/example-video-attempt-1/result.mp4?signature=illustration-only",
+    "max_bytes": 10485760
+  }
+}

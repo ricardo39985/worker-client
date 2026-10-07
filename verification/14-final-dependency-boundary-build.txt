@@ -1,0 +1,12 @@
+[0/1] Re-running CMake...
+CMake Warning at CMakeLists.txt:24 (message):
+  Using installed Boost headers for development only; release builds use the
+  locked archive.
+
+
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /mnt/data/organizer-worker/build-final
+[1/4] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[2/4] Linking CXX static library libow_json.a
+[3/4] Linking CXX executable ow_contract_tests

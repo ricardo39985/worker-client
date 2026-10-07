@@ -1,0 +1,26 @@
+FAIL verified capabilities accept independent jobs concurrently: check failed at tests/admission_test.cpp:16: a.offer(task("a"),0,budget).accepted
+PASS missing capability fails closed
+PASS installed but unverified does not mean capable
+PASS local disabled vetoes a preferred server offer
+FAIL reservation consumes capacity before execution: check failed at tests/admission_test.cpp:24: a.offer(task("a",{3000,0,100,4}),0,budget).accepted
+PASS dynamic low memory rejects despite configured budget
+FAIL duplicate offer is idempotent: check failed at tests/admission_test.cpp:31: a.offer(o,0,budget).accepted
+FAIL changed duplicate payload is rejected: check failed at tests/admission_test.cpp:35: a.offer(o,0,budget).accepted
+FAIL same content job cannot run in two attempts on one host: check failed at tests/admission_test.cpp:39: a.offer(o,0,budget).accepted
+FAIL job guardrail is independent of resource budget: check failed at tests/admission_test.cpp:43: a.offer(task("a"),0,budget).accepted
+FAIL oversized resource numbers cannot overflow accounting: check failed at tests/admission_test.cpp:46: a.offer(task(),0,budget).accepted
+PASS zero CPU or memory declaration is rejected
+FAIL invalid IDs cannot become filesystem paths: check failed at tests/admission_test.cpp:54: safe_id("7e11_a-b")
+FAIL expired reservation cannot be started: check failed at tests/admission_test.cpp:57: a.offer(task(),0,budget).accepted
+FAIL start without lease is rejected: check failed at tests/admission_test.cpp:60: a.offer(task(),0,budget).accepted
+FAIL replayed begin does not start a second process: check failed at tests/admission_test.cpp:63: a.offer(task(),0,budget).accepted
+FAIL pause refuses new work but preserves active execution: check failed at tests/admission_test.cpp:68: a.offer(task(),0,budget).accepted
+FAIL pause prevents an unstarted reservation from beginning: check failed at tests/admission_test.cpp:73: a.offer(task(),0,budget).accepted
+FAIL only a valid fresh renewal extends the lease: check failed at tests/admission_test.cpp:76: a.offer(task(),0,budget).accepted
+FAIL expired running lease cannot be revived by late renewal: check failed at tests/admission_test.cpp:82: a.offer(task(),0,budget).accepted
+FAIL expiry returns unused reservations to the budget: check failed at tests/admission_test.cpp:86: a.offer(task(),0,budget).accepted
+FAIL expired running job retains resources until child shutdown: check failed at tests/admission_test.cpp:90: a.offer(task(),0,budget).accepted
+FAIL cancelling one job preserves the other: check failed at tests/admission_test.cpp:95: a.offer(task("a"),0,budget).accepted
+FAIL duplicate finish cannot release resources twice: check failed at tests/admission_test.cpp:100: a.offer(task(),0,budget).accepted
+FAIL simultaneous offers never oversubscribe: check failed at tests/admission_test.cpp:106: accepted==2
+25 contracts, 20 failures

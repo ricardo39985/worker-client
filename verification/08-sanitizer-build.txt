@@ -1,0 +1,11 @@
+[1/11] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[2/11] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[3/11] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[4/11] Linking CXX static library libow_json.a
+[5/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[6/11] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[7/11] Linking CXX static library libow_core.a
+[8/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[9/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[10/11] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[11/11] Linking CXX executable ow_contract_tests
