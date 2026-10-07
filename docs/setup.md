@@ -76,6 +76,16 @@ keys, journals or result outboxes, override operator limits, or change coordinat
 The x64/build-19041 minimum and real Windows OS component requirements remain;
 unsupported OS/architecture needs a compatible release, not an unsafe DLL download.
 
+## Memory availability
+
+Fresh installations default to `reserve_ram_mb: 0`: job placement uses the
+physical memory Windows currently reports as available, without subtracting an
+additional fixed OS reserve. Each offer still needs its declared memory budget,
+and the worker's configured budget and active reservations remain enforced.
+Existing configurations are retained. To change an installed reserve, exit the
+tray worker, back up worker.json, set limits.reserve_ram_mb to the desired value,
+and restart the installed worker. Its paired identity is retained.
+
 ## Progress feedback
 
 Each setup operation announces its stage and completion or failure. Downloads

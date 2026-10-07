@@ -6,7 +6,7 @@
   "ffmpeg_sha256": "",
   "limits": {
     "ram_mb": 2048,
-    "reserve_ram_mb": 2048,
+    "reserve_ram_mb": 0,
     "scratch_mb": 8192,
     "cpu_threads": 2,
     "max_jobs": 4
