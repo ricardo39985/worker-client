@@ -12,7 +12,7 @@ struct Config {
  std::filesystem::path root,ffmpeg;
  std::vector<std::string> storage_hosts;
  Resources budget{2048,0,8192,2};
- std::uint64_t reserve_ram_mb{2048};std::size_t max_jobs{4};
+ std::uint64_t reserve_ram_mb{0};std::size_t max_jobs{4};
 };
 Config load_config(const std::filesystem::path& root);
 struct Probe {bool video{},image{};std::string reason;};
