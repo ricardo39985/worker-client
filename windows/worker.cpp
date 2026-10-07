@@ -1,5 +1,6 @@
 #include <cctype>
 #include "worker.hpp"
+#include "pairing_adapter.hpp"
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
@@ -21,8 +22,7 @@ void run_probe(const std::filesystem::path& exe,const std::vector<std::wstring>&
 }
 }
 Config load_config(const std::filesystem::path& root){
- Config c;c.root=root;auto obj=parse(read_file(root/"worker.json")).as_object();if(number(obj,"schema",1)!=1)throw std::runtime_error("Unsupported configuration version");c.coordinator=text(obj,"coordinator_url",1024);while(c.coordinator.ends_with('/'))c.coordinator.pop_back();
- if(!c.coordinator.empty()&&(c.coordinator.rfind("https://",0)!=0||c.coordinator.find_first_of("/?#@\\",8)!=std::string::npos))throw std::runtime_error("Coordinator must be an HTTPS origin, not a path or credentialed URL");
+ Config c;c.root=root;auto obj=parse(read_file(root/"worker.json")).as_object();if(number(obj,"schema",1)!=1)throw std::runtime_error("Unsupported configuration version");c.coordinator=coordinator_origin(text(obj,"coordinator_url",1024));
  for(const auto& v:obj.at("storage_hosts").as_array()){auto s=std::string(v.as_string());std::transform(s.begin(),s.end(),s.begin(),[](unsigned char x){return static_cast<char>(std::tolower(x));});if(!allowed_url("https://"+s+"/",{s}))throw std::runtime_error("Invalid approved storage host");c.storage_hosts.push_back(s);}
  c.ffmpeg=wide(text(obj,"ffmpeg_path",32700));c.ffmpeg_sha256=text(obj,"ffmpeg_sha256",64);
  const auto& limits=obj.at("limits").as_object();c.budget={number(limits,"ram_mb",1024*1024),0,number(limits,"scratch_mb",1024*1024),number(limits,"cpu_threads",64)};c.reserve_ram_mb=number(limits,"reserve_ram_mb",1024*1024);c.max_jobs=static_cast<std::size_t>(number(limits,"max_jobs",64));
@@ -45,6 +45,12 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled){
  std::error_code error;std::filesystem::remove_all(workspace,error);return p;
 }
 Worker::Worker(Config config):config_(std::move(config)),store_(config_.root/"journal.sqlite3"),log_(config_.root/"worker.log"),admission_(config_.budget,config_.max_jobs){
+ std::optional<std::string> proven_origin;
+ ProtectedPairingSecrets identity(config_.root);
+ if(auto credential=identity.read(SecretSlot::credential)) {
+  proven_origin=text(parse(*credential).as_object(),"coordinator_url",1024);
+ }
+ bind_journal_origin(store_,config_.coordinator,proven_origin);
  if(auto p=store_.get("priority"))priority_=parse_priority(*p);
  if(auto p=store_.get("video_preference"))video_=parse_pref(*p);
  if(auto p=store_.get("image_preference"))image_=parse_pref(*p);
@@ -74,27 +80,20 @@ json::object Worker::heartbeat(){
  {"capabilities",{{"conversion.video.h264",{{"verified",verified_video_.load()},{"preference",pref_name(video_)}}},{"conversion.image.jpeg",{{"verified",verified_image_.load()},{"preference",pref_name(image_)}}}}}};
 }
 std::string Worker::paired_token(){
- auto credential=config_.root/"credential.dpapi";
- if(std::filesystem::exists(credential)){
-  auto clear=unprotect(read_file(credential));auto value=parse(clear).as_object();auto origin=text(value,"coordinator_url",1024);if(origin!=config_.coordinator)throw std::runtime_error("Stored identity belongs to another coordinator; explicit re-pair required");auto token=text(value,"token",4096);SecureZeroMemory(clear.data(),clear.size());return token;
- }
- Http http;check_protocol(http.request("GET",config_.coordinator+"/v1/worker/protocol"));
- auto key=config_.root/"pairing-key.dpapi";auto public_key=public_pairing_key(key);wchar_t name[256]{};DWORD length=256;require(GetComputerNameW(name,&length),"Read worker display name");
- json::object request{{"protocol",1},{"name",utf8(std::wstring(name,length))},{"public_key_format","bcrypt-ecdsa-p256-public-blob-base64"},{"public_key",public_key}};
- auto r=http.request("POST",config_.coordinator+"/v1/worker/pairings",json::serialize(request));if(r.status!=201)throw std::runtime_error("Pairing request rejected, HTTP "+std::to_string(r.status));
- auto pairing=parse(r.body).as_object();auto device=text(pairing,"device_code",256),code=text(pairing,"user_code",32),challenge=text(pairing,"challenge",256);auto seconds=number(pairing,"expires_in",600);if(!seconds)throw std::runtime_error("Pairing already expired");auto interval=number(pairing,"interval",30);interval=std::max<std::uint64_t>(2,interval);auto expires=monotonic_ms()+static_cast<Tick>(seconds*1000);
- state("PAIRING CODE: "+code+" | approve this exact code on Lightsail; expires in "+std::to_string(seconds)+" seconds");
- auto signature=sign_pairing_challenge(key,"organizer-worker-pair-v1\n"+device+"\n"+challenge);
- while(!stop_&&monotonic_ms()<expires){
- sleep_until_stop(stop_,static_cast<unsigned>(interval*1000));if(stop_)break;
- auto poll=http.request("POST",config_.coordinator+"/v1/worker/pairings/token",json::serialize(json::object{{"device_code",device},{"signature",signature}}));
- if(poll.status==429){interval=std::min<std::uint64_t>(30,interval+5);continue;}
- if(poll.status!=200)throw std::runtime_error("Pairing approval failed, HTTP "+std::to_string(poll.status));auto reply=parse(poll.body).as_object();auto state=text(reply,"status",32);
- if(state=="pending")continue;if(state=="denied"||state=="expired")throw std::runtime_error("Pairing "+state);
- if(state!="approved")throw std::runtime_error("Unknown pairing response");auto token=text(reply,"token",4096),id=text(reply,"worker_id",128);if(!safe_id(id)||token.empty())throw std::runtime_error("Invalid worker credential");
- atomic_write(credential,protect(json::serialize(json::object{{"coordinator_url",config_.coordinator},{"worker_id",id},{"token",token}})));safe_log("Paired successfully. Reconnect identity saved using Windows user protection.");return token;
- }
- throw std::runtime_error(stop_?"Pairing stopped":"Pairing expired");
+ ProtectedPairingSecrets secrets(config_.root);
+ NativePairingTransport transport;
+ NativePairingKey key(config_.root);
+ wchar_t name[256]{};DWORD length=256;
+ require(GetComputerNameW(name,&length),"Read worker display name");
+ auto already_paired=secrets.read(SecretSlot::credential).has_value();
+ auto token=pairing_token(config_.coordinator,utf8(std::wstring(name,length)),secrets,transport,key,
+  PairingEnvironment{[]{return utc_ms();},[this](unsigned ms){sleep_until_stop(stop_,ms);},
+   [this]{return stop_.load()||exit_requested_.load();},
+   [this](const std::string& code,unsigned seconds){
+    state("PAIRING CODE: "+code+" | approve this exact code on Lightsail; expires in "+std::to_string(seconds)+" seconds");
+   }});
+ if(!already_paired)safe_log("PAIRING APPROVED: protected identity saved; connecting to coordinator");
+ return token;
 }
 void Worker::network(){
  try{auto probe=probe_ffmpeg(config_,[this]{return stop_||exit_requested_;});verified_video_=probe.video;verified_image_=probe.image;safe_log(probe.reason);apply_preferences();}catch(const std::exception& e){state(e.what());}
@@ -102,8 +101,8 @@ void Worker::network(){
  unsigned backoff=1000;
  while(!stop_){
  try{
-  auto token=paired_token();Http http;check_protocol(http.request("GET",config_.coordinator+"/v1/worker/protocol"));WebSocket socket(config_.coordinator+"/v1/worker/connect",token);SecureZeroMemory(token.data(),token.size());
-  socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.0"},{"state",heartbeat()}}));state("CONNECTED: waiting for work");backoff=1000;Tick next_heartbeat=0,next_results=0;
+  auto token=paired_token();if(stop_||exit_requested_)return;Http http;check_protocol(http.request("GET",config_.coordinator+"/v1/worker/protocol"));WebSocket socket(config_.coordinator+"/v1/worker/connect",token);SecureZeroMemory(token.data(),token.size());
+  socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.2"},{"state",heartbeat()}}));state("CONNECTED: waiting for work");backoff=1000;Tick next_heartbeat=0,next_results=0;
   while(!stop_){
    auto now=monotonic_ms();if(now>=next_heartbeat){
     // Specs for expired unstarted offers are not an unbounded in-memory queue.
@@ -113,6 +112,10 @@ void Worker::network(){
    if(now>=next_results){for(const auto& p:store_.pending()){auto body=parse(p.body).as_object();body["outbox_sequence"]=p.sequence;socket.send(json::serialize(body));}next_results=now+2000;}
    if(auto incoming=socket.receive()){auto value=parse(*incoming);message(socket,value.as_object());}
   }
+ }catch(const PairingActionRequired& e){
+  pause(true);state(std::string("ACTION REQUIRED: ")+e.what());
+  while(!stop_&&!exit_requested_)sleep_until_stop(stop_,500);
+  return;
  }catch(const std::exception& e){
   state(std::string("OFFLINE: ")+e.what());
   // Never bypass an explicit revocation by silently starting a new pairing.
@@ -124,7 +127,7 @@ void Worker::network(){
 void Worker::message(WebSocket& socket,const json::object& m){
  if(number(m,"protocol",1)!=1)throw std::runtime_error("Unsupported coordinator protocol");auto type=text(m,"type",32);
  if(type=="ping"){socket.send(json::serialize(heartbeat()));return;}
- if(type=="result_ack"){auto id=text(m,"attempt_id",128);auto seq=number(m,"outbox_sequence",INT64_MAX);store_.acknowledge(static_cast<std::int64_t>(seq),id);return;}
+ if(type=="result_ack"){auto id=text(m,"attempt_id",128);auto seq=number(m,"outbox_sequence",INT64_MAX);if(store_.acknowledge(static_cast<std::int64_t>(seq),id))safe_log("RESULT ACKNOWLEDGED "+id);return;}
  if(type=="offer"){
   std::string id;try{id=text(m,"attempt_id",128);auto spec=decode_offer(m,monotonic_ms(),config_.storage_hosts);
    if(store_.pending_count()>=512)throw std::runtime_error("Unacknowledged result backlog is full");

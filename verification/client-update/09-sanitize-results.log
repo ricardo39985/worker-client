@@ -1,0 +1,8 @@
+Internal ctest changing into directory: /mnt/data/work/organizer-worker/build-sanitize
+Test project /mnt/data/work/organizer-worker/build-sanitize
+    Start 1: worker_contracts
+1/1 Test #1: worker_contracts .................   Passed    0.04 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.04 sec

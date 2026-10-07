@@ -102,3 +102,15 @@ Attempt tombstones currently remain in SQLite for idempotency. Long-term bounded
 retention, revocation/credential rotation tooling, upload resumability and detailed
 progress streaming are follow-on work. Disk size monitoring is a watchdog, not
 a hard filesystem quota; keep safety headroom.
+
+## Endpoint/pairing module (0.1.1)
+
+`ow/pairing.hpp` exposes coordinator identity validation, a durable pairing journey
+and journal-origin binding. It depends on purpose-specific secret-store, signing,
+HTTP and clock/cancellation boundaries. Windows adapters supply existing DPAPI,
+BCrypt and WinHTTP; the tray/worker is an execution entry point, not a second
+pairing policy owner. Setup keeps decision/persistence functions separate from
+OS installation and startup effects. Tests assert outcomes through those ports
+and durable reopen; implementation helper layout is not the acceptance criterion.
+This applies the agreed selective ports-and-adapters structure without moving
+unrelated scheduling/media code or changing its behavior.

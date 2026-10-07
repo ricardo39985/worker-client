@@ -45,15 +45,16 @@ LRESULT CALLBACK procedure(HWND h,UINT message,WPARAM w,LPARAM l){
 }
 }
 int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,PWSTR,int){
+ Handle lock;
  try{
   require(SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32|LOAD_LIBRARY_SEARCH_USER_DIRS),"Restrict DLL search");
   if(elevated())throw std::runtime_error("Run the worker as your normal Windows user, not Administrator. Setup can install build tools separately.");
   USEROBJECTFLAGS station{};DWORD length=0;if(!GetUserObjectInformationW(GetProcessWindowStation(),UOI_FLAGS,&station,sizeof(station),&length)||!(station.dwFlags&WSF_VISIBLE))throw std::runtime_error("No interactive Windows desktop. SSH can install/update; launch the worker from the signed-in desktop or its interactive logon task.");
-  root=data_directory();std::filesystem::create_directories(root);Handle lock(CreateFileW((root/"instance.lock").c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr));
+  root=data_directory();std::filesystem::create_directories(root);lock.reset(CreateFileW((root/"instance.lock").c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr));
   if(!lock){if(HWND other=FindWindowW(L"OrganizerWorker.Tray",nullptr))PostMessageW(other,OpenViewer,0,0);else MessageBoxW(nullptr,L"A worker already owns this user's state directory. Use its tray icon.",L"Organizer Worker",MB_OK);return 0;}
   auto cfg=load_config(root);std::filesystem::create_directories(root/"jobs");std::filesystem::create_directories(root/"probes");worker=std::make_unique<Worker>(std::move(cfg));
   WNDCLASSW wc{};wc.lpfnWndProc=procedure;wc.hInstance=instance;wc.lpszClassName=L"OrganizerWorker.Tray";if(!RegisterClassW(&wc))fail("Register tray window");taskbarCreated=RegisterWindowMessageW(L"TaskbarCreated");
-  window=CreateWindowExW(0,wc.lpszClassName,L"Organizer Worker",WS_OVERLAPPED,0,0,0,0,nullptr,nullptr,instance,nullptr);if(!window)fail("Create tray controller");add_icon();if(!SetTimer(window,1,500,nullptr))fail("Start tray status timer");console();
-  MSG message{};BOOL result;while((result=GetMessageW(&message,nullptr,0,0))>0){TranslateMessage(&message);DispatchMessageW(&message);}worker.reset();if(result<0)fail("Windows message loop");return 0;
- }catch(const std::exception& e){worker.reset();MessageBoxW(nullptr,wide(e.what()).c_str(),L"Organizer Worker startup failed",MB_OK|MB_ICONERROR);return 1;}
+  window=CreateWindowExW(0,wc.lpszClassName,L"Organizer Worker",WS_OVERLAPPED,0,0,0,0,nullptr,nullptr,instance,nullptr);if(!window)fail("Create tray controller");add_icon();if(!SetTimer(window,1,500,nullptr))fail("Start tray status timer");console();publish_runtime_ready(root);
+  MSG message{};BOOL result;while((result=GetMessageW(&message,nullptr,0,0))>0){TranslateMessage(&message);DispatchMessageW(&message);}clear_runtime_ready(root);worker.reset();if(result<0)fail("Windows message loop");return 0;
+ }catch(const std::exception& e){clear_runtime_ready(root);worker.reset();MessageBoxW(nullptr,wide(e.what()).c_str(),L"Organizer Worker startup failed",MB_OK|MB_ICONERROR);return 1;}
 }

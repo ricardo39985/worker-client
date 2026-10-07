@@ -29,7 +29,7 @@ cmake --build build-sanitize --parallel 2
 ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-On Windows, setup.cmd builds Release and runs both registered suites before
+On Windows, setup.cmd builds Release and runs all three registered suites before
 installation. A standalone build is also possible with a verified Boost root:
 
 ```powershell
@@ -68,3 +68,18 @@ for the intended reason; implement; run focused and relevant complete suites;
 refactor; document exact results and remaining unrun checks. Never assert private
 source snippets, method names or arbitrary logging order as a replacement for
 behavior tests. Never contact production as part of an automated test.
+
+## Current client update evidence
+
+The original fifty-case runs above are historical. `verification/client-update/`
+contains the freshly executed 50-case baseline, 68-case enrollment red/green,
+71-case journal-scope red/green and current 71-case ASan/UBSan run. Windows tests
+now include six OS contracts and eleven PowerShell setup contracts; neither was
+executed in this Linux environment. Setup tests were authored first, but their
+runtime was unavailable: do not call that an executed red stage. The actual
+pairing port, external credential storage and HTTP transport are faked only at
+those boundaries; real temporary SQLite is used for durable journal guarantees.
+
+Read docs/status.md before reporting readiness. Source changes, portable checks,
+Windows compilation, real gateway interoperability and actual remote job execution
+are separate acceptance levels.

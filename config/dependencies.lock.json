@@ -5,7 +5,10 @@
     "url": "https://archives.boost.io/release/1.89.0/source/boost_1_89_0.tar.gz",
     "sha256": "9de758db755e8330a01d995b0a24d09798048400ac25c03fc5ea9be364b13c93",
     "directory": "boost_1_89_0",
-    "used_libraries": ["Boost.JSON", "its header dependencies"]
+    "used_libraries": [
+      "Boost.JSON",
+      "its header dependencies"
+    ]
   },
   "compiler": {
     "family": "MSVC",
@@ -16,7 +19,22 @@
     "workload": "Microsoft.VisualStudio.Workload.VCTools",
     "cmake_component": "Microsoft.VisualStudio.Component.VC.CMake.Project"
   },
-  "native_libraries": ["WinHTTP", "BCrypt", "DPAPI", "WinSQLite", "Shell32", "User32"],
+  "native_libraries": [
+    "WinHTTP",
+    "BCrypt",
+    "DPAPI",
+    "WinSQLite",
+    "Shell32",
+    "User32"
+  ],
   "models": [],
-  "ffmpeg": "Not downloaded automatically. Supply an explicitly approved executable and its SHA-256. Functional probes must pass."
+  "ffmpeg": {
+    "version": "n9.0.2-22-g46d8f462ee",
+    "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-10-01-13-06/ffmpeg-n9.0.2-22-g46d8f462ee-win64-gpl-9.0.zip",
+    "sha256": "74827e097445a136b803febd4dcf80f7cba7f14a4c612fb80f7b5e5cedd3ffbe",
+    "license_url": "https://ffmpeg.org/legal.html",
+    "directory": "ffmpeg-n9.0.2-22-g46d8f462ee-win64-gpl-9.0",
+    "executable": "bin/ffmpeg.exe",
+    "license": "GPL build; review bundled license and source notices before enabling."
+  }
 }

@@ -10,3 +10,7 @@ worker.json
 current.json
 verification/windows-setup.json
 verification/windows-runtime*.json
+
+runtime.json
+pairing-backups/
+install-check-*/

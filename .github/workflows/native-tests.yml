@@ -15,7 +15,7 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference='Stop'
-          Get-ChildItem scripts -Filter *.ps1 | ForEach-Object {
+          Get-ChildItem scripts,tests -Filter *.ps1 | ForEach-Object {
             $tokens=$null; $errors=$null
             [System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors) | Out-Null
             if ($errors.Count -gt 0) { $errors | Out-String | Write-Error; throw 'PowerShell syntax check failed' }

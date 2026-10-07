@@ -27,6 +27,20 @@ void atomic_write(const std::filesystem::path& p,const std::string& bytes){
  try{Handle h(CreateFileW(temp.c_str(),GENERIC_WRITE,0,nullptr,CREATE_NEW,FILE_ATTRIBUTE_NORMAL,nullptr));if(!h)fail("Create state file");DWORD written=0;require(WriteFile(h.get(),bytes.data(),static_cast<DWORD>(bytes.size()),&written,nullptr),"Write state file");if(written!=bytes.size())throw std::runtime_error("Short state write");require(FlushFileBuffers(h.get()),"Flush state file");h.reset();require(MoveFileExW(temp.c_str(),p.c_str(),MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH),"Commit state file");}
  catch(...){DeleteFileW(temp.c_str());throw;}
 }
+void publish_runtime_ready(const std::filesystem::path& root){
+ FILETIME created{},exited{},kernel{},user{};
+ require(GetProcessTimes(GetCurrentProcess(),&created,&exited,&kernel,&user),"Read process creation time");
+ ULARGE_INTEGER started{};started.LowPart=created.dwLowDateTime;started.HighPart=created.dwHighDateTime;
+ atomic_write(root/"runtime.json",json::serialize(json::object{{"schema",1},{"state","running"},
+  {"process_id",GetCurrentProcessId()},{"process_started_filetime",started.QuadPart}}));
+}
+void clear_runtime_ready(const std::filesystem::path& root) noexcept {
+ try {
+  if(root.empty()||!std::filesystem::exists(root/"runtime.json"))return;
+  auto value=parse(read_file(root/"runtime.json")).as_object();
+  if(number(value,"process_id",UINT32_MAX)==GetCurrentProcessId())std::filesystem::remove(root/"runtime.json");
+ }catch(...){ }
+}
 std::string sha256_file(const std::filesystem::path& path){
  BCRYPT_ALG_HANDLE algorithm{};BCRYPT_HASH_HANDLE hash{};crypto(BCryptOpenAlgorithmProvider(&algorithm,BCRYPT_SHA256_ALGORITHM,nullptr,0),"Open SHA-256");
  try{crypto(BCryptCreateHash(algorithm,&hash,nullptr,0,nullptr,0,0),"Create SHA-256");std::ifstream f(path,std::ios::binary);if(!f)throw std::runtime_error("Cannot open digest input");std::vector<unsigned char> buffer(1024*1024);while(f){f.read(reinterpret_cast<char*>(buffer.data()),buffer.size());auto n=f.gcount();if(n)crypto(BCryptHashData(hash,buffer.data(),static_cast<ULONG>(n),0),"Update SHA-256");}if(!f.eof())throw std::runtime_error("Digest read failed");std::array<unsigned char,32> digest{};crypto(BCryptFinishHash(hash,digest.data(),32,0),"Finish SHA-256");BCryptDestroyHash(hash);hash=nullptr;BCryptCloseAlgorithmProvider(algorithm,0);algorithm=nullptr;static const char h[]="0123456789abcdef";std::string out;for(auto c:digest){out+=h[c>>4];out+=h[c&15];}return out;}
