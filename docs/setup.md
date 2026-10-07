@@ -35,7 +35,7 @@ share those private backups or restore them into a different server scope.
 ## Required native acceptance (not executed here)
 
 Build the source with the locked Windows toolchain; run worker_contracts,
-windows_contracts and setup_contracts. Verify the first-run prompt, interrupted
+windows_contracts, setup_contracts, progress_contracts and setup_progress_contracts. Verify the first-run prompt, interrupted
 setup recovery, Microsoft-tools consent/reboot path, failed config publication,
 normal/elevated session handling, scheduled-task principal/settings, one active
 worker, process-readiness detection, tray close/exit, sign-out/logon/reboot, and
@@ -75,3 +75,51 @@ repairs affect generated dependencies/builds/startup; they do not silently delet
 keys, journals or result outboxes, override operator limits, or change coordinators.
 The x64/build-19041 minimum and real Windows OS component requirements remain;
 unsupported OS/architecture needs a compatible release, not an unsafe DLL download.
+
+## Progress feedback
+
+Each setup operation announces its stage and completion or failure. Downloads
+and archive checksums report actual bytes; manifests report checked file counts.
+Commands stream stdout/stderr while running, with status at roughly two-second
+intervals. Extraction/compilation cannot reliably report a total, so they show
+elapsed time and output-line activity without a percentage. Thirty seconds
+without measured activity displays a quiet warning; this is not proof of a hang.
+Interactive prompts explicitly say WAITING FOR INPUT. GUI Microsoft installers
+show an elapsed wait and direct the user to their installer/UAC window.
+
+Setup's private `logs/setup-progress.log` contains the same sanitized feedback.
+It retains a current and previous file, each normally bounded to about 5 MiB.
+Signed URLs, authorization fields and common secret fields are redacted. Doctor
+JSON is captured for validation, not dumped into the terminal.
+
+A dependency transfer stops after 90 seconds without bytes, or 30 minutes
+overall; the existing three-attempt checksum-verified retry remains. Response
+headers have a 90-second deadline. Native stages have explicit deadlines:
+Boost/FFmpeg extraction 30 minutes, configure 10 minutes, compile 60 minutes,
+CTest 15 minutes, installation 2 minutes, runtime/sample probe 3 minutes and
+process readiness 20 seconds. A timed-out setup-owned native process tree is
+stopped and reported failed. The GUI/elevated installer wait is bounded to two
+hours but does not forcibly terminate a system installation; inspect its window
+before rerunning. No quiet warning skips tests or changes a pinned hash.
+
+The worker console also shows DOWNLOAD / checksum / CONVERT / UPLOAD / result
+persistence / cleanup stages, with job IDs and roughly two-second active-job
+updates. Transfer and checksum percentages use exact file totals. Conversion
+shows measured output bytes and elapsed time; a media duration is not assumed.
+Converter probes and pairing waits also print elapsed status while awaiting
+local sample processes or coordinator approval. Connection status reports active jobs and durable results awaiting ACK every
+ten seconds. An open connection or a 100% upload is not proof that a result
+was accepted: confirm RESULT ACKNOWLEDGED and coordinator `state:done`.
+
+For acceptance, run both PowerShell suites first from the source folder:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\setup_policy_test.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\setup_progress_test.ps1
+```
+
+Then run setup's mandatory native CTest/doctor checks. Observe a real download,
+cache reuse, quiet extraction, native failure/timeout and normal-user launch,
+then a small real conversion through the coordinator. Do not replace source
+files while an older setup is running. An existing paired identity is retained
+when rerunning against the same endpoint without `-RePair`.

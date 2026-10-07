@@ -46,15 +46,15 @@ Response Http::request(const std::string& method,const std::string& url,const st
  if(body.size()>256*1024)throw std::runtime_error("Control request too large");Request r(method,url);r.send(headers(bearer),body.empty()?WINHTTP_NO_REQUEST_DATA:const_cast<char*>(body.data()),static_cast<DWORD>(body.size()),static_cast<DWORD>(body.size()));r.response();Response out{status(r.request.get()),{}};
  std::array<char,16384> b{};for(;;){DWORD n=0;require(WinHttpReadData(r.request.get(),b.data(),static_cast<DWORD>(b.size()),&n),"Read HTTPS body");if(!n)break;if(out.body.size()+n>256*1024)throw std::runtime_error("Control response too large");out.body.append(b.data(),n);}return out;
 }
-void Http::download(const std::string& url,const std::filesystem::path& target,std::uint64_t expected,const std::function<bool()>& cancelled){
+void Http::download(const std::string& url,const std::filesystem::path& target,std::uint64_t expected,const std::function<bool()>& cancelled,const std::function<void(std::uint64_t)>& progress){
  check_cancel(cancelled);Request r("GET",url);r.send(L"Accept-Encoding: identity\r\n",WINHTTP_NO_REQUEST_DATA,0,0);r.response();if(status(r.request.get())!=200)throw std::runtime_error("Input download HTTP status was not 200");
  std::ofstream file(target,std::ios::binary|std::ios::trunc);if(!file)throw std::runtime_error("Cannot create job input");std::array<char,64*1024> buffer{};std::uint64_t total=0;
- for(;;){check_cancel(cancelled);DWORD n=0;require(WinHttpReadData(r.request.get(),buffer.data(),static_cast<DWORD>(buffer.size()),&n),"Download input");if(!n)break;if(n>expected-total)throw std::runtime_error("Input exceeds approved byte budget");file.write(buffer.data(),n);if(!file)throw std::runtime_error("Input write failed (disk full?)");total+=n;}
+ for(;;){check_cancel(cancelled);DWORD n=0;require(WinHttpReadData(r.request.get(),buffer.data(),static_cast<DWORD>(buffer.size()),&n),"Download input");if(!n)break;if(n>expected-total)throw std::runtime_error("Input exceeds approved byte budget");file.write(buffer.data(),n);if(!file)throw std::runtime_error("Input write failed (disk full?)");total+=n;if(progress)progress(total);}
  file.close();if(total!=expected)throw std::runtime_error("Input byte count differs from job manifest");
 }
-void Http::upload(const std::string& url,const std::filesystem::path& source,const std::string& mime,const std::function<bool()>& cancelled){
+void Http::upload(const std::string& url,const std::filesystem::path& source,const std::string& mime,const std::function<bool()>& cancelled,const std::function<void(std::uint64_t)>& progress){
  check_cancel(cancelled);auto length=std::filesystem::file_size(source);if(length>1024ull*1024*1024)throw std::runtime_error("Output exceeds transport limit");Request r("PUT",url);r.send(headers({},wide(mime).c_str()),WINHTTP_NO_REQUEST_DATA,0,static_cast<DWORD>(length));std::ifstream file(source,std::ios::binary);if(!file)throw std::runtime_error("Cannot read output");std::array<char,64*1024> b{};std::uint64_t total=0;
- while(file){check_cancel(cancelled);file.read(b.data(),b.size());auto n=file.gcount();if(!n)break;DWORD sent=0;require(WinHttpWriteData(r.request.get(),b.data(),static_cast<DWORD>(n),&sent),"Upload output");if(sent!=n)throw std::runtime_error("Short output upload");total+=sent;}
+ while(file){check_cancel(cancelled);file.read(b.data(),b.size());auto n=file.gcount();if(!n)break;DWORD sent=0;require(WinHttpWriteData(r.request.get(),b.data(),static_cast<DWORD>(n),&sent),"Upload output");if(sent!=n)throw std::runtime_error("Short output upload");total+=sent;if(progress)progress(total);}
  if(!file.eof()||total!=length)throw std::runtime_error("Output changed or could not be read");r.response();auto code=status(r.request.get());if(code<200||code>=300)throw std::runtime_error("Output upload rejected");check_cancel(cancelled);
 }
 // Asynchronous WinHTTP completions let the receive remain pending while the

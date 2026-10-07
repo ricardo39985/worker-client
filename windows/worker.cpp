@@ -86,8 +86,14 @@ std::string Worker::paired_token(){
  wchar_t name[256]{};DWORD length=256;
  require(GetComputerNameW(name,&length),"Read worker display name");
  auto already_paired=secrets.read(SecretSlot::credential).has_value();
+ auto pairing_started=monotonic_ms(),next_pairing_status=pairing_started+5000;
  auto token=pairing_token(config_.coordinator,utf8(std::wstring(name,length)),secrets,transport,key,
-  PairingEnvironment{[]{return utc_ms();},[this](unsigned ms){sleep_until_stop(stop_,ms);},
+  PairingEnvironment{[]{return utc_ms();},[this,pairing_started,&next_pairing_status](unsigned ms){
+    for(unsigned elapsed=0;elapsed<ms&&!stop_&&!exit_requested_;elapsed+=100){
+     Sleep(std::min(100u,ms-elapsed));auto now=monotonic_ms();
+     if(now>=next_pairing_status){safe_log("PAIRING WAIT | elapsed "+std::to_string((now-pairing_started)/1000)+"s | waiting for coordinator approval or credential reply");next_pairing_status=now+5000;}
+    }
+   },
    [this]{return stop_.load()||exit_requested_.load();},
    [this](const std::string& code,unsigned seconds){
     state("PAIRING CODE: "+code+" | approve this exact code on Lightsail; expires in "+std::to_string(seconds)+" seconds");
@@ -96,13 +102,18 @@ std::string Worker::paired_token(){
  return token;
 }
 void Worker::network(){
- try{auto probe=probe_ffmpeg(config_,[this]{return stop_||exit_requested_;});verified_video_=probe.video;verified_image_=probe.image;safe_log(probe.reason);apply_preferences();}catch(const std::exception& e){state(e.what());}
+ auto probe_started=monotonic_ms(),next_probe_status=probe_started+2000;
+ safe_log("PROBE | checking approved converter and real samples; percentage unavailable");
+ try{auto probe=probe_ffmpeg(config_,[this,probe_started,&next_probe_status]{
+  auto now=monotonic_ms();if(now>=next_probe_status){safe_log("PROBE | elapsed "+std::to_string((now-probe_started)/1000)+"s | sample process running; percentage unavailable");next_probe_status=now+2000;}
+  return stop_||exit_requested_;
+ });verified_video_=probe.video;verified_image_=probe.image;safe_log(probe.reason);apply_preferences();}catch(const std::exception& e){state(e.what());}
  if(config_.coordinator.empty()){state("UNCONFIGURED: set coordinator_url after Lightsail worker endpoints are deployed");while(!stop_)sleep_until_stop(stop_,500);return;}
  unsigned backoff=1000;
  while(!stop_){
  try{
   auto token=paired_token();if(stop_||exit_requested_)return;Http http;check_protocol(http.request("GET",config_.coordinator+"/v1/worker/protocol"));WebSocket socket(config_.coordinator+"/v1/worker/connect",token);SecureZeroMemory(token.data(),token.size());
-  socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.2"},{"state",heartbeat()}}));state("CONNECTED: waiting for work");backoff=1000;Tick next_heartbeat=0,next_results=0;
+  socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.2"},{"state",heartbeat()}}));state("CONNECTED: waiting for work");backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;
   while(!stop_){
    auto now=monotonic_ms();if(now>=next_heartbeat){
     // Specs for expired unstarted offers are not an unbounded in-memory queue.
@@ -110,6 +121,7 @@ void Worker::network(){
     socket.send(json::serialize(heartbeat()));next_heartbeat=now+5000;
    }
    if(now>=next_results){for(const auto& p:store_.pending()){auto body=parse(p.body).as_object();body["outbox_sequence"]=p.sequence;socket.send(json::serialize(body));}next_results=now+2000;}
+   if(now>=next_status){safe_log("CONNECTION OPEN | active jobs "+std::to_string(active_count())+" | durable results awaiting ACK "+std::to_string(store_.pending_count()));next_status=now+10000;}
    if(auto incoming=socket.receive()){auto value=parse(*incoming);message(socket,value.as_object());}
   }
  }catch(const PairingActionRequired& e){
@@ -162,23 +174,30 @@ void Worker::message(WebSocket& socket,const json::object& m){
 void Worker::execute(std::shared_ptr<TaskData> data){
  const auto& s=data->spec;auto id=s.offer.attempt_id;auto workspace=config_.root/"jobs"/("job-"+id);json::object result{{"protocol",1},{"type","result"},{"attempt_id",id},{"job_id",s.offer.job_id},{"lease_token",data->token}};
  auto cancelled=[&]{return stop_||data->cancel||monotonic_ms()>=data->hard_deadline;};
+ auto phase=[&](const char* name,std::uint64_t total=0){data->progress.begin(name,monotonic_ms(),total);safe_log("JOB "+id+" | "+name+" started");};
+ auto bytes_progress=[&](std::uint64_t bytes){if(cancelled())throw std::runtime_error("Job cancelled or lease expired");data->progress.update(bytes,monotonic_ms());};
  try{
+  phase("prepare workspace");
   if(std::filesystem::exists(workspace))throw std::runtime_error("Attempt workspace already exists; refusing unsafe reuse");std::filesystem::create_directories(workspace);
-  Http http;http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled);if(sha256_file(workspace/"source.bin")!=s.input_sha256)throw std::runtime_error("Input integrity check failed");if(cancelled())throw std::runtime_error("Job cancelled before conversion");
+  Http http;phase("download input",s.input_bytes);http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);
+  phase("verify input SHA-256",s.input_bytes);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");if(cancelled())throw std::runtime_error("Job cancelled before conversion");
+  phase("convert (output bytes; percentage unavailable)");
   {
    auto current=priority_.load();Child child(config_.ffmpeg,ffmpeg_arguments(s,workspace),workspace,s.offer.resources,current);
    for(;;){if(cancelled())throw std::runtime_error("Job cancelled or timed out");if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Conversion process failed; see per-job log");break;}
     auto latest=priority_.load();if(latest!=current){child.priority(latest);current=latest;}
-    std::error_code error;auto size=std::filesystem::file_size(workspace/output_name(s),error);if(!error&&size>s.output_max_bytes)throw std::runtime_error("Output exceeded declared byte limit");
+    std::error_code error;auto size=std::filesystem::file_size(workspace/output_name(s),error);if(!error)data->progress.update(size,monotonic_ms());if(!error&&size>s.output_max_bytes)throw std::runtime_error("Output exceeded declared byte limit");
     auto log_bytes=std::filesystem::file_size(workspace/"process.log",error);if(!error&&log_bytes>5*1024*1024)throw std::runtime_error("Child output exceeded log budget");Sleep(100);
    }
   }
-  auto output=workspace/output_name(s);auto bytes=std::filesystem::file_size(output);if(!bytes||bytes>s.output_max_bytes)throw std::runtime_error("Invalid output size");auto hash=sha256_file(output);auto mime=s.offer.capability=="conversion.video.h264"?"video/mp4":"image/jpeg";
-  http.upload(s.output_url,output,mime,cancelled);result["status"]="succeeded";result["output"]={{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
- }catch(const std::exception& e){result["status"]="failed";result["reason"]=std::string(e.what());safe_log("END "+id+": "+e.what());}
+  auto output=workspace/output_name(s);auto bytes=std::filesystem::file_size(output);if(!bytes||bytes>s.output_max_bytes)throw std::runtime_error("Invalid output size");phase("verify output SHA-256",bytes);auto hash=sha256_file(output,bytes_progress);auto mime=s.offer.capability=="conversion.video.h264"?"video/mp4":"image/jpeg";
+  phase("upload result",bytes);http.upload(s.output_url,output,mime,cancelled,bytes_progress);data->progress.finish(true,monotonic_ms());result["status"]="succeeded";result["output"]={{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
+ }catch(const std::exception& e){data->progress.finish(false,monotonic_ms());result["status"]="failed";result["reason"]=std::string(e.what());safe_log("END "+id+": "+e.what());}
+ phase("persist durable result");
  try{store_.result(id,json::serialize(result));safe_log("RESULT PENDING ACK "+id);}catch(...){paused_=true;admission_.pause(true);safe_log("JOURNAL FAILURE: admissions paused; coordinator must recover unacknowledged attempt");}
  // Media is not needed after an attempt: authoritative output is in object
  // storage, and any accepted completion is durably represented in the outbox.
+ phase("clean completed attempt workspace");
  std::error_code error;
  try{
   if(result.at("status").as_string()!="succeeded"&&std::filesystem::exists(workspace/"process.log")){
@@ -187,19 +206,31 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    if(length<=5*1024*1024)std::filesystem::copy_file(source,logs/("job-"+id+".log"),std::filesystem::copy_options::overwrite_existing);
    // Only 20 bounded process logs are retained across completed jobs.
    std::vector<std::filesystem::directory_entry> entries;
-   for(const auto& entry:std::filesystem::directory_iterator(logs))if(entry.is_regular_file()&&entry.path().extension()==".log")entries.push_back(entry);
+   for(const auto& entry:std::filesystem::directory_iterator(logs))if(entry.is_regular_file()&&entry.path().extension()==".log"&&entry.path().filename().string().starts_with("job-"))entries.push_back(entry);
    std::sort(entries.begin(),entries.end(),[](const auto& a,const auto& b){return a.last_write_time()<b.last_write_time();});
    for(std::size_t i=0;i+20<entries.size();++i)std::filesystem::remove(entries[i].path(),error);
   }
  }catch(...){safe_log("Could not preserve child diagnostic log");}
- std::filesystem::remove_all(workspace,error);admission_.finish(id);data->done=true;
+ std::filesystem::remove_all(workspace,error);admission_.finish(id);data->progress.finish(true,monotonic_ms());data->done=true;
 }
 void Worker::watchdog(){
+ Tick next_progress=0;
  while(!stop_){
  try{
   for(const auto& e:admission_.expire(monotonic_ms())){
    if(e.stop_process){std::lock_guard lock(mutex_);if(auto i=running_.find(e.attempt_id);i!=running_.end())i->second->data->cancel=true;}
    else store_.result(e.attempt_id,json::serialize(json::object{{"protocol",1},{"type","result"},{"attempt_id",e.attempt_id},{"status","abandoned"},{"reason","offer_expired"}}));
+  }
+  auto now=monotonic_ms();if(now>=next_progress){
+   std::vector<std::shared_ptr<TaskData>> active;{std::lock_guard lock(mutex_);for(const auto& [_,r]:running_)if(!r->data->done)active.push_back(r->data);}
+   for(const auto& data:active){auto p=data->progress.snapshot(now);if(p.stage.empty()||p.finished)continue;
+    std::string line="JOB "+data->spec.offer.attempt_id+" | "+p.stage+" | elapsed "+std::to_string(p.elapsed_ms/1000)+"s | "+std::to_string(p.completed)+" measured bytes";
+    if(p.percent)line+=" / "+std::to_string(p.total)+" ("+std::to_string(*p.percent)+"%)";
+    if(!p.percent)line+=" | percentage unavailable";
+    if(p.quiet)line+=" | no measured progress for "+std::to_string(p.quiet_ms/1000)+"s; may be waiting on I/O";
+    safe_log(line);
+   }
+   next_progress=now+2000;
   }
   std::vector<std::unique_ptr<Running>> finished;{std::lock_guard lock(mutex_);for(auto i=running_.begin();i!=running_.end();){if(i->second->data->done){finished.push_back(std::move(i->second));i=running_.erase(i);}else ++i;}}finished.clear();
  }catch(const std::exception& e){paused_=true;admission_.pause(true);safe_log(std::string("Watchdog check failed; admissions paused: ")+e.what());}

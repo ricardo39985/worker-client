@@ -29,7 +29,7 @@ cmake --build build-sanitize --parallel 2
 ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-On Windows, setup.cmd builds Release and runs all three registered suites before
+On Windows, setup.cmd builds Release and runs all five registered suites before
 installation. A standalone build is also possible with a verified Boost root:
 
 ```powershell
@@ -83,3 +83,26 @@ those boundaries; real temporary SQLite is used for durable journal guarantees.
 Read docs/status.md before reporting readiness. Source changes, portable checks,
 Windows compilation, real gateway interoperability and actual remote job execution
 are separate acceptance levels.
+
+## Terminal progress change (October 7, 2026)
+
+The dedicated `progress_contracts` executable is independent of Boost and Windows.
+Eight contracts passed using GCC with `-std=c++20 -Wall -Wextra -Werror -pthread`,
+including concurrent updates, measured percentages, unknown totals, quiet
+activity, stage reset and failure without invented completion. They also passed
+ASan/UBSan with `detect_leaks=0` and `halt_on_error=1`. LeakSanitizer with leak
+detection enabled failed because this runtime could not inspect `/proc/2/task`;
+no leak-detection pass is claimed. The existing core suite was not rerun.
+
+Fifteen new `setup_progress_contracts` cases cover elapsed/quiet output, real
+stream hashing, exact byte limits, truncated downloads, staging collision
+preservation, real ZIP extraction, child stdout/stderr before exit, Windows argv
+round-trip, nonzero exit and owned-child timeout. They use synthetic local files
+and processes, not production media or credentials. Windows PowerShell 5.1 is
+unavailable here: neither these cases nor the existing setup suite has executed
+for this change. No executed PowerShell red or green stage is claimed.
+
+Required: Windows syntax checks, both PowerShell suites, all five registered CTest
+suites with MSVC, the real converter doctor and setup/bootstrap/network/timeout
+observations. The portable counter tests do not establish WinHTTP transfer,
+PowerShell process streaming, tray behavior or a successful remote conversion.

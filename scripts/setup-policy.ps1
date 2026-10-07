@@ -1,5 +1,6 @@
 # Pure setup decisions and explicitly injected operating-system boundaries.
 # Dot-sourcing this file does not install, launch, prompt, or write files.
+. (Join-Path $PSScriptRoot 'setup-progress.ps1')
 function Get-WorkerPairingAction([string]$Origin,[long]$NowMs,[scriptblock]$ReadSecret) {
     try {
         $credential=& $ReadSecret 'credential'
@@ -60,11 +61,13 @@ function Resolve-WorkerOrigin([string]$Stored,[string]$Requested,[bool]$HasIdent
 function Complete-WorkerSetup([switch]$NoStartup,[switch]$NoLaunch,[scriptblock]$RegisterStartup,[scriptblock]$VerifyStartup,[scriptblock]$LaunchWorker) {
     if (-not $NoStartup) {
         Invoke-WorkerRepair -Operation {
-            & $RegisterStartup | Out-Null
-            if (-not (& $VerifyStartup)) { throw 'Windows startup registration could not be verified. Setup is incomplete.' }
+            Invoke-WorkerSetupStage 'Register normal-user startup' $RegisterStartup | Out-Null
+            Invoke-WorkerSetupStage 'Verify startup registration' {
+                if (-not (& $VerifyStartup)) { throw 'Windows startup registration could not be verified. Setup is incomplete.' }
+            } | Out-Null
         } -Repair { Write-Host '[REPAIR] Re-registering this users normal-privilege startup task.' } | Out-Null
     }
-    if (-not $NoLaunch) { & $LaunchWorker | Out-Null }
+    if (-not $NoLaunch) { Invoke-WorkerSetupStage 'Launch and verify worker' $LaunchWorker | Out-Null }
     return [pscustomobject]@{startup_registered=(-not $NoStartup);started=(-not $NoLaunch)}
 }
 function Invoke-WorkerRepair([scriptblock]$Operation,[scriptblock]$Repair) {
@@ -79,14 +82,14 @@ function Invoke-WorkerRepair([scriptblock]$Operation,[scriptblock]$Repair) {
 function Get-WorkerVerifiedFile([string]$Destination,[string]$Sha256,[scriptblock]$Download) {
     if ($Sha256 -notmatch '\A[a-fA-F0-9]{64}\z') { throw 'Invalid dependency checksum lock.' }
     if (Test-Path -LiteralPath $Destination) {
-        if ((Get-FileHash -LiteralPath $Destination -Algorithm SHA256).Hash -ieq $Sha256) { return }
+        if ((Get-WorkerFileSha256 $Destination) -ieq $Sha256) { Write-WorkerSetupLine '[CACHE] Verified archive reused.';return }
         Remove-Item -LiteralPath $Destination -Force
         Write-Host '[REPAIR] Replacing a damaged download from the reviewed dependency lock.'
     }
     $partial=$Destination+'.'+[guid]::NewGuid().ToString('N')+'.part'
     try {
         & $Download $partial | Out-Null
-        if (-not (Test-Path -LiteralPath $partial) -or (Get-FileHash -LiteralPath $partial -Algorithm SHA256).Hash -ine $Sha256) { throw 'Downloaded dependency checksum mismatch; refusing to extract or execute.' }
+        if (-not (Test-Path -LiteralPath $partial) -or (Get-WorkerFileSha256 $partial) -ine $Sha256) { throw 'Downloaded dependency checksum mismatch; refusing to extract or execute.' }
         [IO.File]::Move($partial,$Destination)
     } finally { if (Test-Path -LiteralPath $partial) { Remove-Item -LiteralPath $partial -Force } }
 }

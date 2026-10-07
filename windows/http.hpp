@@ -10,8 +10,8 @@ struct Response {DWORD status{};std::string body;};
 class Http {
 public:
  Response request(const std::string& method,const std::string& url,const std::string& body={},const std::string& bearer={});
- void download(const std::string& url,const std::filesystem::path& target,std::uint64_t expected,const std::function<bool()>& cancelled);
- void upload(const std::string& url,const std::filesystem::path& source,const std::string& content_type,const std::function<bool()>& cancelled);
+ void download(const std::string& url,const std::filesystem::path& target,std::uint64_t expected,const std::function<bool()>& cancelled,const std::function<void(std::uint64_t)>& progress={});
+ void upload(const std::string& url,const std::filesystem::path& source,const std::string& content_type,const std::function<bool()>& cancelled,const std::function<void(std::uint64_t)>& progress={});
 };
 class WebSocket {
  struct Impl;std::unique_ptr<Impl> impl_;
