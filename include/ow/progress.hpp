@@ -6,6 +6,10 @@
 #include <string>
 #include <utility>
 namespace ow {
+inline std::string connectionActivityLine(std::uint64_t active,std::uint64_t pending) {
+ if(active==0 && pending==0)return {};
+ return "ACTIVITY | active jobs "+std::to_string(active)+" | durable results awaiting ACK "+std::to_string(pending);
+}
 struct ProgressSnapshot {
  std::string stage;std::uint64_t completed{},total{};std::optional<unsigned> percent;
  std::int64_t elapsed_ms{},quiet_ms{};bool quiet{},finished{},succeeded{};
