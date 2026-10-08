@@ -107,8 +107,9 @@ Setup now streams native output, counts download/checksum bytes and dependency
 files, labels prompts, and reports elapsed time in quiet native stages. Boost
 extraction moves the generated tree into staging instead of copying it again.
 The worker console reports job stages, measured transfer/checksum bytes,
-conversion output bytes and quiet time. It periodically reports active jobs and
-durable results awaiting acknowledgment. Unknown totals have no percentage.
+conversion output bytes and quiet time. It reports active jobs and durable results awaiting acknowledgment only when
+there is outstanding work. An idle connected worker emits no periodic summary;
+connection changes, errors and named job progress remain visible. Unknown totals have no percentage.
 
 Eight isolated portable progress contracts passed on Linux. Fifteen new
 PowerShell progress contracts and the updated native Windows integration are

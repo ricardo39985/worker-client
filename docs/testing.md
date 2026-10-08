@@ -133,3 +133,15 @@ Windows/MSVC/PowerShell tests, probes, cancellation across multiple renditions,
 ordinary app uploads and computer-loss/local-fallback acceptance remain required.
 Setup now registers an additional standalone rendition suite (six CTest suites
 on Windows). Passing old diagnostic probes is not proof of these new capabilities.
+
+## Quiet idle console (October 7, 2026)
+
+A behavior-preserving extraction kept the existing eight progress contracts green.
+The new activity-output regression then failed with `Idle connection must not
+emit activity lines`. It now passes: repeated zero-job/zero-result samples produce
+no summary, active jobs and pending acknowledgments remain visible, and a drained
+backlog returns to silence. The existing measured/quiet/failure/concurrent progress
+contracts also pass with installed GCC using C++20, warnings as errors and pthread.
+Windows/MSVC compilation and the actual tray/viewer check have not run for this
+change. Run setup's registered native tests before installing a release; observe
+an idle interval, a job and its ACK, and a disconnect/reconnect on Windows.
