@@ -1,5 +1,7 @@
 #include <cctype>
 #include "worker.hpp"
+#include "embedding.hpp"
+#include "ow/inference.hpp"
 #include "ow/media_renditions.hpp"
 #include "pairing_adapter.hpp"
 #include <algorithm>
@@ -25,6 +27,11 @@ void run_probe(const std::filesystem::path& exe,const std::vector<std::wstring>&
 Config load_config(const std::filesystem::path& root){
  Config c;c.root=root;auto obj=parse(read_file(root/"worker.json")).as_object();if(number(obj,"schema",1)!=1)throw std::runtime_error("Unsupported configuration version");c.coordinator=coordinator_origin(text(obj,"coordinator_url",1024));
  for(const auto& v:obj.at("storage_hosts").as_array()){auto s=std::string(v.as_string());std::transform(s.begin(),s.end(),s.begin(),[](unsigned char x){return static_cast<char>(std::tolower(x));});if(!allowed_url("https://"+s+"/",{s}))throw std::runtime_error("Invalid approved storage host");c.storage_hosts.push_back(s);}
+ if(auto* model=obj.if_contains("embedding")){
+  const auto& e=model->as_object();if(text(e,"profile",64)!=embedding_profile)throw std::runtime_error("Unsupported inference profile");
+  c.llama_server=wide(text(e,"server_path",32700));c.embedding_model=wide(text(e,"model_path",32700));c.embedding_projector=wide(text(e,"projector_path",32700));
+  for(const auto& f:e.at("runtime_files").as_array()){auto& v=f.as_object();c.llama_files.emplace_back(wide(text(v,"path",32700)),text(v,"sha256",64));}
+ }
  c.ffmpeg=wide(text(obj,"ffmpeg_path",32700));c.ffmpeg_sha256=text(obj,"ffmpeg_sha256",64);
  const auto& limits=obj.at("limits").as_object();c.budget={number(limits,"ram_mb",1024*1024),0,number(limits,"scratch_mb",1024*1024),number(limits,"cpu_threads",64)};c.reserve_ram_mb=number(limits,"reserve_ram_mb",1024*1024);c.max_jobs=static_cast<std::size_t>(number(limits,"max_jobs",64));
  if(c.budget.ram_mb<256||!c.budget.cpu_threads||!c.max_jobs||!c.budget.scratch_mb)throw std::runtime_error("Invalid resource budget");
@@ -44,7 +51,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled){
  try{for(const auto& rendition:rendition_plan(true,false,workspace)){run_probe(c.ffmpeg,rendition.arguments,workspace,cancelled);if(!std::filesystem::file_size(workspace/rendition.filename))throw std::runtime_error("App video probe produced no output");run_probe(c.ffmpeg,{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",(workspace/rendition.filename).wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,cancelled);}p.media_video=true;}catch(const std::exception&){p.media_video=false;}
  std::filesystem::copy_file(workspace/"result.jpg",workspace/"source.bin",std::filesystem::copy_options::overwrite_existing);
  try{for(const auto& rendition:rendition_plan(false,false,workspace)){run_probe(c.ffmpeg,rendition.arguments,workspace,cancelled);if(!std::filesystem::file_size(workspace/rendition.filename))throw std::runtime_error("App image probe produced no output");run_probe(c.ffmpeg,{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",(workspace/rendition.filename).wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,cancelled);}p.media_image=true;}catch(const std::exception&){p.media_image=false;}
- p.reason=std::string("CPU conversion probes passed; app video=")+(p.media_video?"verified":"unavailable")+" app image="+(p.media_image?"verified":"unavailable")+"; GPU and inference are not advertised";
+ p.reason=std::string("CPU conversion probes passed; app video=")+(p.media_video?"verified":"unavailable")+" app image="+(p.media_image?"verified":"unavailable")+"; GPU is not advertised";
  }catch(const std::exception& e){p.reason=e.what();}
  std::error_code error;std::filesystem::remove_all(workspace,error);return p;
 }
@@ -58,30 +65,33 @@ Worker::Worker(Config config):config_(std::move(config)),store_(config_.root/"jo
  if(auto p=store_.get("priority"))priority_=parse_priority(*p);
  if(auto p=store_.get("video_preference"))video_=parse_pref(*p);
  if(auto p=store_.get("image_preference"))image_=parse_pref(*p);
+ if(auto p=store_.get("inference_preference"))inference_=parse_pref(*p);
  paused_=store_.get("paused").value_or("false")=="true";admission_.pause(paused_);
  for(const auto& id:store_.interrupted())store_.result(id,json::serialize(json::object{{"protocol",1},{"type","result"},{"attempt_id",id},{"status","abandoned"},{"reason","worker_restarted"}}));
  safe_log("Worker starting. Closing the console only closes the viewer; use the tray to exit.");
  // Slow capability probes run on the background thread, never blocking tray creation.
  network_=std::jthread([this]{network();});try{watchdog_=std::jthread([this]{watchdog();});}catch(...){stop_=true;network_.join();throw;}
 }
-Worker::~Worker(){stop_=true;{std::lock_guard lock(mutex_);for(auto& [_,r]:running_)r->data->cancel=true;}if(network_.joinable())network_.join();if(watchdog_.joinable())watchdog_.join();std::unordered_map<std::string,std::unique_ptr<Running>> remaining;{std::lock_guard lock(mutex_);remaining.swap(running_);}remaining.clear();}
+Worker::~Worker(){stop_=true;{std::lock_guard lock(mutex_);for(auto& [_,r]:running_)r->data->cancel=true;}if(network_.joinable())network_.join();if(inference_probe_.joinable())inference_probe_.join();if(watchdog_.joinable())watchdog_.join();std::unordered_map<std::string,std::unique_ptr<Running>> remaining;{std::lock_guard lock(mutex_);remaining.swap(running_);}remaining.clear();}
 void Worker::safe_log(const std::string& s) noexcept {try{log_.write(s);}catch(...){paused_=true;admission_.pause(true);}}
 void Worker::state(std::string s){{std::lock_guard lock(mutex_);status_=s;}safe_log(s);}
 std::string Worker::status() const{std::lock_guard lock(mutex_);return status_;}
 std::size_t Worker::active_count() const{return admission_.active().size();}
 void Worker::pause(bool p){if(exit_requested_&&!p)throw std::runtime_error("Worker is exiting; restart it to resume");paused_=p;admission_.pause(p);store_.set("paused",p?"true":"false");safe_log(p?"Paused: no new jobs will start":"Resumed");}
 void Worker::priority(Priority p){priority_=p;store_.set("priority",priority_name(p));safe_log("Machine priority: "+priority_name(p));}
-void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);}
+void Worker::inference_preference(Preference value){inference_=value;store_.set("inference_preference",pref_name(value));apply_preferences();safe_log("Inference preference changed; active jobs are not interrupted");}
+void Worker::apply_preferences(){admission_.capability(embedding_capability,verified_embedding_.load(),inference_);admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);}
 void Worker::preference(bool video,Preference value){if(video)video_=value;else image_=value;store_.set(video?"video_preference":"image_preference",pref_name(value));apply_preferences();safe_log("Task preference changed; active jobs are not interrupted");}
 void Worker::exit(bool kill){pause(true);exit_requested_=true;{std::lock_guard lock(mutex_);if(kill)for(auto& [_,r]:running_)r->data->cancel=true;}state(kill?"EXITING: stopping jobs; pending results remain in journal":"DRAINING: finish active jobs, then exit");}
 bool Worker::ready_to_exit() const{if(!exit_requested_)return false;std::lock_guard lock(mutex_);return running_.empty();}
 json::object Worker::heartbeat(){
+ json::array modalities;if(verified_embedding_)modalities.emplace_back("text");if(verified_embedding_media_)modalities.emplace_back("image");if(verified_embedding_audio_)modalities.emplace_back("audio");if(verified_embedding_video_)modalities.emplace_back("video");
  auto free=available_resources(config_.root,config_.reserve_ram_mb);auto used=admission_.used();json::array active;
  for(const auto& a:admission_.active())active.emplace_back(json::object{{"attempt_id",a.offer.attempt_id},{"state",a.phase==Phase::reserved?"reserved":a.phase==Phase::running?"running":"cancelling"}});
  return {{"protocol",1},{"type","heartbeat"},{"status",paused_?"paused":"ready"},{"priority",priority_name(priority_)},{"active",std::move(active)},
  {"available",{{"ram_mb",free.ram_mb},{"vram_mb",0},{"scratch_mb",free.scratch_mb},{"cpu_threads",free.cpu_threads}}},
  {"reserved",{{"ram_mb",used.ram_mb},{"scratch_mb",used.scratch_mb},{"cpu_threads",used.cpu_threads}}},
- {"capabilities",{{"conversion.video.h264",{{"verified",verified_video_.load()},{"preference",pref_name(video_)}}},{"conversion.image.jpeg",{{"verified",verified_image_.load()},{"preference",pref_name(image_)}}},{"media.video.renditions.v1",{{"verified",verified_media_video_.load()},{"preference",pref_name(video_)}}},{"media.image.renditions.v1",{{"verified",verified_media_image_.load()},{"preference",pref_name(image_)}}}}}};
+ {"capabilities",{{embedding_capability,{{"verified",(verified_embedding_.load()&&!inference_probing_.load())},{"preference",pref_name(inference_)},{"modalities",std::move(modalities)},{"profile",embedding_profile}}},{"conversion.video.h264",{{"verified",verified_video_.load()},{"preference",pref_name(video_)}}},{"conversion.image.jpeg",{{"verified",verified_image_.load()},{"preference",pref_name(image_)}}},{"media.video.renditions.v1",{{"verified",verified_media_video_.load()},{"preference",pref_name(video_)}}},{"media.image.renditions.v1",{{"verified",verified_media_image_.load()},{"preference",pref_name(image_)}}}}}};
 }
 std::string Worker::paired_token(){
  ProtectedPairingSecrets secrets(config_.root);
@@ -105,6 +115,27 @@ std::string Worker::paired_token(){
  if(!already_paired)safe_log("PAIRING APPROVED: protected identity saved; connecting to coordinator");
  return token;
 }
+void Worker::probe_inference(){
+ // Reserve probe memory in the same atomic host budget as actual conversion.
+ // An unavailable inference lane cannot block pairing or conversion startup.
+ constexpr const char* internal="local.embedding.probe";admission_.capability(internal,true,Preference::allowed);
+ bool waiting=false;const std::string id="local-embedding-probe";
+ try{
+  while(!stop_&&!exit_requested_){
+   bool media=verified_embedding_.load()&&!config_.ffmpeg.empty()&&config_.budget.ram_mb>=2048;
+   auto ram=media?2048u:768u;auto now=monotonic_ms();Offer offer{id,id,internal,"pinned-cpu-probe",{ram,0,128,1},now+10000};
+   if(inference_.load()==Preference::disabled||!admission_.offer(offer,now,available_resources(config_.root,config_.reserve_ram_mb)).accepted){
+    if(!waiting){safe_log("INFERENCE WAIT | needs "+std::to_string(ram)+" MB in the shared budget and live free memory; conversion remains available");waiting=true;}
+    sleep_until_stop(stop_,1000);continue;
+   }
+   if(admission_.begin(id,"local-probe",now+300000,now)!=Start::started){admission_.finish(id);continue;}
+   inference_probing_=true;auto next=now;auto p=probe_embedding(config_,[this,now,&next]{auto t=monotonic_ms();if(t>=next){safe_log("INFERENCE PROBE | elapsed "+std::to_string((t-now)/1000)+"s | checking pinned CPU model and real samples; percentage unavailable");next=t+2000;}return stop_.load()||exit_requested_.load()||t>=now+300000;},media);
+   // probe_embedding has stopped every child before returning capacity.
+   admission_.finish(id);inference_probing_=false;verified_embedding_=p.text;verified_embedding_media_=p.media;verified_embedding_audio_=p.audio;verified_embedding_video_=p.video;safe_log(p.reason);apply_preferences();
+   if(!media&&p.text&&!config_.ffmpeg.empty()&&config_.budget.ram_mb>=2048){waiting=false;continue;}return;
+  }
+ }catch(const std::exception&){admission_.finish(id);inference_probing_=false;safe_log("CPU inference probe failed; conversion remains available. Rerun setup to repair inference.");}
+}
 void Worker::network(){
  auto probe_started=monotonic_ms(),next_probe_status=probe_started+2000;
  safe_log("PROBE | checking approved converter and real samples; percentage unavailable");
@@ -112,12 +143,13 @@ void Worker::network(){
   auto now=monotonic_ms();if(now>=next_probe_status){safe_log("PROBE | elapsed "+std::to_string((now-probe_started)/1000)+"s | sample process running; percentage unavailable");next_probe_status=now+2000;}
   return stop_||exit_requested_;
  });verified_video_=probe.video;verified_image_=probe.image;verified_media_video_=probe.media_video;verified_media_image_=probe.media_image;safe_log(probe.reason);apply_preferences();}catch(const std::exception& e){state(e.what());}
+ if(!config_.embedding_model.empty())inference_probe_=std::jthread([this]{probe_inference();});
  if(config_.coordinator.empty()){state("UNCONFIGURED: set coordinator_url after Lightsail worker endpoints are deployed");while(!stop_)sleep_until_stop(stop_,500);return;}
  unsigned backoff=1000;
  while(!stop_){
  try{
   auto token=paired_token();if(stop_||exit_requested_)return;Http http;check_protocol(http.request("GET",config_.coordinator+"/v1/worker/protocol"));WebSocket socket(config_.coordinator+"/v1/worker/connect",token);SecureZeroMemory(token.data(),token.size());
-  socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.2"},{"state",heartbeat()}}));state("CONNECTED: waiting for work");backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;
+  socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.3"},{"state",heartbeat()}}));state("CONNECTED: waiting for work");backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;
   while(!stop_){
    auto now=monotonic_ms();if(now>=next_heartbeat){
     // Specs for expired unstarted offers are not an unbounded in-memory queue.
@@ -125,7 +157,7 @@ void Worker::network(){
     socket.send(json::serialize(heartbeat()));next_heartbeat=now+5000;
    }
    if(now>=next_results){for(const auto& p:store_.pending()){auto body=parse(p.body).as_object();body["outbox_sequence"]=p.sequence;socket.send(json::serialize(body));}next_results=now+2000;}
-   if(now>=next_status){safe_log("CONNECTION OPEN | active jobs "+std::to_string(active_count())+" | durable results awaiting ACK "+std::to_string(store_.pending_count()));next_status=now+10000;}
+   if(now>=next_status){auto activity=connectionActivityLine(active_count(),store_.pending_count());if(!activity.empty())safe_log(activity);next_status=now+10000;}
    if(auto incoming=socket.receive()){auto value=parse(*incoming);message(socket,value.as_object());}
   }
  }catch(const PairingActionRequired& e){
@@ -148,6 +180,7 @@ void Worker::message(WebSocket& socket,const json::object& m){
   std::string id;try{id=text(m,"attempt_id",128);auto spec=decode_offer(m,monotonic_ms(),config_.storage_hosts);
    if(store_.pending_count()>=512)throw std::runtime_error("Unacknowledged result backlog is full");
    if(auto s=store_.state(id);s&&*s!="reserved"&&*s!="running"){socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","attempt_already_recorded"}}));return;}
+   if(spec.offer.capability==embedding_capability && ((spec.modality=="text"&&!verified_embedding_)||(spec.modality=="image"&&!verified_embedding_media_)||(spec.modality=="audio"&&!verified_embedding_audio_)||(spec.modality=="video"&&!verified_embedding_video_)))throw std::runtime_error("Inference modality not verified");
    auto decision=admission_.offer(spec.offer,monotonic_ms(),available_resources(config_.root,config_.reserve_ram_mb));
    if(decision.accepted&&decision.reason!="duplicate"){
     try{if(!store_.reserve(id,spec.offer.job_id,spec.offer.fingerprint))throw std::runtime_error("journal attempt conflict");offered_.insert_or_assign(id,spec);}catch(...){admission_.cancel(id);throw;}
@@ -200,7 +233,10 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    label="upload "+filename;phase(label.c_str(),bytes);http.upload(url,output,mime,cancelled,bytes_progress);
    data->progress.finish(true,monotonic_ms());return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
   };
-  if(!s.artifacts.empty()){
+  if(s.offer.capability==embedding_capability){
+   execute_embedding(config_,s,workspace,priority_.load(),cancelled,[&](const char* name){phase(name);});
+   result["output"]=upload("embedding.json",s.output_url,"application/json");
+  }else if(!s.artifacts.empty()){
    auto plan=rendition_plan(s.offer.capability=="media.video.renditions.v1",s.copy_audio,workspace);json::object outputs;
    for(const auto& rendition:plan){
     if(cancelled())throw std::runtime_error("Job cancelled before next rendition");
@@ -223,7 +259,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
  phase("clean completed attempt workspace");
  std::error_code error;
  try{
-  if(result.at("status").as_string()!="succeeded"&&std::filesystem::exists(workspace/"process.log")){
+  if(s.offer.capability!=embedding_capability && result.at("status").as_string()!="succeeded"&&std::filesystem::exists(workspace/"process.log")){
    auto logs=config_.root/"logs";std::filesystem::create_directories(logs);
    auto source=workspace/"process.log";auto length=std::filesystem::file_size(source);
    if(length<=5*1024*1024)std::filesystem::copy_file(source,logs/("job-"+id+".log"),std::filesystem::copy_options::overwrite_existing);
@@ -241,6 +277,7 @@ void Worker::watchdog(){
  while(!stop_){
  try{
   for(const auto& e:admission_.expire(monotonic_ms())){
+   if(e.attempt_id=="local-embedding-probe")continue;
    if(e.stop_process){std::lock_guard lock(mutex_);if(auto i=running_.find(e.attempt_id);i!=running_.end())i->second->data->cancel=true;}
    else store_.result(e.attempt_id,json::serialize(json::object{{"protocol",1},{"type","result"},{"attempt_id",e.attempt_id},{"status","abandoned"},{"reason","offer_expired"}}));
   }

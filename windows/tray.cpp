@@ -6,7 +6,7 @@
 namespace {
 using namespace ow;using namespace ow::win;
 constexpr UINT TrayMessage=WM_APP+1,OpenViewer=WM_APP+2;
-constexpr int Open=100,Pause=101,Logs=102,Exit=103,PriorityBase=200,VideoBase=300,ImageBase=400;
+constexpr int Open=100,Pause=101,Logs=102,Exit=103,PriorityBase=200,VideoBase=300,ImageBase=400,InferenceBase=500;
 std::unique_ptr<Worker> worker;std::filesystem::path root;Handle viewer;HWND window{};UINT taskbarCreated{};
 void console(){
  if(viewer&&WaitForSingleObject(viewer.get(),0)==WAIT_TIMEOUT)return;
@@ -17,17 +17,18 @@ void console(){
 NOTIFYICONDATAW icon(){NOTIFYICONDATAW n{};n.cbSize=sizeof(n);n.hWnd=window;n.uID=1;n.uFlags=NIF_MESSAGE|NIF_ICON|NIF_TIP;n.uCallbackMessage=TrayMessage;n.hIcon=LoadIconW(nullptr,IDI_APPLICATION);std::wstring title=L"Organizer Worker | "+wide(worker?worker->status():"STARTING");wcsncpy_s(n.szTip,title.c_str(),_TRUNCATE);return n;}
 void add_icon(){auto n=icon();require(Shell_NotifyIconW(NIM_ADD,&n),"Create worker tray icon");n.uVersion=NOTIFYICON_VERSION_4;require(Shell_NotifyIconW(NIM_SETVERSION,&n),"Set tray version");}
 void menu(){
- HMENU m=CreatePopupMenu(),priority=CreatePopupMenu(),video=CreatePopupMenu(),image=CreatePopupMenu();if(!m||!priority||!video||!image)throw std::runtime_error("Cannot create tray menu");
+ HMENU m=CreatePopupMenu(),priority=CreatePopupMenu(),video=CreatePopupMenu(),image=CreatePopupMenu(),inference=CreatePopupMenu();if(!m||!priority||!video||!image||!inference)throw std::runtime_error("Cannot create tray menu");
  auto s=wide(worker->status())+L" | "+std::to_wstring(worker->active_count())+L" jobs";AppendMenuW(m,MF_STRING|MF_DISABLED,0,s.c_str());AppendMenuW(m,MF_SEPARATOR,0,nullptr);
  AppendMenuW(m,MF_STRING,Open,L"Open live console");AppendMenuW(m,MF_STRING,Pause,worker->paused()?L"Resume new jobs":L"Pause new jobs / drain");
  const wchar_t* names[]={L"Maximum",L"Normal",L"Low",L"Backup only"};for(int i=0;i<4;++i)AppendMenuW(priority,MF_STRING|(static_cast<int>(worker->priority())==i?MF_CHECKED:0),PriorityBase+i,names[i]);AppendMenuW(m,MF_POPUP,reinterpret_cast<UINT_PTR>(priority),L"Machine priority");
- const wchar_t* prefs[]={L"Preferred",L"Allowed",L"Disabled"};for(int i=0;i<3;++i){AppendMenuW(video,MF_STRING|(static_cast<int>(worker->preference(true))==i?MF_CHECKED:0),VideoBase+i,prefs[i]);AppendMenuW(image,MF_STRING|(static_cast<int>(worker->preference(false))==i?MF_CHECKED:0),ImageBase+i,prefs[i]);}
- AppendMenuW(m,MF_POPUP,reinterpret_cast<UINT_PTR>(video),L"Video conversion preference");AppendMenuW(m,MF_POPUP,reinterpret_cast<UINT_PTR>(image),L"Image conversion preference");AppendMenuW(m,MF_STRING,Logs,L"Open data and logs folder");AppendMenuW(m,MF_SEPARATOR,0,nullptr);AppendMenuW(m,MF_STRING,Exit,L"Exit worker...");
+ const wchar_t* prefs[]={L"Preferred",L"Allowed",L"Disabled"};for(int i=0;i<3;++i){AppendMenuW(video,MF_STRING|(static_cast<int>(worker->preference(true))==i?MF_CHECKED:0),VideoBase+i,prefs[i]);AppendMenuW(inference,MF_STRING|(static_cast<int>(worker->inference_preference())==i?MF_CHECKED:0),InferenceBase+i,prefs[i]);AppendMenuW(image,MF_STRING|(static_cast<int>(worker->preference(false))==i?MF_CHECKED:0),ImageBase+i,prefs[i]);}
+ AppendMenuW(m,MF_POPUP,reinterpret_cast<UINT_PTR>(video),L"Video conversion preference");AppendMenuW(m,MF_POPUP,reinterpret_cast<UINT_PTR>(image),L"Image conversion preference");AppendMenuW(m,MF_POPUP,reinterpret_cast<UINT_PTR>(inference),L"CPU inference preference");AppendMenuW(m,MF_STRING,Logs,L"Open data and logs folder");AppendMenuW(m,MF_SEPARATOR,0,nullptr);AppendMenuW(m,MF_STRING,Exit,L"Exit worker...");
  POINT p{};GetCursorPos(&p);SetForegroundWindow(window);auto id=TrackPopupMenu(m,TPM_RETURNCMD|TPM_RIGHTBUTTON,p.x,p.y,0,window,nullptr);DestroyMenu(m);PostMessageW(window,WM_NULL,0,0);
  if(id==Open)console();else if(id==Pause)worker->pause(!worker->paused());else if(id==Logs)ShellExecuteW(window,L"open",root.c_str(),nullptr,nullptr,SW_SHOWNORMAL);
  else if(id>=PriorityBase&&id<PriorityBase+4)worker->priority(static_cast<Priority>(id-PriorityBase));
  else if(id>=VideoBase&&id<VideoBase+3)worker->preference(true,static_cast<Preference>(id-VideoBase));
  else if(id>=ImageBase&&id<ImageBase+3)worker->preference(false,static_cast<Preference>(id-ImageBase));
+ else if(id>=InferenceBase&&id<InferenceBase+3)worker->inference_preference(static_cast<Preference>(id-InferenceBase));
  else if(id==Exit){if(worker->active_count()==0){worker->exit(false);return;}int answer=MessageBoxW(window,L"Yes: finish current jobs, then exit.\n\nNo: stop current jobs and report them for retry, then exit.\n\nCancel: keep the worker running.",L"Exit Organizer Worker",MB_YESNOCANCEL|MB_ICONQUESTION);if(answer!=IDCANCEL)worker->exit(answer==IDNO);}
 }
 LRESULT CALLBACK procedure(HWND h,UINT message,WPARAM w,LPARAM l){

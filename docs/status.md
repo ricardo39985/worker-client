@@ -77,3 +77,19 @@ pass. Full Boost-dependent core tests and actual Windows/MSVC/PowerShell builds
 are unavailable in this authoring runtime. This source is not installed on the
 operator's machine and neither repository's new feature is merged or deployed.
 See docs/testing.md for commands and required native acceptance.
+
+
+
+## 0.1.3 CPU inference / update review candidate
+
+CPU EmbeddingGemma 2 and prebuilt ZIP installation/packaging are implemented as
+review candidates. Quiet idle logging is carried forward from PR #5. Source
+hashing avoids per-file large array allocations and reports rejected cache files.
+Text uses a 768 MB reservation; bounded media uses 2048 MB. Both share the paired
+machine's admission budget with conversion, including model probes. Insufficient
+memory defers inference while pairing and conversion remain available.
+
+Portable client contracts, Linux real-model probes and pure PowerShell bundle
+checks passed; native Windows compilation/setup/laptop jobs are unverified.
+No compiled Windows ZIP has been created. Issue #6 remains open until native
+update acceptance. Existing production and the running laptop are unchanged.

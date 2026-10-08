@@ -5,8 +5,13 @@ param(
     [switch]$InstallMissing,
     [switch]$AcceptToolLicenses,
     [switch]$AcceptConversionLicense,
+    [switch]$AcceptRuntimeLicense,
     [switch]$AcceptStorageHosts,
     [switch]$NoConversion,
+    [switch]$EnableInference=$true,
+    [switch]$NoInference,
+    [switch]$SourceBuild,
+    [string]$Bundle,
     [string]$Server,
     [string[]]$StorageHosts,
     [string]$FfmpegPath,
@@ -26,6 +31,8 @@ $ProgressPreference = 'SilentlyContinue'
 . (Join-Path $PSScriptRoot 'setup-dependencies.ps1')
 . (Join-Path $PSScriptRoot 'setup-startup.ps1')
 . (Join-Path $PSScriptRoot 'setup-identity.ps1')
+. (Join-Path $PSScriptRoot 'setup-inference.ps1')
+. (Join-Path $PSScriptRoot 'setup-bundle.ps1')
 $Source = Split-Path -Parent $PSScriptRoot
 $Checks = New-Object System.Collections.Generic.List[object]
 $Root = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'OrganizerWorker'
@@ -36,6 +43,8 @@ $script:Sdk = $null
 $script:InstallGuard = $null
 $script:ExplicitFfmpeg=$PSBoundParameters.ContainsKey('FfmpegPath')
 $script:WholeCoordinatorRepair=$false
+if(-not $Bundle){$Bundle=Join-Path $Source 'bundle'}
+$UseBundle=(-not $SourceBuild) -and (Test-Path -LiteralPath $Bundle)
 
 function Add-Check([string]$Name, [string]$Status, [string]$Detail) {
     $Detail=Protect-WorkerSetupOutput $Detail
@@ -196,23 +205,24 @@ try {
     if ($sshd) { Add-Check 'SSH (optional)' 'info' ([string]$sshd.Status) }
     else { Add-Check 'SSH (optional)' 'info' 'Not installed or still installing. Setup will not alter SSH or firewall rules.' }
     $lock = Get-Content -LiteralPath (Join-Path $Source 'config\dependencies.lock.json') -Raw | ConvertFrom-Json
-    Find-Toolchain
-    if ($Compiler) { Add-Check 'MSVC' 'pass' $Compiler }
-    else { Add-Check 'MSVC' 'missing' 'Visual Studio 2022 >=17.10 with C++ tools and Windows SDK required.' }
-    if ($CMake) { Add-Check 'CMake' 'pass' $CMake }
-    else { Add-Check 'CMake' 'missing' 'CMake >=3.25 required; Build Tools CMake component can supply it.' }
-    if ($Sdk) { Add-Check 'Windows SDK' 'pass' $Sdk }
-    else { Add-Check 'Windows SDK' 'missing' 'Windows 10/11 SDK headers and x64 WinSQLite import library are required.' }
+    if($UseBundle){Test-WorkerBundle $Bundle | Out-Null;Add-Check 'Windows bundle' 'pass' 'Verified prebuilt native binaries; MSVC and Boost are not needed.'}
+    else {Find-Toolchain}
+    if (-not $UseBundle -and $Compiler) { Add-Check 'MSVC' 'pass' $Compiler }
+    elseif(-not $UseBundle) { Add-Check 'MSVC' 'missing' 'Visual Studio 2022 >=17.10 with C++ tools and Windows SDK required.' }
+    if (-not $UseBundle -and $CMake) { Add-Check 'CMake' 'pass' $CMake }
+    elseif(-not $UseBundle) { Add-Check 'CMake' 'missing' 'CMake >=3.25 required; Build Tools CMake component can supply it.' }
+    if (-not $UseBundle -and $Sdk) { Add-Check 'Windows SDK' 'pass' $Sdk }
+    elseif(-not $UseBundle) { Add-Check 'Windows SDK' 'missing' 'Windows 10/11 SDK headers and x64 WinSQLite import library are required.' }
     if ($CheckOnly) {
         Add-Check 'Check-only' 'info' 'No tools installed, downloads performed, configuration changed, or jobs started.'
-        if (-not $Compiler -or -not $CMake -or -not $Sdk) { exit 2 }
+        if (-not $UseBundle -and (-not $Compiler -or -not $CMake -or -not $Sdk)) { exit 2 }
         exit 0
     }
     if ((Is-Administrator) -and -not $ElevatedBuildToolsOnly) {
         throw 'Double-click setup.cmd as your normal Windows user. It requests elevation only when needed; worker identity must not be created as Administrator.'
     }
     if ($ElevatedBuildToolsOnly -and -not (Is-Administrator)) { throw 'The toolchain helper requires elevation.' }
-    if (-not $Compiler -or -not $CMake -or -not $Sdk) {
+    if (-not $UseBundle -and (-not $Compiler -or -not $CMake -or -not $Sdk)) {
         if (-not $InstallMissing -or -not $AcceptToolLicenses) {
             if ($NonInteractive) { throw 'Missing Microsoft build tools. Supply -InstallMissing -AcceptToolLicenses after reviewing the license, or run setup interactively.' }
             Write-Host 'Microsoft C++ Build Tools and the Windows SDK are required.'
@@ -328,6 +338,7 @@ try {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $cache=Join-Path $Root 'downloads'; New-Item -ItemType Directory -Force -Path $cache | Out-Null
     $dependencies=Join-Path $Root 'dependencies';New-Item -ItemType Directory -Force -Path $dependencies | Out-Null
+    if(-not $UseBundle){
     $archive=Join-Path $cache ('boost-'+$lock.boost.version+'.tar.gz')
     Fetch-Verified $lock.boost.url $archive $lock.boost.sha256
     $boost=Join-Path $dependencies $lock.boost.directory
@@ -343,8 +354,12 @@ try {
             Move-WorkerDependencyContents $inner $stage
         } finally { Pop-Location;Remove-WorkerGeneratedTree $unpack }
     }
+    }
     if (-not $PSBoundParameters.ContainsKey('FfmpegPath')) { Configure-WorkerConverter }
     if ($NoConversion) { $config.ffmpeg_path='';$config.ffmpeg_sha256='' }
+    Configure-WorkerEmbedding
+    if($UseBundle){$version=Install-WorkerBundle $Bundle $Root;Add-Check 'Build and behavior tests' 'pass' 'Bundled native tests passed at packaging; runtime doctor is run on this machine.'}
+    else {
     $build=Join-Path $Root 'build-windows-x64'
     $ctest=Join-Path (Split-Path -Parent $CMake) 'ctest.exe'
     Invoke-WorkerRepair -Operation {
@@ -360,8 +375,9 @@ try {
     $built=Join-Path $build 'Release\OrganizerWorker.exe'
     if (-not (Test-Path -LiteralPath $built)) { throw 'Build reported success but no native worker executable exists.' }
     $buildId=(Get-WorkerFileSha256 $built).Substring(0,16).ToLowerInvariant()
-    $version=Join-Path $Root ('versions\0.1.2-'+$buildId)
+    $version=Join-Path $Root ('versions\0.1.3-'+$buildId)
     Native $CMake @('--install',$build,'--config','Release','--prefix',$version) -Name 'Install verified native binaries' -TimeoutSeconds 120
+    }
     foreach ($binary in 'OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe') { if (-not (Test-Path -LiteralPath (Join-Path $version $binary))) { throw "Installed binary missing: $binary" } }
     # Validate candidate configuration without publishing over the installed one.
     $doctor=Join-Path $version 'OrganizerWorkerDoctor.exe'
@@ -381,6 +397,25 @@ try {
         }
         $health=$script:DoctorHealth
     } finally { Remove-WorkerGeneratedTree $stage }
+    if($config.PSObject.Properties.Name -contains 'embedding'){
+        $probeRoot=Join-Path $Root ('embedding-check-'+[guid]::NewGuid().ToString('N'));New-Item -ItemType Directory -Path $probeRoot | Out-Null
+        try {
+            try {
+            Invoke-WorkerRepair -Operation {
+                Atomic-Json (Join-Path $probeRoot 'worker.json') $config
+                $probeText=Invoke-WorkerNativeProgress $doctor @('--json','--probe-embedding','--data-root',$probeRoot) -Name 'Verify CPU embeddings and distinct media samples' -TimeoutSeconds 600 -CaptureOutput
+                $script:EmbeddingHealth=$probeText | ConvertFrom-Json
+            } -Repair {
+                Add-Check 'CPU inference' 'repair' 'Re-extracting the pinned CPU runtime and rechecking model hashes once; identity and journal retained.'
+                Configure-WorkerEmbedding -Force
+            }
+            $embeddingHealth=$script:EmbeddingHealth
+            if(($embeddingHealth.embedding.PSObject.Properties.Name -contains 'deferred') -and $embeddingHealth.embedding.deferred){Add-Check 'CPU inference' 'info' 'Model installed; text functional probe deferred until 768 MB is available. Conversion can start immediately.'}
+            elseif($embeddingHealth.embedding.media_deferred){Add-Check 'CPU inference' 'pass' 'Real text embeddings verified. Media probes wait for 2048 MB; shared admission controls concurrent conversion.'}
+            else{Add-Check 'CPU inference' 'pass' 'Real CPU embedding probes passed. Shared admission budget controls concurrent conversion.'}
+            } catch {Add-Check 'CPU inference' 'disabled' 'CPU model probes failed after one pinned-runtime repair. Inference stays unavailable; verified conversion can run. Rerun setup after resolving the native runtime failure.'}
+        } finally {Remove-WorkerGeneratedTree $probeRoot}
+    }
     Add-Check 'Runtime self-check' 'pass' 'Windows crypto, atomic storage and SQLite journal passed.'
     if ($health.processing_ready) { Add-Check 'Conversion adapters' 'pass' 'Approved FFmpeg passed real sample conversions.' }
     elseif ($NoConversion) { Add-Check 'Conversion adapters' 'disabled' 'Pairing-only mode was explicitly selected.' }
@@ -400,13 +435,15 @@ try {
         $script:WorkerSetupProgressLog=Join-Path $Root 'logs\setup-progress.log'
         if ($archived) { Add-Check 'Pairing' 'info' 'Previous state archived locally; revoke the old credential on its coordinator. Endpoint changes also isolate the old journal, keys and media.' }
     }
+    Invoke-WorkerInstallTransaction -Root $Root -Publish {
     Atomic-Json $configPath $config
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'setup-progress.ps1') -Destination (Join-Path $Root 'setup-progress.ps1') -Force
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'setup-policy.ps1') -Destination (Join-Path $Root 'setup-policy.ps1') -Force
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'start-worker.ps1') -Destination (Join-Path $Root 'start-worker.ps1') -Force
     $current=[ordered]@{ schema=1; directory=$version; sha256=(Get-WorkerFileSha256 (Join-Path $version 'OrganizerWorker.exe')).ToLowerInvariant() }
     Atomic-Json (Join-Path $Root 'current.json') $current
-    $complete=Complete-WorkerSetup -NoStartup:$NoStartup -NoLaunch:$NoLaunch -RegisterStartup {
+    } -Verify {
+    $script:CompletedInstall=Complete-WorkerSetup -NoStartup:$NoStartup -NoLaunch:$NoLaunch -RegisterStartup {
         Register-WorkerStartup -Root $Root -Sid $sid
     } -VerifyStartup {
         Test-WorkerStartup -Root $Root -Sid $sid
@@ -414,6 +451,12 @@ try {
         $script:InstallGuard.Dispose();$script:InstallGuard=$null
         & (Join-Path $Root 'start-worker.ps1')
     }
+    } -StopCandidate {
+        foreach($candidate in @(Get-Process OrganizerWorker -ErrorAction SilentlyContinue)){
+            try {if($candidate.Path -eq (Join-Path $version 'OrganizerWorker.exe')){Stop-Process -Id $candidate.Id -Force -ErrorAction Stop}}catch {throw 'Cannot stop the failed candidate safely; previous pointer backup retained.'}
+        }
+    }
+    $complete=$script:CompletedInstall
     if ($complete.startup_registered) { Add-Check 'Startup' 'pass' 'Verified normal-user startup at Windows sign-in (Task Scheduler or per-user Startup shortcut).' }
     if ($complete.started) { Add-Check 'Launch' 'pass' 'Worker process and readiness marker verified. Pairing/processing readiness is reported separately.' }
     Add-Check 'Installed' 'pass' $version

@@ -7,7 +7,7 @@ namespace ow {
 struct ArtifactTarget { std::string role,url,mime; };
 struct JobSpec {
  Offer offer;
- std::string input_url,input_sha256,output_url;
+ std::string input_url,input_sha256,output_url,modality;
  std::uint64_t input_bytes{},output_max_bytes{},timeout_ms{};
  std::vector<ArtifactTarget> artifacts;
  bool copy_audio{};

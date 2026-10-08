@@ -27,7 +27,9 @@
     "Shell32",
     "User32"
   ],
-  "models": [],
+  "models": [
+    "google/embeddinggemma-2"
+  ],
   "ffmpeg": {
     "version": "n9.0.2-22-g46d8f462ee",
     "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-10-01-13-06/ffmpeg-n9.0.2-22-g46d8f462ee-win64-gpl-9.0.zip",
@@ -36,5 +38,32 @@
     "directory": "ffmpeg-n9.0.2-22-g46d8f462ee-win64-gpl-9.0",
     "executable": "bin/ffmpeg.exe",
     "license": "GPL build; review bundled license and source notices before enabling."
+  },
+  "embeddinggemma2": {
+    "profile": "embeddinggemma2-q8-b11475-768-v1",
+    "source_model": "google/embeddinggemma-2",
+    "revision": "bfcd298762cc34d0357ece5ebdd31791a3a374d8",
+    "license": "Apache-2.0",
+    "runtime": {
+      "version": "b11475",
+      "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11475/llama-b11475-bin-win-cpu-x64.zip",
+      "sha256": "1e0d0ed71d143bde3b2ea45d65879eae9b72998cfd5ace4d6aa9570c789be6a7"
+    },
+    "model": {
+      "name": "embeddinggemma-2-Q8_0.gguf",
+      "url": "https://huggingface.co/ggml-org/embeddinggemma-2-GGUF/resolve/bfcd298762cc34d0357ece5ebdd31791a3a374d8/embeddinggemma-2-Q8_0.gguf",
+      "sha256": "2188ac1deca4b77dffefd603c2776a9d76d9d74ec01841392982ebb840b09135"
+    },
+    "projector": {
+      "name": "mmproj-embeddinggemma-2-Q8_0.gguf",
+      "url": "https://huggingface.co/ggml-org/embeddinggemma-2-GGUF/resolve/bfcd298762cc34d0357ece5ebdd31791a3a374d8/mmproj-embeddinggemma-2-Q8_0.gguf",
+      "sha256": "c4a8a52691ecef40618438928bdf9e68379b854e24166f292592353db0aab64f"
+    },
+    "vc_runtime": {
+      "version": "14.44.35211.0",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/73aabf2e-9532-4f68-99f7-3247081a619c/CC0FF0EB1DC3F5188AE6300FAEF32BF5BEEBA4BDD6E8E445A9184072096B713B/VC_redist.x64.exe",
+      "sha256": "cc0ff0eb1dc3f5188ae6300faef32bf5beeba4bdd6e8e445a9184072096b713b",
+      "manifest_blob": "6cdab74037d685cf44e9f811043cb9fc3a44cb80"
+    }
   }
 }

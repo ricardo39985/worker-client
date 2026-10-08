@@ -1,8 +1,22 @@
-# Organizer Windows worker — 0.1.2 source candidate
+# Organizer Windows worker — 0.1.3 review candidate
 
 A native Windows tray worker with typed conversion jobs, durable results and
 operator-approved pairing. This candidate contains source, not a compiled or
 signed Windows release. The updated Windows build and real job test are pending.
+
+## CPU embeddings and Windows updates
+
+EmbeddingGemma 2 runs in a contained CPU process alongside a separate conversion
+process on the same paired machine. Text reserves 768 MB, bounded media 2048 MB;
+both use one shared resource budget. Capabilities require real model probes.
+Inference waits for available memory, with conversion and pairing able to run.
+This produces embeddings, not generated descriptions or a semantic-search UI.
+
+A reviewed prebuilt ZIP with `bundle/manifest.json` skips MSVC, CMake and Boost.
+The packaging command enforces all native contracts before creating that ZIP.
+This repository archive is source: its first build still needs the locked tools
+and Boost. No verified binary release has been produced by this change yet.
+See [CPU setup](docs/cpu-embeddings.md) and the companion Organizer contract.
 
 ## Setup
 
@@ -19,7 +33,7 @@ bare DNS name and canonicalizes it to HTTPS; enter `rick-organizer-api.duckdns.o
 for this deployment, or your intended coordinator. Only verified HTTPS on port
 443 is supported. There is no embedded production default.
 
-Setup offers missing Microsoft C++ tools and SDK installation with a license
+Source setup offers missing Microsoft C++ tools and SDK installation with a license
 prompt and UAC only for those tools. It downloads dependencies from the reviewed
 lock, verifies their hashes, repairs damaged generated caches, builds and runs
 all registered CTest suites. A required reboot is reported; rerun the same command
