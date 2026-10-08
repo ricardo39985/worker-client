@@ -73,7 +73,15 @@ function Get-WorkerFileSha256([string]$Path,[switch]$Quiet) {
     try {
         $stream=[IO.File]::OpenRead($Path);$size=$stream.Length
         if(-not $Quiet){$p=New-WorkerProgress ('SHA-256 '+[IO.Path]::GetFileName($Path)) -Total $size -Unit bytes}
-        $sha=[Security.Cryptography.SHA256]::Create();$buffer=New-Object byte[] (1MB);$done=[long]0
+        $sha=[Security.Cryptography.SHA256]::Create()
+        if($Quiet){
+            # A managed streaming hash avoids allocating a PowerShell 1 MiB
+            # array for each of tens of thousands of tiny cached headers.
+            $digest=$sha.ComputeHash($stream)
+            if($stream.Position -ne $size -or $stream.Length -ne $size){throw 'File size changed during checksum verification.'}
+            return [BitConverter]::ToString($digest).Replace('-','').ToLowerInvariant()
+        }
+        $buffer=New-Object byte[] (1MB);$done=[long]0
         while(($count=$stream.Read($buffer,0,$buffer.Length)) -gt 0){
             $null=$sha.TransformBlock($buffer,0,$count,$buffer,0);$done+=$count
             if($p){Update-WorkerProgress $p -Completed $done}

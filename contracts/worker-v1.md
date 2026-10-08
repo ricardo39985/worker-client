@@ -224,4 +224,35 @@ normal journal replay; stale/failed attempts cannot overwrite newer results.
 
 Existing diagnostic single-output messages and pairing protocol 1 are unchanged.
 Older clients lack the new probed capability and receive no app-profile offer;
-the server uses local fallback instead. No inference/GPU adapters are added.
+the server uses local fallback instead. GPU adapters remain unavailable. The CPU inference extension below is opt-in on the coordinator.
+
+
+
+## CPU embedding extension
+
+Capability `inference.embeddinggemma2.v1` uses profile
+`embeddinggemma2-q8-b11475-768-v1`. Heartbeat adds the pinned `profile` and a
+`modalities` array containing only actually probed text/image/video/audio paths.
+`parameters` is exactly `{profile, modality}`. CPU resources require at least
+768 MB for text, 2048 MB for media, one CPU thread and zero VRAM. One inference
+attempt and conversion can coexist; reservations, cancellation and leases share
+the same atomic machine budget. Inference cancellation releases resources only
+after the complete contained child tree stops.
+
+Input is an approved HTTPS object with mandatory SHA-256, at most 100 MiB;
+text is UTF-8, nonempty, at most 4096 bytes, prefixed `title: none | text: `.
+Image inference samples preserve aspect ratio within 256x256. Video samples
+at most the first four frames at one frame/second with the same limit. Audio
+uses at most the first 10 seconds, mono PCM WAV at 16 kHz. These are bounded
+samples, not whole-media transcript/video indexing. Vision max tokens and
+vision encoding batch max tokens are both 256; context/batch/ubatch are 2048.
+The runtime uses mean pooling, one slot, CPU layers only and no mmproj offload.
+
+Output is a single approved PUT URL, at most 65536 bytes, `application/json`:
+`{schema:1, profile, modality, vector:[768 finite normalized values]}`.
+`output` metadata in the durable result contains bytes/SHA-256/content_type;
+vectors never travel on the control WebSocket. Server validation copies the
+object, independently verifies bytes/hash/profile/dimension/norm/modality,
+fences the current source and lease, and commits `item_embeddings` before ACK.
+The vector persists; staging/result objects retain existing 24-hour cleanup.
+The canonical companion is Organizer `contracts/embedding-worker-v1.md`.

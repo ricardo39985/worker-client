@@ -38,8 +38,8 @@ Preserve these invariants:
 Windows-specific changes require actual MSVC compilation and native tests before
 release. Linux core tests cannot establish Windows behavior. Record unrun checks
 and missing prerequisites accurately; never mark a production service deployed
-because a protocol document or mock exists. This repository has no actual
-inference adapter yet. Verify model/runtime compatibility before adding one.
+because a protocol document or mock exists. The CPU inference adapter is a review candidate. Verify model/runtime
+compatibility and actual native probes before advertising or releasing it.
 
 Use the reviewed dependency lock. No automatic upgrade to latest, no host-wide
 PATH changes, no machine execution-policy changes, no silent license acceptance.

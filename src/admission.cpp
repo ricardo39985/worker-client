@@ -1,4 +1,5 @@
 #include "ow/admission.hpp"
+#include "ow/inference.hpp"
 #include <stdexcept>
 #include <algorithm>
 namespace ow {
@@ -33,6 +34,7 @@ Decision Admission::offer(const Offer& o,Tick now,Resources available){
  if(c==capabilities_.end()||!c->second.verified)return {false,"unsupported"};
  if(c->second.preference==Preference::disabled)return {false,"disabled"};
  for(const auto& [_,a]:active_)if(a.offer.job_id==o.job_id)return {false,"job_already_active"};
+ for(const auto& [_,a]:active_)if(inference_lane(o.capability)=="inference"&&inference_lane(a.offer.capability)=="inference")return {false,"inference_busy"};
  if(active_.size()>=max_jobs_||!fits(o.resources,budget_,used_)||!fits(o.resources,available,used_))return {false,"busy"};
  used_.ram_mb+=o.resources.ram_mb;used_.vram_mb+=o.resources.vram_mb;used_.scratch_mb+=o.resources.scratch_mb;used_.cpu_threads+=o.resources.cpu_threads;
  active_.emplace(o.attempt_id,Active{o,Phase::reserved,{},o.reserve_until,0});return {true,"ready"};

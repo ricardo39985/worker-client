@@ -133,3 +133,49 @@ Windows/MSVC/PowerShell tests, probes, cancellation across multiple renditions,
 ordinary app uploads and computer-loss/local-fallback acceptance remain required.
 Setup now registers an additional standalone rendition suite (six CTest suites
 on Windows). Passing old diagnostic probes is not proof of these new capabilities.
+
+
+
+## CPU embedding candidate verification — 2026-10-08
+
+Protected contracts: independent conversion/inference offers and shared live
+reservation budget; one model lane including probes; cancellation retains
+capacity until child shutdown; typed immutable profile/input/output; copied
+output verification and source/lease/deletion fencing; durable embedding/ACK;
+prebuilt integrity and rollback with retained identity/journal.
+
+The initial red stages rejected the missing embedding capability and exposed
+single-lane dispatch, recursive/unsafe publication failures on changed source
+or wrong modality, malformed capability acceptance and overlapping inference
+probes. Portable green evidence: 76 client core contracts, standalone normalized
+embedding/progress tests and three rendition-profile contracts. PowerShell 7.4
+Linux parsed all scripts and ran pure bundle corruption/install/version-isolation/
+rollback/backup-retention and injected Microsoft runtime bootstrap contracts.
+Verified the downloaded Windows runtime ZIP hash and PE import tables; Microsoft
+redistributable URL/hash come from Microsoft winget-pkgs blob
+6cdab74037d685cf44e9f811043cb9fc3a44cb80. Runtime install, Authenticode and UAC
+execution are native acceptance items. These do not verify Windows startup, DPAPI,
+MSVC or Windows PowerShell 5.1. Full existing native setup suites remain required.
+
+Real b11475/Q8_0 CPU probes passed: distinct text, image content and audio tones,
+plus four image parts, all 768 finite normalized values. Fixed maximum sample
+size 256x256, four frames and ten-second audio with encoder token/batch limits
+256 kept measured child peak RSS at 1,576,472 KiB (about 1.5 GiB). Text-only
+without projector peaked at 441,044 KiB (about 431 MiB). These are authoring CPU
+measurements, not laptop/Windows performance promises. Larger experimental
+media batches exceeded the original 2 GB declaration, motivating bounded samples.
+
+Reproduce on a prepared Linux authoring environment with explicit local binaries
+and verified downloaded model directory (no automatic SDK/model downloads):
+
+```sh
+python3 tests/embedding_model_smoke.py --server /absolute/llama-server --model-directory /absolute/pinned-models
+python3 tests/embedding_model_smoke.py --server /absolute/llama-server --model-directory /absolute/pinned-models --text-only
+```
+
+Native acceptance still required: MSVC Release compile and all CTest suites;
+Windows PowerShell 5.1 parsing/setup; CPU doctor on real Windows; prebuilt update
+on a machine without build tools/Boost; damaged-bundle/cache repair; failed
+launch rollback; independent live text/media + conversion jobs, cancellation,
+reconnect and result publication. No binary release, merge or deployment was
+performed by this candidate.

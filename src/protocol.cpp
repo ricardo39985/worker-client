@@ -1,5 +1,6 @@
 #include "ow/protocol.hpp"
 #include "ow/media_renditions.hpp"
+#include "ow/inference.hpp"
 #include <algorithm>
 #include <cctype>
 #include <cstdint>
@@ -27,14 +28,20 @@ JobSpec decode_offer(const json::object& m,Tick now,const std::vector<std::strin
  if(number(m,"protocol",1)!=1||text(m,"type",32)!="offer")throw std::runtime_error("unsupported protocol message");
  JobSpec s;s.offer.job_id=text(m,"job_id",128);s.offer.attempt_id=text(m,"attempt_id",128);s.offer.capability=text(m,"capability",128);
  if(!safe_id(s.offer.job_id)||!safe_id(s.offer.attempt_id))throw std::runtime_error("invalid job identity");
+ const bool embedding=s.offer.capability==embedding_capability;
  const bool media_video=s.offer.capability=="media.video.renditions.v1",media_image=s.offer.capability=="media.image.renditions.v1";
- if(!media_video&&!media_image&&s.offer.capability!="conversion.video.h264"&&s.offer.capability!="conversion.image.jpeg")throw std::runtime_error("capability is not installed in this build");
+ if(!embedding&&!media_video&&!media_image&&s.offer.capability!="conversion.video.h264"&&s.offer.capability!="conversion.image.jpeg")throw std::runtime_error("capability is not installed in this build");
  auto r=m.at("resources").as_object();s.offer.resources={number(r,"ram_mb",1024*1024),number(r,"vram_mb",1024*1024),number(r,"scratch_mb",1024*1024),number(r,"cpu_threads",64)};
- if(s.offer.resources.ram_mb<((media_video||s.offer.capability=="conversion.video.h264")?512u:256u)||s.offer.resources.vram_mb!=0||!s.offer.resources.cpu_threads)throw std::runtime_error("resource declaration incompatible with adapter");
+ if(s.offer.resources.ram_mb<(embedding?768u:((media_video||s.offer.capability=="conversion.video.h264")?512u:256u))||s.offer.resources.vram_mb!=0||!s.offer.resources.cpu_threads)throw std::runtime_error("resource declaration incompatible with adapter");
  auto ttl=number(m,"offer_ttl_ms",60000);if(ttl<1000)throw std::runtime_error("invalid offer TTL");s.offer.reserve_until=now+static_cast<Tick>(ttl);
  const auto& in=m.at("input").as_object();s.input_url=text(in,"url");s.input_sha256=text(in,"sha256",64);s.input_bytes=number(in,"bytes",1024ull*1024*1024);
  const auto& out=m.at("output").as_object();s.output_max_bytes=number(out,"max_bytes",1024ull*1024*1024);
  if(!s.input_bytes||!s.output_max_bytes||!allowed_url(s.input_url,hosts))throw std::runtime_error("unapproved input endpoint or byte limit");
+ if(embedding){
+  const auto& params=m.at("parameters").as_object();s.modality=text(params,"modality",16);
+  if(s.offer.resources.ram_mb<(s.modality=="text"?768u:2048u))throw std::runtime_error("Inference modality exceeds memory declaration");
+  if(params.size()!=2||text(params,"profile",64)!=embedding_profile||(s.modality!="text"&&s.modality!="image"&&s.modality!="audio"&&s.modality!="video")||s.output_max_bytes>65536||(s.modality=="text"&&s.input_bytes>4096)||s.input_bytes>104857600)throw std::runtime_error("Invalid typed inference parameters");
+ }
  if(media_video||media_image){
   if(s.input_bytes>104857600||s.output_max_bytes>104857600)throw std::runtime_error("app media exceeds installed profile bounds");
   if(media_video){auto& parameters=m.at("parameters").as_object();auto* audio=parameters.if_contains("copy_audio");if(!audio||!audio->is_bool()||parameters.size()!=1)throw std::runtime_error("invalid typed app parameters");s.copy_audio=audio->as_bool();}

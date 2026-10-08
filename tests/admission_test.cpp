@@ -120,3 +120,25 @@ TEST("a duplicate offer cannot extend a reservation indefinitely"){
  o.reserve_until=5000;CHECK(a.offer(o,900,budget).accepted);
  CHECK(a.begin("a","token",6000,1000)==Start::declined);
 }
+
+TEST("one inference lane runs beside conversion and cancelling it retains capacity"){
+ Admission a({5000,0,10000,6},8);ready(a);a.capability("inference.embeddinggemma2.v1",true,Preference::allowed);
+ auto inference=task("inference",{2048,0,200,1});inference.capability="inference.embeddinggemma2.v1";
+ CHECK(a.offer(inference,0,{5000,0,10000,6}).accepted);
+ CHECK(a.offer(task("conversion",{512,0,100,1}),0,{5000,0,10000,6}).accepted);
+ CHECK(a.begin("inference","lease",5000,100)==Start::started);CHECK(a.cancel("inference"));
+ auto another=inference;another.attempt_id="another";another.job_id="another-job";another.fingerprint="another";
+ CHECK(!a.offer(another,101,{5000,0,10000,6}).accepted);
+ CHECK(a.used().ram_mb==2560);CHECK(a.finish("inference"));
+ CHECK(a.offer(another,102,{5000,0,10000,6}).accepted);
+}
+TEST("inference probes reserve the same execution lane as model jobs"){
+ Resources b{5000,0,10000,6};Admission a(b,8);ready(a);
+ a.capability("inference.embeddinggemma2.v1",true,Preference::allowed);a.capability("local.embedding.probe",true,Preference::allowed);
+ auto probe=task("probe",{2048,0,128,1});probe.capability="local.embedding.probe";
+ CHECK(a.offer(probe,0,b).accepted);
+ auto model=task("model",{768,0,128,1});model.capability="inference.embeddinggemma2.v1";
+ CHECK(!a.offer(model,0,b).accepted);CHECK(a.offer(task("convert",{512,0,128,1}),0,b).accepted);
+ CHECK(a.finish("probe"));CHECK(a.offer(model,0,b).accepted);
+ CHECK(!a.offer(probe,0,b).accepted);
+}

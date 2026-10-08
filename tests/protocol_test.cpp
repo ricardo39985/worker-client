@@ -73,3 +73,16 @@ TEST("app jobs refuse arbitrary output roles and mixed media type declarations")
  m["output"].as_object()["artifacts"].as_object()["execute"]=json::object{};THROWS(decode_offer(m,0,{"media.example.test"}));
 }
 
+
+TEST("embedding offers accept only the pinned profile and bounded CPU inputs"){
+ auto m=offer_message();m["capability"]="inference.embeddinggemma2.v1";m["resources"].as_object()["ram_mb"]=2048;
+ m["output"].as_object()["max_bytes"]=65536;
+ m["parameters"]=json::object{{"modality","text"},{"profile","embeddinggemma2-q8-b11475-768-v1"}};
+ CHECK(decode_offer(m,0,{"media.example.test"}).modality=="text");
+ m["input"].as_object()["bytes"]=4097;THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["parameters"].as_object()["modality"]="image";CHECK(decode_offer(m,0,{"media.example.test"}).modality=="image");
+ m["parameters"].as_object()["profile"]="another-model";THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["parameters"].as_object()["profile"]="embeddinggemma2-q8-b11475-768-v1";
+ m["parameters"].as_object()["command"]="shell";THROWS(decode_offer(m,0,{"media.example.test"}));m["parameters"].as_object().erase("command");
+ m["resources"].as_object()["ram_mb"]=2047;THROWS(decode_offer(m,0,{"media.example.test"}));
+}
