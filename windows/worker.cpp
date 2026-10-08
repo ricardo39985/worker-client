@@ -1,6 +1,7 @@
 #include <cctype>
 #include "worker.hpp"
 #include "ow/media_renditions.hpp"
+#include "ow/progress.hpp"
 #include "pairing_adapter.hpp"
 #include <algorithm>
 #include <cstdlib>
@@ -125,7 +126,7 @@ void Worker::network(){
     socket.send(json::serialize(heartbeat()));next_heartbeat=now+5000;
    }
    if(now>=next_results){for(const auto& p:store_.pending()){auto body=parse(p.body).as_object();body["outbox_sequence"]=p.sequence;socket.send(json::serialize(body));}next_results=now+2000;}
-   if(now>=next_status){safe_log("CONNECTION OPEN | active jobs "+std::to_string(active_count())+" | durable results awaiting ACK "+std::to_string(store_.pending_count()));next_status=now+10000;}
+   if(now>=next_status){auto activity=connectionActivityLine(active_count(),store_.pending_count());if(!activity.empty())safe_log(activity);next_status=now+10000;}
    if(auto incoming=socket.receive()){auto value=parse(*incoming);message(socket,value.as_object());}
   }
  }catch(const PairingActionRequired& e){
@@ -261,4 +262,3 @@ void Worker::watchdog(){
  }
 }
 }
-
