@@ -2,6 +2,9 @@
 #include "platform.hpp"
 #include "process.hpp"
 #include "pairing_adapter.hpp"
+#include "ow/rendition_pipeline.hpp"
+#include <future>
+#include <atomic>
 #include <fstream>
 using namespace ow;using namespace ow::win;
 namespace {
@@ -60,4 +63,29 @@ TEST("runtime readiness identifies this process and is removed on shutdown"){
  CHECK(text(value,"state")=="running");
  clear_runtime_ready(t.path);
  CHECK(!std::filesystem::exists(t.path/"runtime.json"));
+}
+
+TEST("pipeline upload failure drains a real contained process tree before unwinding") {
+ Temp t;std::ofstream(t.path/"source.marker")<<"synthetic input";Handle root,leaf;std::promise<void> child_ready;
+ auto ready=child_ready.get_future().share();std::atomic_bool transfer_joined{};
+ std::string reason;
+ try{run_rendition_pipeline(std::vector<int>{0,1},[&](int i,std::stop_token stop){
+  if(!i)return;
+  Child child(executable_directory()/"ow_test_child.exe",{},t.path,{128,0,16,1},Priority::normal);
+  root.reset(OpenProcess(SYNCHRONIZE,FALSE,wait_pid(t.path/"root.pid")));
+  leaf.reset(OpenProcess(SYNCHRONIZE,FALSE,wait_pid(t.path/"leaf.pid")));
+  child_ready.set_value();auto until=monotonic_ms()+5000;
+  while(!stop.stop_requested()&&monotonic_ms()<until)Sleep(10);
+  if(!stop.stop_requested())throw std::runtime_error("pipeline did not cancel native child");
+  throw std::runtime_error("secondary encoder cancellation");
+ },[&](int i,std::stop_token){
+  if(i==0){if(ready.wait_for(std::chrono::seconds(20))!=std::future_status::ready)throw std::runtime_error("native child not ready");
+   CHECK(std::filesystem::exists(t.path/"source.marker"));transfer_joined=true;
+   throw std::runtime_error("synthetic upload rejected");}
+  return i;
+ });}catch(const std::exception& e){reason=e.what();}
+ CHECK(reason=="synthetic upload rejected");CHECK(transfer_joined);CHECK(root&&leaf);
+ CHECK(WaitForSingleObject(root.get(),1000)==WAIT_OBJECT_0);
+ CHECK(WaitForSingleObject(leaf.get(),1000)==WAIT_OBJECT_0);
+ CHECK(std::filesystem::exists(t.path/"source.marker"));
 }

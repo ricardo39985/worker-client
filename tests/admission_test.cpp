@@ -17,6 +17,18 @@ TEST("verified capabilities accept independent jobs concurrently") {
  CHECK(a.begin("a","token-a",5000,100)==Start::started);
  CHECK(a.begin("b","token-b",5000,100)==Start::started);CHECK(a.active().size()==2);
 }
+TEST("four single-CPU app jobs reserve and begin independently within configured limits") {
+ const Resources capacity{2667,0,8192,4};Admission admission(capacity,4);
+ admission.capability("media.video.renditions.v1",true,Preference::allowed);
+ for(int i=0;i<4;++i){auto offer=task(std::to_string(i),{512,0,1024,1});offer.capability="media.video.renditions.v1";
+  CHECK(admission.offer(offer,0,capacity).accepted);
+  CHECK(admission.begin(offer.attempt_id,"token-"+offer.attempt_id,5000,1)==Start::started);}
+ auto fifth=task("fifth",{512,0,1024,1});fifth.capability="media.video.renditions.v1";
+ CHECK(!admission.offer(fifth,0,capacity).accepted);CHECK(admission.active().size()==4);
+ CHECK(admission.used()==Resources{2048,0,4096,4});
+ CHECK(admission.cancel("0"));CHECK(!admission.offer(fifth,0,capacity).accepted);
+ CHECK(admission.finish("0"));CHECK(admission.offer(fifth,0,capacity).accepted);
+}
 TEST("missing capability fails closed"){Admission a(budget,8);CHECK(!a.offer(task(),0,budget).accepted);}
 TEST("installed but unverified does not mean capable"){Admission a(budget,8);a.capability("conversion.video.h264",false,Preference::preferred);CHECK(!a.offer(task(),0,budget).accepted);}
 TEST("local disabled vetoes a preferred server offer"){Admission a(budget,8);a.capability("conversion.video.h264",true,Preference::disabled);CHECK(!a.offer(task(),0,budget).accepted);}

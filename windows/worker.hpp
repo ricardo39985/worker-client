@@ -18,7 +18,7 @@ Config load_config(const std::filesystem::path& root);
 struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};};
 Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={});
 class Worker {
- struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::atomic_bool cancel{},done{};ProgressCounter progress;};
+ struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;};
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
  Config config_;Store store_;Log log_;Admission admission_;
  std::jthread network_,watchdog_;

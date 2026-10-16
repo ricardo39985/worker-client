@@ -2,6 +2,7 @@
 #include "worker.hpp"
 #include "ow/media_renditions.hpp"
 #include "ow/progress.hpp"
+#include "ow/rendition_pipeline.hpp"
 #include "pairing_adapter.hpp"
 #include <algorithm>
 #include <cstdlib>
@@ -186,37 +187,45 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   if(std::filesystem::exists(workspace))throw std::runtime_error("Attempt workspace already exists; refusing unsafe reuse");std::filesystem::create_directories(workspace);
   Http http;phase("download input",s.input_bytes);http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);
   phase("verify input SHA-256",s.input_bytes);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");if(cancelled())throw std::runtime_error("Job cancelled before conversion");
-  auto convert=[&](const std::vector<std::wstring>& arguments,const std::string& filename,unsigned seconds){
+  auto convert=[&](const std::vector<std::wstring>& arguments,const std::string& filename,unsigned seconds,std::stop_token pipeline_stop=std::stop_token{}){
+   if(cancelled()||pipeline_stop.stop_requested())throw std::runtime_error("Job cancelled before conversion");
    auto label="convert "+filename+" (output bytes; percentage unavailable)";phase(label.c_str());
    const auto started=monotonic_ms();auto current=priority_.load();Child child(config_.ffmpeg,arguments,workspace,s.offer.resources,current);
-   for(;;){if(cancelled()||monotonic_ms()-started>=static_cast<Tick>(seconds)*1000)throw std::runtime_error("Job cancelled or conversion timed out");if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Conversion process failed; see per-job log");break;}
+   for(;;){if(cancelled()||pipeline_stop.stop_requested()||monotonic_ms()-started>=static_cast<Tick>(seconds)*1000)throw std::runtime_error("Job cancelled or conversion timed out");if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Conversion process failed; see per-job log");break;}
     auto latest=priority_.load();if(latest!=current){child.priority(latest);current=latest;}
     std::error_code error;auto size=std::filesystem::file_size(workspace/filename,error);if(!error)data->progress.update(size,monotonic_ms());if(!error&&size>s.output_max_bytes)throw std::runtime_error("Output exceeded declared byte limit");
     auto log_bytes=std::filesystem::file_size(workspace/"process.log",error);if(!error&&log_bytes>5*1024*1024)throw std::runtime_error("Child output exceeded log budget");Sleep(100);
    }
+   data->progress.finish(true,monotonic_ms());
   };
-  auto upload=[&](const std::string& filename,const std::string& url,const std::string& mime){
+  auto upload=[&](const std::string& filename,const std::string& url,const std::string& mime,std::stop_token pipeline_stop=std::stop_token{}){
+   auto transfer_cancelled=[&]{return cancelled()||pipeline_stop.stop_requested();};
+   auto transfer_bytes=[&](std::uint64_t count){if(transfer_cancelled())throw std::runtime_error("Job cancelled during transfer");data->transfer_progress.update(count,monotonic_ms());};
+   auto transfer_phase=[&](const std::string& name,std::uint64_t total){data->transfer_progress.begin(name,monotonic_ms(),total);safe_log("JOB "+id+" | "+name+" started");};
+   if(transfer_cancelled())throw std::runtime_error("Job cancelled before transfer");
    auto output=workspace/filename;auto bytes=std::filesystem::file_size(output);if(!bytes||bytes>s.output_max_bytes)throw std::runtime_error("Invalid output size");
-   auto label="verify "+filename+" SHA-256";phase(label.c_str(),bytes);auto hash=sha256_file(output,bytes_progress);
-   label="upload "+filename;phase(label.c_str(),bytes);http.upload(url,output,mime,cancelled,bytes_progress);
-   data->progress.finish(true,monotonic_ms());return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
+   auto label="verify "+filename+" SHA-256";transfer_phase(label,bytes);auto hash=sha256_file(output,transfer_bytes);
+   label="upload "+filename;transfer_phase(label,bytes);Http transfer_http;transfer_http.upload(url,output,mime,transfer_cancelled,transfer_bytes);
+   data->transfer_progress.finish(true,monotonic_ms());return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
   };
   if(!s.artifacts.empty()){
    auto plan=rendition_plan(s.offer.capability=="media.video.renditions.v1",s.copy_audio,workspace);json::object outputs;
-   for(const auto& rendition:plan){
-    if(cancelled())throw std::runtime_error("Job cancelled before next rendition");
-    convert(rendition.arguments,rendition.filename,rendition.timeout_seconds);
+   auto metadata=run_rendition_pipeline(plan,[&](const Rendition& rendition,std::stop_token stop){
+    convert(rendition.arguments,rendition.filename,rendition.timeout_seconds,stop);
+   },[&](const Rendition& rendition,std::stop_token stop){
     const auto target=std::find_if(s.artifacts.begin(),s.artifacts.end(),[&](const auto& t){return t.role==rendition.role;});
     if(target==s.artifacts.end())throw std::runtime_error("Rendition target missing");
-    outputs[rendition.role]=upload(rendition.filename,target->url,rendition.mime);
-   }
+    return upload(rendition.filename,target->url,rendition.mime,stop);
+   });
+   for(std::size_t i=0;i<plan.size();++i)outputs[plan[i].role]=std::move(metadata[i]);
    result["outputs"]=std::move(outputs);
   }else{
    convert(ffmpeg_arguments(s,workspace),output_name(s),static_cast<unsigned>(s.timeout_ms/1000));
    result["output"]=upload(output_name(s),s.output_url,s.offer.capability=="conversion.video.h264"?"video/mp4":"image/jpeg");
   }
+  if(cancelled())throw std::runtime_error("Job cancelled before completion");
   result["status"]="succeeded";
- }catch(const std::exception& e){data->progress.finish(false,monotonic_ms());result["status"]="failed";result["reason"]=std::string(e.what());safe_log("END "+id+": "+e.what());}
+ }catch(const std::exception& e){data->progress.finish(false,monotonic_ms());data->transfer_progress.finish(false,monotonic_ms());result["status"]="failed";result["reason"]=std::string(e.what());safe_log("END "+id+": "+e.what());}
  phase("persist durable result");
  try{store_.result(id,json::serialize(result));safe_log("RESULT PENDING ACK "+id);}catch(...){paused_=true;admission_.pause(true);safe_log("JOURNAL FAILURE: admissions paused; coordinator must recover unacknowledged attempt");}
  // Media is not needed after an attempt: authoritative output is in object
@@ -235,7 +244,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    for(std::size_t i=0;i+20<entries.size();++i)std::filesystem::remove(entries[i].path(),error);
   }
  }catch(...){safe_log("Could not preserve child diagnostic log");}
- std::filesystem::remove_all(workspace,error);admission_.finish(id);data->progress.finish(true,monotonic_ms());data->done=true;
+ std::filesystem::remove_all(workspace,error);admission_.finish(id);data->progress.finish(result.at("status").as_string()=="succeeded",monotonic_ms());data->done=true;
 }
 void Worker::watchdog(){
  Tick next_progress=0;
@@ -247,7 +256,7 @@ void Worker::watchdog(){
   }
   auto now=monotonic_ms();if(now>=next_progress){
    std::vector<std::shared_ptr<TaskData>> active;{std::lock_guard lock(mutex_);for(const auto& [_,r]:running_)if(!r->data->done)active.push_back(r->data);}
-   for(const auto& data:active){auto p=data->progress.snapshot(now);if(p.stage.empty()||p.finished)continue;
+   for(const auto& data:active)for(auto* counter:{&data->progress,&data->transfer_progress}){auto p=counter->snapshot(now);if(p.stage.empty()||p.finished)continue;
     std::string line="JOB "+data->spec.offer.attempt_id+" | "+p.stage+" | elapsed "+std::to_string(p.elapsed_ms/1000)+"s | "+std::to_string(p.completed)+" measured bytes";
     if(p.percent)line+=" / "+std::to_string(p.total)+" ("+std::to_string(*p.percent)+"%)";
     if(!p.percent)line+=" | percentage unavailable";
