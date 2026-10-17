@@ -152,6 +152,12 @@ An expired lease cannot be revived, and the overall job timeout is never extende
 `cancel` requires matching attempt/token. It stops that attempt, not the host or
 other jobs. Cancellation/expiry retains resources until shutdown finishes.
 
+For worker-local adaptive H.264 scheduling, a second job may reserve an available
+primary backend only when its per-task cost, the combined machine budgets and
+that backend's concurrency/device budgets fit while retaining every reservation
+of the cancelled job until its entire process tree has drained; a GPU job's
+reserved CPU fallback budgets do not themselves occupy a CPU encoder slot.
+
 ## Results, acknowledgment and publication
 
 A successful result contains protocol, type `result`, attempt_id, job_id,

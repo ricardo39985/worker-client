@@ -1,0 +1,3 @@
+FAIL exact native fixture rejects a second reservation before child creation: check failed at verification/reservation-drain/repro.cpp:9: !scheduler.reserve({Codec::h264})
+PASS exact native fixture retains GPU capacity while admitting an independent CPU job
+2 contracts, 1 failures

@@ -78,12 +78,27 @@ TEST("adaptive capacity stays reserved until a cancelled native process tree dra
  adaptive::Profile cpu{"cpu","","hash",adaptive::Backend::cpu,adaptive::Codec::h264,1,256,0,128,1,20,0,0,true};
  adaptive::Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
  auto held=scheduler.reserve({adaptive::Codec::h264});CHECK(held);CHECK(scheduler.active_jobs()==1);
+ CHECK(held.profiles().front().backend==adaptive::Backend::nvidia_nvenc);
+ // The GPU job reserves fallback budgets, but does not occupy the CPU encoder.
+ auto independent=scheduler.reserve({adaptive::Codec::h264});CHECK(independent);
+ CHECK(independent.profiles().size()==1);
+ CHECK(independent.profiles().front().backend==adaptive::Backend::cpu);
+ CHECK(scheduler.active_jobs()==2);
  CHECK(!scheduler.reserve({adaptive::Codec::h264}));
  Child child(executable_directory()/"ow_test_child.exe",{},t.path,{128,0,16,1},Priority::low);
  auto root=wait_pid(t.path/"root.pid"),leaf=wait_pid(t.path/"leaf.pid");
  Handle rootHandle(OpenProcess(SYNCHRONIZE,FALSE,root)),leafHandle(OpenProcess(SYNCHRONIZE,FALSE,leaf));CHECK(rootHandle&&leafHandle);
- child.stop();CHECK(WaitForSingleObject(rootHandle.get(),1000)==WAIT_OBJECT_0);CHECK(WaitForSingleObject(leafHandle.get(),1000)==WAIT_OBJECT_0);
- CHECK(scheduler.active_jobs()==1);held.release();CHECK(scheduler.active_jobs()==0);CHECK(scheduler.reserve({adaptive::Codec::h264}));
+ auto stopped=std::async(std::launch::async,[&]{child.stop();});
+ do{
+  CHECK(scheduler.active_jobs()==2);
+  CHECK(!scheduler.reserve({adaptive::Codec::h264}));
+ }while(stopped.wait_for(std::chrono::milliseconds(1))!=std::future_status::ready);
+ stopped.get();
+ CHECK(WaitForSingleObject(rootHandle.get(),1000)==WAIT_OBJECT_0);CHECK(WaitForSingleObject(leafHandle.get(),1000)==WAIT_OBJECT_0);
+ CHECK(scheduler.active_jobs()==2);CHECK(!scheduler.reserve({adaptive::Codec::h264}));
+ held.release();CHECK(scheduler.active_jobs()==1);
+ auto after_drain=scheduler.reserve({adaptive::Codec::h264});CHECK(after_drain);
+ CHECK(after_drain.profiles().front().backend==adaptive::Backend::nvidia_nvenc);
 }
 
 TEST("protected enrollment and credentials remain readable after adapter reopen"){
