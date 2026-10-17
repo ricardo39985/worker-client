@@ -279,11 +279,13 @@ public:
   }
   if(starts(body,"PROBE RESULT"))return event(prefix,capability_from_probe(body),ConsoleColor::white,"$probe",true);
   if(starts(body,"PROBE SCOPE "))return event(prefix,body.substr(12),ConsoleColor::white);
+  if(starts(body,"PROBE FALLBACK "))return event(prefix,"CPU fallback: "+body.substr(15),ConsoleColor::orange);
   if(starts(body,"PROBE DETAIL "))return {}; // Full evidence remains in the durable log.
   if(starts(body,"ENCODERS UPDATE")){
    auto tokens=probe_encoders(body);auto detail=field_value(body,"encoders");
    std::string text="encoders now: "+(detail&&*detail=="none"?"none":tokens.empty()?"unknown":tokens);
    if(auto failure=field_value(body,"failed"))text+="; "+*failure+" failed";
+   if(field_value(body,"demoted")==std::optional<std::string>{"1"})text+="; demoted";
    if(auto fallback=field_value(body,"fallback"))text+="; retrying "+*fallback;
    return event(prefix,text,ConsoleColor::orange);
   }

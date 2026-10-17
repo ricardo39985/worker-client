@@ -1,10 +1,12 @@
 # Test policy and evidence
 
-Current merge evidence: see `verification/gpu-on-logs/REPORT.md`. Hardware tip
-`1edeada` is UNVERIFIED work in progress. Its inherited Windows execution
-narratives and checked-in logs below are not accepted verification for that tip
-or this merge. This run used Linux only; no worker was contacted or restarted.
-The two reproduced fallback ownership defects remain open.
+Current geometry correction evidence: see
+`verification/gpu-dimensions/REPORT.md`. The sample size no longer sets encoder
+limits; startup tuning is 1920x1080 and larger hardware work uses guarded
+validation, targeted demotion and CPU retry. Portable and sanitizer evidence is
+recorded there. Windows/MSVC and physical GPU checks remain unrun for this tree.
+No worker was contacted or restarted. Historical verification narratives below
+do not establish native verification for this change.
 
 Behavior and contracts are the unit of testing, not the current implementation.
 Tests must survive changing helper structure, parser implementation, scheduler
@@ -285,3 +287,21 @@ input support. Heartbeat `verified` retains that protocol meaning; app video
 reporting also requires current CPU H.264/HEVC fallback profiles. Runtime hardware
 failure suppression affects the reporting ledger only, leaving device selection,
 resource policy and scheduler behavior unchanged.
+
+
+## GPU dimensions correction — October 17, 2026
+
+The current gate ledger is [verification/gpu-dimensions/REPORT.md](../verification/gpu-dimensions/REPORT.md).
+The optional installed-FFmpeg smoke checks the actual 1920x1080 tuning filter,
+CPU rendition command factory and shared strict tuning-output validator:
+
+```sh
+python3 tests/adaptive_probe_smoke.py --evidence-probe build-tests/ow_adaptive_evidence_probe --rendition-probe build-tests/ow_rendition_probe
+```
+
+It validates both H.264 and HEVC, complete 72-frame output, AAC audio and geometry
+after real encode/decode. It does not measure hardware performance or verify the
+approved Windows binary. Portable contracts cover small-sample/large-input
+admission, unsupported geometry, comparable measurement resolution, saved evidence,
+large encode failure, atomic codec-specific demotion, capacity retention, CPU retry
+and the short console reasons. Native MSVC and actual GPU/job gates remain required.

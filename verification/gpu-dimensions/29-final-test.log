@@ -1,0 +1,29 @@
+-- Configuring done (0.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+[  9%] Built target ow_pipeline_contract_tests
+[ 16%] Built target ow_json
+[ 22%] Built target ow_rendition_probe
+[ 32%] Built target ow_rendition_contract_tests
+[ 45%] Built target ow_progress_contract_tests
+[ 64%] Built target ow_core
+[ 67%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 87%] Built target ow_contract_tests
+[ 93%] Built target ow_adaptive_evidence_probe
+[ 96%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[100%] Built target ow_adaptive_hardware_contract_tests
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+    Start 1: worker_contracts
+1/5 Test #1: worker_contracts .................   Passed    0.01 sec
+    Start 2: pipeline_contracts
+2/5 Test #2: pipeline_contracts ...............   Passed    0.00 sec
+    Start 3: rendition_contracts
+3/5 Test #3: rendition_contracts ..............   Passed    0.00 sec
+    Start 4: adaptive_hardware_contracts
+4/5 Test #4: adaptive_hardware_contracts ......   Passed    0.02 sec
+    Start 5: progress_contracts
+5/5 Test #5: progress_contracts ...............   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Total Test time (real) =   0.06 sec

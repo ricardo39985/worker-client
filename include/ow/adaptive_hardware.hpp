@@ -40,7 +40,8 @@ struct TuningEvidence {
     std::uint64_t cpu_threads{}, ram_mb{}, vram_mb{}, scratch_mb{};
     bool completed{}, output_valid{}, cancelled_cleanly{};
     std::uint32_t tested_concurrency{1};
-    std::uint32_t max_width{},max_height{};
+    // Measurement resolution, never an encoder capability ceiling.
+    std::uint32_t measured_width{},measured_height{};
 };
 struct Limits {
     std::uint64_t cpu_threads{}, ram_mb{}, vram_mb{}, scratch_mb{};
@@ -68,7 +69,9 @@ struct Profile {
     std::uint32_t adapter_index{};
     std::uint32_t backend_index{};
     bool backend_identity_verified{};
+    // Encoder admission ceiling; every runtime hardware result is still decoded.
     std::uint32_t max_width{},max_height{};
+    std::uint32_t measured_width{},measured_height{};
 };
 struct TuningComparison { double serial_fps{},parallel_fps{};bool comparable{}; };
 TuningComparison compare_tuning_runs(const std::vector<std::uint64_t>& serial_stage_ms,
@@ -89,6 +92,12 @@ std::vector<Profile> choose_profiles(const std::vector<Device>& devices,
 bool profile_current(const Profile& profile, const Device& device,
                      const std::string& ffmpeg_sha256);
 bool profile_supports_dimensions(const Profile& profile,std::uint32_t width,std::uint32_t height);
+struct EncoderGeometry { std::uint32_t max_width{},max_height{}; };
+EncoderGeometry encoder_geometry(Backend backend);
+bool comparable_resolution(const TuningEvidence& hardware,const TuningEvidence& cpu);
+enum class GeometryEvidence { unsupported, unproven, measured };
+GeometryEvidence geometry_evidence(const Profile& profile,std::uint32_t width,std::uint32_t height);
+std::string geometry_reason(GeometryEvidence evidence);
 
 // Only the supplied profiles establish backend evidence. Empty means unknown/unavailable.
 inline std::string backend_token(Backend backend) {
@@ -134,6 +143,7 @@ public:
         const std::vector<Profile>& profiles() const { return profiles_; }
         explicit operator bool() const { return active_; }
         void release() noexcept;
+        bool hardware_enabled(const Profile& profile) const;
         bool acquire_cpu_fallback(const std::function<bool()>& cancelled,
                                   std::uint32_t max_wait_ms=30000);
     };
@@ -141,6 +151,7 @@ public:
     Reservation reserve(const std::vector<Codec>& codecs);
     Reservation reserve(const std::vector<Codec>& codecs, const Limits& task_limits);
     void set_device_available_vram(const std::string& stable_id,std::uint64_t mb);
+    bool demote_profile(const Profile& profile);
     void invalidate_hardware();
     void invalidate_all();
     std::uint64_t active_jobs() const;

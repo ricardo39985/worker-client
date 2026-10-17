@@ -146,3 +146,31 @@ OS installation and startup effects. Tests assert outcomes through those ports
 and durable reopen; implementation helper layout is not the acceptance criterion.
 This applies the agreed selective ports-and-adapters structure without moving
 unrelated scheduling/media code or changing its behavior.
+
+## Adaptive geometry evidence
+
+Encoder admission ceilings and measurement resolution are separate. The current
+approved FFmpeg command boundary has no uniform per-adapter maximum-size query;
+reviewed conservative backend ceilings bound admission (NVENC/QSV 4096x4096,
+AMF 3840x2160). These are policy ceilings, not a claim that every driver/codec
+supports every size inside them. Fixed yuv420p GPU commands require even axes.
+CPU profiles carry no GPU geometry ceiling. No sample dimension sets a ceiling.
+
+Startup compares repeated CPU/hardware encode-plus-decode throughput at
+1920x1080. Only matching measurements at least that large can reject a hardware
+profile for the 5 percent gain floor. Saved profiles and tuning measurements name
+their resolution; throughput is synthetic evidence, not a quality or 4K speed
+claim. The two-minute per-encode tuning deadline accommodates the larger sample;
+all configured resource caps and cancellation checks remain in force.
+
+A larger input within the backend ceiling gets the real full-size hardware encode
+with a guarded CPU retry. Every hardware result must decode successfully and
+retain the expected codec and input dimensions before upload. Failure discards
+partial output, drains the contained child tree, demotes only that device/codec
+once for the current probe epoch, and acquires the reserved CPU encoder slot.
+Demotion blocks later selection and is checked before reserved work launches;
+already running work retains its reservation until drain. Diagnostic profile
+state records demotions; restart runs a fresh probe instead of trusting that file.
+Unknown dimensions and unsupported geometry take CPU, including fallback slot
+acquisition. Logs distinguish geometry rejection, unproven size, measured slower
+throughput, insufficient measured gain, and actual runtime failure/demotion.

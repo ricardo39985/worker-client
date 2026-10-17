@@ -19,7 +19,7 @@ struct Config {
  std::uint64_t reserve_ram_mb{0};std::size_t max_jobs{4};
 };
 Config load_config(const std::filesystem::path& root);
-struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;};
+struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;std::vector<std::string> fallback_notes;};
 using ProbePhase=std::function<void(std::string,unsigned,unsigned)>;
 Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={},const ProbePhase& phase={});
 class Worker {

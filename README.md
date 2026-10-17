@@ -144,3 +144,13 @@ preferences. Direct R2 transfers still require explicit approved hosts. The
 companion server feature defaults to off; old diagnostic capability names do not
 qualify a PC for ordinary app jobs. Read contracts/worker-v1.md and the new
 verification section in docs/testing.md before treating this as a release.
+
+
+### GPU dimension correction candidate
+
+Adaptive encoder ceilings now come from conservative backend policy, separately
+from the recorded 1920x1080 tuning resolution. Larger supported inputs use guarded
+full-size encoding and validation; a failed device/codec is demoted once and
+retried on CPU. The console names the selected encoder and distinguishes geometry,
+unproven size and measured throughput fallback. See
+`verification/gpu-dimensions/REPORT.md` for local gates and the unrun Windows checks.

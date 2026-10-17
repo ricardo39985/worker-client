@@ -1,10 +1,12 @@
 # Candidate status — 0.1.2
 
-Current merge evidence: see `verification/gpu-on-logs/REPORT.md`. Hardware tip
-`1edeada` is UNVERIFIED work in progress. Its inherited Windows execution
-narratives and checked-in logs below are not accepted verification for that tip
-or this merge. This run used Linux only; no worker was contacted or restarted.
-The two reproduced fallback ownership defects remain open.
+Current geometry correction evidence: see
+`verification/gpu-dimensions/REPORT.md`. The sample size no longer sets encoder
+limits; startup tuning is 1920x1080 and larger hardware work uses guarded
+validation, targeted demotion and CPU retry. Portable and sanitizer evidence is
+recorded there. Windows/MSVC and physical GPU checks remain unrun for this tree.
+No worker was contacted or restarted. Historical verification narratives below
+do not establish native verification for this change.
 
 Updated October 7, 2026. This source candidate adds bounded dependency/build
 repair, verified startup fallback, pinned FFmpeg installation/probing, exact

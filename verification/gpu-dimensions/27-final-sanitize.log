@@ -1,0 +1,223 @@
+UpdateCTestConfiguration  from :/home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/DartConfiguration.tcl
+Parse Config file:/home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/DartConfiguration.tcl
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: worker_contracts
+
+1: Test command: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/ow_contract_tests
+1: Working Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize
+1: Test timeout computed to be: 30
+1: PASS verified capabilities accept independent jobs concurrently
+1: PASS four single-CPU app jobs reserve and begin independently within configured limits
+1: PASS missing capability fails closed
+1: PASS installed but unverified does not mean capable
+1: PASS local disabled vetoes a preferred server offer
+1: PASS reservation consumes capacity before execution
+1: PASS dynamic low memory rejects despite configured budget
+1: PASS duplicate offer is idempotent
+1: PASS changed duplicate payload is rejected
+1: PASS same content job cannot run in two attempts on one host
+1: PASS job guardrail is independent of resource budget
+1: PASS oversized resource numbers cannot overflow accounting
+1: PASS zero CPU or memory declaration is rejected
+1: PASS invalid IDs cannot become filesystem paths
+1: PASS expired reservation cannot be started
+1: PASS start without lease is rejected
+1: PASS replayed begin does not start a second process
+1: PASS pause refuses new work but preserves active execution
+1: PASS pause prevents an unstarted reservation from beginning
+1: PASS only a valid fresh renewal extends the lease
+1: PASS expired running lease cannot be revived by late renewal
+1: PASS expiry returns unused reservations to the budget
+1: PASS expired running job retains resources until child shutdown
+1: PASS cancelling one job preserves the other
+1: PASS duplicate finish cannot release resources twice
+1: PASS simultaneous offers never oversubscribe
+1: PASS two outstanding offers cannot both reserve the same live free memory
+1: PASS disabling a capability prevents a reserved job from starting
+1: PASS a duplicate offer cannot extend a reservation indefinitely
+1: PASS accepted attempt and pending result survive journal reopen
+1: PASS outbox cannot be acknowledged with wrong attempt or sequence
+1: PASS repeated result does not create duplicate outbox entry
+1: PASS attempt collision cannot change persisted payload
+1: PASS restart exposes interrupted work without automatically rerunning it
+1: PASS denied BEGIN capacity is terminally never-started across journal restart
+1: PASS priority settings survive restart
+1: PASS result without accepted job fails instead of making orphan output
+1: PASS pending counter follows durable results and acknowledgements
+1: PASS journal coordinator binding survives reopen and rejects a different server
+1: PASS legacy pending results cannot be adopted without endpoint provenance
+1: PASS legacy interrupted attempt needs the same protected coordinator origin
+1: PASS media transfer requires exact approved HTTPS host
+1: PASS well formed offer translates to validated typed job
+1: PASS wire requests cannot smuggle arbitrary commands as capabilities
+1: PASS negative or floating resource values are rejected
+1: PASS unverified GPU is never requested by the CPU converter
+1: PASS download digest is mandatory and strictly encoded
+1: PASS input and output must fit declared temporary storage
+1: PASS control message size and parser nesting are bounded
+1: PASS null bytes cannot reach Win32 URL or process APIs
+1: PASS Windows argument quoting preserves spaces quotes and trailing slashes
+1: PASS converter receives local files not remote URLs or shell commands
+1: PASS leases use the shorter of local and server remaining time
+1: PASS expired and unsigned-underflow lease cases fail closed
+1: PASS lease duration and monotonic addition cannot overflow
+1: PASS app rendition contract requires every fixed output and budgets all simultaneous files
+1: PASS app jobs refuse arbitrary output roles and mixed media type declarations
+1: PASS endpoint supplied by operator has a stable HTTPS origin
+1: PASS missing unsafe or ambiguous endpoints cannot become network destinations
+1: PASS an absent endpoint fails before enrollment or key disclosure
+1: PASS credential reopen reconnects without a new enrollment
+1: PASS credential canonicalization allows same origin but never a different server
+1: PASS corrupt saved credential never triggers silent reenrollment
+1: PASS successful pairing persists identity before returning and removes pending secret
+1: PASS incompatible coordinator receives no public key or enrollment request
+1: PASS lost initial response reuses durable request id rather than inventing another enrollment
+1: PASS lost approval response resumes same enrollment with its private key proof
+1: PASS pending enrollment is never sent to a different endpoint
+1: PASS failed credential persistence preserves resumable approval and returns no success
+1: PASS pending cleanup failure cannot discard an already durable credential
+1: PASS late approval after cancellation does not publish credentials
+1: PASS denial is explicit and cannot erase an existing pending record
+1: PASS server revocation does not silently start another pairing
+1: PASS rate limited polling waits and remains bounded by pairing expiry
+1: PASS invalid permanent tokens and worker ids never reach credential storage
+1: 75 contracts, 0 failures
+1/5 Test #1: worker_contracts .................   Passed    0.07 sec
+test 2
+    Start 2: pipeline_contracts
+
+2: Test command: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/ow_pipeline_contract_tests
+2: Working Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize
+2: Test timeout computed to be: 30
+2: PASS rendition pipeline returns ordered metadata for every artifact
+2: PASS next encode overlaps previous transfer
+2: PASS empty rendition pipeline starts no stages
+2: PASS transfer backpressure keeps one encoder and one transfer at a time
+2: PASS final transfer must join before result is returned
+2: PASS transfer failure cancels next encode and preserves original cause
+2: PASS encode failure cancels and joins transfer before unwinding
+2: PASS failed final checksum cannot return a successful partial result
+2: PASS independent pipelines do not share cancellation or metadata
+2: 9 contracts, 0 failures
+2/5 Test #2: pipeline_contracts ...............   Passed    0.02 sec
+test 3
+    Start 3: rendition_contracts
+
+3: Test command: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/ow_rendition_contract_tests
+3: Working Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize
+3: Test timeout computed to be: 30
+3: PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
+3: PASS app image renders a full-size WebP and bounded poster with independent destinations
+3: PASS non-AAC audio uses the existing app delivery bitrate
+3: 3 contracts, 0 failures
+3/5 Test #3: rendition_contracts ..............   Passed    0.02 sec
+test 4
+    Start 4: adaptive_hardware_contracts
+
+4: Test command: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/ow_adaptive_hardware_contract_tests
+4: Working Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize
+4: Test timeout computed to be: 30
+4: PASS CPU remains the safe profile when no supported GPU is installed
+4: PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+4: PASS single GPU profile requires matching encode decode and validated output
+4: PASS heterogeneous GPUs retain independent identities and schedules
+4: PASS two synthetic NVIDIA GPUs schedule independently through the production scheduler
+4: PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+4: PASS low VRAM and machine resource caps reject unsafe tuning
+4: PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+4: PASS profile invalidates on adapter identity driver or approved FFmpeg change
+4: PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+4: PASS selected hardware rendition binds an explicit adapter and conservative codec mode
+4: PASS Intel QSV and AMD AMF commands bind their probed DirectX adapter
+4: PASS hardware failure removes partial output and validates a clean CPU retry before success
+4: PASS cancelled hardware work does not start a CPU retry or retain partial output
+4: PASS runtime scheduler atomically enforces global and per-device costs until drain
+4: PASS task caps limit each reservation while global capacity admits four small jobs
+4: PASS native drain fixture keeps its GPU reservation while admitting independent CPU work
+4: PASS temporary CPU admission and GPU reservation moves preserve separate backend capacity
+4: PASS exhausted backend capacity stays owned across reservation moves until release
+4: PASS CUDA LUID mapping survives ordinal reorder and rejects duplicate or invalid mappings
+4: PASS GPU memory telemetry is child and LUID scoped and rejects ambiguous physical nodes
+4: PASS missing foreign invalid and zero GPU counters never mean idle headroom
+4: PASS serial and parallel tuning compare equal work repeated stages and child budgets
+4: PASS two independent GPU jobs fit with one CPU encoder slot and can wait for safe CPU retry
+4: PASS GPU fallback slot acquisition ignores a CPU codec already owned by the same task
+4: PASS runtime profile ties resolve by stable device identity and CPU profile is selectable
+4: PASS hardware adapter mapping ambiguity fails closed independent of enumeration order
+4: PASS runtime admission falls back to the measured CPU profile when configured VRAM is too small
+4: PASS live adapter headroom closes GPU admission and restores it after headroom returns
+4: PASS CPU concurrency reflects repeated tuning candidates within every configured cap
+4: PASS multi-codec runtime reservation uses peak per-job CPU memory and scratch costs
+4: PASS runtime scheduler invalidation stops stale hardware while active reservations drain
+4: PASS runtime command generation applies the scheduler-selected measured CPU profile
+4: PASS cancellation before an encode prevents every helper spawn
+4: PASS cancellation during output validation cannot publish a successful artifact
+4: PASS declared VRAM fallback permits proven hardware and retains CPU and drain budgets
+4: PASS VRAM budgets preserve live headroom and fail closed without either source
+4: PASS declared budget never substitutes for encode decode identity or tuning proof
+4: PASS encoder tokens name every backend that survived probing
+4: PASS encoder tokens never claim hardware when only CPU was profiled
+4: PASS a hardware-only profile set cannot imply a CPU profile
+4: PASS runtime hardware failure reports exactly once without changing selected profiles
+4: PASS reporting retains another profiled codec and handles profile removal and binary invalidation
+4: PASS diagnostic CPU evidence is distinct from missing adaptive profiles
+4: PASS converter invalidation retracts CPU as well as hardware evidence once
+4: PASS backup presentation promises a routing hint only
+4: PASS unobserved inventory is unknown while an observed zero stays zero
+4: PASS status evidence separates unrun checks from failed probes and requires current CPU app profiles
+4: PASS sample dimensions describe evidence while encoder geometry governs admission
+4: PASS only equal realistic measurements may withhold hardware for CPU throughput
+4: PASS large hardware failure demotes once and retries clean CPU while capacity stays owned
+4: PASS saved profiles and rejected measurements name their actual tuning resolution
+4: PASS demotion is atomic codec specific and preserves already reserved capacity
+4: 53 contracts, 0 failures
+4/5 Test #4: adaptive_hardware_contracts ......   Passed    0.07 sec
+test 5
+    Start 5: progress_contracts
+
+5: Test command: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/ow_progress_contract_tests
+5: Working Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize
+5: Test timeout computed to be: 30
+5: PASS idle connection emits no activity and active states stay terse
+5: PASS encoder timeline and byte accounting behavior are preserved
+5: PASS unmeasurable stages say only stage and elapsed once
+5: PASS a repeated stage is a visible retry with one stable suffix
+5: PASS local timestamp format is exact through midnight month and zone changes
+5: PASS job suffixes are lowercase last four and stable for a job life
+5: PASS two live jobs with the same four characters stay distinguishable
+5: PASS a shown suffix resolves to exactly one full attempt id in the durable log
+5: PASS restart needs no counter and never implies continuation
+5: PASS every rendered line fits eighty columns including an impossible message
+5: PASS old durable lines still render plainly without breaking the viewer
+5: PASS exactly five colours carry one consistent meaning
+5: PASS progress rows keep a bounded bar and vanish on terminal events
+5: PASS four concurrent rows and activity stay readable and cancellation clears at any percent
+5: PASS many jobs keep suffix-to-id resolvability and concurrent accounting
+5: PASS the ready line names the encoders the worker actually reported
+5: PASS a probe record without encoder detail claims no backend
+5: PASS a malformed encoder list cannot invent a backend
+5: PASS explicit failed app probes never inherit successful diagnostics
+5: PASS absent capability and priority evidence is explicitly unknown
+5: PASS capability flags require complete field values and boundaries
+5: PASS probe elapsed phases and remaining candidates use an injected clock
+5: PASS probe has one bounded row alongside jobs and clears on result or failure
+5: PASS encoder change and sample scope fit the existing neutral and warning style
+5: PASS an encoder substring is not backend evidence and unknown lists stay empty
+5: PASS probe phase labels cannot hide elapsed time at console width
+5: PASS hardware demotion is one short warning line in the existing console style
+5: PASS geometry and performance fallback reasons remain distinct and readable
+5: PASS all hardware command plans retain device selection and measured timeline progress
+5: PASS four hardware failures reset timeline and stage generation on CPU retry independently
+5: 30 contracts, 0 failures
+5/5 Test #5: progress_contracts ...............   Passed    0.50 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Total Test time (real) =   0.68 sec

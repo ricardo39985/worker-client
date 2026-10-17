@@ -42,10 +42,10 @@ public:
   return "PROBE RESULT app_video="+std::to_string(app_video())+" app_image="+std::to_string(app_image_)+
    " video="+std::to_string(video_)+" image="+std::to_string(image_)+" encoders="+(tokens.empty()?"none":tokens);
  }
- std::optional<std::string> failed(const adaptive::Profile& profile){
+ std::optional<std::string> failed(const adaptive::Profile& profile,bool demoted=false){
   if(profile.backend==adaptive::Backend::cpu||!visible().contains(key(profile))||!failed_.insert(key(profile)).second)return {};
   return update()+" failed="+adaptive::backend_token(profile.backend)+"/"+
-   (profile.codec==adaptive::Codec::hevc?"hevc":"h264")+" fallback=cpu";
+   (profile.codec==adaptive::Codec::hevc?"hevc":"h264")+(demoted?" demoted=1":"")+" fallback=cpu";
  }
  std::optional<std::string> changed(std::vector<adaptive::Profile> profiles){
   auto before=visible();profiles_=std::move(profiles);if(before==visible())return {};return update();

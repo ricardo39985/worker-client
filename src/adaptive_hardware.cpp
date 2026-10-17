@@ -19,7 +19,7 @@ const TuningEvidence* find_tuning(const std::vector<TuningEvidence>& all,const D
   return t.stable_id==d.stable_id&&t.backend==d.family&&t.codec==codec&&t.completed&&
          t.output_valid&&t.cancelled_cleanly&&std::isfinite(t.frames_per_second)&&t.frames_per_second>0&&
          t.cpu_threads>0&&t.ram_mb>0&&t.scratch_mb>0&&t.tested_concurrency>0&&
-         (d.family==Backend::cpu?t.vram_mb==0:(t.vram_mb>0&&t.max_width>0&&t.max_height>0));
+         (d.family==Backend::cpu?t.vram_mb==0:(t.vram_mb>0&&t.measured_width>0&&t.measured_height>0));
  });
  return i==all.end()?nullptr:&*i;
 }
@@ -73,8 +73,9 @@ std::vector<Profile> choose_profiles(const std::vector<Device>& devices,
    if(!concurrency_cap||t.cpu_threads>limits.cpu_threads||t.ram_mb>limits.ram_mb||
       t.scratch_mb>limits.scratch_mb||
       (d.family!=Backend::cpu&&(!d.driver_healthy||d.dedicated_vram_mb<t.vram_mb||t.vram_mb>limits.vram_mb)))return;
+   const auto geometry=encoder_geometry(d.family);
    out.push_back({d.stable_id,d.driver_version,hash,d.family,codec,t.cpu_threads,t.ram_mb,t.vram_mb,
-                  t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,t.max_width,t.max_height});
+                  t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,geometry.max_width,geometry.max_height,t.measured_width,t.measured_height});
   };
   add(*cpu_device,*cpu_tuning);
   for(const auto& d:devices){
@@ -84,9 +85,11 @@ std::vector<Profile> choose_profiles(const std::vector<Device>& devices,
        return other.family==d.family&&other.backend_index==d.backend_index;
       })!=1)continue;
    auto t=find_tuning(tuning,d,codec);if(!t||t->vram_mb>d.dedicated_vram_mb)continue;
-   // Hardware is selected only after a repeatable measured improvement over
-   // the verified CPU baseline; CRF/quality equivalence is never inferred.
-   if(t->frames_per_second<cpu_tuning->frames_per_second*1.05)continue;
+   // Only comparable 1080p-or-larger evidence can withhold a functional
+   // profile for speed. A tiny or mismatched sample cannot decide real-video
+   // performance; runtime still uses guarded validation and resource caps.
+   // CRF/quality equivalence is never inferred.
+   if(comparable_resolution(*t,*cpu_tuning)&&t->frames_per_second<cpu_tuning->frames_per_second*1.05)continue;
    add(d,*t);
   }
  }
@@ -133,7 +136,44 @@ bool profile_current(const Profile& p,const Device& d,const std::string& hash){
         (d.family==Backend::cpu||d.dedicated_vram_mb>=p.vram_mb);
 }
 bool profile_supports_dimensions(const Profile& p,std::uint32_t width,std::uint32_t height){
- return p.backend==Backend::cpu||(width&&height&&p.max_width&&p.max_height&&width<=p.max_width&&height<=p.max_height);
+ return p.backend==Backend::cpu||(width&&height&&!(width%2)&&!(height%2)&&p.max_width&&p.max_height&&width<=p.max_width&&height<=p.max_height);
+}
+EncoderGeometry encoder_geometry(Backend backend){
+ // The approved FFmpeg CLI does not export a uniform per-device dimension-cap
+ // query. Do not turn a successful sample into a hardware capability limit.
+ // These are conservative admission ceilings, not proof of every size within.
+ // NVENC: bound both axes to the older AVC 4096 envelope, even for HEVC.
+ // QSV: bound both axes to 4096 for older Intel generations (no 8K inference).
+ // AMF: cap at UHD, avoiding newer VCN-only 8K capability assumptions.
+ // Driver/codec-specific restrictions inside these ceilings are caught by the
+ // guarded full-size encode AND decode, with one demotion and CPU retry.
+ // Encoder APIs: FFmpeg nvenc.c NV_ENC_CAPS_WIDTH_MAX/HEIGHT_MAX;
+ // GPUOpen AMF_Video_Encode_API.md AMFCaps (hardware-specific).
+ switch(backend){
+  case Backend::nvidia_nvenc:return {4096,4096};
+  case Backend::intel_qsv:return {4096,4096};
+  case Backend::amd_amf:return {3840,2160};
+  case Backend::cpu:return {}; // CPU is not constrained by a GPU envelope.
+ }
+ return {};
+}
+bool comparable_resolution(const TuningEvidence& hardware,const TuningEvidence& cpu){
+ return hardware.measured_width>=1920&&hardware.measured_height>=1080&&
+  hardware.measured_width==cpu.measured_width&&hardware.measured_height==cpu.measured_height;
+}
+GeometryEvidence geometry_evidence(const Profile& p,std::uint32_t width,std::uint32_t height){
+ if(!width||!height)return GeometryEvidence::unproven;
+ if(!profile_supports_dimensions(p,width,height))return GeometryEvidence::unsupported;
+ if(width>p.measured_width||height>p.measured_height)return GeometryEvidence::unproven;
+ return GeometryEvidence::measured;
+}
+std::string geometry_reason(GeometryEvidence evidence){
+ switch(evidence){
+  case GeometryEvidence::unsupported:return "unsupported geometry";
+  case GeometryEvidence::unproven:return "GPU size not yet proven";
+  case GeometryEvidence::measured:return "GPU size sampled";
+ }
+ return {};
 }
 struct Scheduler::State {
  mutable std::mutex mutex;
@@ -175,6 +215,13 @@ Scheduler::Reservation& Scheduler::Reservation::operator=(Reservation&& other) n
 }
 Scheduler::Reservation::~Reservation(){release();}
 void Scheduler::Reservation::release() noexcept{if(active_){Scheduler::release(state_,profiles_);active_=false;}}
+bool Scheduler::Reservation::hardware_enabled(const Profile& profile) const{
+ if(!active_||!state_||profile.backend==Backend::cpu)return false;
+ std::lock_guard lock(state_->mutex);
+ return std::any_of(state_->profiles.begin(),state_->profiles.end(),[&](const auto& p){
+  return p.stable_id==profile.stable_id&&p.backend==profile.backend&&p.codec==profile.codec;
+ });
+}
 bool Scheduler::Reservation::acquire_cpu_fallback(const std::function<bool()>& cancelled,std::uint32_t wait_ms){
  if(!active_||!state_)return false;
  auto deadline=std::chrono::steady_clock::now()+std::chrono::milliseconds(wait_ms);
@@ -266,6 +313,15 @@ void Scheduler::set_device_available_vram(const std::string& id,std::uint64_t mb
  if(found!=s->device_caps.end())found->second=mb;
 }
 std::uint64_t Scheduler::active_jobs() const{auto s=state_;std::lock_guard lock(s->mutex);return s->jobs;}
+bool Scheduler::demote_profile(const Profile& profile){
+ if(profile.backend==Backend::cpu)return false;
+ auto s=state_;std::lock_guard lock(s->mutex);const auto before=s->profiles.size();
+ s->profiles.erase(std::remove_if(s->profiles.begin(),s->profiles.end(),[&](const auto& p){
+  return p.stable_id==profile.stable_id&&p.backend==profile.backend&&p.codec==profile.codec;
+ }),s->profiles.end());
+ // Active reservations retain their original cost and slots until drain.
+ return before!=s->profiles.size();
+}
 void Scheduler::invalidate_hardware(){auto s=state_;std::lock_guard lock(s->mutex);s->profiles.erase(std::remove_if(s->profiles.begin(),s->profiles.end(),[](const auto& p){return p.backend!=Backend::cpu;}),s->profiles.end());}
 void Scheduler::invalidate_all(){auto s=state_;std::lock_guard lock(s->mutex);s->profiles.clear();}
 }

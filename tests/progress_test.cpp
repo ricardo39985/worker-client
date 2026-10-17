@@ -429,3 +429,21 @@ TEST("probe phase labels cannot hide elapsed time at console width") {
  auto line=view.render_row(view.rows().front(),false);
  CHECK(ow::console_text_width(line)<=80);CHECK(line.ends_with("50s"));
 }
+
+TEST("hardware demotion is one short warning line in the existing console style"){
+ ow::ConsoleFormatter formatter;
+ auto line=formatter.render("ENCODERS UPDATE encoders=cpu failed=amf/hevc demoted=1 fallback=cpu");
+ CHECK(line.text=="encoders now: cpu; amf/hevc failed; demoted; retrying cpu");
+ CHECK(line.color==ow::ConsoleColor::orange);CHECK(line.text.size()<=80);
+}
+
+TEST("geometry and performance fallback reasons remain distinct and readable"){
+ ow::ConsoleFormatter formatter;
+ auto unsupported=formatter.render("JOB attempt-abcd CPU fallback: amf/hevc unsupported GPU geometry");
+ auto unproven=formatter.render("JOB attempt-abcd CPU fallback: amf/hevc GPU size not yet proven");
+ auto slower=formatter.render("PROBE FALLBACK qsv/h264 measured slower than CPU at 1920x1080");
+ CHECK(unsupported.text.find("unsupported GPU geometry")!=std::string::npos);
+ CHECK(unproven.text.find("not yet proven")!=std::string::npos);
+ CHECK(slower.text.find("measured slower")!=std::string::npos);
+ CHECK(slower.color==ow::ConsoleColor::orange);
+}

@@ -1,0 +1,77 @@
+[ 17%] Built target ow_json
+[ 17%] Built target ow_pipeline_contract_tests
+[ 24%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 24%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 27%] Linking CXX executable ow_rendition_probe
+[ 31%] Linking CXX executable ow_rendition_contract_tests
+[ 31%] Built target ow_rendition_probe
+[ 34%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 37%] Built target ow_rendition_contract_tests
+[ 41%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 44%] Linking CXX executable ow_progress_contract_tests
+[ 48%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp: In lambda function:
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:77:158: error: ‘const struct ow::adaptive::TuningEvidence’ has no member named ‘max_width’
+   77 |                   t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,t.max_width,t.max_height});
+      |                                                                                                                                                              ^~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:77:170: error: ‘const struct ow::adaptive::TuningEvidence’ has no member named ‘max_height’
+   77 |                   t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,t.max_width,t.max_height});
+      |                                                                                                                                                                          ^~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:76:17: error: no matching function for call to ‘std::vector<ow::adaptive::Profile>::push_back(<brace-enclosed initializer list>)’
+   76 |    out.push_back({d.stable_id,d.driver_version,hash,d.family,codec,t.cpu_threads,t.ram_mb,t.vram_mb,
+      |    ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   77 |                   t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,t.max_width,t.max_height});
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:76:17: note: there are 2 candidates
+In file included from /usr/include/c++/15/vector:68,
+                 from /usr/include/c++/15/functional:66,
+                 from /home/rick/Downloads/worker-client-gpu-on-logs/include/ow/adaptive_hardware.hpp:5,
+                 from /home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:1:
+/usr/include/c++/15/bits/stl_vector.h:1416:7: note: candidate 1: ‘constexpr void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = ow::adaptive::Profile; _Alloc = std::allocator<ow::adaptive::Profile>; value_type = ow::adaptive::Profile]’
+ 1416 |       push_back(const value_type& __x)
+      |       ^~~~~~~~~
+/usr/include/c++/15/bits/stl_vector.h:1416:35: note: no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘const std::vector<ow::adaptive::Profile>::value_type&’ {aka ‘const ow::adaptive::Profile&’}
+ 1416 |       push_back(const value_type& __x)
+      |                 ~~~~~~~~~~~~~~~~~~^~~
+/usr/include/c++/15/bits/stl_vector.h:1433:7: note: candidate 2: ‘constexpr void std::vector<_Tp, _Alloc>::push_back(value_type&&) [with _Tp = ow::adaptive::Profile; _Alloc = std::allocator<ow::adaptive::Profile>; value_type = ow::adaptive::Profile]’
+ 1433 |       push_back(value_type&& __x)
+      |       ^~~~~~~~~
+/usr/include/c++/15/bits/stl_vector.h:1433:30: note: no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘std::vector<ow::adaptive::Profile>::value_type&&’ {aka ‘ow::adaptive::Profile&&’}
+ 1433 |       push_back(value_type&& __x)
+      |                 ~~~~~~~~~~~~~^~~
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp: In instantiation of ‘ow::adaptive::{anonymous}::find_tuning(const std::vector<ow::adaptive::TuningEvidence>&, const ow::adaptive::Device&, ow::adaptive::Codec)::<lambda(const auto:12&)> [with auto:12 = ow::adaptive::TuningEvidence]’:
+/usr/include/c++/15/bits/predefined_ops.h:318:23:   required from ‘constexpr bool __gnu_cxx::__ops::_Iter_pred<_Predicate>::operator()(_Iterator) [with _Iterator = __gnu_cxx::__normal_iterator<const ow::adaptive::TuningEvidence*, std::vector<ow::adaptive::TuningEvidence> >; _Predicate = ow::adaptive::{anonymous}::find_tuning(const std::vector<ow::adaptive::TuningEvidence>&, const ow::adaptive::Device&, ow::adaptive::Codec)::<lambda(const auto:12&)>]’
+  318 |         { return bool(_M_pred(*__it)); }
+      |                       ~~~~~~~^~~~~~~
+/usr/include/c++/15/bits/stl_algobase.h:2095:42:   required from ‘constexpr _Iterator std::__find_if(_Iterator, _Iterator, _Predicate) [with _Iterator = __gnu_cxx::__normal_iterator<const ow::adaptive::TuningEvidence*, vector<ow::adaptive::TuningEvidence> >; _Predicate = __gnu_cxx::__ops::_Iter_pred<ow::adaptive::{anonymous}::find_tuning(const std::vector<ow::adaptive::TuningEvidence>&, const ow::adaptive::Device&, ow::adaptive::Codec)::<lambda(const auto:12&)> >]’
+ 2095 |       while (__first != __last && !__pred(__first))
+      |                                    ~~~~~~^~~~~~~~~
+/usr/include/c++/15/bits/stl_algo.h:3921:28:   required from ‘constexpr _IIter std::find_if(_IIter, _IIter, _Predicate) [with _IIter = __gnu_cxx::__normal_iterator<const ow::adaptive::TuningEvidence*, vector<ow::adaptive::TuningEvidence> >; _Predicate = ow::adaptive::{anonymous}::find_tuning(const std::vector<ow::adaptive::TuningEvidence>&, const ow::adaptive::Device&, ow::adaptive::Codec)::<lambda(const auto:12&)>]’
+ 3921 |       return std::__find_if(__first, __last,
+      |              ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+ 3922 |                             __gnu_cxx::__ops::__pred_iter(__pred));
+      |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:18:21:   required from here
+   18 |  auto i=std::find_if(all.begin(),all.end(),[&](const auto& t){
+      |         ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   19 |   return t.stable_id==d.stable_id&&t.backend==d.family&&t.codec==codec&&t.completed&&
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   20 |          t.output_valid&&t.cancelled_cleanly&&std::isfinite(t.frames_per_second)&&t.frames_per_second>0&&
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   21 |          t.cpu_threads>0&&t.ram_mb>0&&t.scratch_mb>0&&t.tested_concurrency>0&&
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   22 |          (d.family==Backend::cpu?t.vram_mb==0:(t.vram_mb>0&&t.max_width>0&&t.max_height>0));
+      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   23 |  });
+      |  ~~
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:22:63: error: ‘const struct ow::adaptive::TuningEvidence’ has no member named ‘max_width’
+   22 |          (d.family==Backend::cpu?t.vram_mb==0:(t.vram_mb>0&&t.max_width>0&&t.max_height>0));
+      |                                                             ~~^~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:22:78: error: ‘const struct ow::adaptive::TuningEvidence’ has no member named ‘max_height’
+   22 |          (d.family==Backend::cpu?t.vram_mb==0:(t.vram_mb>0&&t.max_width>0&&t.max_height>0));
+      |                                                                            ~~^~~~~~~~~~
+gmake[2]: *** [CMakeFiles/ow_core.dir/build.make:135: CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:168: CMakeFiles/ow_core.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+[ 55%] Built target ow_progress_contract_tests
+gmake: *** [Makefile:101: all] Error 2

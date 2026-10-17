@@ -3,8 +3,10 @@
 #include "ow/operator_status.hpp"
 #include "ow/adaptive_hardware.hpp"
 #include "ow/media_renditions.hpp"
+#include "ow/adaptive_evidence.hpp"
 #include <algorithm>
 #include <fstream>
+#include <future>
 using namespace ow::adaptive;
 namespace {
 constexpr const char* hash = "approved-ffmpeg-hash";
@@ -48,8 +50,9 @@ TEST("single GPU profile requires matching encode decode and validated output"){
  auto selected=find(profiles,g.stable_id,Codec::h264);
  CHECK(selected&&selected->backend==Backend::nvidia_nvenc);
  CHECK(selected->vram_mb==1024&&selected->max_concurrency>0);
- CHECK(selected->max_width==640&&selected->max_height==360);
- CHECK(profile_supports_dimensions(*selected,640,360));CHECK(!profile_supports_dimensions(*selected,1920,1080));
+ CHECK(selected->max_width>=1920&&selected->max_height>=1080);
+ CHECK(profile_supports_dimensions(*selected,640,360));CHECK(profile_supports_dimensions(*selected,1920,1080));
+ CHECK(!profile_supports_dimensions(*selected,16384,8640));
 }
 TEST("heterogeneous GPUs retain independent identities and schedules"){
  auto c=cpu(),a=gpu("pci:nvidia:2704",Backend::nvidia_nvenc,6144),b=gpu("pci:amd:694e",Backend::amd_amf,4096);
@@ -507,4 +510,91 @@ TEST("status evidence separates unrun checks from failed probes and requires cur
  CHECK(report.changed({h264,hevc,gpu}));CHECK(report.failed(gpu));CHECK(report.app_video());
  CHECK(report.changed({h264}));CHECK(!report.app_video());
  CHECK(report.record().starts_with("PROBE RESULT app_video=0 app_image=1"));
+}
+
+TEST("sample dimensions describe evidence while encoder geometry governs admission"){
+ for(auto backend:{Backend::nvidia_nvenc,Backend::intel_qsv,Backend::amd_amf}){
+  auto c=cpu(),g=gpu("fixture:geometry",backend);
+  auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},
+    {tune(c,Codec::h264,20),tune(g,Codec::h264,42,512)});
+  auto p=find(profiles,g.stable_id,Codec::h264);CHECK(p);
+  CHECK(p->measured_width==640&&p->measured_height==360);
+  CHECK(profile_supports_dimensions(*p,1920,1080));
+  CHECK(geometry_evidence(*p,1920,1080)==GeometryEvidence::unproven);
+  CHECK(geometry_evidence(*p,640,360)==GeometryEvidence::measured);
+  CHECK(geometry_evidence(*p,p->max_width+2,1080)==GeometryEvidence::unsupported);
+  CHECK(geometry_evidence(*p,1921,1080)==GeometryEvidence::unsupported);
+  CHECK(geometry_evidence(*p,0,1080)==GeometryEvidence::unproven);
+  CHECK(geometry_reason(GeometryEvidence::unproven)!=geometry_reason(GeometryEvidence::unsupported));
+ }
+}
+TEST("only equal realistic measurements may withhold hardware for CPU throughput"){
+ auto c=cpu(),g=gpu("fixture:comparison",Backend::intel_qsv);
+ auto ct=tune(c,Codec::h264,100),gt=tune(g,Codec::h264,20,512);
+ ct.measured_width=gt.measured_width=640;ct.measured_height=gt.measured_height=360;
+ CHECK(!comparable_resolution(gt,ct));
+ CHECK(find(run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt}),g.stable_id,Codec::h264));
+ ct.measured_width=gt.measured_width=1920;ct.measured_height=gt.measured_height=1080;
+ CHECK(comparable_resolution(gt,ct));
+ CHECK(!find(run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt}),g.stable_id,Codec::h264));
+ gt.measured_width=3840;gt.measured_height=2160;CHECK(!comparable_resolution(gt,ct));
+}
+TEST("large hardware encode or validation failure demotes once and retries CPU while capacity stays owned"){
+ for(bool encode_failure:{true,false}){
+ auto c=cpu(),g=gpu("fixture:large",Backend::amd_amf);
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},
+   {tune(c,Codec::h264,20),tune(g,Codec::h264,42,512)});
+ auto p=*find(profiles,g.stable_id,Codec::h264);
+ Scheduler scheduler(limits(),profiles);auto reserved=scheduler.reserve({Codec::h264});CHECK(reserved);
+ CHECK(reserved.hardware_enabled(p));CHECK(geometry_evidence(p,3840,2160)==GeometryEvidence::unproven);
+ auto output=std::filesystem::temp_directory_path()/"ow-large-fallback-test.mp4";
+ unsigned demotions=0,hardware_runs=0,cpu_runs=0;
+ bool used_hardware=run_with_cpu_fallback(output,true,[]{return false;},[&](bool hardware){
+  CHECK(scheduler.active_jobs()==1);
+  if(hardware){++hardware_runs;std::ofstream(output)<<"partial";if(encode_failure)throw std::runtime_error("large encode failed");return;}
+  if(scheduler.demote_profile(p))++demotions;
+  CHECK(!scheduler.demote_profile(p));CHECK(!reserved.hardware_enabled(p));
+  CHECK(reserved.acquire_cpu_fallback([]{return false;},0));CHECK(!std::filesystem::exists(output));
+  ++cpu_runs;std::ofstream(output)<<"validated";
+ },[](const auto& path){std::ifstream file(path);std::string result;file>>result;return result=="validated";});
+ CHECK(!used_hardware&&hardware_runs==1&&cpu_runs==1&&demotions==1);
+ reserved.release();CHECK(scheduler.active_jobs()==0);
+ auto next=scheduler.reserve({Codec::h264});CHECK(next);
+ CHECK(next.profiles().front().backend==Backend::cpu);
+ std::filesystem::remove(output);
+ }
+}
+
+TEST("saved profiles and rejected measurements name their actual tuning resolution"){
+ auto c=cpu(),g=gpu("fixture:record",Backend::intel_qsv);
+ auto ct=tune(c,Codec::h264,20),gt=tune(g,Codec::h264,42,512);
+ ct.measured_width=gt.measured_width=tuning_width;ct.measured_height=gt.measured_height=tuning_height;
+ CHECK(tuning_width>=1920&&tuning_height>=1080);
+ CHECK(tuning_source_filter()==L"testsrc2=size=1920x1080:rate=24");
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt});
+ auto record=profile_record(*find(profiles,g.stable_id,Codec::h264));
+ CHECK(record.at("measured_width").as_uint64()==1920);CHECK(record.at("measured_height").as_uint64()==1080);
+ CHECK(record.at("max_width").as_uint64()>1920);CHECK(record.at("geometry_source").as_string()=="conservative_backend_ceiling");
+ auto measurement=tuning_record(gt);CHECK(measurement.at("measured_width").as_uint64()==1920);
+ CHECK(measurement.at("measured_height").as_uint64()==1080);
+ const std::string valid="Input #0, mov,mp4\nVideo: h264 (High), yuv420p, 1920x1080, 24 fps\nAudio: aac\nframe=   72 ";
+ CHECK(tuning_output_valid(valid,"h264"));CHECK(!tuning_output_valid(valid,"hevc"));
+ auto bad=valid;bad.replace(bad.find("1920x1080"),9,"640x360");CHECK(!tuning_output_valid(bad,"h264"));
+ bad=valid;bad.replace(bad.find("72"),2,"71");CHECK(!tuning_output_valid(bad,"h264"));
+ CHECK(video_geometry_valid(valid,"h264",1920,1080));
+ CHECK(!video_geometry_valid(valid,"h264",3840,2160));
+}
+
+TEST("demotion is atomic codec specific and preserves already reserved capacity"){
+ auto c=cpu(),g=gpu("fixture:demotion",Backend::nvidia_nvenc);
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(c,Codec::hevc),probe(g,Codec::h264),probe(g,Codec::hevc)},
+   {tune(c,Codec::h264,20),tune(c,Codec::hevc,12),tune(g,Codec::h264,42,512),tune(g,Codec::hevc,40,512)});
+ auto p=*find(profiles,g.stable_id,Codec::h264);Scheduler scheduler(limits(),profiles);
+ auto active=scheduler.reserve({Codec::h264});CHECK(active);
+ auto first=std::async(std::launch::async,[&]{return scheduler.demote_profile(p);});
+ auto second=std::async(std::launch::async,[&]{return scheduler.demote_profile(p);});
+ CHECK(static_cast<unsigned>(first.get())+static_cast<unsigned>(second.get())==1);
+ CHECK(scheduler.active_jobs()==1);CHECK(!active.hardware_enabled(p));
+ active.release();
+ auto hevc=scheduler.reserve({Codec::hevc});CHECK(hevc);CHECK(hevc.profiles().front().stable_id==g.stable_id);
 }

@@ -1,6 +1,7 @@
 #include <cctype>
 #include "worker.hpp"
 #include "ow/media_renditions.hpp"
+#include "ow/adaptive_evidence.hpp"
 #include "ow/progress.hpp"
 #include "ow/encoder_run.hpp"
 #include "ow/rendition_pipeline.hpp"
@@ -35,10 +36,10 @@ void check_protocol(const Response& r){
  auto v=parse(r.body);if(number(v.as_object(),"protocol",1)!=1)throw std::runtime_error("Coordinator worker protocol is incompatible");
 }
 struct ProbeRun {std::uint64_t elapsed_ms{},peak_vram_mb{};bool estimated_vram{};};
-ProbeRun run_child_probe(const std::filesystem::path& exe,const std::vector<std::wstring>& args,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits,const adaptive::Device* hardware_device=nullptr,std::uint64_t vram_limit_mb=UINT64_MAX){
+ProbeRun run_child_probe(const std::filesystem::path& exe,const std::vector<std::wstring>& args,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits,const adaptive::Device* hardware_device=nullptr,std::uint64_t vram_limit_mb=UINT64_MAX,Tick timeout_ms=30000){
  const auto started=monotonic_ms();
  if(!limits.ram_mb||!limits.cpu_threads||!limits.scratch_mb)throw std::runtime_error("Configured/live resource budget cannot run converter probe");
- Child child(exe,args,workspace,limits,Priority::low);auto until=started+30000;std::uint64_t peak_vram{};bool estimated_vram=false;
+ Child child(exe,args,workspace,limits,Priority::low);auto until=started+timeout_ms;std::uint64_t peak_vram{};bool estimated_vram=false;
  for(;;){
   if(cancelled&&cancelled())throw std::runtime_error("Capability probe cancelled");
   if(hardware_device){
@@ -131,7 +132,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const 
  if(p.media_video){
   progress("tuning source");
   const auto tune_source=workspace/"adaptive-source.mp4";
-  run_probe(c.ffmpeg,{L"-nostdin",L"-hide_banner",L"-loglevel",L"error",L"-y",L"-f",L"lavfi",L"-i",L"testsrc2=size=640x360:rate=24",L"-f",L"lavfi",L"-i",L"sine=frequency=880:sample_rate=48000",L"-t",L"3",L"-frames:v",L"72",L"-c:v",L"libx264",L"-preset",L"ultrafast",L"-threads",L"1",L"-pix_fmt",L"yuv420p",L"-c:a",L"aac",(tune_source).wstring()},workspace,cancelled);
+  run_probe(c.ffmpeg,{L"-nostdin",L"-hide_banner",L"-loglevel",L"error",L"-y",L"-f",L"lavfi",L"-i",adaptive::tuning_source_filter(),L"-f",L"lavfi",L"-i",L"sine=frequency=880:sample_rate=48000",L"-t",L"3",L"-frames:v",L"72",L"-c:v",L"libx264",L"-preset",L"ultrafast",L"-threads",L"1",L"-pix_fmt",L"yuv420p",L"-c:a",L"aac",(tune_source).wstring()},workspace,cancelled);
   std::filesystem::copy_file(tune_source,workspace/"source.bin",std::filesystem::copy_options::overwrite_existing);
   devices=std::move(inventory);adaptive::Device cpu{"cpu",adaptive::Backend::cpu,"",0,true,0,"CPU",0,true};
   for(const auto backend:{adaptive::Backend::nvidia_nvenc,adaptive::Backend::intel_qsv,adaptive::Backend::amd_amf})
@@ -150,10 +151,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const 
    if(!std::filesystem::is_regular_file(output)||!std::filesystem::file_size(output))return false;
    run_child_probe(c.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-xerror",L"-threads",L"1",L"-i",output.wstring(),L"-f",L"null",L"-"},log_root,cancelled,child_limits);
    const auto log=read_file(log_root/"process.log");
-   const std::regex stream("Video: "+codec+R"([^\r\n]*\b640x360\b)");
-   const std::regex frames(R"(frame=\s*72(?:\s|$))");
-   return std::regex_search(log,stream)&&std::regex_search(log,frames)&&
-     log.find("Input #0, mov,mp4")!=std::string::npos&&log.find("Audio: aac")!=std::string::npos;
+   return adaptive::tuning_output_valid(log,codec);
   };
   auto profile_for=[&](const adaptive::Device& d,adaptive::Codec codec){
    return adaptive::Profile{d.stable_id,d.driver_version,c.ffmpeg_sha256,d.family,codec,1,512,0,128,1,0,d.adapter_index,d.backend_index};
@@ -183,7 +181,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const 
    for(unsigned repeat=0;repeat<2;++repeat){
     if(cancelled&&cancelled())throw std::runtime_error("Capability tuning cancelled");
      tuning_progress("encode "+std::to_string(repeat+1)+"/2");
-     const auto sample=run_child_probe(c.ffmpeg,rendition->arguments,workspace,cancelled,candidate_limits,d.family==adaptive::Backend::cpu?nullptr:&d,vram_probe_cap);
+     const auto sample=run_child_probe(c.ffmpeg,rendition->arguments,workspace,cancelled,candidate_limits,d.family==adaptive::Backend::cpu?nullptr:&d,vram_probe_cap,120000);
      tuning_progress("decode "+std::to_string(repeat+1)+"/2");
      const auto stage_started=monotonic_ms();
      if(!decode_valid(output,codec_name,workspace,candidate_limits))throw std::runtime_error("Synthetic app output decode/profile validation failed");
@@ -216,24 +214,25 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const 
       auto live_now=available_resources(c.root,c.reserve_ram_mb);if(live_now.ram_mb<1024||live_now.cpu_threads<2||live_now.scratch_mb<256)throw std::runtime_error("stable live headroom fell below two equal candidate reservations");
       tuning_progress("serial "+std::to_string(repeat+1)+"/2");
       const auto serial_started=monotonic_ms();
-      for(unsigned index=0;index<2;++index){auto [child_workspace,args,target]=prepare_child(repeat,index,"serial");run_child_probe(c.ffmpeg,args,child_workspace,cancelled,candidate_limits);if(!decode_valid(target,codec_name,child_workspace,candidate_limits))throw std::runtime_error("Serial CPU output failed strict validation");}
+      for(unsigned index=0;index<2;++index){auto [child_workspace,args,target]=prepare_child(repeat,index,"serial");run_child_probe(c.ffmpeg,args,child_workspace,cancelled,candidate_limits,nullptr,UINT64_MAX,120000);if(!decode_valid(target,codec_name,child_workspace,candidate_limits))throw std::runtime_error("Serial CPU output failed strict validation");}
       serial_stages.push_back(static_cast<std::uint64_t>(std::max<Tick>(1,monotonic_ms()-serial_started)));
       tuning_progress("parallel "+std::to_string(repeat+1)+"/2");
       std::vector<std::future<void>> runs;const auto parallel_started=monotonic_ms();
-      for(unsigned index=0;index<2;++index){auto [child_workspace,args,target]=prepare_child(repeat,index,"parallel");runs.push_back(std::async(std::launch::async,[&,args=std::move(args),target,child_workspace]{run_child_probe(c.ffmpeg,args,child_workspace,cancelled,candidate_limits);if(!decode_valid(target,codec_name,child_workspace,candidate_limits))throw std::runtime_error("Concurrent CPU output failed strict validation");}));}
+      for(unsigned index=0;index<2;++index){auto [child_workspace,args,target]=prepare_child(repeat,index,"parallel");runs.push_back(std::async(std::launch::async,[&,args=std::move(args),target,child_workspace]{run_child_probe(c.ffmpeg,args,child_workspace,cancelled,candidate_limits,nullptr,UINT64_MAX,120000);if(!decode_valid(target,codec_name,child_workspace,candidate_limits))throw std::runtime_error("Concurrent CPU output failed strict validation");}));}
       for(auto& run:runs)run.get();parallel_stages.push_back(static_cast<std::uint64_t>(std::max<Tick>(1,monotonic_ms()-parallel_started)));
       if(cancelled&&cancelled())throw std::runtime_error("CPU tuning cancelled after contained children drained");
       auto after=available_resources(c.root,c.reserve_ram_mb);if(after.ram_mb<1024||after.cpu_threads<2||after.scratch_mb<256)throw std::runtime_error("live headroom changed during tuning");
      }
      const auto comparison=adaptive::compare_tuning_runs(serial_stages,parallel_stages,2,2,288,288,1,1,512,512,128,128);
      if(!comparison.comparable)throw std::runtime_error("serial and parallel candidates did not use equal work and budgets");
-     tuning_measurements.emplace_back(json::object{{"codec",codec_name},{"serial_stage_ms",json::array{serial_stages[0],serial_stages[1]}},{"parallel_stage_ms",json::array{parallel_stages[0],parallel_stages[1]}},{"repeats",2},{"total_frames_per_candidate",288},{"child_cpu_threads",1},{"child_ram_mb",512},{"child_scratch_mb",128},{"serial_aggregate_fps",comparison.serial_fps},{"parallel_aggregate_fps",comparison.parallel_fps}});
+     tuning_measurements.emplace_back(json::object{{"codec",codec_name},{"measured_width",adaptive::tuning_width},{"measured_height",adaptive::tuning_height},{"serial_stage_ms",json::array{serial_stages[0],serial_stages[1]}},{"parallel_stage_ms",json::array{parallel_stages[0],parallel_stages[1]}},{"repeats",2},{"total_frames_per_candidate",288},{"child_cpu_threads",1},{"child_ram_mb",512},{"child_scratch_mb",128},{"serial_aggregate_fps",comparison.serial_fps},{"parallel_aggregate_fps",comparison.parallel_fps}});
      if(comparison.parallel_fps>=comparison.serial_fps*1.05){slowest_fps=comparison.parallel_fps/2.0;tested_concurrency=2;}
      else unavailable.emplace_back(std::string("CPU ")+(codec==adaptive::Codec::h264?"H.264":"HEVC")+" concurrency 2 measured aggregate "+std::to_string(comparison.parallel_fps)+" fps versus equal-work serial aggregate "+std::to_string(comparison.serial_fps)+" fps; below 5% gain, retained concurrency 1");
     }
    if(d.family!=adaptive::Backend::cpu)budget_sources[d.stable_id+":"+std::to_string(static_cast<int>(codec))]=estimated_vram?"declared-VRAM estimate":"live VRAM telemetry";
    evidence.push_back({d.stable_id,d.driver_version,c.ffmpeg_sha256,d.family,codec,true,true,true});
-   tuning.push_back({d.stable_id,d.family,codec,slowest_fps,1,512,vram_reservation,128,true,true,true,tested_concurrency,640,360});
+   tuning.push_back({d.stable_id,d.family,codec,slowest_fps,1,512,vram_reservation,128,true,true,true,tested_concurrency,adaptive::tuning_width,adaptive::tuning_height});
+   tuning_measurements.emplace_back(adaptive::tuning_record(tuning.back()));
   };
   if(ram_limit<512||scratch_limit<128||!cpu_limit)unavailable.emplace_back("live headroom below one CPU profile cost; adaptive app profiles withheld");
    else for(auto codec:{adaptive::Codec::h264,adaptive::Codec::hevc}){
@@ -249,8 +248,11 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const 
   }
   for(const auto& measured:tuning)if(measured.backend!=adaptive::Backend::cpu){
    const auto cpu_measure=std::find_if(tuning.begin(),tuning.end(),[&](const auto& candidate){return candidate.backend==adaptive::Backend::cpu&&candidate.codec==measured.codec;});
-   if(cpu_measure!=tuning.end()&&measured.frames_per_second<cpu_measure->frames_per_second*1.05)
-    unavailable.emplace_back(measured.stable_id+" "+(measured.codec==adaptive::Codec::h264?"H.264":"HEVC")+" measured less than 5% faster than CPU; profile withheld");
+   if(cpu_measure!=tuning.end()&&adaptive::comparable_resolution(measured,*cpu_measure)&&measured.frames_per_second<cpu_measure->frames_per_second*1.05){
+    const auto reason=std::string(measured.frames_per_second<cpu_measure->frames_per_second?"measured slower than CPU":"measured gain below 5%")+" at "+std::to_string(measured.measured_width)+"x"+std::to_string(measured.measured_height);
+    unavailable.emplace_back(measured.stable_id+" "+(measured.codec==adaptive::Codec::h264?"H.264":"HEVC")+" "+reason+"; profile withheld");
+    p.fallback_notes.push_back(adaptive::backend_token(measured.backend)+"/"+(measured.codec==adaptive::Codec::hevc?"hevc":"h264")+" "+reason);
+   }
   }
   progress("selecting sample profiles");
   p.profiles=adaptive::choose_profiles(all,evidence,tuning,limits,c.ffmpeg_sha256);
@@ -262,7 +264,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const 
   progress("saving sample evidence");
   json::array saved_profiles,saved_devices;
   for(const auto& device:devices)saved_devices.emplace_back(json::object{{"device_id",device.stable_id},{"name",device.name},{"backend",static_cast<int>(device.family)},{"driver_version",device.driver_version},{"dedicated_vram_mb",device.dedicated_vram_mb},{"adapter_index",device.adapter_index},{"backend_index",device.backend_index},{"backend_identity_verified",device.backend_identity_verified},{"driver_healthy",device.driver_healthy}});
-  for(const auto& profile:p.profiles)saved_profiles.emplace_back(json::object{{"device_id",profile.stable_id},{"driver_version",profile.driver_version},{"ffmpeg_sha256",profile.ffmpeg_sha256},{"backend",static_cast<int>(profile.backend)},{"codec",static_cast<int>(profile.codec)},{"cpu_threads",profile.cpu_threads},{"ram_mb",profile.ram_mb},{"vram_mb",profile.vram_mb},{"scratch_mb",profile.scratch_mb},{"max_concurrency",profile.max_concurrency},{"measured_fps",profile.measured_frames_per_second},{"adapter_index",profile.adapter_index},{"backend_index",profile.backend_index},{"backend_identity_verified",profile.backend_identity_verified},{"max_width",profile.max_width},{"max_height",profile.max_height}});
+  for(const auto& profile:p.profiles)saved_profiles.emplace_back(adaptive::profile_record(profile));
   json::array saved_reasons;for(const auto& reason:unavailable)saved_reasons.emplace_back(reason);
    atomic_write(c.root/"adaptive-hardware.json",json::serialize(json::object{{"schema",1},{"ffmpeg_sha256",c.ffmpeg_sha256},{"processor",processor_model()},{"logical_cpu_count",GetActiveProcessorCount(ALL_PROCESSOR_GROUPS)},{"total_ram_mb",observed_json(total_ram_mb)},{"available_ram_mb",headroom.ram_mb},{"total_disk_mb",observed_json(total_disk_mb)},{"available_scratch_mb",headroom.scratch_mb},{"limits",{{"cpu_threads",c.budget.cpu_threads},{"ram_mb",c.budget.ram_mb},{"vram_mb_override",c.budget.vram_mb},{"vram_mb_override_set",c.vram_override_set},{"vram_mb_effective",limits.vram_mb},{"scratch_mb",c.budget.scratch_mb},{"max_jobs",c.max_jobs}}},{"devices",std::move(saved_devices)},{"profiles",std::move(saved_profiles)},{"tuning_measurements",std::move(tuning_measurements)},{"unavailable_reasons",std::move(saved_reasons)}}));
   if(p.profiles.empty())unavailable.emplace_back("no codec profile passed probe and bounded tuning");
@@ -270,7 +272,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const 
  p.reason="Adaptive media setup: CPU="+processor_model()+" logical="+std::to_string(GetActiveProcessorCount(ALL_PROCESSOR_GROUPS))+" RAM_total_MB="+observed_count(total_ram_mb)+" RAM_available_MB="+observed_count(total_ram_mb?std::optional<std::uint64_t>{headroom.ram_mb}:std::nullopt)+" disk_total_MB="+observed_count(total_disk_mb)+" disk_available_MB="+observed_count(total_disk_mb?std::optional<std::uint64_t>{headroom.scratch_mb}:std::nullopt)+" approved_ffmpeg_sha256="+c.ffmpeg_sha256+"; detected adapters="+observed_count(inventory_available?std::optional<std::uint64_t>{devices.empty()?inventory.size():devices.size()}:std::nullopt);
  for(const auto& device:(devices.empty()?inventory:devices))p.reason+=" ["+device.name+" id="+device.stable_id+" dedicated_VRAM_MB="+std::to_string(device.dedicated_vram_mb)+" driver="+(device.driver_version.empty()?"unavailable":device.driver_version)+"]";
  p.reason+="; retained sample profiles="+std::to_string(p.profiles.size())+"; app video="+(p.media_video?"CPU fallback sampled":"unavailable")+" app image="+(p.media_image?"sample passed":"unavailable");
- for(const auto& profile:p.profiles)p.reason+="; chosen "+backend_name(profile.backend)+" "+(profile.codec==adaptive::Codec::h264?"H.264":"HEVC")+" at "+std::to_string(profile.measured_frames_per_second)+" synthetic fps at 640x360 with concurrency="+std::to_string(profile.max_concurrency)+(profile.backend==adaptive::Backend::cpu?"":" ("+budget_sources[profile.stable_id+":"+std::to_string(static_cast<int>(profile.codec))]+")");
+ for(const auto& profile:p.profiles)p.reason+="; chosen "+backend_name(profile.backend)+" "+(profile.codec==adaptive::Codec::h264?"H.264":"HEVC")+" at "+std::to_string(profile.measured_frames_per_second)+" synthetic fps at "+std::to_string(profile.measured_width)+"x"+std::to_string(profile.measured_height)+" with concurrency="+std::to_string(profile.max_concurrency)+(profile.backend==adaptive::Backend::cpu?"":" ("+budget_sources[profile.stable_id+":"+std::to_string(static_cast<int>(profile.codec))]+")");
  for(const auto& reason:unavailable)p.reason+="; fallback "+reason;
  }catch(const std::exception& e){p.reason=e.what();}
  std::error_code error;std::filesystem::remove_all(workspace,error);return p;
@@ -371,6 +373,7 @@ void Worker::network(){
    probe_status_.finish();
    safe_log(config_.ffmpeg.empty()?"PROBE RESULT disabled":capability_report_.record());
    if(!config_.ffmpeg.empty())safe_log("PROBE SCOPE startup samples only; job support may vary");
+   for(const auto& note:probe.fallback_notes)safe_log("PROBE FALLBACK "+note);
    if(!probe.reason.empty())safe_log("PROBE DETAIL "+probe.reason);
   }
   apply_preferences();
@@ -457,7 +460,19 @@ void Worker::message(WebSocket& socket,const json::object& m){
 }
 void Worker::report_encoder_failure(const adaptive::Profile& profile){
  std::lock_guard lock(mutex_);
- if(auto record=capability_report_.failed(profile))safe_log(*record);
+ if(!adaptive_scheduler_||!adaptive_scheduler_->demote_profile(profile))return;
+ hardware_profiles_.erase(std::remove_if(hardware_profiles_.begin(),hardware_profiles_.end(),[&](const auto& p){
+  return p.stable_id==profile.stable_id&&p.backend==profile.backend&&p.codec==profile.codec;
+ }),hardware_profiles_.end());
+ if(auto record=capability_report_.failed(profile,true))safe_log(*record);
+ try{
+  auto state=parse(read_file(config_.root/"adaptive-hardware.json")).as_object();json::array profiles;
+  for(const auto& p:hardware_profiles_)profiles.emplace_back(adaptive::profile_record(p));
+  state["profiles"]=std::move(profiles);
+  if(!state.contains("runtime_demotions"))state["runtime_demotions"]=json::array{};
+  state["runtime_demotions"].as_array().emplace_back(adaptive::profile_record(profile));
+  atomic_write(config_.root/"adaptive-hardware.json",json::serialize(state));
+ }catch(...){safe_log("Adaptive demotion could not update its diagnostic profile file");}
 }
 void Worker::execute(std::shared_ptr<TaskData> data){
  const auto& s=data->spec;auto id=s.offer.attempt_id;auto workspace=config_.root/"jobs"/("job-"+id);json::object result{{"protocol",1},{"type","result"},{"attempt_id",id},{"job_id",s.offer.job_id},{"lease_token",data->token}};
@@ -470,16 +485,20 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   if(std::filesystem::exists(workspace))throw std::runtime_error("Attempt workspace already exists; refusing unsafe reuse");std::filesystem::create_directories(workspace);
   Http http;phase("download input",s.input_bytes);http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);
   phase("verify input SHA-256",s.input_bytes);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");if(cancelled())throw std::runtime_error("Job cancelled before conversion");
+  std::optional<std::pair<std::uint32_t,std::uint32_t>> input_dimensions;
   auto convert=[&](const std::vector<std::wstring>& arguments,const std::vector<std::wstring>& cpu_arguments,
                    const std::string& filename,unsigned seconds,bool hardware,std::stop_token pipeline_stop=std::stop_token{}){
    if(cancelled()||pipeline_stop.stop_requested())throw std::runtime_error("Job cancelled before conversion");
    auto label="convert "+filename;
    auto run_encoder=[&](const std::vector<std::wstring>& selected,bool use_hardware){
     std::optional<adaptive::Device> gpu_device;std::uint64_t gpu_reserved{};
+    if(!use_hardware&&(filename=="feed.mp4"||filename=="optimized.mp4")&&data->profile_reservation&&!data->profile_reservation->acquire_cpu_fallback([&]{return cancelled()||pipeline_stop.stop_requested();},30000))
+     throw std::runtime_error("CPU fallback encoder slot unavailable before lease or cancellation deadline");
     if(use_hardware){
      const auto codec=filename=="optimized.mp4"?adaptive::Codec::hevc:adaptive::Codec::h264;
      if(!data->profile_reservation)throw std::runtime_error("GPU reservation missing");
      for(const auto& profile:data->profile_reservation->profiles())if(profile.backend!=adaptive::Backend::cpu&&profile.codec==codec){
+      if(!data->profile_reservation->hardware_enabled(profile))throw std::runtime_error("GPU profile demoted; retrying CPU");
       for(const auto& device:enumerate_video_devices())if(adaptive::profile_current(profile,device,config_.ffmpeg_sha256)){gpu_device=device;gpu_reserved=profile.vram_mb;break;}
      }
      if(!gpu_device)throw std::runtime_error("GPU profile no longer matches installed adapter");
@@ -510,14 +529,12 @@ void Worker::execute(std::shared_ptr<TaskData> data){
         const auto codec=filename=="optimized.mp4"?adaptive::Codec::hevc:adaptive::Codec::h264;
         for(const auto& profile:data->profile_reservation->profiles())if(profile.backend!=adaptive::Backend::cpu&&profile.codec==codec)report_encoder_failure(profile);
        }
-       if(!use_hardware&&data->profile_reservation&&!data->profile_reservation->acquire_cpu_fallback([&]{return cancelled()||pipeline_stop.stop_requested();},30000))
-        throw std::runtime_error("CPU fallback encoder slot unavailable before lease or cancellation deadline");
        run_encoder(use_hardware?arguments:cpu_arguments,use_hardware);
       },
      [&](const std::filesystem::path& path){
       if(cancelled()||pipeline_stop.stop_requested())return false;
-      run_child_probe(config_.ffmpeg,{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",path.wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},s.offer.resources);
-      return std::filesystem::file_size(path)>0;
+      run_child_probe(config_.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-xerror",L"-threads",L"1",L"-i",path.wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},s.offer.resources);
+      return input_dimensions&&adaptive::video_geometry_valid(read_file(workspace/"process.log"),filename=="optimized.mp4"?"hevc":"h264",input_dimensions->first,input_dimensions->second);
      });
    }else run_encoder(arguments,false);
    data->progress.finish(true,monotonic_ms());
@@ -541,14 +558,29 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     std::optional<std::pair<std::uint32_t,std::uint32_t>> dimensions;
     try{dimensions=inspect_video_dimensions(config_.ffmpeg,workspace/"source.bin",workspace,cancelled,Resources{s.offer.resources.ram_mb,0,s.offer.resources.scratch_mb,s.offer.resources.cpu_threads});}
     catch(const std::exception&){dimensions.reset();}
-    const auto original_size=applicable_profiles.size();
+    input_dimensions=dimensions;
     applicable_profiles.erase(std::remove_if(applicable_profiles.begin(),applicable_profiles.end(),[&](const auto& profile){
-     return profile.backend!=adaptive::Backend::cpu&&(!dimensions||!adaptive::profile_supports_dimensions(profile,dimensions->first,dimensions->second));
+     if(profile.backend==adaptive::Backend::cpu)return false;
+     const auto name=adaptive::backend_token(profile.backend)+"/"+(profile.codec==adaptive::Codec::hevc?"hevc":"h264");
+     const auto size=dimensions?std::to_string(dimensions->first)+"x"+std::to_string(dimensions->second):"unknown size";
+     const auto evidence=adaptive::geometry_evidence(profile,dimensions?dimensions->first:0,dimensions?dimensions->second:0);
+     if(!dimensions||evidence==adaptive::GeometryEvidence::unsupported){
+      safe_log("JOB "+id+" CPU fallback: "+name+" "+adaptive::geometry_reason(evidence)+" "+size);
+      return true;
+     }
+     safe_log("JOB "+id+" selected "+name+" "+size+
+       (evidence==adaptive::GeometryEvidence::unproven?"; not yet proven; guarded":"; sampled; guarded"));
+     return false;
     }),applicable_profiles.end());
-    if(applicable_profiles.size()!=original_size)safe_log("JOB "+id+" CPU fallback: input outside GPU profile");
    }
-   if(std::any_of(applicable_profiles.begin(),applicable_profiles.end(),[](const auto& p){return p.backend!=adaptive::Backend::cpu;}))safe_log("JOB "+id+" selected GPU profiles");
    auto plan=rendition_plan(video,s.copy_audio,workspace,applicable_profiles);
+   if(video)for(const auto& rendition:plan){
+    if(rendition.hardware||(rendition.role!="feed"&&rendition.role!="feed_optimized"))continue;
+    const auto codec=rendition.role=="feed_optimized"?adaptive::Codec::hevc:adaptive::Codec::h264;
+    // A geometry rejection already names this CPU fallback in one line.
+    if(std::none_of(selected_profiles.begin(),selected_profiles.end(),[&](const auto& p){return p.backend!=adaptive::Backend::cpu&&p.codec==codec;}))
+     safe_log("JOB "+id+" selected cpu/"+(codec==adaptive::Codec::hevc?"hevc":"h264"));
+   }
    std::vector<adaptive::Profile> cpu_profiles;{std::lock_guard lock(mutex_);for(const auto& profile:hardware_profiles_)if(profile.backend==adaptive::Backend::cpu)cpu_profiles.push_back(profile);}
    auto cpu_plan=rendition_plan(video,s.copy_audio,workspace,cpu_profiles);json::object outputs;
    auto metadata=run_rendition_pipeline(plan,[&](const Rendition& rendition,std::stop_token stop){
@@ -622,8 +654,9 @@ void Worker::watchdog(){
     {std::lock_guard lock(mutex_);if(auto record=capability_report_.changed(hardware_profiles_))safe_log(*record);}
     safe_log("ADAPTIVE INVALIDATION: "+invalidation);
     try{
+     std::lock_guard lock(mutex_); // Serialize diagnostic writes with runtime demotion.
      auto state=parse(read_file(config_.root/"adaptive-hardware.json")).as_object();json::array current_profiles,reasons;
-     {std::lock_guard lock(mutex_);for(const auto& profile:hardware_profiles_)current_profiles.emplace_back(json::object{{"device_id",profile.stable_id},{"driver_version",profile.driver_version},{"ffmpeg_sha256",profile.ffmpeg_sha256},{"backend",static_cast<int>(profile.backend)},{"codec",static_cast<int>(profile.codec)},{"cpu_threads",profile.cpu_threads},{"ram_mb",profile.ram_mb},{"vram_mb",profile.vram_mb},{"scratch_mb",profile.scratch_mb},{"max_concurrency",profile.max_concurrency},{"measured_fps",profile.measured_frames_per_second},{"adapter_index",profile.adapter_index},{"backend_index",profile.backend_index},{"max_width",profile.max_width},{"max_height",profile.max_height}});}
+     for(const auto& profile:hardware_profiles_)current_profiles.emplace_back(adaptive::profile_record(profile));
      if(auto existing=state.find("unavailable_reasons");existing!=state.end())reasons=existing->value().as_array();
      reasons.emplace_back(invalidation);state["profiles"]=std::move(current_profiles);state["unavailable_reasons"]=std::move(reasons);atomic_write(config_.root/"adaptive-hardware.json",json::serialize(state));
     }catch(...){safe_log("Adaptive invalidation could not update its diagnostic profile file");}

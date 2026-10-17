@@ -1,0 +1,53 @@
+PASS CPU remains the safe profile when no supported GPU is installed
+PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+PASS single GPU profile requires matching encode decode and validated output
+PASS heterogeneous GPUs retain independent identities and schedules
+PASS two synthetic NVIDIA GPUs schedule independently through the production scheduler
+PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+PASS low VRAM and machine resource caps reject unsafe tuning
+PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+PASS profile invalidates on adapter identity driver or approved FFmpeg change
+PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+PASS selected hardware rendition binds an explicit adapter and conservative codec mode
+PASS Intel QSV and AMD AMF commands bind their probed DirectX adapter
+PASS hardware failure removes partial output and validates a clean CPU retry before success
+PASS cancelled hardware work does not start a CPU retry or retain partial output
+PASS runtime scheduler atomically enforces global and per-device costs until drain
+PASS task caps limit each reservation while global capacity admits four small jobs
+PASS native drain fixture keeps its GPU reservation while admitting independent CPU work
+PASS temporary CPU admission and GPU reservation moves preserve separate backend capacity
+PASS exhausted backend capacity stays owned across reservation moves until release
+PASS CUDA LUID mapping survives ordinal reorder and rejects duplicate or invalid mappings
+PASS GPU memory telemetry is child and LUID scoped and rejects ambiguous physical nodes
+PASS missing foreign invalid and zero GPU counters never mean idle headroom
+PASS serial and parallel tuning compare equal work repeated stages and child budgets
+PASS two independent GPU jobs fit with one CPU encoder slot and can wait for safe CPU retry
+PASS GPU fallback slot acquisition ignores a CPU codec already owned by the same task
+PASS runtime profile ties resolve by stable device identity and CPU profile is selectable
+PASS hardware adapter mapping ambiguity fails closed independent of enumeration order
+PASS runtime admission falls back to the measured CPU profile when configured VRAM is too small
+PASS live adapter headroom closes GPU admission and restores it after headroom returns
+PASS CPU concurrency reflects repeated tuning candidates within every configured cap
+PASS multi-codec runtime reservation uses peak per-job CPU memory and scratch costs
+PASS runtime scheduler invalidation stops stale hardware while active reservations drain
+PASS runtime command generation applies the scheduler-selected measured CPU profile
+PASS cancellation before an encode prevents every helper spawn
+PASS cancellation during output validation cannot publish a successful artifact
+PASS declared VRAM fallback permits proven hardware and retains CPU and drain budgets
+PASS VRAM budgets preserve live headroom and fail closed without either source
+PASS declared budget never substitutes for encode decode identity or tuning proof
+PASS encoder tokens name every backend that survived probing
+PASS encoder tokens never claim hardware when only CPU was profiled
+PASS a hardware-only profile set cannot imply a CPU profile
+PASS runtime hardware failure reports exactly once without changing selected profiles
+PASS reporting retains another profiled codec and handles profile removal and binary invalidation
+PASS diagnostic CPU evidence is distinct from missing adaptive profiles
+PASS converter invalidation retracts CPU as well as hardware evidence once
+PASS backup presentation promises a routing hint only
+PASS unobserved inventory is unknown while an observed zero stays zero
+PASS status evidence separates unrun checks from failed probes and requires current CPU app profiles
+PASS sample dimensions describe evidence while encoder geometry governs admission
+PASS only equal realistic measurements may withhold hardware for CPU throughput
+PASS large hardware failure demotes once and retries clean CPU while capacity stays owned
+FAIL saved profiles and rejected measurements name their actual tuning resolution: value is not a std::int64_t number [boost.json:33 at /tmp/ow-boost.mxOndo/boost_1_89_0/boost/json/impl/value.ipp:436:5 in function 'boost::system::result<long int&> boost::json::value::try_as_int64()']
+52 contracts, 1 failures
