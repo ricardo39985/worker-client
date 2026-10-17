@@ -33,6 +33,13 @@ hosts. Missing dependency downloads, damaged extraction, build cache failures
 and startup registration/readback have bounded repair paths. Persistent failures
 stay visible in the setup window and reports.
 
+FFmpeg distribution is currently **publication blocked**: the old upstream
+autobuild was deleted. The reviewed executable pin is retained, but an operator
+must publish its permanent download and matching source/notices URLs before fresh
+machines can install conversion automatically. See
+[the publication procedure](docs/ffmpeg-distribution.md). Existing approved
+converters remain usable; `-NoConversion` is an explicit pairing-only choice.
+
 Normal-user startup is verified using SID account identity. If Task Scheduler is
 unavailable, setup uses a verified shortcut in this user's Startup folder. It
 starts the tray worker and checks the process image and readiness marker. Closing

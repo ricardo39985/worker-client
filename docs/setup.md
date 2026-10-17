@@ -52,10 +52,19 @@ checksum-verified; damaged download caches are replaced. Extracted dependency
 files carry a full-file manifest; altered, missing or extra files trigger fresh
 extraction. Failed extraction preserves the previous dependency directory.
 Build failures receive one fresh generated-build retry; failing behavior tests
-are never skipped. Converter probe failures receive one pinned re-extraction
+are never skipped. Converter probe failures receive one pinned verification
 retry unless an explicit external converter was supplied. Startup failures use
 SID identity verification and a normal-user Startup shortcut fallback. Persistent
 errors stop with the failing step and write both source and installed reports.
+
+The retained FFmpeg executable replaces the expiring upstream ZIP. Its download
+is publication blocked until an operator sets the permanent binary and matching
+source/notices URLs in the reviewed lock. See
+[FFmpeg distribution](ffmpeg-distribution.md) for exact steps and the Windows
+acceptance checklist. Setup checks its size and SHA-256 before local publication;
+real conversion probes are still mandatory. Healthy approved existing converters
+are retained. Forced repair verifies the same pinned executable. Downloads retain the maximum of three
+checksum-verified attempts; persistent failures require rerunning setup.
 
 For unattended operation, after reviewing the relevant terms and hosts:
 
@@ -132,11 +141,12 @@ quiet. Connection activity is shown only while jobs or acknowledgments remain.
 An open connection or a 100% upload is not proof that a result was accepted:
 confirm RESULT ACKNOWLEDGED and coordinator `state:done`.
 
-For acceptance, run both PowerShell suites first from the source folder:
+For acceptance, run all three PowerShell suites first from the source folder:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\setup_policy_test.ps1
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\setup_progress_test.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\setup_converter_test.ps1
 ```
 
 Then run setup's mandatory native CTest/doctor checks. Observe a real download,

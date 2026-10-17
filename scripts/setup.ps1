@@ -24,6 +24,7 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 . (Join-Path $PSScriptRoot 'setup-policy.ps1')
 . (Join-Path $PSScriptRoot 'setup-dependencies.ps1')
+. (Join-Path $PSScriptRoot 'setup-converter.ps1')
 . (Join-Path $PSScriptRoot 'setup-startup.ps1')
 . (Join-Path $PSScriptRoot 'setup-identity.ps1')
 $Source = Split-Path -Parent $PSScriptRoot
@@ -132,40 +133,18 @@ function Install-BuildTools($Lock) {
     Find-Toolchain
 }
 function Configure-WorkerConverter([switch]$Force) {
-    # A verified pinned converter is per-user, independent of PATH or system DLLs.
-    if (-not $NoConversion) {
-        $converterOk=$false
-        if ($config.ffmpeg_path -and $config.ffmpeg_sha256 -and (Test-Path -LiteralPath $config.ffmpeg_path -PathType Leaf)) {
-            $converterOk=(Get-WorkerFileSha256 $config.ffmpeg_path) -ieq $config.ffmpeg_sha256
-        }
-        if ($Force -or -not $converterOk) {
-            $accepted=Join-Path $Root ('ffmpeg-license-'+$lock.ffmpeg.sha256+'.json')
-            if (-not $AcceptConversionLicense -and -not (Test-Path -LiteralPath $accepted)) {
-                if ($NonInteractive) { throw 'Conversion needs the pinned FFmpeg build. Review its license and supply -AcceptConversionLicense, or choose -NoConversion.' }
-                Write-Host ('FFmpeg '+$lock.ffmpeg.version+' will be installed for this user. '+$lock.ffmpeg.license)
-                Write-Host $lock.ffmpeg.license_url
-                if ((Read-WorkerSetupInput 'Type INSTALL to accept this dependency and enable conversion, or Enter to cancel') -cne 'INSTALL') { throw 'Conversion installation cancelled. Use -NoConversion for an explicit pairing-only setup.' }
-            }
-            $zip=Join-Path $cache ('ffmpeg-'+$lock.ffmpeg.sha256+'.zip')
-            Fetch-Verified $lock.ffmpeg.url $zip $lock.ffmpeg.sha256
-            $ffmpegDir=Join-Path $dependencies ('ffmpeg-'+$lock.ffmpeg.sha256.Substring(0,16))
-            if ($Force -and (Test-Path -LiteralPath $ffmpegDir)) { Remove-WorkerGeneratedTree $ffmpegDir }
-            Expand-WorkerDependency -Directory $ffmpegDir -ArchiveSha256 $lock.ffmpeg.sha256 -Extract {
-                param($stage)
-                $unpack=Join-Path $cache ('ffmpeg-unpack-'+[guid]::NewGuid().ToString('N'))
-                try {
-                    $ps=Join-Path $PSHOME 'powershell.exe'
-                    Native $ps @('-NoLogo','-NoProfile','-ExecutionPolicy','Bypass','-File',(Join-Path $PSScriptRoot 'setup-extract-zip.ps1'),'-Archive',$zip,'-Destination',$unpack) -Name 'Extract FFmpeg ZIP' -TimeoutSeconds 1800
-                    $inner=Join-Path $unpack $lock.ffmpeg.directory
-                    if (-not (Test-Path -LiteralPath (Join-Path $inner $lock.ffmpeg.executable))) { throw 'Pinned FFmpeg executable is absent from the archive.' }
-                    Move-WorkerDependencyContents $inner $stage
-                } finally { if (Test-Path -LiteralPath $unpack) { Remove-WorkerGeneratedTree $unpack } }
-            }
-            $config.ffmpeg_path=Join-Path $ffmpegDir $lock.ffmpeg.executable
-            $config.ffmpeg_sha256=(Get-WorkerFileSha256 $config.ffmpeg_path).ToLowerInvariant()
-            Atomic-Json $accepted @{archive_sha256=$lock.ffmpeg.sha256;accepted_utc=[DateTime]::UtcNow.ToString('o')}
-        }
+    $selected=Install-WorkerLockedConverter -Dependency $lock.ffmpeg -Root $Root -StoredPath $config.ffmpeg_path -StoredSha256 $config.ffmpeg_sha256 -NoConversion:$NoConversion -Force:$Force -AcceptLicense:$AcceptConversionLicense -NonInteractive:$NonInteractive -Consent {
+        param($dependency)
+        Write-Host ('FFmpeg '+$dependency.version+' will be installed for this user. '+$dependency.license)
+        Write-Host $dependency.license_url
+        Write-Host $dependency.redistribution_url
+        return (Read-WorkerSetupInput 'Type INSTALL to accept this dependency and enable conversion, or Enter to cancel') -ceq 'INSTALL'
+    } -Download {
+        param($url,$partial)
+        Get-WorkerSetupDownload $url $partial -Name 'Download retained pinned FFmpeg'
     }
+    $config.ffmpeg_path=$selected.path
+    $config.ffmpeg_sha256=$selected.sha256
 }
 
 try {
@@ -399,7 +378,7 @@ try {
             if (-not $NoConversion -and -not $script:DoctorHealth.processing_ready) { throw ('Converter probe failed: '+$script:DoctorHealth.capabilities.reason) }
         } -Repair {
             if ($script:ExplicitFfmpeg -or $NoConversion) { throw 'Explicit converter/runtime check failed; it cannot be repaired by changing the approved configuration.' }
-            Add-Check 'Conversion adapters' 'repair' 'Re-extracting the pinned converter and retrying sample conversions once.'
+            Add-Check 'Conversion adapters' 'repair' 'Verifying the retained pinned converter and retrying sample conversions once.'
             Configure-WorkerConverter -Force
         }
         $health=$script:DoctorHealth

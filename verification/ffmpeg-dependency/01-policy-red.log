@@ -1,0 +1,17 @@
+E
+======================================================================
+ERROR: setUpClass (__main__.DistributionContracts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/tests/ffmpeg_dependency_test.py", line 24, in setUpClass
+    spec.loader.exec_module(cls.policy)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1019, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1156, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1214, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/home/rick/Downloads/worker-client-gpu-on-logs/scripts/check_ffmpeg_dependency.py'
+
+----------------------------------------------------------------------
+Ran 0 tests in 0.001s
+
+FAILED (errors=1)
