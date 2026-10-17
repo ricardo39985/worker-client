@@ -188,6 +188,42 @@ TEST("task caps limit each reservation while global capacity admits four small j
  CHECK(!scheduler.reserve({Codec::h264},task));
  reservations.clear();CHECK(scheduler.active_jobs()==0);
 }
+TEST("native drain fixture keeps its GPU reservation while admitting independent CPU work"){
+ Profile gpu{"synthetic-luid","driver","hash",Backend::nvidia_nvenc,Codec::h264,1,256,512,128,1,50,0,0,true};
+ Profile cpu{"cpu","","hash",Backend::cpu,Codec::h264,1,256,0,128,1,20,0,0,true};
+ Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
+ auto held=scheduler.reserve({Codec::h264});CHECK(held);
+ CHECK(held.profiles().front().backend==Backend::nvidia_nvenc);
+ auto independent=scheduler.reserve({Codec::h264});CHECK(independent);
+ CHECK(independent.profiles().size()==1);
+ CHECK(independent.profiles().front().backend==Backend::cpu);
+ CHECK(scheduler.active_jobs()==2);CHECK(!scheduler.reserve({Codec::h264}));
+ independent.release();CHECK(scheduler.active_jobs()==1);
+ // Releasing unrelated CPU work must not return the GPU's reserved capacity.
+ auto replacement=scheduler.reserve({Codec::h264});CHECK(replacement);
+ CHECK(replacement.profiles().front().backend==Backend::cpu);
+ replacement.release();held.release();CHECK(scheduler.active_jobs()==0);
+ auto after_drain=scheduler.reserve({Codec::h264});CHECK(after_drain);
+ CHECK(after_drain.profiles().front().backend==Backend::nvidia_nvenc);
+}
+TEST("exhausted backend capacity stays owned across reservation moves until release"){
+ for(auto backend:{Backend::cpu,Backend::nvidia_nvenc,Backend::intel_qsv,Backend::amd_amf}){
+  Profile cpu{"cpu","","hash",Backend::cpu,Codec::h264,1,256,0,128,1,20,0,0,true};
+  Profile gpu{"synthetic-luid","driver","hash",backend,Codec::h264,1,256,512,128,1,50,0,0,true};
+  std::vector<Profile> profiles{cpu};if(backend!=Backend::cpu)profiles.push_back(gpu);
+  // One CPU thread is exhausted by either primary backend's job budget.
+  Scheduler scheduler({1,1024,512,512,4},profiles);
+  auto held=scheduler.reserve({Codec::h264});CHECK(held);
+  CHECK(held.profiles().front().backend==backend);
+  CHECK(!scheduler.reserve({Codec::h264}));
+  Scheduler::Reservation draining(std::move(held));
+  CHECK(!held);CHECK(draining);CHECK(scheduler.active_jobs()==1);
+  CHECK(!scheduler.reserve({Codec::h264}));
+  draining.release();draining.release();CHECK(scheduler.active_jobs()==0);
+  auto after_drain=scheduler.reserve({Codec::h264});CHECK(after_drain);
+  CHECK(after_drain.profiles().front().backend==backend);
+ }
+}
 TEST("CUDA LUID mapping survives ordinal reorder and rejects duplicate or invalid mappings"){
  std::vector<BackendIdentity> mappings{{"luid-b",1,1},{"luid-a",0,1}};
  CHECK(resolve_unique_backend_ordinal(mappings,"luid-a")==0);
