@@ -179,3 +179,54 @@ environment. The Windows console/controller code and the native 1,800-line
 concurrent rotation test are therefore authored but uncompiled and unrun. A real
 Windows gate must still run all registered CTest suites and judge cursor redraw,
 colors, legacy-console fallback, viewer close/reopen and a real conversion.
+
+## Short readable console (October 17, 2026)
+
+The progress/console executable now carries fifteen behavior contracts. They
+exercise suffix stability, live four-character collision disambiguation,
+suffix-to-full-id resolution from a plain durable log, restart determinism,
+midnight/month boundaries, fixed and daylight-saving local zones, width after the
+ASCII bar is inserted, impossible long messages, old log records, the five-color
+mapping, retry visibility, four concurrent rows, cancellation at 0/99 percent,
+idle silence and the preserved encoder-timeline byte accounting. The focused
+warnings-as-errors command passed 15 contracts:
+
+```sh
+g++ -std=c++20 -Wall -Wextra -Werror -pedantic -pthread -Iinclude -Itests tests/main.cpp tests/progress_test.cpp -o .cache/ow-progress-contracts
+.cache/ow-progress-contracts
+```
+
+The reviewed Boost 1.89.0 archive was downloaded to the ignored `.cache/`, its
+SHA-256 matched lock hash `9de758db755e8330a01d995b0a24d09798048400ac25c03fc5ea9be364b13c93`,
+and it was passed to CMake without installation. Results:
+
+```sh
+./scripts/test.sh -DOW_BOOST_ROOT="$PWD/.cache/boost_1_89_0"
+# 4/4 CTest executables passed: 74 core, 9 pipeline, 3 rendition,
+# 15 progress/console (101 contracts); exit 0
+
+cmake -S . -B build-sanitize -DCMAKE_BUILD_TYPE=Debug -DOW_SANITIZE=ON -DOW_ENABLE_IPO=OFF -DOW_BOOST_ROOT="$PWD/.cache/boost_1_89_0"
+cmake --build build-sanitize --parallel 2
+ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
+# 4/4 passed, 101 contracts with leak detection and halt on error; exit 0
+
+python3 tests/media_rendition_smoke.py --probe build-tests/ow_rendition_probe
+# Synthetic full-size H.264, HEVC and WebP profiles decoded successfully; exit 0
+```
+
+No PowerShell, MSVC, Windows SDK or Windows kernel is available here. The console
+and worker changes are therefore authored but uncompiled and unrun on Windows. A
+native gate still has to judge both light and dark 16-color palettes, legacy
+console cursor redraw, viewer close/reopen, suffix labels in a real job, and the
+short timestamps on a machine whose local zone is not UTC.
+
+| Edge case | Contract |
+|---|---|
+| Concurrent jobs with colliding suffixes | `two live jobs with the same four characters stay distinguishable` |
+| Retry then completion with one suffix | `a repeated stage is a visible retry with one stable suffix` |
+| Before/after restart with no counter | `restart needs no counter and never implies continuation` |
+| Message too long for the width | `every rendered line fits eighty columns including an impossible message` |
+| Midnight and month boundary | `local timestamp format is exact through midnight month and zone changes` |
+| DST and non-UTC local zone | same timestamp contract with fixed and DST POSIX zones |
+| Many jobs and grep resolution | `many jobs keep suffix-to-id resolvability and concurrent accounting` |
+| Old UUID/old-timestamp lines | `old durable lines still render plainly without breaking the viewer` |

@@ -25,6 +25,7 @@ class Worker {
  std::jthread network_,watchdog_;
  mutable std::mutex mutex_;std::unordered_map<std::string,std::unique_ptr<Running>> running_;
  std::atomic_bool paused_{},exit_requested_{},stop_{};
+ std::string last_activity_,last_capability_;bool connected_once_{};
  std::atomic<Priority> priority_{Priority::normal};
  std::atomic_bool verified_video_{},verified_image_{},verified_media_video_{},verified_media_image_{};std::string status_{"STARTING"};
  std::unordered_map<std::string,JobSpec> offered_; // network thread only

@@ -94,3 +94,22 @@ also passed. The Windows-native rotation contract covers 1,800 concurrent long
 lines across the existing cap, but it and the changed worker/viewer have not been
 compiled or run with MSVC here. No installation, startup change, deployment,
 merge, release publication or running-worker restart was performed.
+
+## Readable console review candidate — October 17, 2026
+
+The second readability pass keeps the durable log as UTC/millisecond plain text
+with complete attempt ids, while the viewer renders short `dd/mm hh:mm:ss` local
+timestamps and `job <last-four>` labels. Live suffix collisions grow the label;
+finished labels can be reused. Meaningful transitions are one terse line, live
+progress stays in bounded dashboard rows, and every rendered line is capped at
+80 columns. Five semantic colors are fixed to failure, warning/attention,
+success/ACK, job activity and neutral system text. On 16-color Windows, orange is
+dark yellow (`FOREGROUND_RED|FOREGROUND_GREEN`).
+
+All four Linux CTest executables passed in Release and under ASan/UBSan with leak
+detection: 74 core, 9 pipeline, 3 rendition and 15 progress/console contracts
+(101 total). The installed-FFmpeg synthetic rendition smoke also passed. The
+Windows console/controller/worker changes remain uncompiled and unrun in this
+authoring environment; native MSVC, a real 16-color console, viewer redraw and a
+live job remain required. No installation, startup change, deployment, merge,
+release publication or running-worker restart was performed.

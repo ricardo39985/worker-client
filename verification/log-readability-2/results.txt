@@ -1,0 +1,47 @@
+Readable console, short job suffixes and local timestamps
+Branch: feat/log-readability-2
+Date: 2026-10-17 (local authoring environment)
+Compiler: GCC 15.2.0; CMake 4.2.3; SQLite 3.46.1; FFmpeg 8.0.1
+Boost: reviewed 1.89.0 archive, SHA-256
+9de758db755e8330a01d995b0a24d09798048400ac25c03fc5ea9be364b13c93
+
+Focused warnings-as-errors behavior executable
+Command:
+  g++ -std=c++20 -Wall -Wextra -Werror -pedantic -pthread -Iinclude -Itests tests/main.cpp tests/progress_test.cpp -o .cache/ow-progress-contracts
+  .cache/ow-progress-contracts
+Exit: 0
+Counts: 15 contracts, 0 failures
+
+Documented portable gate
+Command:
+  ./scripts/test.sh -DOW_BOOST_ROOT="$PWD/.cache/boost_1_89_0"
+Exit: 0
+Counts: 4/4 CTest executables passed
+  worker_contracts: 74 contracts, 0 failures
+  pipeline_contracts: 9 contracts, 0 failures
+  rendition_contracts: 3 contracts, 0 failures
+  progress_contracts: 15 contracts, 0 failures
+  total: 101 contracts, 0 failures
+
+Sanitizer gate
+Commands:
+  cmake -S . -B build-sanitize -DCMAKE_BUILD_TYPE=Debug -DOW_SANITIZE=ON -DOW_ENABLE_IPO=OFF -DOW_BOOST_ROOT="$PWD/.cache/boost_1_89_0"
+  cmake --build build-sanitize --parallel 2
+  ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
+Exit: 0 configure, 0 build, 0 CTest
+Counts: 4/4 passed; 74 + 9 + 3 + 15 = 101 contracts, 0 failures
+Leak detection was enabled and UBSan halted on error.
+
+Existing synthetic media smoke
+Command:
+  python3 tests/media_rendition_smoke.py --probe build-tests/ow_rendition_probe
+Exit: 0
+Result: Synthetic full-size H.264, HEVC and WebP profiles decoded successfully
+
+Not run here:
+- MSVC/Windows SDK compilation of windows/console.cpp, windows/worker.cpp and
+  the native console/worker contracts.
+- Real 16-color light/dark palette contrast, legacy cursor redraw, viewer
+  close/reopen, a live job and its ACK on Windows.
+No installation, deployment, startup change, push or running-worker restart
+was performed.

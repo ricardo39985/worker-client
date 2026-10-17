@@ -109,17 +109,19 @@ extraction moves the generated tree into staging instead of copying it again.
 The worker now derives conversion progress from FFmpeg's reported media position
 against the source duration; output size remains only a safety limit. Transfer
 and verification retain exact byte totals. The separate console viewer turns
-plain durable progress records into stable in-place ASCII bars with human elapsed
-and remaining times. It colors interactive categories when supported, while
-redirected output and `NO_COLOR` remain plain append-only text. Unknown totals
-are described once without an invented percentage.
+plain durable progress records into stable in-place ASCII bars. It prints one
+short transition line at a time, identifies a job by `job ` plus the last four
+attempt characters, uses `dd/mm hh:mm:ss` local console timestamps, and caps all
+rendered lines at 80 columns. Five semantic colors are used; redirected output
+and `NO_COLOR` remain plain append-only event text. Unknown totals show only the
+stage name and elapsed time, without an invented percentage.
 
 The current Linux run passed all four portable CTest executables (74 core, 9
-pipeline, 3 rendition and the progress/console contract executable), the same
-four under ASan/UBSan with leak detection, and the synthetic H.264/HEVC/WebP
-decode smoke. The Windows console/controller changes and native log-rotation
-contract remain uncompiled and unrun here. This is source evidence, not a
-verified or installed Windows release.
+pipeline, 3 rendition and 15 progress/console contracts), the same 101 contracts
+under ASan/UBSan with leak detection, and the synthetic H.264/HEVC/WebP decode
+smoke. The Windows console/controller changes and native log-rotation contract
+remain uncompiled and unrun here. This is source evidence, not a verified or
+installed Windows release.
 
 
 

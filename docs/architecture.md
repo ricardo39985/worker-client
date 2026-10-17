@@ -46,11 +46,27 @@ not a boot service; user sign-in is required.
 
 The controller's durable log is the only input to the console viewer. It contains
 plain timestamped event and progress records, never terminal escape sequences.
-The viewer owns color, categorization and in-place dashboard redraw, so closing
-or crashing it cannot signal the controller or its contained process trees.
-Redirected output and `NO_COLOR` bypass presentation and copy the durable bytes
-as plain text. Legacy consoles use Win32 cursor/color operations and ASCII bars
-instead of assuming virtual-terminal or Unicode support.
+Durable lines keep a UTC millisecond timestamp and the complete attempt id, so
+they remain unambiguous evidence and a displayed suffix can be grepped back to
+the real attempt. The viewer owns the short local presentation, color and
+in-place dashboard redraw, so closing or crashing it cannot signal the controller
+or its contained process trees.
+
+Console lines are capped at 80 columns and target roughly 60. The viewer renders
+`dd/mm hh:mm:ss` in local time, shows a job as `job ` plus the last four attempt
+characters (`job 93c7`), and grows that suffix only while another live job would
+otherwise be indistinguishable. One short line records a meaningful transition;
+per-poll progress stays in the dashboard, and a stage without a defensible total
+shows only its name and elapsed time. Only five semantic colors are used: red
+failure, orange warning/retry/cancellation/attention, green success/ACK, blue
+ordinary job activity/progress and white system/configuration text. White uses
+the terminal default foreground. On a 16-color Windows console orange is the
+closest legible analogue: dark yellow (`FOREGROUND_RED|FOREGROUND_GREEN`, ANSI
+33), which retains contrast on both dark and light backgrounds. Redirected
+output and `NO_COLOR` remain plain append-only event text with no escape codes;
+redirected output also suppresses dashboard-only progress rows. Legacy consoles
+use Win32 cursor/color operations and ASCII bars instead of assuming
+virtual-terminal support.
 
 Conversion progress is an execution measurement, not a file-size estimate.
 Typed FFmpeg invocations enable its machine-readable progress stream; the worker
