@@ -65,8 +65,12 @@ function Find-Toolchain {
     $script:Compiler = $null; $script:CMake = $null; $script:Sdk = $null
     $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
     if (Test-Path -LiteralPath $vswhere -PathType Leaf) {
-        $found = Invoke-WorkerNativeProgress $vswhere @('-latest','-products','*','-version','[17.10,18.0)','-requires','Microsoft.VisualStudio.Component.VC.Tools.x86.x64','-format','json') -Name 'Inspect Microsoft toolchain' -TimeoutSeconds 30 -CaptureOutput
-        $instances = @($found | ConvertFrom-Json)
+        try {
+            $found = Invoke-WorkerNativeProgress $vswhere @('-latest','-products','*','-version','[17.10,18.0)','-requires','Microsoft.VisualStudio.Component.VC.Tools.x86.x64','-format','json') -Name 'Inspect Microsoft toolchain' -TimeoutSeconds 30 -CaptureOutput
+        } catch { $found = '' }
+        # No matching instance is a normal outcome, not a crash: the missing-toolchain
+        # path below offers the elevated Microsoft Build Tools install.
+        $instances = @(Convert-WorkerToolchainInstances -Json ([string]$found))
         if ($instances.Count -gt 0) { $script:Compiler = [string]$instances[0].installationPath }
     }
     if ($script:Compiler) {

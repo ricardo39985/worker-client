@@ -152,3 +152,21 @@ function Archive-WorkerPairing([string]$Root,[switch]$WholeCoordinator) {
     }
     return $archive
 }
+
+# vswhere reports nothing when no installed instance matches the version and
+# workload filter. ConvertFrom-Json turns that empty output into $null, and
+# @($null) still has Count 1, so reading .installationPath on it used to raise
+# 'The property installationPath cannot be found on this object' under
+# Set-StrictMode instead of letting setup report the missing toolchain and offer
+# to install it. This returns only real instances that carry a usable path.
+function Convert-WorkerToolchainInstances([string]$Json) {
+    if ([string]::IsNullOrWhiteSpace($Json)) { return }
+    $parsed = $null
+    try { $parsed = $Json | ConvertFrom-Json -ErrorAction Stop } catch { return }
+    foreach ($instance in @($parsed)) {
+        if ($null -eq $instance) { continue }
+        $path = $instance.PSObject.Properties['installationPath']
+        if ($null -eq $path -or [string]::IsNullOrWhiteSpace([string]$path.Value)) { continue }
+        $instance
+    }
+}

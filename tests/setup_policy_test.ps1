@@ -166,6 +166,23 @@ try {
   Assert ([IO.File]::ReadAllText((Join-Path $root 'pairing-key.dpapi')) -eq 'synthetic-pairing-key.dpapi')
   Assert ([IO.File]::ReadAllText((Join-Path $root 'journal.sqlite3')) -eq 'synthetic-journal.sqlite3')
  }
-} finally {Remove-Item -LiteralPath $root -Recurse -Force}
+ Case 'an absent toolchain is reported as missing instead of crashing' {
+  Assert (@(Convert-WorkerToolchainInstances -Json '').Count -eq 0) 'empty output must yield no instances'
+  Assert (@(Convert-WorkerToolchainInstances -Json $null).Count -eq 0) 'null output must yield no instances'
+  Assert (@(Convert-WorkerToolchainInstances -Json '   ').Count -eq 0) 'blank output must yield no instances'
+  Assert (@(Convert-WorkerToolchainInstances -Json 'null').Count -eq 0) 'json null must yield no instances'
+  Assert (@(Convert-WorkerToolchainInstances -Json '[{"instanceId":"x"}]').Count -eq 0) 'an instance without installationPath must be dropped'
+  Assert (@(Convert-WorkerToolchainInstances -Json '[{"installationPath":"  "}]').Count -eq 0) 'a blank path must be dropped'
+  Assert (@(Convert-WorkerToolchainInstances -Json 'not json').Count -eq 0) 'malformed output must yield no instances'
+ }
+ Case 'a real toolchain instance still supplies the compiler path' {
+  $instances=@(Convert-WorkerToolchainInstances -Json '[{"installationPath":"C:\\BuildTools","instanceId":"a"},{"instanceId":"b"}]')
+  Assert ($instances.Count -eq 1) 'only instances with a usable path count'
+  Assert ($instances[0].installationPath -eq 'C:\BuildTools') 'the path must survive'
+  $single=@(Convert-WorkerToolchainInstances -Json '{"installationPath":"C:\\Tools"}')
+  Assert ($single.Count -eq 1 -and $single[0].installationPath -eq 'C:\Tools') 'a single object must be accepted'
+ }
+} 
+finally {Remove-Item -LiteralPath $root -Recurse -Force}
 Write-Host "$script:passed setup contracts passed; $script:failed failed"
 if($script:failed){exit 1}
