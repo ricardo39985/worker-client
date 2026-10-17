@@ -1,0 +1,8 @@
+kernel: Linux
+python3: /home/rick/miniforge3/bin/python3
+cmake: /usr/bin/cmake
+ctest: /usr/bin/ctest
+c++: /usr/bin/c++
+powershell.exe: UNAVAILABLE
+pwsh: UNAVAILABLE
+cl.exe: UNAVAILABLE

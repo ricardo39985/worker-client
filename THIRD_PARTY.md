@@ -9,9 +9,12 @@ Read the license in the downloaded source before redistribution.
 MSVC Build Tools installation requires the user's explicit license acceptance.
 The bootstrap uses the Microsoft-signed VS2022 installer channel; Windows APIs
 and WinSQLite are OS-supplied components, not DLLs fetched from arbitrary sites.
-FFmpeg licensing depends on the approved build configuration. This package does
-not select or redistribute a particular FFmpeg binary, so its redistribution
-obligations still need review when that artifact is chosen. No license for this
+FFmpeg licensing depends on the approved build configuration. This source package
+selects the previously approved static GPL executable by hash but bundles no
+binary. Operator publication of that exact build, matching source, build details
+and license notices remains blocked pending redistribution review. See
+`docs/ffmpeg-distribution.md`; the generic FFmpeg legal page is not a substitute
+for retained corresponding source and notices. No license for this
 project's own code is selected; do not make it public without the owner's decision.
 
 Primary references consulted while writing this implementation (not proof of

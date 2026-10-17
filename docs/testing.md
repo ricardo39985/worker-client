@@ -1,5 +1,12 @@
 # Test policy and evidence
 
+Retained FFmpeg distribution evidence is in
+`verification/ffmpeg-dependency/REPORT.md`. The dependency-only Linux snapshot
+passed six CTest suites (187 contracts including 17 new offline policy cases).
+Sixteen additional PowerShell converter contracts are registered but unrun here;
+Windows compilation, native setup/Doctor and real published-artifact checks are
+still required. See `docs/ffmpeg-distribution.md` for the publication procedure.
+
 Current geometry correction evidence: see
 `verification/gpu-dimensions/REPORT.md`. The sample size no longer sets encoder
 limits; startup tuning is 1920x1080 and larger hardware work uses guarded

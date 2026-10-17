@@ -30,11 +30,19 @@
   "models": [],
   "ffmpeg": {
     "version": "n9.0.2-22-g46d8f462ee",
-    "url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-10-01-13-06/ffmpeg-n9.0.2-22-g46d8f462ee-win64-gpl-9.0.zip",
-    "sha256": "74827e097445a136b803febd4dcf80f7cba7f14a4c612fb80f7b5e5cedd3ffbe",
+    "format": "exe",
+    "distribution": "operator-retained",
+    "url": null,
+    "sha256": "f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4",
+    "bytes": 165167104,
     "license_url": "https://ffmpeg.org/legal.html",
-    "directory": "ffmpeg-n9.0.2-22-g46d8f462ee-win64-gpl-9.0",
-    "executable": "bin/ffmpeg.exe",
-    "license": "GPL build; review bundled license and source notices before enabling."
+    "redistribution_url": null,
+    "license": "GPL build; review the retained matching source, build configuration and license notices before enabling.",
+    "provenance": {
+      "upstream_archive_url": "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-10-01-13-06/ffmpeg-n9.0.2-22-g46d8f462ee-win64-gpl-9.0.zip",
+      "upstream_archive_sha256": "74827e097445a136b803febd4dcf80f7cba7f14a4c612fb80f7b5e5cedd3ffbe",
+      "upstream_directory": "ffmpeg-n9.0.2-22-g46d8f462ee-win64-gpl-9.0",
+      "upstream_executable": "bin/ffmpeg.exe"
+    }
   }
 }

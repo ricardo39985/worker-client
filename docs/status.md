@@ -1,5 +1,14 @@
 # Candidate status — 0.1.2
 
+Retained FFmpeg distribution: see
+`verification/ffmpeg-dependency/REPORT.md` and `docs/ffmpeg-distribution.md`.
+The expired autobuild is replaced by an exact executable pin and retained-artifact
+installation path. Publication is explicitly pending; fresh automatic conversion
+remains blocked until the operator publishes and reviews the two lock URLs.
+Linux gates pass on an isolated dependency-only snapshot; Windows PowerShell/MSVC,
+actual retained download, redistribution review and native probes remain unrun.
+No GPU behavior changes or running-host actions belong to this branch.
+
 Current geometry correction evidence: see
 `verification/gpu-dimensions/REPORT.md`. The sample size no longer sets encoder
 limits; startup tuning is 1920x1080 and larger hardware work uses guarded
