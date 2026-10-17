@@ -29,7 +29,7 @@ cmake --build build-sanitize --parallel 2
 ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize --output-on-failure
 ```
 
-On Windows, setup.cmd builds Release and runs all five registered suites before
+On Windows, setup.cmd builds Release and runs all eight registered suites before
 installation. A standalone build is also possible with a verified Boost root:
 
 ```powershell
@@ -102,7 +102,7 @@ and processes, not production media or credentials. Windows PowerShell 5.1 is
 unavailable here: neither these cases nor the existing setup suite has executed
 for this change. No executed PowerShell red or green stage is claimed.
 
-Required: Windows syntax checks, both PowerShell suites, all five registered CTest
+Required: Windows syntax checks, both PowerShell suites, all eight registered CTest
 suites with MSVC, the real converter doctor and setup/bootstrap/network/timeout
 observations. The portable counter tests do not establish WinHTTP transfer,
 PowerShell process streaming, tray behavior or a successful remote conversion.
@@ -145,3 +145,33 @@ contracts also pass with installed GCC using C++20, warnings as errors and pthre
 Windows/MSVC compilation and the actual tray/viewer check have not run for this
 change. Run setup's registered native tests before installing a release; observe
 an idle interval, a job and its ACK, and a disconnect/reconnect on Windows.
+
+## Adaptive hardware correction 2 (October 17, 2026)
+
+The first global-budget regression linked the production `src/adaptive_hardware.cpp`
+and failed before the scheduler change. Four offers each cost one CPU and 512 MiB;
+the fourth was incorrectly rejected against the task's 512 MiB ceiling. After the
+fix, four reservations are accepted under machine CPU4/RAM2048 and the fifth is
+rejected. The focused adaptive executable passed 28/28 contracts, including two
+synthetic NVIDIA fixture devices, ordinal reordering, PID/LUID telemetry ambiguity,
+task/global budgets, live per-device headroom, codec fallback, output cleanup and
+drain. These fixtures are not physical GPU claims.
+
+The portable `scripts/test.sh` run passed 5/5 CTest suites. On the reachable
+Windows PC, MSVC 19.44 Release with parallel 2 and CTest passed 8/8. The isolated
+Doctor used the installed approved FFmpeg and detected the Radeon RX Vega M GL
+(4,043 MiB dedicated) and Intel HD Graphics 630 (128 MiB). It enabled one AMD AMF
+HEVC profile after the 640x360 synthetic encode, decode, child PID/LUID dedicated
+memory sample and repeated tuning. The observed rates are sample-specific; quality
+parity is unmeasured. AMD AMF H.264 was withheld below the 5% CPU throughput floor.
+Intel QSV ran but had no nonzero dedicated-memory sample; NVIDIA was absent.
+Runtime sends inputs outside the tested 640x360 envelope to CPU without scaling.
+
+Before Doctor and smoke, the isolated script checked worker PID 28136 present,
+zero unmatched START records and zero live FFmpeg processes. The synthetic native
+pipeline smoke passed serial/overlapped H.264, HEVC and WebP decode, observed
+overlap, matched artifact bytes and SHA-256, and validated a single CPU retry
+before upload observation. Its 500 ms per-artifact transfer delay was simulated;
+it did not contact storage or the coordinator. No live config, service, pairing,
+startup or job state changed. Exact executed logs are in
+`/home/rick/.hermes/cache/scratch/worker-adaptive-hardware-implementation-r2.md`.

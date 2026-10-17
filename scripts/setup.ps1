@@ -177,17 +177,27 @@ try {
     if ([int]$os.BuildNumber -lt 19041) { throw ('Windows build {0} is below this worker''s minimum 19041. No changes made.' -f $os.BuildNumber) }
     Add-Check 'Windows' 'pass' ($os.Caption + ' build ' + $os.BuildNumber)
     $ramMb = [math]::Floor([double]$os.TotalVisibleMemorySize / 1024)
-    Add-Check 'Memory' 'pass' ('{0} MB installed; {1} MB currently free' -f $ramMb,[math]::Floor([double]$os.FreePhysicalMemory/1024))
+    $freeRamMb=[math]::Floor([double]$os.FreePhysicalMemory/1024)
+    $logicalCpu=0;foreach($processor in $cpu){$logicalCpu += [int]$processor.NumberOfLogicalProcessors}
+    Add-Check 'Memory' 'pass' ('{0} MB installed; {1} MB currently free' -f $ramMb,$freeRamMb)
     Add-Check 'CPU' 'pass' (($cpu | ForEach-Object { $_.Name }) -join '; ')
+    $gpuInventory=@()
     try {
-        $gpu = @(Invoke-WorkerSetupStage 'Inspect GPU inventory' {Get-CimInstance Win32_VideoController | ForEach-Object { $_.Name }})
-        Add-Check 'GPU' 'info' (($gpu -join '; ') + '; detected only, not verified or enabled for compute')
+        $gpuInventory = @(Invoke-WorkerSetupStage 'Inspect GPU inventory' {Get-CimInstance Win32_VideoController | ForEach-Object {
+            [pscustomobject]@{name=[string]$_.Name;device_id=[string]$_.PNPDeviceID;driver_version=[string]$_.DriverVersion;reported_adapter_ram_bytes=[uint64]$_.AdapterRAM}
+        }})
+        Add-Check 'GPU' 'info' (($gpuInventory | ForEach-Object { $_.name+' ['+$_.device_id+'] driver '+$_.driver_version }) -join '; ')
     } catch { Add-Check 'GPU' 'info' 'GPU inventory unavailable. CPU operation does not require it.' }
     $drive = [IO.DriveInfo]::new([IO.Path]::GetPathRoot($Root))
     $neededGb = 3
     if ($InstallMissing) { $neededGb=15 }
     if ($drive.AvailableFreeSpace -lt ($neededGb * 1GB)) { throw "At least $neededGb GB free disk required for this setup mode." }
     Add-Check 'Disk' 'pass' ('{0:N1} GB free' -f ($drive.AvailableFreeSpace/1GB))
+    if (-not $CheckOnly) {
+        $inventoryRoot=Join-Path $Root 'verification';New-Item -ItemType Directory -Force -Path $inventoryRoot | Out-Null
+        Atomic-Json (Join-Path $inventoryRoot 'setup-inventory.json') ([ordered]@{schema=1;captured_utc=[DateTime]::UtcNow.ToString('o');logical_cpu_count=$logicalCpu;processor_names=@($cpu | ForEach-Object { [string]$_.Name });total_ram_mb=$ramMb;available_ram_mb=$freeRamMb;disk_total_bytes=[uint64]$drive.TotalSize;disk_available_bytes=[uint64]$drive.AvailableFreeSpace;adapters=@($gpuInventory)})
+        Add-Check 'Initial hardware inventory' 'pass' 'CPU, RAM, disk and adapter identity/driver report saved before converter probes.'
+    } else { Add-Check 'Initial hardware inventory' 'info' 'CPU, RAM, disk and adapter inventory collected; CheckOnly did not persist it.' }
     foreach ($dll in 'winhttp.dll','bcrypt.dll','crypt32.dll','winsqlite3.dll') {
         if (-not (Test-Path -LiteralPath (Join-Path $env:SystemRoot "System32\$dll"))) { throw "Required Windows component missing: $dll. Repair Windows; do not download random DLLs." }
     }

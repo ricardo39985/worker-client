@@ -1,0 +1,10 @@
+FAIL CPU remains the safe profile when no supported GPU is installed: check failed at tests/adaptive_hardware_test.cpp:30: profiles.size()==2
+FAIL GPU adapter and compiled encoder listing do not qualify a broken driver: check failed at tests/adaptive_hardware_test.cpp:37: profiles.size()==1
+FAIL single GPU profile requires matching encode decode and validated output: check failed at tests/adaptive_hardware_test.cpp:44: selected&&selected->backend==Backend::nvidia_nvenc
+FAIL heterogeneous GPUs retain independent identities and schedules: check failed at tests/adaptive_hardware_test.cpp:51: find(profiles,a.stable_id,Codec::h264)
+FAIL codec-specific evidence keeps unsupported HEVC on a verified CPU profile: check failed at tests/adaptive_hardware_test.cpp:58: find(profiles,g.stable_id,Codec::h264)
+PASS low VRAM and machine resource caps reject unsafe tuning
+FAIL measured concurrency stays under CPU RAM scratch VRAM and job ceilings: check failed at tests/adaptive_hardware_test.cpp:75: p
+FAIL profile invalidates on adapter identity driver or approved FFmpeg change: check failed at tests/adaptive_hardware_test.cpp:83: p
+FAIL cancelled or failed tuning falls back to CPU without leaking a device reservation: check failed at tests/adaptive_hardware_test.cpp:93: profiles.size()==1
+9 contracts, 8 failures

@@ -27,6 +27,14 @@ TEST("restart exposes interrupted work without automatically rerunning it"){
  Temp t;{Store s(t.path/"journal.db");CHECK(s.reserve("a","j","p"));CHECK(s.start("a"));}
  Store s(t.path/"journal.db");CHECK(s.interrupted()==std::vector<std::string>{"a"});s.result("a","abandoned");CHECK(s.interrupted().empty());CHECK(s.pending().size()==1);
 }
+TEST("denied BEGIN capacity is terminally never-started across journal restart"){
+ Temp t;{Store s(t.path/"journal.db");CHECK(s.reserve("denied","job","fingerprint"));
+  CHECK(s.decline_reserved("denied","profile_capacity_unavailable"));
+  CHECK(!s.start("denied"));CHECK(s.state("denied")=="never_started:profile_capacity_unavailable");}
+ Store reopened(t.path/"journal.db");CHECK(reopened.interrupted().empty());
+ CHECK(reopened.pending().empty());CHECK(reopened.pending_count()==0);
+ CHECK(!reopened.reserve("denied","job","fingerprint"));
+}
 TEST("priority settings survive restart"){
  Temp t;{Store s(t.path/"j.db");s.set("priority","low");}Store s(t.path/"j.db");CHECK(s.get("priority")=="low");CHECK(!s.get("absent"));
 }

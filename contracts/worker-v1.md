@@ -224,4 +224,6 @@ normal journal replay; stale/failed attempts cannot overwrite newer results.
 
 Existing diagnostic single-output messages and pairing protocol 1 are unchanged.
 Older clients lack the new probed capability and receive no app-profile offer;
-the server uses local fallback instead. No inference/GPU adapters are added.
+the server uses local fallback instead. No inference adapter or protocol-level
+GPU requirement is added. Worker-local adaptive media profiles do not change
+this wire contract.

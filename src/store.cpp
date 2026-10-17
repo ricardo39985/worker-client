@@ -41,6 +41,11 @@ bool Store::reserve(const std::string& id,const std::string& job,const std::stri
  Statement q(db_,"SELECT job,payload,state FROM attempts WHERE id=?");q.bind(1,id);q.step();return q.string(0)==job&&q.string(1)==payload&&q.string(2)=="reserved";
 }
 bool Store::start(const std::string& id){std::lock_guard lock(mutex_);Statement s(db_,"UPDATE attempts SET state='running' WHERE id=? AND state='reserved'");s.bind(1,id);s.step();return sqlite3_changes(db_)==1;}
+bool Store::decline_reserved(const std::string& id,const std::string& reason){
+ if(reason.empty()||reason.size()>96)throw std::runtime_error("invalid never-started reason");
+ for(unsigned char c:reason)if(!((c>='a'&&c<='z')||(c>='0'&&c<='9')||c=='_'||c=='-'))throw std::runtime_error("invalid never-started reason");
+ std::lock_guard lock(mutex_);Statement s(db_,"UPDATE attempts SET state=? WHERE id=? AND state='reserved'");s.bind(1,"never_started:"+reason);s.bind(2,id);s.step();return sqlite3_changes(db_)==1;
+}
 std::optional<std::string> Store::state(const std::string& id){std::lock_guard lock(mutex_);Statement s(db_,"SELECT state FROM attempts WHERE id=?");s.bind(1,id);if(s.step())return s.string(0);return {};}
 void Store::result(const std::string& id,const std::string& body){
  std::lock_guard lock(mutex_);exec("BEGIN IMMEDIATE");try{

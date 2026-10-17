@@ -68,6 +68,13 @@ coordinator's verified HTTPS connection. To pin it explicitly instead, use
 `-StorageHosts storage.example`. `-NoConversion` deliberately leaves conversion
 disabled. Existing externally approved FFmpeg remains usable with
 `-FfmpegPath C:\approved\ffmpeg.exe -FfmpegSha256 <approved-executable-hash>`.
+Setup records CPU, RAM, disk and DXGI adapter inventory before converter checks,
+including with `-NoConversion`; that mode saves inventory and a disabled-capability
+reason without hashing or probing FFmpeg. The per-machine `worker.json` limit
+`limits.vram_mb` is the optional global VRAM ceiling for adaptive GPU profiles.
+When absent, the worker chooses a conservative aggregate ceiling from detected
+adapters. A positive value sets an explicit ceiling; `0` disables GPU profiles.
+CPU, RAM, scratch and job limits continue to bound converter probes and runtime work.
 
 Expired pending identity prompts for PAIR; unreadable or cross-endpoint state
 prompts for ARCHIVE. Both require explicit action and retained backups. Automatic

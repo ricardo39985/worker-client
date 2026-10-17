@@ -1,0 +1,13 @@
+PASS CPU remains the safe profile when no supported GPU is installed
+PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+PASS single GPU profile requires matching encode decode and validated output
+PASS heterogeneous GPUs retain independent identities and schedules
+PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+PASS low VRAM and machine resource caps reject unsafe tuning
+PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+PASS profile invalidates on adapter identity driver or approved FFmpeg change
+PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+FAIL selected hardware rendition binds an explicit adapter and conservative codec mode: check failed at tests/adaptive_hardware_test.cpp:105: std::find(plan[0].arguments.begin(),plan[0].arguments.end(),L"-gpu")!=plan[0].arguments.end()
+FAIL hardware failure removes partial output and validates a clean CPU retry before success: check failed at tests/adaptive_hardware_test.cpp:118: !used_gpu&&gpu_tried&&cpu_tried
+FAIL cancelled hardware work does not start a CPU retry or retain partial output: check failed at tests/adaptive_hardware_test.cpp:124: caught
+12 contracts, 3 failures

@@ -1,0 +1,6 @@
+CMake Error at CMakeLists.txt:23 (find_path):
+  Could not find OW_BOOST_INCLUDE using the following files:
+  boost/json/src.hpp
+
+
+-- Configuring incomplete, errors occurred!

@@ -1,5 +1,6 @@
 #include "worker.hpp"
 #include "pairing_adapter.hpp"
+#include <algorithm>
 #include <iostream>
 using namespace ow;using namespace ow::win;
 int wmain(int argc,wchar_t** argv){
@@ -22,7 +23,7 @@ int wmain(int argc,wchar_t** argv){
     if(auto credential=identity.read(SecretSlot::credential))proven=text(parse(*credential).as_object(),"coordinator_url",1024);
     Store journal(root/"journal.sqlite3");bind_journal_origin(journal,c.coordinator,proven);report["journal_endpoint_bound"]=true;
    }
-   if(probe){auto p=probe_ffmpeg(c);report["capabilities"]={{"conversion.video.h264",p.video},{"conversion.image.jpeg",p.image},{"inference",false},{"gpu",false},{"reason",p.reason}};report["processing_ready"]=p.video||p.image;}
+   if(probe){auto p=probe_ffmpeg(c);const bool gpu=std::any_of(p.profiles.begin(),p.profiles.end(),[](const auto& item){return item.backend!=adaptive::Backend::cpu;});report["capabilities"]={{"conversion.video.h264",p.video},{"conversion.image.jpeg",p.image},{"media.video.renditions.v1",p.media_video},{"media.image.renditions.v1",p.media_image},{"inference",false},{"gpu",gpu},{"adaptive_profiles",p.profiles.size()},{"reason",p.reason}};report["processing_ready"]=p.video||p.image;}
    if(network){if(c.coordinator.empty())throw std::runtime_error("No coordinator configured");Http h;auto r=h.request("GET",c.coordinator+"/v1/worker/protocol");report["coordinator_http_status"]=r.status;if(r.status!=200)throw std::runtime_error("Lightsail worker endpoint is not ready");auto body=parse(r.body);if(number(body.as_object(),"protocol",1)!=1)throw std::runtime_error("Incompatible coordinator");report["coordinator_ready"]=true;}
   }else report["configuration_valid"]=false;
   std::cout<<json::serialize(report)<<'\n';return 0;

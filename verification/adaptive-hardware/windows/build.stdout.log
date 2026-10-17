@@ -1,0 +1,73 @@
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  boost_json.cpp
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  progress_test.cpp
+  main.cpp
+  pipeline_test.cpp
+  ow_progress_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_progress_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  main.cpp
+  media_rendition_test.cpp
+  Generating Code...
+  Generating Code...
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_pipeline_contract_tests.exe
+  ow_json.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_json.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  admission.cpp
+  media_rendition_probe.cpp
+  ow_rendition_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_rendition_contract_tests.exe
+  store.cpp
+  ow_rendition_probe.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_rendition_probe.exe
+  protocol.cpp
+  pairing.cpp
+  adaptive_hardware.cpp
+  Generating Code...
+  ow_core.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_core.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  main.cpp
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  platform.cpp
+  main.cpp
+  admission_test.cpp
+  adaptive_hardware_test.cpp
+  store_test.cpp
+  Generating Code...
+  process.cpp
+  protocol_test.cpp
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_adaptive_hardware_contract_tests.exe
+  http.cpp
+  pairing_test.cpp
+  worker.cpp
+  Generating Code...
+  pairing_adapter.cpp
+  ow_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_contract_tests.exe
+  hardware.cpp
+  Generating Code...
+  ow_windows.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_windows.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  windows_pipeline_smoke.cpp
+  console.cpp
+  windows_child.cpp
+  doctor.cpp
+  tray.cpp
+  ow_pipeline_smoke.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_pipeline_smoke.exe
+  OrganizerWorkerConsole.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\OrganizerWorkerConsole.exe
+  ow_test_child.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_test_child.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
+  main.cpp
+  windows_test.cpp
+  OrganizerWorker.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\OrganizerWorker.exe
+  OrganizerWorkerDoctor.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\OrganizerWorkerDoctor.exe
+  Generating Code...
+  ow_windows_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_windows_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/source/CMakeLists.txt
