@@ -1,0 +1,12 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Error at CMakeLists.txt:23 (find_path):
+  Could not find OW_BOOST_INCLUDE using the following files:
+  boost/json/src.hpp
+
+
+-- Configuring incomplete, errors occurred!

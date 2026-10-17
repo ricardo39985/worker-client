@@ -80,11 +80,12 @@ without a defensible total emit one written explanation rather than a percentage
 One logical task is one job; a retry is a different attempt. An offer reserves
 capacity atomically before readiness is acknowledged. It cannot start until
 BEGIN supplies a valid lease. Reservations account for RAM, CPU shares, scratch
-space and optional VRAM; this build refuses GPU requirements altogether.
-The configured ceiling and live available resources both apply. Live headroom
-subtracts all outstanding reservations conservatively, so it can temporarily
-underutilize a host rather than oversubscribe it. Local maximum job counts remain
-an independent safety ceiling.
+space and optional VRAM. Coordinator offers still cannot require VRAM in this
+protocol version. A local adaptive media encode may reserve a tested device
+profile separately. The configured ceiling and live available resources both
+apply. Live headroom subtracts all outstanding reservations conservatively, so
+it can temporarily underutilize a host rather than oversubscribe it. Local
+maximum job counts remain an independent safety ceiling.
 
 Conversion attempts each have an isolated workspace, contained native process
 tree, timeout, cancellation flag and result. One bounded orchestration thread

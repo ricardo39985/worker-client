@@ -12,6 +12,7 @@ public:
        const std::filesystem::path& workspace,Resources resources,Priority priority);
  ~Child();Child(const Child&)=delete;Child& operator=(const Child&)=delete;
  std::optional<DWORD> exit_code();
+ DWORD process_id() const;
  void stop();void priority(Priority);
 };
 }

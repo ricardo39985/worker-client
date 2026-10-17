@@ -1,5 +1,11 @@
 # Candidate status — 0.1.2
 
+Current merge evidence: see `verification/gpu-on-logs/REPORT.md`. Hardware tip
+`1edeada` is UNVERIFIED work in progress. Its inherited Windows execution
+narratives and checked-in logs below are not accepted verification for that tip
+or this merge. This run used Linux only; no worker was contacted or restarted.
+The two reproduced fallback ownership defects remain open.
+
 Updated October 7, 2026. This source candidate adds bounded dependency/build
 repair, verified startup fallback, pinned FFmpeg installation/probing, exact
 storage-host approval and explicit expired/unreadable pairing recovery. It carries
@@ -113,3 +119,147 @@ Windows console/controller/worker changes remain uncompiled and unrun in this
 authoring environment; native MSVC, a real 16-color console, viewer redraw and a
 live job remain required. No installation, startup change, deployment, merge,
 release publication or running-worker restart was performed.
+
+<!-- Inherited hardware-branch narrative below is UNVERIFIED for tip 1edeada.
+No Windows evidence here establishes this merged tree or current hardware support. -->
+## Adaptive Windows hardware candidate — October 17, 2026
+
+The initial paragraphs below describe the rejected first implementation and
+first review candidate. They are historical evidence only; the uncommitted
+Correction 2 section at the end is the current implementation and replaces
+their hardware outcome and candidate path.
+
+The uncommitted candidate adds a fail-closed per-device NVENC, QSV and AMF
+profile policy, explicit encoder/device command generation, DXGI identity/driver/
+dedicated-memory inventory, live VRAM sampling, startup synthetic tuning,
+persistent profile evidence, runtime invalidation and clean CPU retry before
+upload. Protocol messages, leases, output roles and bounded encode/upload overlap
+remain unchanged. Injected policy tests cover CPU fallback, codec differences,
+heterogeneous adapters, caps, invalidation and failed/cancelled hardware attempts;
+those fixtures are not claims about physical GPU support.
+
+Native verification used an entirely separate candidate tree at
+`C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2` and
+the reviewed Boost 1.89.0 dependency. MSVC 19.44 Release compilation with parallel
+2 succeeded. CTest passed all 8 registered suites, including the native adapter
+inventory and 28 adaptive policy contracts. The synthetic native pipeline smoke
+encoded and decoded H.264, HEVC and WebP; serial and overlapped artifacts had
+matching byte counts and SHA-256, and overlap was observed. Its 500 ms simulated
+transfer delay was local only, with no storage account. Logs and profile evidence
+are under `verification/adaptive-hardware/windows/`.
+
+The isolated approved-FFmpeg Doctor probe exited 0 on the reachable Windows host:
+Intel Core i5-8305G, 8 logical CPUs, 8,002 MiB RAM, Radeon RX Vega M GL (DXGI
+dedicated memory 4,043 MiB) and Intel HD Graphics 630 (128 MiB). The Doctor
+verified CPU H.264, HEVC, JPEG, full-size app video renditions and image
+renditions; two CPU profiles were saved at one-job concurrency. The synthetic
+CPU samples measured about 108.3 H.264 fps and 25.7 HEVC fps. These are machine-
+and sample-specific tuning observations, not speedup claims. AMD AMF H.264/HEVC
+functional trials failed and were left disabled. Intel QSV was withheld below
+the 256 MiB dedicated/live-headroom floor. NVIDIA was not detected. No GPU profile
+was enabled. The pictured RTX 3070/3050 system was not available or tested.
+
+Before each synthetic probe the protected worker PID 28136 remained present with
+no FFmpeg process under it. Doctor data and smoke work stayed under the isolated
+candidate path; no production worker config, pairing, job state, startup, or
+service was changed. This does not verify non-elevated tray behavior, a real
+coordinator job, upload/publication, or quality parity on any GPU.
+
+The required local `scripts/test.sh` attempt is recorded but could not configure
+because this Linux authoring environment lacks `boost/json/src.hpp`; no portable
+full-suite pass is claimed for that command. The separately compiled adaptive
+policy binary passed 13/13 contracts. Exact red/green, blocked-suite, MSVC/CTest,
+Doctor and synthetic smoke logs are:
+
+- `verification/adaptive-hardware/01-policy-red.log`
+- `verification/adaptive-hardware/02-policy-green.log`
+- `verification/adaptive-hardware/03-command-red.log`
+- `verification/adaptive-hardware/06-backend-green.log`
+- `verification/adaptive-hardware/07-adaptive-policy.log`
+- `verification/adaptive-hardware/08-portable-test.sh.log`
+- `verification/adaptive-hardware/windows/build2.stdout.log`
+- `verification/adaptive-hardware/windows/ctest.stdout.log`
+- `verification/adaptive-hardware/windows/adaptive-probe.stdout.log`
+- `verification/adaptive-hardware/windows/adaptive-hardware-final.json`
+- `verification/adaptive-hardware/windows/pipeline-smoke.stdout.log`
+
+This is source only, remains uncommitted for independent review, and is not
+production acceptance. Real NVIDIA hardware, a successfully probed AMD backend,
+concurrent multi-GPU tuning, non-elevated user-session verification and device-
+specific output-quality validation remain open.
+
+### Independent review corrections — October 17, 2026
+
+The first candidate was rejected after review. This working correction replaces
+its DXGI `CurrentUsage` sampling and family-ordinal assignment claims: that API
+reports the caller's usage, and DXGI order is not a verified FFmpeg backend
+identity. The corrected inventory records stable DXGI IDs but marks backend
+mapping unproven and withholds those GPU profiles with an explicit reason. The
+approved runtime has no child-scoped per-adapter VRAM telemetry source, so GPU
+use remains disabled until both mapping and telemetry can be established.
+
+The correction adds an atomic adaptive scheduler used at BEGIN, including the
+measured CPU retry profile, task CPU/RAM/scratch caps, global and per-device VRAM
+accounting, deterministic stable-ID ties, and drain-bound RAII reservations.
+Setup inventories before converter work and persists a NoConversion inventory.
+`limits.vram_mb` is parsed and recorded as the operator's global VRAM ceiling;
+an absent value selects a conservative aggregate default and explicit zero
+disables GPU scheduling. CPU concurrency is measured with repeated bounded
+one- and two-process candidates when configured caps permit.
+
+### Correction 2 — real backend identity and telemetry — October 17, 2026
+
+The candidate now maps NVIDIA CUDA ordinals through the installed driver
+`cuDeviceGetLuid` API and maps QSV/AMF commands to explicit DXGI devices. Windows
+PDH GPU Process Memory Dedicated Usage is matched to each child PID and LUID;
+runtime admission refreshes per-device memory headroom. Unsupported telemetry
+keeps that device on CPU. GPU profiles record the tested 640x360 envelope;
+runtime probes input dimensions and selects CPU for unknown or larger frames.
+
+The regression first failed as expected because a second task exceeded its
+512 MiB per-task RAM cap when existing aggregate usage was included. It is fixed:
+four 1 CPU/512 MiB jobs are accepted under global CPU4/RAM2048, and the fifth is
+rejected. The portable CTest suite passed 5/5; MSVC 19.44 Release built with
+parallel 2 and CTest passed 8/8. The isolated Doctor passed on the actual
+i5-8305G PC and enabled AMD AMF HEVC at 640x360 after encode, decode and matching
+child dedicated-memory telemetry. The final Doctor reported AMD AMF HEVC at
+71.713 fps and CPU HEVC at 53.933 fps for this synthetic sample. H.264 did not
+beat CPU by the 5% selection floor. Intel QSV ran its encode command but lacked
+a nonzero dedicated-memory sample; it remains disabled. No NVIDIA device is
+installed. AMF quality parity is not measured; no 4K envelope or RTX 3070/3050
+hardware result is claimed.
+
+The final isolated serial/overlap/retry smoke passed; the original worker PID 28136
+was present and idle before Doctor and smoke, and no live FFmpeg process was
+present. No service, live config, pairing, startup or job state was changed.
+The final native candidate tree was
+`C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r4`.
+See `/home/rick/.hermes/cache/scratch/worker-adaptive-hardware-implementation-r2.md`
+for exact logs, counts and remaining hardware gates. The candidate is uncommitted
+and is not production acceptance.
+
+### Final correction gate R3 — October 17, 2026
+
+The candidate now treats absent, foreign-LUID, invalid and zero GPU counters as
+unavailable; explicit `vram_mb: 0` skips GPU encoder identity initialization and
+GPU probes; positive-cap probes reserve live per-device/global headroom and
+abort/drain when observed child allocation exceeds that reservation. These are
+admission limits with sampled watchdogs, not a hard Windows GPU-memory quota.
+CPU concurrency candidates use equal work, repeats, encode/decode stages and
+per-child limits; measured stage timings/configuration are saved for review.
+GPU jobs reserve CPU fallback resources without occupying the CPU encoder slot;
+CPU fallback waits within a bounded cancellation-aware interval. Denied BEGIN
+attempts become durable `never_started:<reason>` journal states without outbox
+results. NoConversion inventory includes processor, logical CPU count, total and
+available RAM, disk and adapter/driver/dedicated-VRAM fields.
+
+Portable `scripts/test.sh -DOW_BOOST_ROOT=/home/rick/.hermes/cache/scratch/boost-extract`
+passed all 5 CTest suites. The adaptive contracts passed 32/32 and the core
+worker/journal contracts passed 75/75. Expected behavior RED evidence covers
+missing GPU telemetry, the one-CPU-slot/two-GPU admission case, unequal tuning
+comparison inputs and denied-BEGIN persistence. Isolated MSVC/CTest/Doctor and
+production-scheduler runtime smoke remain pending: the protected worker PID
+28136 was present, but its current-epoch log showed 3 unmatched START records
+when the final idle gate ran. No Windows native tests, Doctor, GPU probes or
+smoke were started against that busy worker. This R3 source remains uncommitted;
+portable contracts do not establish Windows behavior or physical GPU support.

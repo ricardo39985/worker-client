@@ -30,6 +30,7 @@ void Child::priority(Priority p){
  require(SetInformationJobObject(job_.get(),JobObjectCpuRateControlInformation,&cpu,sizeof(cpu)),"Apply CPU budget");
 }
 std::optional<DWORD> Child::exit_code(){if(!process_)return 1;DWORD wait=WaitForSingleObject(process_.get(),0);if(wait==WAIT_TIMEOUT)return {};if(wait!=WAIT_OBJECT_0)fail("Wait for job");DWORD code=0;require(GetExitCodeProcess(process_.get(),&code),"Read child result");return code;}
+DWORD Child::process_id() const {if(!process_)return 0;const auto id=GetProcessId(process_.get());if(!id)fail("Read child process identity");return id;}
 void Child::stop(){
  if(job_){
   // Keep the reservation until the entire process tree is gone, not just its

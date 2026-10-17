@@ -1,0 +1,19 @@
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  ow_json.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_json.lib
+  ow_core.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_core.lib
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_adaptive_hardware_contract_tests.exe
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_pipeline_contract_tests.exe
+  ow_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_contract_tests.exe
+  ow_progress_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_progress_contract_tests.exe
+  ow_rendition_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_rendition_contract_tests.exe
+  worker.cpp
+  ow_rendition_probe.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_rendition_probe.exe
+  ow_windows.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_windows.lib
+  OrganizerWorkerConsole.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\OrganizerWorkerConsole.exe
+  OrganizerWorkerDoctor.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\OrganizerWorkerDoctor.exe
+  ow_test_child.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_test_child.exe
+  ow_pipeline_smoke.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_pipeline_smoke.exe
+  OrganizerWorker.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\OrganizerWorker.exe
+  ow_windows_tests.vcxproj -> C:\Users\reald\AppData\Local\ow-adaptive-hardware-candidate-20261017-r2\build\Release\ow_windows_tests.exe

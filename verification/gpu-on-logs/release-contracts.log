@@ -1,0 +1,219 @@
+Start testing: Oct 17 11:55 EDT
+----------------------------------------------------------
+1/5 Testing: worker_contracts
+1/5 Test: worker_contracts
+Command: "/home/rick/Downloads/worker-client-gpu-on-logs/build-tests/ow_contract_tests"
+Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+"worker_contracts" start time: Oct 17 11:55 EDT
+Output:
+----------------------------------------------------------
+PASS endpoint supplied by operator has a stable HTTPS origin
+PASS missing unsafe or ambiguous endpoints cannot become network destinations
+PASS an absent endpoint fails before enrollment or key disclosure
+PASS credential reopen reconnects without a new enrollment
+PASS credential canonicalization allows same origin but never a different server
+PASS corrupt saved credential never triggers silent reenrollment
+PASS successful pairing persists identity before returning and removes pending secret
+PASS incompatible coordinator receives no public key or enrollment request
+PASS lost initial response reuses durable request id rather than inventing another enrollment
+PASS lost approval response resumes same enrollment with its private key proof
+PASS pending enrollment is never sent to a different endpoint
+PASS failed credential persistence preserves resumable approval and returns no success
+PASS pending cleanup failure cannot discard an already durable credential
+PASS late approval after cancellation does not publish credentials
+PASS denial is explicit and cannot erase an existing pending record
+PASS server revocation does not silently start another pairing
+PASS rate limited polling waits and remains bounded by pairing expiry
+PASS invalid permanent tokens and worker ids never reach credential storage
+PASS media transfer requires exact approved HTTPS host
+PASS well formed offer translates to validated typed job
+PASS wire requests cannot smuggle arbitrary commands as capabilities
+PASS negative or floating resource values are rejected
+PASS unverified GPU is never requested by the CPU converter
+PASS download digest is mandatory and strictly encoded
+PASS input and output must fit declared temporary storage
+PASS control message size and parser nesting are bounded
+PASS null bytes cannot reach Win32 URL or process APIs
+PASS Windows argument quoting preserves spaces quotes and trailing slashes
+PASS converter receives local files not remote URLs or shell commands
+PASS leases use the shorter of local and server remaining time
+PASS expired and unsigned-underflow lease cases fail closed
+PASS lease duration and monotonic addition cannot overflow
+PASS app rendition contract requires every fixed output and budgets all simultaneous files
+PASS app jobs refuse arbitrary output roles and mixed media type declarations
+PASS accepted attempt and pending result survive journal reopen
+PASS outbox cannot be acknowledged with wrong attempt or sequence
+PASS repeated result does not create duplicate outbox entry
+PASS attempt collision cannot change persisted payload
+PASS restart exposes interrupted work without automatically rerunning it
+PASS denied BEGIN capacity is terminally never-started across journal restart
+PASS priority settings survive restart
+PASS result without accepted job fails instead of making orphan output
+PASS pending counter follows durable results and acknowledgements
+PASS journal coordinator binding survives reopen and rejects a different server
+PASS legacy pending results cannot be adopted without endpoint provenance
+PASS legacy interrupted attempt needs the same protected coordinator origin
+PASS verified capabilities accept independent jobs concurrently
+PASS four single-CPU app jobs reserve and begin independently within configured limits
+PASS missing capability fails closed
+PASS installed but unverified does not mean capable
+PASS local disabled vetoes a preferred server offer
+PASS reservation consumes capacity before execution
+PASS dynamic low memory rejects despite configured budget
+PASS duplicate offer is idempotent
+PASS changed duplicate payload is rejected
+PASS same content job cannot run in two attempts on one host
+PASS job guardrail is independent of resource budget
+PASS oversized resource numbers cannot overflow accounting
+PASS zero CPU or memory declaration is rejected
+PASS invalid IDs cannot become filesystem paths
+PASS expired reservation cannot be started
+PASS start without lease is rejected
+PASS replayed begin does not start a second process
+PASS pause refuses new work but preserves active execution
+PASS pause prevents an unstarted reservation from beginning
+PASS only a valid fresh renewal extends the lease
+PASS expired running lease cannot be revived by late renewal
+PASS expiry returns unused reservations to the budget
+PASS expired running job retains resources until child shutdown
+PASS cancelling one job preserves the other
+PASS duplicate finish cannot release resources twice
+PASS simultaneous offers never oversubscribe
+PASS two outstanding offers cannot both reserve the same live free memory
+PASS disabling a capability prevents a reserved job from starting
+PASS a duplicate offer cannot extend a reservation indefinitely
+75 contracts, 0 failures
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"worker_contracts" end time: Oct 17 11:55 EDT
+"worker_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/5 Testing: pipeline_contracts
+2/5 Test: pipeline_contracts
+Command: "/home/rick/Downloads/worker-client-gpu-on-logs/build-tests/ow_pipeline_contract_tests"
+Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+"pipeline_contracts" start time: Oct 17 11:55 EDT
+Output:
+----------------------------------------------------------
+PASS rendition pipeline returns ordered metadata for every artifact
+PASS next encode overlaps previous transfer
+PASS empty rendition pipeline starts no stages
+PASS transfer backpressure keeps one encoder and one transfer at a time
+PASS final transfer must join before result is returned
+PASS transfer failure cancels next encode and preserves original cause
+PASS encode failure cancels and joins transfer before unwinding
+PASS failed final checksum cannot return a successful partial result
+PASS independent pipelines do not share cancellation or metadata
+9 contracts, 0 failures
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"pipeline_contracts" end time: Oct 17 11:55 EDT
+"pipeline_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/5 Testing: rendition_contracts
+3/5 Test: rendition_contracts
+Command: "/home/rick/Downloads/worker-client-gpu-on-logs/build-tests/ow_rendition_contract_tests"
+Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+"rendition_contracts" start time: Oct 17 11:55 EDT
+Output:
+----------------------------------------------------------
+PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
+PASS app image renders a full-size WebP and bounded poster with independent destinations
+PASS non-AAC audio uses the existing app delivery bitrate
+3 contracts, 0 failures
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"rendition_contracts" end time: Oct 17 11:55 EDT
+"rendition_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/5 Testing: adaptive_hardware_contracts
+4/5 Test: adaptive_hardware_contracts
+Command: "/home/rick/Downloads/worker-client-gpu-on-logs/build-tests/ow_adaptive_hardware_contract_tests"
+Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+"adaptive_hardware_contracts" start time: Oct 17 11:55 EDT
+Output:
+----------------------------------------------------------
+PASS CPU remains the safe profile when no supported GPU is installed
+PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+PASS single GPU profile requires matching encode decode and validated output
+PASS heterogeneous GPUs retain independent identities and schedules
+PASS two synthetic NVIDIA GPUs schedule independently through the production scheduler
+PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+PASS low VRAM and machine resource caps reject unsafe tuning
+PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+PASS profile invalidates on adapter identity driver or approved FFmpeg change
+PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+PASS selected hardware rendition binds an explicit adapter and conservative codec mode
+PASS Intel QSV and AMD AMF commands bind their probed DirectX adapter
+PASS hardware failure removes partial output and validates a clean CPU retry before success
+PASS cancelled hardware work does not start a CPU retry or retain partial output
+PASS runtime scheduler atomically enforces global and per-device costs until drain
+PASS task caps limit each reservation while global capacity admits four small jobs
+PASS CUDA LUID mapping survives ordinal reorder and rejects duplicate or invalid mappings
+PASS GPU memory telemetry is child and LUID scoped and rejects ambiguous physical nodes
+PASS missing foreign invalid and zero GPU counters never mean idle headroom
+PASS serial and parallel tuning compare equal work repeated stages and child budgets
+PASS two independent GPU jobs fit with one CPU encoder slot and can wait for safe CPU retry
+PASS GPU fallback slot acquisition ignores a CPU codec already owned by the same task
+PASS runtime profile ties resolve by stable device identity and CPU profile is selectable
+PASS hardware adapter mapping ambiguity fails closed independent of enumeration order
+PASS runtime admission falls back to the measured CPU profile when configured VRAM is too small
+PASS live adapter headroom closes GPU admission and restores it after headroom returns
+PASS CPU concurrency reflects repeated tuning candidates within every configured cap
+PASS multi-codec runtime reservation uses peak per-job CPU memory and scratch costs
+PASS runtime scheduler invalidation stops stale hardware while active reservations drain
+PASS runtime command generation applies the scheduler-selected measured CPU profile
+PASS cancellation before an encode prevents every helper spawn
+PASS cancellation during output validation cannot publish a successful artifact
+32 contracts, 0 failures
+<end of output>
+Test time =   0.02 sec
+----------------------------------------------------------
+Test Passed.
+"adaptive_hardware_contracts" end time: Oct 17 11:55 EDT
+"adaptive_hardware_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/5 Testing: progress_contracts
+5/5 Test: progress_contracts
+Command: "/home/rick/Downloads/worker-client-gpu-on-logs/build-tests/ow_progress_contract_tests"
+Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+"progress_contracts" start time: Oct 17 11:55 EDT
+Output:
+----------------------------------------------------------
+PASS all hardware command plans retain device selection and measured timeline progress
+PASS four hardware failures reset timeline and stage generation on CPU retry independently
+PASS idle connection emits no activity and active states stay terse
+PASS encoder timeline and byte accounting behavior are preserved
+PASS unmeasurable stages say only stage and elapsed once
+PASS a repeated stage is a visible retry with one stable suffix
+PASS local timestamp format is exact through midnight month and zone changes
+PASS job suffixes are lowercase last four and stable for a job life
+PASS two live jobs with the same four characters stay distinguishable
+PASS a shown suffix resolves to exactly one full attempt id in the durable log
+PASS restart needs no counter and never implies continuation
+PASS every rendered line fits eighty columns including an impossible message
+PASS old durable lines still render plainly without breaking the viewer
+PASS exactly five colours carry one consistent meaning
+PASS progress rows keep a bounded bar and vanish on terminal events
+PASS four concurrent rows and activity stay readable and cancellation clears at any percent
+PASS many jobs keep suffix-to-id resolvability and concurrent accounting
+17 contracts, 0 failures
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"progress_contracts" end time: Oct 17 11:55 EDT
+"progress_contracts" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 17 11:55 EDT

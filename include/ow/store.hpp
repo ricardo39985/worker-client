@@ -14,6 +14,7 @@ public:
  ~Store();Store(const Store&)=delete;Store& operator=(const Store&)=delete;
  bool reserve(const std::string& id,const std::string& job,const std::string& payload);
  bool start(const std::string& id);
+ bool decline_reserved(const std::string& id,const std::string& reason);
  std::optional<std::string> state(const std::string& id);
  void result(const std::string& id,const std::string& body);
  std::vector<Pending> pending();

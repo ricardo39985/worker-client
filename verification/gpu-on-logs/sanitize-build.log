@@ -1,0 +1,37 @@
+[  6%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[  6%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/main.cpp.o
+[ 10%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/pipeline_test.cpp.o
+[ 13%] Linking CXX executable ow_pipeline_contract_tests
+[ 13%] Built target ow_pipeline_contract_tests
+[ 17%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/main.cpp.o
+[ 20%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 24%] Linking CXX static library libow_json.a
+[ 24%] Built target ow_json
+[ 27%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 31%] Linking CXX executable ow_rendition_contract_tests
+[ 31%] Built target ow_rendition_contract_tests
+[ 34%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/main.cpp.o
+[ 37%] Linking CXX executable ow_rendition_probe
+[ 37%] Built target ow_rendition_probe
+[ 41%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 44%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 48%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 51%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 55%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 58%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 62%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+[ 65%] Linking CXX executable ow_progress_contract_tests
+[ 65%] Built target ow_progress_contract_tests
+[ 68%] Linking CXX static library libow_core.a
+[ 68%] Built target ow_core
+[ 75%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/main.cpp.o
+[ 75%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[ 82%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[ 82%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 86%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[ 89%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 93%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[ 93%] Built target ow_adaptive_hardware_contract_tests
+[ 96%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/pairing_test.cpp.o
+[100%] Linking CXX executable ow_contract_tests
+[100%] Built target ow_contract_tests

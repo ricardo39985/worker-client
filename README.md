@@ -2,7 +2,8 @@
 
 A native Windows tray worker with typed conversion jobs, durable results and
 operator-approved pairing. This candidate contains source, not a compiled or
-signed Windows release. The updated Windows build and real job test are pending.
+signed Windows release. Adaptive hardware corrections passed isolated native
+verification; see the status and testing documents for evidence and limits.
 
 ## Setup
 
@@ -61,7 +62,11 @@ Lightsail. ACK alone also covers a rejected result; it is not proof of success.
 
 This first job path is explicitly queued by an operator. It leaves the app's
 primary media and existing renditions intact. Outputs are temporary, retained
-for about 24 hours from attempt creation. No GPU/inference adapter is included.
+for about 24 hours from attempt creation. The adaptive media path can select a
+local NVENC, QSV or AMF encoder only when backend identity mapping,
+child-scoped VRAM telemetry, synthetic encode/decode and bounded tuning are
+verified. Unproven mapping or telemetry keeps that GPU profile disabled while
+measured CPU profiles remain available. There is no inference adapter.
 
 ## Maintenance and limits
 
@@ -96,10 +101,15 @@ one at a time; the complete installation is not a transactional rollback.
 
 Historical 0.1.1 portable evidence is in `verification/client-update/`. The user
 reported passing the prior Windows compilation, three CTest suites and runtime
-doctor. That evidence does not verify this 0.1.2 candidate. Its MSVC/native build,
-23 PowerShell setup contracts, clean-machine/bootstrap/reboot paths and actual
-Windows-to-Lightsail conversion remain required. See `docs/status.md`,
-`docs/testing.md`, `docs/setup.md` and `contracts/worker-v1.md`.
+doctor. The October 17 adaptive-hardware correction passed the portable suite,
+MSVC compilation and all eight registered native CTest suites. Its isolated
+approved-FFmpeg Doctor verified CPU profiles and one AMD AMF HEVC profile on the
+available Windows host after adapter mapping, child-scoped dedicated-memory
+telemetry, encode and decode checks. Intel QSV remained disabled because its
+child did not report dedicated-memory allocation; no NVIDIA adapter was present.
+Clean-machine/bootstrap/reboot paths, GPU quality parity and actual
+Windows-to-Lightsail conversion remain separate acceptance gates. See
+`docs/status.md`, `docs/testing.md`, `docs/setup.md` and `contracts/worker-v1.md`.
 
 ## Terminal progress candidate
 

@@ -1,0 +1,22 @@
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/build
+Test project C:/Users/reald/AppData/Local/ow-adaptive-hardware-candidate-20261017-r2/build
+    Start 1: worker_contracts
+1/8 Test #1: worker_contracts .................   Passed    0.22 sec
+    Start 2: pipeline_contracts
+2/8 Test #2: pipeline_contracts ...............   Passed    0.02 sec
+    Start 3: rendition_contracts
+3/8 Test #3: rendition_contracts ..............   Passed    0.02 sec
+    Start 4: adaptive_hardware_contracts
+4/8 Test #4: adaptive_hardware_contracts ......   Passed    0.03 sec
+    Start 5: progress_contracts
+5/8 Test #5: progress_contracts ...............   Passed    0.02 sec
+    Start 6: windows_contracts
+6/8 Test #6: windows_contracts ................   Passed    0.46 sec
+    Start 7: setup_contracts
+7/8 Test #7: setup_contracts ..................   Passed    2.98 sec
+    Start 8: setup_progress_contracts
+8/8 Test #8: setup_progress_contracts .........   Passed   12.43 sec
+
+100% tests passed, 0 tests failed out of 8
+
+Total Test time (real) =  16.20 sec

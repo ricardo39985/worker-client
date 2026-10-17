@@ -1,0 +1,4 @@
+tests/encoder_run_test.cpp:2:10: fatal error: ow/encoder_run.hpp: No such file or directory
+    2 | #include "ow/encoder_run.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~
+compilation terminated.

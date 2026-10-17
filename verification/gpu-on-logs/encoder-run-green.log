@@ -1,0 +1,3 @@
+PASS all hardware command plans retain device selection and measured timeline progress
+PASS four hardware failures reset timeline and stage generation on CPU retry independently
+2 contracts, 0 failures

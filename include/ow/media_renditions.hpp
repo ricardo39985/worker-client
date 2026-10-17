@@ -1,4 +1,6 @@
 #pragma once
+#include "ow/adaptive_hardware.hpp"
+#include <algorithm>
 #include <filesystem>
 #include <string>
 #include <vector>
@@ -7,6 +9,7 @@ struct Rendition {
  std::string role,mime,filename;
  std::vector<std::wstring> arguments;
  unsigned timeout_seconds;
+ bool hardware{};
 };
 // This is an installed typed app profile, never command text from the network.
 inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const std::filesystem::path& workspace) {
@@ -35,5 +38,57 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
   plan.push_back({poster?"thumbnail":"feed","image/webp",file,std::move(args),poster?30u:180u});
  }
  return plan;
+}
+inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const std::filesystem::path& workspace,
+                                               const std::vector<adaptive::Profile>& profiles) {
+ auto plan=rendition_plan(video,copy_audio,workspace);
+ for(auto& rendition:plan){
+  if(rendition.role!="feed"&&rendition.role!="feed_optimized")continue;
+  const auto codec=rendition.role=="feed_optimized"?adaptive::Codec::hevc:adaptive::Codec::h264;
+  const adaptive::Profile* cpu_profile=nullptr;
+  for(const auto& p:profiles)if(p.codec==codec&&p.backend==adaptive::Backend::cpu&&p.cpu_threads&&
+    (!cpu_profile||p.measured_frames_per_second>cpu_profile->measured_frames_per_second))cpu_profile=&p;
+  auto selected=profiles.end();
+  for(auto i=profiles.begin();i!=profiles.end();++i)
+   if(i->codec==codec&&i->backend!=adaptive::Backend::cpu&&
+      (selected==profiles.end()||i->measured_frames_per_second>selected->measured_frames_per_second))selected=i;
+  if(selected==profiles.end()){
+   if(cpu_profile){const auto threads=std::to_wstring(cpu_profile->cpu_threads);auto& args=rendition.arguments;
+    for(auto flag:{L"-threads",L"-filter_threads"}){auto i=std::find(args.begin(),args.end(),flag);if(i!=args.end()&&i+1!=args.end())*(i+1)=threads;}}
+   continue;
+  }
+  auto& args=rendition.arguments;
+  rendition.hardware=true;
+  const auto input=std::find(args.begin(),args.end(),L"-i");
+  if(selected->backend==adaptive::Backend::intel_qsv){
+   args.insert(input,{L"-init_hw_device",L"qsv=ow_qsv:hw_any,child_device="+std::to_wstring(selected->adapter_index)+L",child_device_type=d3d11va",L"-filter_hw_device",L"ow_qsv"});
+  }else if(selected->backend==adaptive::Backend::amd_amf){
+   args.insert(input,{L"-init_hw_device",L"d3d11va=ow_d3d:"+std::to_wstring(selected->adapter_index),L"-init_hw_device",L"amf=ow_amf@ow_d3d",L"-filter_hw_device",L"ow_amf"});
+   args.insert(std::find(args.begin(),args.end(),L"-map")+4,{L"-vf",L"vpp_amf"});
+  }
+  const auto encoder_position=static_cast<std::size_t>(std::distance(args.begin(),std::find(args.begin(),args.end(),L"-c:v"))+1);
+  auto encoder=args.begin()+static_cast<std::ptrdiff_t>(encoder_position);
+  if(selected->backend==adaptive::Backend::nvidia_nvenc){
+   *encoder=codec==adaptive::Codec::hevc?L"hevc_nvenc":L"h264_nvenc";
+   args.erase(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),args.begin()+static_cast<std::ptrdiff_t>(encoder_position+3));
+   args.insert(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),{L"-gpu",std::to_wstring(selected->backend_index),L"-preset",L"p4",L"-rc",L"vbr",L"-cq",L"24",L"-b:v",L"0",L"-rc-lookahead",L"0"});
+  }else if(selected->backend==adaptive::Backend::intel_qsv){
+   *encoder=codec==adaptive::Codec::hevc?L"hevc_qsv":L"h264_qsv";
+   args.erase(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),args.begin()+static_cast<std::ptrdiff_t>(encoder_position+3));
+   args.insert(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),{L"-global_quality",L"24",L"-look_ahead",L"0",L"-bf",L"2"});
+  }else{
+   *encoder=codec==adaptive::Codec::hevc?L"hevc_amf":L"h264_amf";
+   args.erase(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),args.begin()+static_cast<std::ptrdiff_t>(encoder_position+3));
+   args.insert(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),{L"-quality",L"speed",L"-rc",L"cqp",L"-qp_i",L"24",L"-qp_p",L"26"});
+  }
+  auto crf=std::find(args.begin(),args.end(),L"-crf");if(crf!=args.end())args.erase(crf,crf+2);
+  auto cpu_params=std::find(args.begin(),args.end(),codec==adaptive::Codec::hevc?L"-x265-params":L"-x264-params");
+  if(cpu_params!=args.end())args.erase(cpu_params,cpu_params+2);
+ }
+ return plan;
+}
+inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const std::filesystem::path& workspace,
+                                               const adaptive::Profile& profile) {
+ return rendition_plan(video,copy_audio,workspace,std::vector<adaptive::Profile>{profile});
 }
 }

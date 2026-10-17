@@ -1,0 +1,3 @@
+FAIL active CPU fallback must block a new primary CPU encode at concurrency one: check failed at verification/gpu-on-logs/hardware_findings.cpp:19: !second
+FAIL releasing a non-owner must not clear another job's CPU fallback slot: check failed at verification/gpu-on-logs/hardware_findings.cpp:28: !third.acquire_cpu_fallback([]{return false;},0)
+2 contracts, 2 failures

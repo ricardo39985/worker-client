@@ -2,6 +2,8 @@
 #include "platform.hpp"
 #include "process.hpp"
 #include "pairing_adapter.hpp"
+#include "hardware.hpp"
+#include "worker.hpp"
 #include "ow/rendition_pipeline.hpp"
 #include <algorithm>
 #include <future>
@@ -25,6 +27,32 @@ TEST("Windows UTF8 conversion preserves non-ASCII filenames"){
  std::string name="worker-\xc3\xa9-\xf0\x9f\x90\xa6";
  CHECK(utf8(wide(name))==name);THROWS(wide(std::string("\xff",1)));
 }
+TEST("Windows adapter inventory has repeatable unique identities and real VRAM and driver fields"){
+ auto first=enumerate_video_devices(),second=enumerate_video_devices();
+ CHECK(first.size()==second.size());
+ for(std::size_t i=0;i<first.size();++i){
+  CHECK(!first[i].stable_id.empty());CHECK(first[i].stable_id==second[i].stable_id);
+  CHECK(first[i].adapter_index==second[i].adapter_index);
+  for(std::size_t j=0;j<i;++j)CHECK(first[i].stable_id!=first[j].stable_id);
+  if(first[i].driver_healthy){CHECK(!first[i].driver_version.empty());CHECK(first[i].dedicated_vram_mb>0);}
+ }
+}
+TEST("NoConversion setup inventories adapters before reporting disabled conversion"){
+ Temp t;Config config;config.root=t.path;config.budget={256,777,256,1};auto result=probe_ffmpeg(config);
+ CHECK(!result.video&&!result.media_video);CHECK(result.reason.find("NoConversion")!=std::string::npos);
+ CHECK(result.reason.find("detected adapters=")!=std::string::npos);
+ auto saved=parse(read_file(t.path/"adaptive-hardware.json")).as_object();
+ CHECK(saved.at("profiles").as_array().empty());CHECK(saved.at("devices").is_array());
+ CHECK(number(saved.at("limits").as_object(),"vram_mb_override",UINT64_MAX)==777);
+}
+TEST("global VRAM override is optional for old configs and honored when configured"){
+ Temp t;auto path=t.path/"worker.json";
+ auto write=[&](const std::string& vram){std::ofstream out(path,std::ios::trunc);
+  out<<"{\"schema\":1,\"coordinator_url\":\"https://example.test\",\"storage_hosts\":[],\"ffmpeg_path\":\"\",\"ffmpeg_sha256\":\"\",\"limits\":{\"ram_mb\":1024,"<<vram<<"\"scratch_mb\":2048,\"cpu_threads\":2,\"max_jobs\":2,\"reserve_ram_mb\":0}}";};
+ write("");CHECK(load_config(t.path).budget.vram_mb==0);CHECK(!load_config(t.path).vram_override_set);
+ write("\"vram_mb\":0,");CHECK(load_config(t.path).vram_override_set);
+ write("\"vram_mb\":777,");CHECK(load_config(t.path).budget.vram_mb==777);CHECK(load_config(t.path).vram_override_set);
+}
 TEST("DPAPI round-trips binary credentials and rejects corruption"){
  std::string secret("worker\0credential",17);auto encrypted=protect(secret);
  CHECK(encrypted!=secret);CHECK(unprotect(encrypted)==secret);
@@ -43,6 +71,19 @@ TEST("stopping a contained job terminates both root and descendant"){
  CHECK(rootHandle&&leafHandle);child.stop();
  CHECK(WaitForSingleObject(rootHandle.get(),1000)==WAIT_OBJECT_0);
  CHECK(WaitForSingleObject(leafHandle.get(),1000)==WAIT_OBJECT_0);
+}
+
+TEST("adaptive capacity stays reserved until a cancelled native process tree drains"){
+ Temp t;adaptive::Profile gpu{"synthetic-luid","driver","hash",adaptive::Backend::nvidia_nvenc,adaptive::Codec::h264,1,256,512,128,1,50,0,0,true};
+ adaptive::Profile cpu{"cpu","","hash",adaptive::Backend::cpu,adaptive::Codec::h264,1,256,0,128,1,20,0,0,true};
+ adaptive::Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
+ auto held=scheduler.reserve({adaptive::Codec::h264});CHECK(held);CHECK(scheduler.active_jobs()==1);
+ CHECK(!scheduler.reserve({adaptive::Codec::h264}));
+ Child child(executable_directory()/"ow_test_child.exe",{},t.path,{128,0,16,1},Priority::low);
+ auto root=wait_pid(t.path/"root.pid"),leaf=wait_pid(t.path/"leaf.pid");
+ Handle rootHandle(OpenProcess(SYNCHRONIZE,FALSE,root)),leafHandle(OpenProcess(SYNCHRONIZE,FALSE,leaf));CHECK(rootHandle&&leafHandle);
+ child.stop();CHECK(WaitForSingleObject(rootHandle.get(),1000)==WAIT_OBJECT_0);CHECK(WaitForSingleObject(leafHandle.get(),1000)==WAIT_OBJECT_0);
+ CHECK(scheduler.active_jobs()==1);held.release();CHECK(scheduler.active_jobs()==0);CHECK(scheduler.reserve({adaptive::Codec::h264}));
 }
 
 TEST("protected enrollment and credentials remain readable after adapter reopen"){

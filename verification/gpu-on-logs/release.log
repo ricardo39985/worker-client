@@ -1,0 +1,65 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found SQLite3: /usr/lib/x86_64-linux-gnu/libsqlite3.so (found suitable version "3.46.1", minimum required is "3.22")
+-- Configuring done (0.5s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+[  6%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/main.cpp.o
+[  6%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[ 10%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/pipeline_test.cpp.o
+[ 13%] Linking CXX executable ow_pipeline_contract_tests
+[ 13%] Built target ow_pipeline_contract_tests
+[ 17%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/main.cpp.o
+[ 20%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 24%] Linking CXX executable ow_rendition_contract_tests
+[ 24%] Built target ow_rendition_contract_tests
+[ 27%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 31%] Linking CXX executable ow_rendition_probe
+[ 34%] Linking CXX static library libow_json.a
+[ 34%] Built target ow_json
+[ 37%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/main.cpp.o
+[ 41%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 41%] Built target ow_rendition_probe
+[ 44%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 48%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 51%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 55%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 58%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 62%] Linking CXX executable ow_progress_contract_tests
+[ 65%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+[ 68%] Linking CXX static library libow_core.a
+[ 68%] Built target ow_core
+[ 72%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[ 75%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[ 75%] Built target ow_progress_contract_tests
+[ 79%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/main.cpp.o
+[ 82%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 86%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[ 89%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 93%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[ 96%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/pairing_test.cpp.o
+[100%] Linking CXX executable ow_contract_tests
+[100%] Built target ow_adaptive_hardware_contract_tests
+[100%] Built target ow_contract_tests
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+    Start 1: worker_contracts
+1/5 Test #1: worker_contracts .................   Passed    0.01 sec
+    Start 2: pipeline_contracts
+2/5 Test #2: pipeline_contracts ...............   Passed    0.00 sec
+    Start 3: rendition_contracts
+3/5 Test #3: rendition_contracts ..............   Passed    0.00 sec
+    Start 4: adaptive_hardware_contracts
+4/5 Test #4: adaptive_hardware_contracts ......   Passed    0.02 sec
+    Start 5: progress_contracts
+5/5 Test #5: progress_contracts ...............   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Total Test time (real) =   0.05 sec
