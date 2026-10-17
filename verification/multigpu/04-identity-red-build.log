@@ -1,0 +1,32 @@
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+[ 16%] Built target ow_pipeline_contract_tests
+[ 16%] Built target ow_json
+[ 22%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 22%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 25%] Linking CXX executable ow_rendition_probe
+[ 29%] Linking CXX executable ow_rendition_contract_tests
+[ 29%] Built target ow_rendition_probe
+[ 32%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 38%] Built target ow_rendition_contract_tests
+[ 38%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 45%] Linking CXX executable ow_progress_contract_tests
+[ 45%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp: In lambda function:
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:77:17: warning: missing initializer for member ‘ow::adaptive::Profile::physical_id’ [-Wmissing-field-initializers]
+   77 |    out.push_back({d.stable_id,d.driver_version,hash,d.family,codec,t.cpu_threads,t.ram_mb,t.vram_mb,
+      |    ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   78 |                   t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,geometry.max_width,geometry.max_height,t.measured_width,t.measured_height});
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:77:17: warning: missing initializer for member ‘ow::adaptive::Profile::device_name’ [-Wmissing-field-initializers]
+[ 58%] Linking CXX static library libow_core.a
+[ 58%] Built target ow_core
+[ 77%] Built target ow_contract_tests
+[ 80%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 87%] Built target ow_progress_contract_tests
+[ 90%] Building CXX object CMakeFiles/ow_adaptive_evidence_probe.dir/tests/adaptive_evidence_probe.cpp.o
+[ 93%] Linking CXX executable ow_adaptive_evidence_probe
+[ 96%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 96%] Built target ow_adaptive_evidence_probe
+[100%] Built target ow_adaptive_hardware_contract_tests

@@ -25,6 +25,8 @@ inline boost::json::object profile_record(const Profile& p){
  return {{"device_id",p.stable_id},{"driver_version",p.driver_version},{"ffmpeg_sha256",p.ffmpeg_sha256},
   {"backend",static_cast<int>(p.backend)},{"codec",static_cast<int>(p.codec)},
   {"cpu_threads",p.cpu_threads},{"ram_mb",p.ram_mb},{"vram_mb",p.vram_mb},{"scratch_mb",p.scratch_mb},
+  {"physical_id",p.physical_id},{"device_name",p.device_name},
+  {"device_encode_sessions",p.backend==Backend::cpu?0:device_encode_sessions},{"worker_nvenc_sessions",worker_nvenc_sessions},
   {"max_concurrency",p.max_concurrency},{"measured_fps",p.measured_frames_per_second},
   {"adapter_index",p.adapter_index},{"backend_index",p.backend_index},{"backend_identity_verified",p.backend_identity_verified},
   {"max_width",p.max_width},{"max_height",p.max_height},

@@ -1,8 +1,10 @@
 #include "ow/adaptive_hardware.hpp"
+#include "ow/device_identity.hpp"
 #include <algorithm>
 #include <cmath>
 #include <map>
 #include <mutex>
+#include <set>
 #include <thread>
 namespace ow::adaptive {
 namespace {
@@ -53,6 +55,7 @@ std::vector<Profile> choose_profiles(const std::vector<Device>& devices,
                                      const std::vector<TuningEvidence>& tuning,
                                      const Limits& limits,const std::string& hash) {
  std::vector<Profile> out;
+ auto verified=devices;verify_device_identities(verified);
  if(hash.empty()||!limits.max_jobs||!limits.cpu_threads||!limits.ram_mb||!limits.scratch_mb)return out;
  for(auto codec:{Codec::h264,Codec::hevc}){
   const Device* cpu_device=nullptr;const TuningEvidence* cpu_tuning=nullptr;
@@ -67,6 +70,7 @@ std::vector<Profile> choose_profiles(const std::vector<Device>& devices,
    concurrency_cap=std::min(concurrency_cap,concurrency(limits.ram_mb,t.ram_mb));
    concurrency_cap=std::min(concurrency_cap,concurrency(limits.scratch_mb,t.scratch_mb));
    if(d.family!=Backend::cpu){
+    concurrency_cap=std::min<std::uint64_t>(concurrency_cap,device_encode_sessions);
     concurrency_cap=std::min(concurrency_cap,concurrency(limits.vram_mb,t.vram_mb));
     concurrency_cap=std::min(concurrency_cap,concurrency(d.dedicated_vram_mb,t.vram_mb));
    }
@@ -75,15 +79,12 @@ std::vector<Profile> choose_profiles(const std::vector<Device>& devices,
       (d.family!=Backend::cpu&&(!d.driver_healthy||d.dedicated_vram_mb<t.vram_mb||t.vram_mb>limits.vram_mb)))return;
    const auto geometry=encoder_geometry(d.family);
    out.push_back({d.stable_id,d.driver_version,hash,d.family,codec,t.cpu_threads,t.ram_mb,t.vram_mb,
-                  t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,geometry.max_width,geometry.max_height,t.measured_width,t.measured_height});
+                  t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,geometry.max_width,geometry.max_height,t.measured_width,t.measured_height,d.physical_id,d.name});
   };
   add(*cpu_device,*cpu_tuning);
-  for(const auto& d:devices){
+  for(const auto& d:verified){
    if(d.family==Backend::cpu||!d.driver_healthy||!d.backend_identity_verified||d.stable_id.empty()||d.driver_version.empty()||
       !d.dedicated_vram_mb||!find_probe(probes,d,codec,hash))continue;
-   if(std::count_if(devices.begin(),devices.end(),[&](const auto& other){
-       return other.family==d.family&&other.backend_index==d.backend_index;
-      })!=1)continue;
    auto t=find_tuning(tuning,d,codec);if(!t||t->vram_mb>d.dedicated_vram_mb)continue;
    // Only comparable 1080p-or-larger evidence can withhold a functional
    // profile for speed. A tiny or mismatched sample cannot decide real-video
@@ -132,7 +133,8 @@ bool profile_current(const Profile& p,const Device& d,const std::string& hash){
  return !p.stable_id.empty()&&p.stable_id==d.stable_id&&p.backend==d.family&&
         p.driver_version==d.driver_version&&p.ffmpeg_sha256==hash&&d.driver_healthy&&
         p.adapter_index==d.adapter_index&&p.backend_index==d.backend_index&&
-        (d.family==Backend::cpu||d.backend_identity_verified)&&
+        (d.family==Backend::cpu||(d.backend_identity_verified&&p.physical_id==d.physical_id&&
+          (d.family!=Backend::nvidia_nvenc||!d.physical_id.empty())))&&
         (d.family==Backend::cpu||d.dedicated_vram_mb>=p.vram_mb);
 }
 bool profile_supports_dimensions(const Profile& p,std::uint32_t width,std::uint32_t height){
@@ -179,42 +181,59 @@ struct Scheduler::State {
  mutable std::mutex mutex;
  Limits limits;
  std::vector<Profile> profiles;
- std::uint64_t jobs{},cpu{},ram{},scratch{},vram{};
+ std::uint64_t jobs{},cpu{},ram{},scratch{},vram{},nvenc_jobs{};
  std::map<std::string,std::uint64_t> device_vram,device_caps;
  std::map<std::string,std::uint32_t> device_jobs;
- std::map<std::string,std::uint32_t> profile_jobs;
  std::map<std::string,std::uint32_t> primary_jobs;
  std::map<std::string,bool> fallback_busy;
 };
 namespace {
 std::string profile_key(const Profile& p){return p.stable_id+":"+std::to_string(static_cast<int>(p.codec));}
-struct ReservationCost {std::uint64_t cpu{},ram{},scratch{},vram{};std::map<std::string,std::uint64_t> devices;};
+struct ReservationCost {std::uint64_t cpu{},ram{},scratch{},vram{};std::map<std::string,std::uint64_t> devices;std::set<std::string> nvenc_devices;};
 ReservationCost aggregate_cost(const std::vector<Profile>& profiles){
  std::map<Codec,ReservationCost> codecs;
  for(const auto& p:profiles){auto& c=codecs[p.codec];c.cpu=std::max(c.cpu,p.cpu_threads);c.ram=std::max(c.ram,p.ram_mb);c.scratch=std::max(c.scratch,p.scratch_mb);
   if(p.backend!=Backend::cpu)c.devices[p.stable_id]=std::max(c.devices[p.stable_id],p.vram_mb);
+  if(p.backend==Backend::nvidia_nvenc)c.nvenc_devices.insert(p.stable_id);
  }
  ReservationCost total;
- for(const auto& [_,c]:codecs){total.cpu=std::max(total.cpu,c.cpu);total.ram=std::max(total.ram,c.ram);total.scratch=std::max(total.scratch,c.scratch);
+ for(const auto& [_,c]:codecs){total.nvenc_devices.insert(c.nvenc_devices.begin(),c.nvenc_devices.end());total.cpu=std::max(total.cpu,c.cpu);total.ram=std::max(total.ram,c.ram);total.scratch=std::max(total.scratch,c.scratch);
   for(const auto& [id,mb]:c.devices)total.devices[id]=std::max(total.devices[id],mb);}
  for(const auto& [_,mb]:total.devices)total.vram+=mb;
  return total;
 }
 }
 Scheduler::Scheduler(Limits limits,std::vector<Profile> profiles):state_(std::make_shared<State>()){
- state_->limits=limits;state_->profiles=std::move(profiles);
- for(const auto& p:state_->profiles)if(p.backend!=Backend::cpu)
-  state_->device_caps[p.stable_id]=std::max(state_->device_caps[p.stable_id],p.vram_mb*p.max_concurrency);
+ state_->limits=limits;
+ std::vector<Device> devices;
+ for(const auto& p:profiles)if(p.backend!=Backend::cpu){
+  auto found=std::find_if(devices.begin(),devices.end(),[&](const auto& d){return d.stable_id==p.stable_id;});
+  if(found==devices.end())devices.push_back({p.stable_id,p.backend,p.driver_version,0,true,p.adapter_index,p.device_name,p.backend_index,p.backend_identity_verified,p.physical_id});
+  else if(found->family!=p.backend||found->backend_index!=p.backend_index||found->physical_id!=p.physical_id||!p.backend_identity_verified)
+   found->backend_identity_verified=false;
+ }
+ verify_device_identities(devices);
+ for(auto p:profiles){
+  if(p.backend!=Backend::cpu){
+   auto d=std::find_if(devices.begin(),devices.end(),[&](const auto& current){return current.stable_id==p.stable_id&&current.backend_identity_verified;});
+   if(d==devices.end()||!p.vram_mb)continue;
+   // Only one simultaneous encode was measured on each card. H.264 and HEVC
+   // are sequential within a job and share this physical session reservation.
+   p.max_concurrency=std::min(p.max_concurrency,device_encode_sessions);
+   state_->device_caps[p.stable_id]=std::max(state_->device_caps[p.stable_id],p.vram_mb);
+  }
+  state_->profiles.push_back(std::move(p));
+ }
 }
 Scheduler::Reservation::Reservation(std::shared_ptr<State> state,std::vector<Profile> profiles)
  :state_(std::move(state)),profiles_(std::move(profiles)),active_(true){}
 Scheduler::Reservation::Reservation(Reservation&& other) noexcept
- :state_(std::move(other.state_)),profiles_(std::move(other.profiles_)),active_(other.active_){other.active_=false;}
+ :state_(std::move(other.state_)),profiles_(std::move(other.profiles_)),active_(other.active_),cpu_fallback_keys_(std::move(other.cpu_fallback_keys_)){other.active_=false;}
 Scheduler::Reservation& Scheduler::Reservation::operator=(Reservation&& other) noexcept{
- if(this!=&other){release();state_=std::move(other.state_);profiles_=std::move(other.profiles_);active_=other.active_;other.active_=false;}return *this;
+ if(this!=&other){release();state_=std::move(other.state_);profiles_=std::move(other.profiles_);active_=other.active_;cpu_fallback_keys_=std::move(other.cpu_fallback_keys_);other.active_=false;}return *this;
 }
 Scheduler::Reservation::~Reservation(){release();}
-void Scheduler::Reservation::release() noexcept{if(active_){Scheduler::release(state_,profiles_);active_=false;}}
+void Scheduler::Reservation::release() noexcept{if(active_){Scheduler::release(state_,profiles_,cpu_fallback_keys_);active_=false;}}
 bool Scheduler::Reservation::hardware_enabled(const Profile& profile) const{
  if(!active_||!state_||profile.backend==Backend::cpu)return false;
  std::lock_guard lock(state_->mutex);
@@ -236,16 +255,18 @@ bool Scheduler::Reservation::acquire_cpu_fallback(const std::function<bool()>& c
   if(ready){for(const auto& p:profiles_)if(p.backend==Backend::cpu&&std::any_of(profiles_.begin(),profiles_.end(),[&](const auto& q){return q.codec==p.codec&&q.backend!=Backend::cpu;})){const auto key=profile_key(p);if(std::find(cpu_fallback_keys_.begin(),cpu_fallback_keys_.end(),key)==cpu_fallback_keys_.end()){state_->fallback_busy[key]=true;cpu_fallback_keys_.push_back(key);}}return true;}
  }if(std::chrono::steady_clock::now()>=deadline)return false;std::this_thread::sleep_for(std::chrono::milliseconds(20));}
 }
-void Scheduler::release(const std::shared_ptr<State>& state,const std::vector<Profile>& profiles) noexcept{
+void Scheduler::release(const std::shared_ptr<State>& state,const std::vector<Profile>& profiles,
+                        const std::vector<std::string>& cpu_fallback_keys) noexcept{
  if(!state)return;
  std::lock_guard lock(state->mutex);
+ for(const auto& key:cpu_fallback_keys)state->fallback_busy[key]=false;
  const auto cost=aggregate_cost(profiles);std::map<std::string,bool> released_devices;
  for(const auto& p:profiles){
   const bool has_gpu=std::any_of(profiles.begin(),profiles.end(),[&](const auto& q){return q.codec==p.codec&&q.backend!=Backend::cpu;});
   if(p.backend!=Backend::cpu&&!released_devices[p.stable_id]){--state->device_jobs[p.stable_id];released_devices[p.stable_id]=true;}
   if(p.backend!=Backend::cpu||!has_gpu)--state->primary_jobs[profile_key(p)];
-  if(p.backend==Backend::cpu)state->fallback_busy[profile_key(p)]=false;
  }
+ state->nvenc_jobs-=cost.nvenc_devices.size();
  state->cpu-=cost.cpu;state->ram-=cost.ram;state->scratch-=cost.scratch;state->vram-=cost.vram;
  for(const auto& [id,mb]:cost.devices)state->device_vram[id]-=mb;
  --state->jobs;
@@ -269,11 +290,13 @@ Scheduler::Reservation Scheduler::reserve(const std::vector<Codec>& codecs,const
   for(const auto& p:s->profiles){
    if(p.codec!=codec||!p.max_concurrency||p.stable_id.empty())continue;
    if(p.backend!=Backend::cpu&&!p.backend_identity_verified)continue;
-   if(p.backend==Backend::cpu){if(s->primary_jobs[profile_key(p)]>=p.max_concurrency)continue;}
+   if(p.backend==Backend::cpu){if(s->primary_jobs[profile_key(p)]>=p.max_concurrency||s->fallback_busy[profile_key(p)])continue;}
    else if(s->primary_jobs[profile_key(p)]>=p.max_concurrency)continue;
    candidates.push_back(&p);
   }
-  std::sort(candidates.begin(),candidates.end(),[](const auto* a,const auto* b){
+  std::sort(candidates.begin(),candidates.end(),[&](const auto* a,const auto* b){
+   auto already_selected=[&](const auto* p){return p->backend!=Backend::cpu&&std::any_of(chosen.begin(),chosen.end(),[&](const auto& selected){return selected.backend!=Backend::cpu&&selected.stable_id==p->stable_id;});};
+   if(already_selected(a)!=already_selected(b))return already_selected(a);
    if(a->measured_frames_per_second!=b->measured_frames_per_second)return a->measured_frames_per_second>b->measured_frames_per_second;
    return a->stable_id<b->stable_id;
   });
@@ -291,8 +314,10 @@ Scheduler::Reservation Scheduler::reserve(const std::vector<Codec>& codecs,const
    auto combined=chosen;combined.insert(combined.end(),for_job.begin(),for_job.end());const auto projected=aggregate_cost(combined);
    if(projected.cpu>task_caps.cpu_threads||projected.ram>task_caps.ram_mb||projected.scratch>task_caps.scratch_mb||projected.vram>task_caps.vram_mb)continue;
    if(projected.cpu+s->cpu>s->limits.cpu_threads||projected.ram+s->ram>s->limits.ram_mb||projected.scratch+s->scratch>s->limits.scratch_mb||projected.vram+s->vram>s->limits.vram_mb)continue;
-   bool device_fit=true;for(const auto& [id,mb]:projected.devices)if(mb+s->device_vram[id]>s->device_caps[id])device_fit=false;
-   if(!device_fit)continue;
+   bool device_fit=true;for(const auto& [id,mb]:projected.devices)if(mb+s->device_vram[id]>s->device_caps[id]||s->device_jobs[id]>=device_encode_sessions)device_fit=false;
+   // Historical consumer drivers have a system-wide limit, not one limit
+   // per card. Stay at two worker sessions even on newer drivers with more.
+   if(!device_fit||s->nvenc_jobs+projected.nvenc_devices.size()>worker_nvenc_sessions)continue;
    chosen.insert(chosen.end(),for_job.begin(),for_job.end());admitted=true;break;
   }
   if(!admitted)return {};
@@ -302,7 +327,9 @@ Scheduler::Reservation Scheduler::reserve(const std::vector<Codec>& codecs,const
     cost.scratch>task_caps.scratch_mb||cost.vram>task_caps.vram_mb)return {};
  if(cost.cpu+s->cpu>s->limits.cpu_threads||cost.ram+s->ram>s->limits.ram_mb||
     cost.scratch+s->scratch>s->limits.scratch_mb||cost.vram+s->vram>s->limits.vram_mb)return {};
- for(const auto& [id,mb]:cost.devices)if(mb+s->device_vram[id]>s->device_caps[id])return {};
+ for(const auto& [id,mb]:cost.devices)if(mb+s->device_vram[id]>s->device_caps[id]||s->device_jobs[id]>=device_encode_sessions)return {};
+ if(s->nvenc_jobs+cost.nvenc_devices.size()>worker_nvenc_sessions)return {};
+ s->nvenc_jobs+=cost.nvenc_devices.size();
  s->cpu+=cost.cpu;s->ram+=cost.ram;s->scratch+=cost.scratch;s->vram+=cost.vram;++s->jobs;
  for(const auto& [id,mb]:cost.devices){s->device_vram[id]+=mb;++s->device_jobs[id];}
  for(const auto& p:chosen)if(p.backend!=Backend::cpu||std::count_if(chosen.begin(),chosen.end(),[&](const auto& q){return q.codec==p.codec&&q.backend!=Backend::cpu;})==0)++s->primary_jobs[profile_key(p)];

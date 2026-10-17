@@ -1,0 +1,16 @@
+{
+  "base": "d1b9fea",
+  "snapshot": "/tmp/ow-multigpu-review-dx8ulkiu",
+  "files": {
+    "include/ow/adaptive_hardware.hpp": "999b7b297da7db33cb1f3b72f8811d1a8f38ee4e65f735bbe38bce1b87e0dab3",
+    "include/ow/device_identity.hpp": "77cf0efcf60a48a82e3788d6af9236f39f2245902e7da8e8b3999ac394e4c53b",
+    "include/ow/adaptive_evidence.hpp": "8293dc4d320941b59aef34bdf8031124825e20b131a7f035c0e20e44b72b9474",
+    "include/ow/console.hpp": "d17c8dc43c5545368b91b4d4b762e149a40e7042763427874c106d97ea89ac28",
+    "src/adaptive_hardware.cpp": "7737175093eb04a4667f0f1b34ca2e369026287ec4eb0c755d23f5e2601e1f18",
+    "windows/hardware.cpp": "392a8111174b8268f5cdb40e3557b49ce6925edae7e97273e2bae8ed076a16a4",
+    "windows/worker.cpp": "3c0e34f75874266213f71e36a99de3d5db112d9c09c112f8417b7768d3a55386",
+    "tests/adaptive_hardware_test.cpp": "d8ed02ba35dcec5e658a7539a699c1b5d9b25612b9b3d18dea60e1ca36cbc64f",
+    "tests/progress_test.cpp": "9a24d9e79417d66e73504fdf5fb425b9999792af30be15b6159bc52d27d75dd4",
+    "tests/windows_test.cpp": "b93198a07c48c8cba11fde58ae364ac0a4ad36448223eafcd8a253e6c3821ede"
+  }
+}

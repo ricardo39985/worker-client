@@ -1,5 +1,11 @@
 # Candidate status — 0.1.2
 
+Current multi-GPU source candidate: see
+[verification/multigpu/REPORT.md](../verification/multigpu/REPORT.md) for the
+code diagnosis, red/green gates, per-card session policy and operator checklist.
+This change has no MSVC/native or physical RTX 3070/3050 execution evidence.
+No Windows machine or production server was contacted, changed or restarted.
+
 Current geometry correction evidence: see
 `verification/gpu-dimensions/REPORT.md`. The sample size no longer sets encoder
 limits; startup tuning is 1920x1080 and larger hardware work uses guarded

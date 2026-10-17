@@ -447,3 +447,23 @@ TEST("geometry and performance fallback reasons remain distinct and readable"){
  CHECK(slower.text.find("measured slower")!=std::string::npos);
  CHECK(slower.color==ow::ConsoleColor::orange);
 }
+
+TEST("encoder placement remains short blue activity with distinct device and CPU retry"){
+ ow::ConsoleFormatter formatter;
+ auto first=formatter.render("JOB attempt-abcd ENCODER | nvenc/h264 GPU 0 | device_id=full-luid-a physical_id=uuid-a");
+ auto second=formatter.render("JOB attempt-efgh ENCODER | nvenc/h264 GPU 1 | device_id=full-luid-b physical_id=uuid-b");
+ CHECK(first.text=="job abcd nvenc/h264 GPU 0");CHECK(second.text=="job efgh nvenc/h264 GPU 1");
+ CHECK(first.color==ow::ConsoleColor::blue&&second.color==ow::ConsoleColor::blue);
+ auto retry=formatter.render("JOB attempt-abcd ENCODER | cpu/h264 | device_id=cpu");
+ CHECK(retry.text=="job abcd cpu/h264");CHECK(retry.color==ow::ConsoleColor::blue);
+ CHECK(first.text.size()<=80&&second.text.size()<=80);
+}
+
+TEST("the short log distinguishes schedulable card count from raw DXGI inventory"){
+ ow::ConsoleFormatter formatter;
+ auto count=formatter.render("PROBE DEVICES schedulable GPUs=2");
+ CHECK(count.text=="schedulable GPUs=2");CHECK(count.color==ow::ConsoleColor::white);
+ auto card=formatter.render("GPU DEVICE | nvenc GPU 1 | NVIDIA GeForce RTX 3050 | device_id=long-luid physical_id=long-uuid");
+ CHECK(card.text.find("nvenc GPU 1 | NVIDIA GeForce RTX 3050")!=std::string::npos);
+ CHECK(card.text.size()<=80);CHECK(card.color==ow::ConsoleColor::white);
+}

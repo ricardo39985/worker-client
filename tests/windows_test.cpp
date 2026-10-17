@@ -33,6 +33,14 @@ TEST("Windows adapter inventory has repeatable unique identities and real VRAM a
  for(std::size_t i=0;i<first.size();++i){
   CHECK(!first[i].stable_id.empty());CHECK(first[i].stable_id==second[i].stable_id);
   CHECK(first[i].adapter_index==second[i].adapter_index);
+  CHECK(first[i].physical_id==second[i].physical_id);
+  if(first[i].backend_identity_verified){
+   if(first[i].family==adaptive::Backend::nvidia_nvenc)CHECK(!first[i].physical_id.empty());
+   for(std::size_t j=0;j<i;++j)if(first[j].backend_identity_verified){
+    if(!first[i].physical_id.empty())CHECK(first[i].physical_id!=first[j].physical_id);
+    if(first[i].family==first[j].family)CHECK(first[i].backend_index!=first[j].backend_index);
+   }
+  }
   for(std::size_t j=0;j<i;++j)CHECK(first[i].stable_id!=first[j].stable_id);
   if(first[i].driver_healthy){CHECK(!first[i].driver_version.empty());CHECK(first[i].dedicated_vram_mb>0);}
  }
@@ -40,7 +48,7 @@ TEST("Windows adapter inventory has repeatable unique identities and real VRAM a
 TEST("NoConversion setup inventories adapters before reporting disabled conversion"){
  Temp t;Config config;config.root=t.path;config.budget={256,777,256,1};auto result=probe_ffmpeg(config);
  CHECK(!result.video&&!result.media_video);CHECK(result.reason.find("converter not configured")!=std::string::npos);
- CHECK(result.reason.find("detected adapters=")!=std::string::npos);
+ CHECK(result.reason.find("DXGI inventory entries=")!=std::string::npos);
  CHECK(result.reason.find("configured_global_VRAM_override_MB=not_set")!=std::string::npos);
  auto saved=parse(read_file(t.path/"adaptive-hardware.json")).as_object();
  CHECK(saved.at("profiles").as_array().empty());CHECK(saved.at("devices").is_array());
@@ -77,7 +85,7 @@ TEST("stopping a contained job terminates both root and descendant"){
 TEST("adaptive capacity stays reserved until a cancelled native process tree drains"){
  Temp t;adaptive::Profile gpu{"synthetic-luid","driver","hash",adaptive::Backend::nvidia_nvenc,adaptive::Codec::h264,1,256,512,128,1,50,0,0,true};
  adaptive::Profile cpu{"cpu","","hash",adaptive::Backend::cpu,adaptive::Codec::h264,1,256,0,128,1,20,0,0,true};
- adaptive::Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
+ gpu.physical_id="fixture-uuid";adaptive::Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
  auto held=scheduler.reserve({adaptive::Codec::h264});CHECK(held);CHECK(scheduler.active_jobs()==1);
  CHECK(held.profiles().front().backend==adaptive::Backend::nvidia_nvenc);
  // The GPU job reserves fallback budgets, but does not occupy the CPU encoder.

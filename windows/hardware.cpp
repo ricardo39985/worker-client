@@ -1,4 +1,5 @@
 #include "hardware.hpp"
+#include "ow/device_identity.hpp"
 #include <windows.h>
 #include <dxgi1_2.h>
 #include <pdh.h>
@@ -27,7 +28,7 @@ std::string adapter_id(const DXGI_ADAPTER_DESC1& desc){
    <<":luid:"<<std::setw(8)<<static_cast<unsigned long>(desc.AdapterLuid.HighPart)<<":"
    <<std::setw(8)<<desc.AdapterLuid.LowPart;return id.str();
 }
-struct CudaMapping { std::vector<adaptive::BackendIdentity> devices; };
+struct CudaMapping { std::vector<adaptive::BackendIdentity> devices;std::map<std::string,std::string> physical_ids; };
 CudaMapping cuda_mappings(){
  CudaMapping result;
  std::unique_ptr<std::remove_pointer_t<HMODULE>,ModuleRelease> module(
@@ -37,15 +38,21 @@ CudaMapping cuda_mappings(){
  auto init=reinterpret_cast<Init>(GetProcAddress(module.get(),"cuInit"));
  auto count=reinterpret_cast<Count>(GetProcAddress(module.get(),"cuDeviceGetCount"));
  auto get=reinterpret_cast<Get>(GetProcAddress(module.get(),"cuDeviceGet"));
+ struct CudaUuid {char bytes[16];};using Uuid=int (WINAPI*)(CudaUuid*,int);
+ auto uuid=reinterpret_cast<Uuid>(GetProcAddress(module.get(),"cuDeviceGetUuid"));
  auto luid=reinterpret_cast<Luid>(GetProcAddress(module.get(),"cuDeviceGetLuid"));
- if(!init||!count||!get||!luid||init(0)!=0)return result;
+ if(!init||!count||!get||!luid||!uuid||init(0)!=0)return result;
  int devices=0;if(count(&devices)!=0||devices<=0||devices>64)return result;
  for(int ordinal=0;ordinal<devices;++ordinal){
-  int device{};char bytes[8]{};unsigned node_mask{};
-  if(get(&device,ordinal)!=0||luid(bytes,&node_mask,device)!=0||!node_mask)continue;
+  int device{};char bytes[8]{};unsigned node_mask{};CudaUuid physical{};
+  if(get(&device,ordinal)!=0||luid(bytes,&node_mask,device)!=0||!node_mask||uuid(&physical,device)!=0)continue;
+  if(std::all_of(physical.bytes,physical.bytes+16,[](char b){return b==0;}))continue;
   DWORD low{};LONG high{};std::memcpy(&low,bytes,sizeof(low));std::memcpy(&high,bytes+sizeof(low),sizeof(high));
   std::ostringstream key;key<<std::hex<<std::setfill('0')<<std::setw(8)<<static_cast<unsigned long>(high)<<":"<<std::setw(8)<<low;
   result.devices.push_back({key.str(),static_cast<std::uint32_t>(ordinal),node_mask});
+  std::ostringstream physical_key;physical_key<<"cuda-uuid:"<<std::hex<<std::setfill('0');
+  for(unsigned char byte:physical.bytes)physical_key<<std::setw(2)<<static_cast<unsigned>(byte);
+  result.physical_ids[key.str()]=physical_key.str();
  }
  return result;
 }
@@ -95,12 +102,13 @@ std::vector<adaptive::Device> enumerate_video_devices(bool resolve_encoder_ident
   int utf8_length=WideCharToMultiByte(CP_UTF8,0,description.data(),static_cast<int>(description.size()),nullptr,0,nullptr,nullptr);
   std::string name(utf8_length>0?static_cast<std::size_t>(utf8_length):0,0);
   if(utf8_length>0)WideCharToMultiByte(CP_UTF8,0,description.data(),static_cast<int>(description.size()),name.data(),utf8_length,nullptr,nullptr);
-  std::uint32_t backend_index=index;bool mapped=false;
+  std::uint32_t backend_index=index;bool mapped=false;std::string physical_id;
   if(family==adaptive::Backend::nvidia_nvenc){
-   if(auto ordinal=adaptive::resolve_unique_backend_ordinal(cuda.devices,luid_key(id))){backend_index=*ordinal;mapped=true;}
+   if(auto ordinal=adaptive::resolve_unique_backend_ordinal(cuda.devices,luid_key(id))){backend_index=*ordinal;physical_id=cuda.physical_ids.at(luid_key(id));mapped=true;}
   }else if(resolve_encoder_identity) { backend_index=backend_indices[family]++;mapped=true; }
-  out.push_back({id,family,driver_version,vram,SUCCEEDED(driver_hr)&&vram>0,index,std::move(name),backend_index,mapped});
+  out.push_back({id,family,driver_version,vram,SUCCEEDED(driver_hr)&&vram>0,index,std::move(name),backend_index,mapped,std::move(physical_id)});
  }
+ adaptive::verify_device_identities(out);
  return out;
 }
 std::optional<GpuMemorySample> sample_gpu_memory(std::uint32_t process_id,const adaptive::Device& device){
