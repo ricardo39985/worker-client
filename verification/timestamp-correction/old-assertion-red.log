@@ -1,0 +1,2 @@
+FAIL previous size assertion rejects the existing formatter: check failed at /tmp/ow-timestamp-old-assertion.cpp:5: sample.size()==15
+1 contracts, 1 failures

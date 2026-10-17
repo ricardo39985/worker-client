@@ -18,19 +18,24 @@ std::int64_t epoch_ms(int year,unsigned month,unsigned day,int hour,int minute,i
   +hours{hour}+minutes{minute}+seconds{second};
  return duration_cast<milliseconds>(point.time_since_epoch()).count();
 }
-#ifndef _WIN32
 struct TzGuard {
  std::optional<std::string> old;
+ static void set(const char* value) {
+#ifdef _WIN32
+  _putenv_s("TZ",value?value:"");_tzset();
+#else
+  if(value)setenv("TZ",value,1);else unsetenv("TZ");
+  tzset();
+#endif
+ }
  explicit TzGuard(const char* value) {
   if(const char* current=std::getenv("TZ"))old=current;
-  setenv("TZ",value,1);tzset();
+  set(value);
  }
  ~TzGuard(){
-  if(old)setenv("TZ",old->c_str(),1);else unsetenv("TZ");
-  tzset();
+  set(old?old->c_str():nullptr);
  }
 };
-#endif
 void check_frame(const std::string& frame) {
  std::size_t start=0;
  while(start<frame.size()){
@@ -138,13 +143,21 @@ TEST("local timestamp format is exact through midnight month and zone changes") 
  CHECK(ow::format_duration_compact(44000)=="44s");
  CHECK(ow::format_duration_compact(72000)=="1m12s");
  CHECK(ow::format_utc_timestamp(0)=="1970-01-01 00:00:00.000Z");
-#ifndef _WIN32
  {
   TzGuard zone{"UTC0"};
+  CHECK(ow::format_local_timestamp(epoch_ms(2026,10,7,9,1,28))=="07/10 09:01:28");
+  auto midnight=epoch_ms(2026,4,8,23,59,59);
+  CHECK(ow::format_local_timestamp(midnight)=="08/04 23:59:59");
+  CHECK(ow::format_local_timestamp(midnight+1000)=="09/04 00:00:00");
+  auto month_end=epoch_ms(2026,4,30,23,59,59);
+  CHECK(ow::format_local_timestamp(month_end)=="30/04 23:59:59");
+  CHECK(ow::format_local_timestamp(month_end+1000)=="01/05 00:00:00");
   auto last= epoch_ms(2026,12,31,23,59,59);
   CHECK(ow::format_local_timestamp(last)=="31/12 23:59:59");
   CHECK(ow::format_local_timestamp(last+1000)=="01/01 00:00:00");
   CHECK(ow::format_local_timestamp(last+424)=="31/12 23:59:59");
+  CHECK(ow::format_utc_timestamp(last+424)=="2026-12-31 23:59:59.424Z");
+  CHECK(ow::format_utc_timestamp(last+1000)=="2027-01-01 00:00:00.000Z");
  }
  {
   TzGuard zone{"EST4"};
@@ -153,14 +166,20 @@ TEST("local timestamp format is exact through midnight month and zone changes") 
   CHECK(feed.event.has_value());CHECK(feed.event->text.starts_with("17/10 11:01:28 "));
  }
  {
+#ifdef _WIN32
+  // The CRT uses US transition rules for this TZ spelling.
+  TzGuard zone{"EST5EDT"};
+#else
   TzGuard zone{"EST5EDT,M3.2.0/2,M11.1.0/2"};
+#endif
   CHECK(ow::format_local_timestamp(epoch_ms(2026,7,1,12,0,0))=="01/07 08:00:00");
   CHECK(ow::format_local_timestamp(epoch_ms(2026,1,1,12,0,0))=="01/01 07:00:00");
+  CHECK(ow::format_local_timestamp(epoch_ms(2026,3,8,6,59,59))=="08/03 01:59:59");
+  CHECK(ow::format_local_timestamp(epoch_ms(2026,3,8,7,0,0))=="08/03 03:00:00");
+  CHECK(ow::format_local_timestamp(epoch_ms(2026,11,1,5,59,59))=="01/11 01:59:59");
+  CHECK(ow::format_local_timestamp(epoch_ms(2026,11,1,6,0,0))=="01/11 01:00:00");
+  CHECK(ow::format_utc_timestamp(epoch_ms(2026,11,1,6,0,0)+424)=="2026-11-01 06:00:00.424Z");
  }
-#else
- auto sample=ow::format_local_timestamp(epoch_ms(2026,10,17,15,1,28));
- CHECK(sample.size()==15);CHECK(sample[2]=='/'&&sample[5]==' '&&sample[8]==':'&&sample[11]==':');
-#endif
 }
 
 TEST("job suffixes are lowercase last four and stable for a job life") {

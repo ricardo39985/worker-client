@@ -1,0 +1,15 @@
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize
+    Start 1: worker_contracts
+1/5 Test #1: worker_contracts .................   Passed    0.06 sec
+    Start 2: pipeline_contracts
+2/5 Test #2: pipeline_contracts ...............   Passed    0.02 sec
+    Start 3: rendition_contracts
+3/5 Test #3: rendition_contracts ..............   Passed    0.02 sec
+    Start 4: adaptive_hardware_contracts
+4/5 Test #4: adaptive_hardware_contracts ......   Passed    0.05 sec
+    Start 5: progress_contracts
+5/5 Test #5: progress_contracts ...............   Passed    0.46 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Total Test time (real) =   0.62 sec
