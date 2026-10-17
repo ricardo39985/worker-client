@@ -124,7 +124,7 @@ inline std::string capability_from_probe(std::string_view body) {
  if(!video&&!image){video=flag(body,"video=");image=flag(body,"image=");}
  if(body.find("app video=verified")!=std::string_view::npos)video=true;
  if(body.find("app image=verified")!=std::string_view::npos)image=true;
- return capability_summary(video,image);
+ return capability_summary(video,image,probe_encoders(body));
 }
 inline std::optional<unsigned> percent_value(std::string_view field) {
  if(field.empty()||field.back()!='%')return {};

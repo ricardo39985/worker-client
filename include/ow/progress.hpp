@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <cctype>
 #include <charconv>
 #include <chrono>
 #include <cstdint>
@@ -159,13 +160,42 @@ inline std::optional<std::string> resolve_job_suffix(std::string_view durable_lo
  return *matches.begin();
 }
 
-inline std::string capability_summary(bool app_video,bool app_image) {
+inline std::string capability_summary(bool app_video,bool app_image,std::string_view encoders={}) {
  std::string out="ready: ";
  if(app_video&&app_image)out+="video+image";
  else if(app_video)out+="video";
  else if(app_image)out+="image";
  else out+="none";
- return out+" (cpu)";
+ // Name the encoders the worker actually reported. An absent field is not proof of CPU:
+ // older records omit it, so claim nothing rather than reporting a backend we cannot see.
+ if(!encoders.empty())out+=" ("+std::string(encoders)+")";
+ return out;
+}
+
+// Extracts the encoder list a worker reported on its probe line, e.g. "encoders=cpu,qsv,amf".
+// Only known backend names survive, and an absent or unrecognised field yields nothing, so the
+// console never invents a backend it cannot verify.
+inline std::string probe_encoders(std::string_view body) {
+ static constexpr std::string_view known[]={"cpu","qsv","amf","nvenc","vaapi","videotoolbox"};
+ constexpr std::string_view key="encoders=";
+ auto at=body.find(key);
+ if(at==std::string_view::npos)return {};
+ at+=key.size();
+ auto end=body.find_first_of(" \t\r\n",at);
+ const auto value=body.substr(at,end==std::string_view::npos?std::string_view::npos:end-at);
+ std::string out;
+ std::size_t start=0;
+ while(start<=value.size()){
+  const auto comma=value.find(',',start);
+  const auto token=value.substr(start,comma==std::string_view::npos?std::string_view::npos:comma-start);
+  for(std::string_view k:known)if(token==k&&out.find(k)==std::string_view::npos){
+   if(!out.empty())out+=", ";
+   out+=k;
+  }
+  if(comma==std::string_view::npos)break;
+  start=comma+1;
+ }
+ return out;
 }
 
 inline std::vector<std::wstring> encoder_progress_arguments(std::vector<std::wstring> arguments) {

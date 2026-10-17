@@ -357,3 +357,20 @@ TEST("many jobs keep suffix-to-id resolvability and concurrent accounting") {
  for(auto& thread:writers)thread.join();
  CHECK(counter.snapshot(92000).completed==400);
 }
+
+TEST("the ready line names the encoders the worker actually reported") {
+ const std::string body="PROBE RESULT app_video=1 app_image=1 video=1 image=1 encoders=cpu,qsv,amf";
+ CHECK(ow::console_detail::capability_from_probe(body)=="ready: video+image (cpu, qsv, amf)");
+}
+
+TEST("a probe record without encoder detail claims no backend") {
+ const std::string body="PROBE RESULT app_video=1 app_image=1 video=1 image=1";
+ CHECK(ow::console_detail::capability_from_probe(body)=="ready: video+image");
+ CHECK(ow::console_detail::capability_from_probe(body).find("cpu")==std::string::npos);
+}
+
+TEST("a malformed encoder list cannot invent a backend") {
+ const std::string body="PROBE RESULT app_video=1 app_image=0 encoders=<script>";
+ CHECK(ow::console_detail::capability_from_probe(body)=="ready: video");
+ CHECK(ow::console_detail::capability_from_probe(body).find("script")==std::string::npos);
+}

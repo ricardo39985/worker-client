@@ -339,8 +339,17 @@ void Worker::network(){
   verified_video_=probe.video;verified_image_=probe.image;verified_media_video_=probe.media_video;verified_media_image_=probe.media_image;{std::lock_guard lock(mutex_);hardware_profiles_=std::move(probe.profiles);std::uint64_t runtime_vram=config_.budget.vram_mb;if(!config_.vram_override_set)for(const auto& profile:hardware_profiles_)if(profile.backend!=adaptive::Backend::cpu)runtime_vram+=profile.vram_mb*profile.max_concurrency;adaptive_scheduler_=std::make_unique<adaptive::Scheduler>(adaptive::Limits{config_.budget.cpu_threads,config_.budget.ram_mb,runtime_vram,config_.budget.scratch_mb,static_cast<std::uint32_t>(config_.max_jobs)},hardware_profiles_);}apply_preferences();
   std::string record;
   if(config_.ffmpeg.empty())record="PROBE RESULT disabled";
-  else record="PROBE RESULT app_video="+std::to_string(probe.media_video?1:0)+" app_image="+std::to_string(probe.media_image?1:0)
-   +" video="+std::to_string(probe.video?1:0)+" image="+std::to_string(probe.image?1:0);
+  else{
+   // Report the encoders that actually survived probing, so the console and any operator log
+   // name a real backend instead of assuming CPU.
+   std::string encoders="cpu";
+   for(const auto& profile:probe.profiles){
+    const std::string name=profile.backend==adaptive::Backend::intel_qsv?"qsv":profile.backend==adaptive::Backend::amd_amf?"amf":profile.backend==adaptive::Backend::nvidia_nvenc?"nvenc":"cpu";
+    if(encoders.find(name)==std::string::npos)encoders+=","+name;
+   }
+   record="PROBE RESULT app_video="+std::to_string(probe.media_video?1:0)+" app_image="+std::to_string(probe.media_image?1:0)
+    +" video="+std::to_string(probe.video?1:0)+" image="+std::to_string(probe.image?1:0)+" encoders="+encoders;
+  }
   if(record!=last_capability_){safe_log(record);last_capability_=record;}
  }catch(const std::exception& e){state(std::string("STATE PROBE_FAILURE ")+e.what());}
  if(config_.coordinator.empty()){state("STATE UNCONFIGURED");while(!stop_)sleep_until_stop(stop_,500);return;}
