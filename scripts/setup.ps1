@@ -351,7 +351,16 @@ try {
         New-Item -ItemType Directory -Path $unpack | Out-Null
         Push-Location $unpack
         try {
-            Native $CMake @('-E','tar','xzf',$archive) -Name 'Extract Boost archive' -TimeoutSeconds 1800
+            # Boost documentation and test trees exist only for humans. Their member names push
+            # full paths past MAX_PATH: extraction leaves holes and the dependency cleanup then
+            # fails on files the filesystem could not create. Extract with the platform bsdtar and
+            # skip them; fall back to CMake's tar when tar.exe is unavailable.
+            $bsdtar=Join-Path $env:SystemRoot 'System32\tar.exe'
+            if (Test-Path -LiteralPath $bsdtar) {
+                Native $bsdtar @('-xzf',$archive,'-C',$unpack,'--exclude','*/doc/*','--exclude','*/doc','--exclude','*/test/*','--exclude','*/tests/*') -Name 'Extract Boost archive' -TimeoutSeconds 1800
+            } else {
+                Native $CMake @('-E','tar','xzf',$archive) -Name 'Extract Boost archive' -TimeoutSeconds 1800
+            }
             $inner=Join-Path $unpack $lock.boost.directory
             if (-not (Test-Path -LiteralPath (Join-Path $inner 'boost\json\src.hpp'))) { throw 'Verified Boost archive is incomplete.' }
             Move-WorkerDependencyContents $inner $stage
