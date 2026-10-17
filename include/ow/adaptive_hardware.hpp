@@ -49,6 +49,11 @@ struct GpuMemoryRecord { std::uint32_t process_id{},node{};std::uint64_t bytes{}
 struct GpuMemoryTotals { std::uint64_t child_bytes{},adapter_bytes{}; };
 std::optional<GpuMemoryTotals> gpu_memory_totals(const std::vector<GpuMemoryRecord>& records,
                                                  std::uint32_t process_id,const std::string& stable_id);
+// Missing telemetry budgets half declared VRAM, capped at 1024 MiB and the
+// operator ceiling. This bounds reservations, not unobserved external GPU usage.
+struct VramBudget { std::uint64_t mb{};bool estimated{}; };
+VramBudget vram_budget(std::uint64_t declared_mb,std::optional<std::uint64_t> adapter_bytes,std::uint64_t global_mb);
+bool vram_envelope_ok(std::uint64_t declared_mb,std::uint64_t reserved_mb,std::optional<GpuMemoryTotals> sample);
 struct BackendIdentity { std::string stable_id;std::uint32_t ordinal{},node_mask{}; };
 std::optional<std::uint32_t> resolve_unique_backend_ordinal(const std::vector<BackendIdentity>& mappings,
                                                             const std::string& stable_id);

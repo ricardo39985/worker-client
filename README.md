@@ -64,8 +64,9 @@ This first job path is explicitly queued by an operator. It leaves the app's
 primary media and existing renditions intact. Outputs are temporary, retained
 for about 24 hours from attempt creation. The adaptive media path can select a
 local NVENC, QSV or AMF encoder only when backend identity mapping,
-child-scoped VRAM telemetry, synthetic encode/decode and bounded tuning are
-verified. Unproven mapping or telemetry keeps that GPU profile disabled while
+synthetic encode/decode and bounded tuning are verified. VRAM admission uses
+live telemetry when available, otherwise a conservative declared-VRAM budget.
+Unproven mapping or no usable VRAM budget keeps that GPU profile disabled while
 measured CPU profiles remain available. There is no inference adapter.
 
 ## Maintenance and limits

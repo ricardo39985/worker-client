@@ -374,3 +374,51 @@ TEST("cancellation during output validation cannot publish a successful artifact
  bool cancelled=false;THROWS(ow::adaptive::run_with_cpu_fallback(file,true,[&]{return cancelled;},[&](bool){std::ofstream(file)<<"complete";},[&](const auto&){cancelled=true;return true;}));
  CHECK(cancelled);CHECK(!std::filesystem::exists(file));
 }
+
+TEST("declared VRAM fallback permits proven hardware and retains CPU and drain budgets"){
+ auto c=cpu(),g=gpu("radeon",Backend::amd_amf,4043);
+ auto budget=vram_budget(g.dedicated_vram_mb,{},8192);
+ CHECK(budget.estimated&&budget.mb==1024);
+ auto profiles=run({c,g},{probe(c,Codec::hevc),probe(g,Codec::hevc)},
+  {tune(c,Codec::hevc,20),tune(g,Codec::hevc,50,budget.mb)});
+ CHECK(find(profiles,g.stable_id,Codec::hevc));CHECK(find(profiles,"cpu",Codec::hevc));
+ Scheduler scheduler(limits(),profiles);scheduler.set_device_available_vram(g.stable_id,budget.mb);
+ auto running=scheduler.reserve({Codec::hevc});CHECK(running);
+ CHECK(running.profiles().front().backend==Backend::amd_amf);
+ auto second=scheduler.reserve({Codec::hevc});CHECK(second);
+ CHECK(second.profiles().front().backend==Backend::cpu);
+ CHECK(vram_envelope_ok(4043,budget.mb,{}));
+ CHECK(!vram_envelope_ok(4043,budget.mb,GpuMemoryTotals{1025ull*1024*1024,1025ull*1024*1024}));
+ CHECK(!vram_envelope_ok(4043,budget.mb,GpuMemoryTotals{1,4044ull*1024*1024}));
+ CHECK(!vram_envelope_ok(0,budget.mb,{}));
+ CHECK(!vram_envelope_ok(4043,1025,{}));
+}
+TEST("VRAM budgets preserve live headroom and fail closed without either source"){
+ CHECK(vram_budget(4043,1000ull*1024*1024,8192).mb==3043);
+ CHECK(!vram_budget(4043,1000ull*1024*1024,8192).estimated);
+ CHECK(vram_budget(4043,4044ull*1024*1024,8192).mb==0);
+ CHECK(vram_budget(0,{},8192).mb==0);
+ CHECK(vram_budget(4043,{},0).mb==0);
+ CHECK(vram_budget(128,{},8192).mb==64);
+ for(auto declared:std::vector<std::uint64_t>{1,2,127,128,4043,UINT64_MAX}){
+  auto b=vram_budget(declared,{},UINT64_MAX);CHECK(b.mb<=declared/2);CHECK(b.mb<=1024);
+ }
+ CHECK(vram_budget(4043,{},256).mb==256);
+ CHECK(vram_budget(4043,1,8192).mb==4042); // fractional usage rounds up
+}
+
+TEST("declared budget never substitutes for encode decode identity or tuning proof"){
+ auto c=cpu(),g=gpu("radeon",Backend::amd_amf,4043);
+ auto t=tune(g,Codec::h264,50,vram_budget(4043,{},8192).mb);
+ for(unsigned failure=0;failure<5;++failure){
+  auto d=g;auto proof=probe(g,Codec::h264);auto tuning=t;
+  if(failure==0)proof.encoded=false;
+  if(failure==1)proof.decoded=false;
+  if(failure==2)proof.output_valid=false;
+  if(failure==3)tuning.completed=false;
+  if(failure==4)d.backend_identity_verified=false;
+  auto profiles=run({c,d},{probe(c,Codec::h264),proof},{tune(c,Codec::h264,20),tuning});
+  CHECK(!find(profiles,g.stable_id,Codec::h264));CHECK(find(profiles,"cpu",Codec::h264));
+ }
+ CHECK(!vram_envelope_ok(4043,1024,GpuMemoryTotals{1024ull*1024*1024+1,1024ull*1024*1024+1}));
+}

@@ -25,6 +25,18 @@ const TuningEvidence* find_tuning(const std::vector<TuningEvidence>& all,const D
 }
 std::uint64_t concurrency(std::uint64_t cap,std::uint64_t each){return each?cap/each:0;}
 }
+VramBudget vram_budget(std::uint64_t declared,std::optional<std::uint64_t> bytes,std::uint64_t global){
+ // With no usage sample, leave at least half the declared memory unbudgeted.
+ if(!bytes)return {std::min({global,declared/2,std::uint64_t{1024}}),true};
+ const auto used=*bytes/(1024*1024)+(*bytes%(1024*1024)!=0);
+ return {std::min(global,declared>used?declared-used:0),false};
+}
+bool vram_envelope_ok(std::uint64_t declared,std::uint64_t reserved,std::optional<GpuMemoryTotals> sample){
+ if(!declared||!reserved||reserved>declared)return false;
+ if(!sample)return reserved<=vram_budget(declared,{},reserved).mb;
+ const auto rounded_mb=[](std::uint64_t bytes){return bytes/(1024*1024)+(bytes%(1024*1024)!=0);};
+ return rounded_mb(sample->child_bytes)<=reserved&&rounded_mb(sample->adapter_bytes)<=declared;
+}
 TuningComparison compare_tuning_runs(const std::vector<std::uint64_t>& serial,
  const std::vector<std::uint64_t>& parallel,std::uint32_t sr,std::uint32_t pr,
  std::uint64_t sf,std::uint64_t pf,std::uint64_t sc,std::uint64_t pc,

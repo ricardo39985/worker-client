@@ -34,17 +34,23 @@ void check_protocol(const Response& r){
  if(r.status!=200)throw std::runtime_error("Coordinator protocol check returned HTTP "+std::to_string(r.status));
  auto v=parse(r.body);if(number(v.as_object(),"protocol",1)!=1)throw std::runtime_error("Coordinator worker protocol is incompatible");
 }
-struct ProbeRun {std::uint64_t elapsed_ms{},peak_vram_mb{};};
+struct ProbeRun {std::uint64_t elapsed_ms{},peak_vram_mb{};bool estimated_vram{};};
 ProbeRun run_child_probe(const std::filesystem::path& exe,const std::vector<std::wstring>& args,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits,const adaptive::Device* hardware_device=nullptr,std::uint64_t vram_limit_mb=UINT64_MAX){
  const auto started=monotonic_ms();
  if(!limits.ram_mb||!limits.cpu_threads||!limits.scratch_mb)throw std::runtime_error("Configured/live resource budget cannot run converter probe");
- Child child(exe,args,workspace,limits,Priority::low);auto until=started+30000;std::uint64_t peak_vram{};bool telemetry_seen=false;
+ Child child(exe,args,workspace,limits,Priority::low);auto until=started+30000;std::uint64_t peak_vram{};bool estimated_vram=false;
  for(;;){
   if(cancelled&&cancelled())throw std::runtime_error("Capability probe cancelled");
   if(hardware_device){
    auto sample=sample_gpu_memory(child.process_id(),*hardware_device);
-    if(sample){telemetry_seen=true;peak_vram=std::max(peak_vram,sample->child_bytes);
-     if(vram_limit_mb!=UINT64_MAX&&peak_vram>vram_limit_mb*1024*1024)throw std::runtime_error("Observed child GPU memory exceeded conservative probe reservation; process tree aborted");}
+    if(sample)peak_vram=std::max(peak_vram,sample->child_bytes);
+    else{
+     estimated_vram=true;
+     vram_limit_mb=std::min(vram_limit_mb,adaptive::vram_budget(hardware_device->dedicated_vram_mb,{},vram_limit_mb).mb);
+    }
+    if(peak_vram/(1024*1024)+(peak_vram%(1024*1024)!=0)>vram_limit_mb||!adaptive::vram_envelope_ok(hardware_device->dedicated_vram_mb,vram_limit_mb,
+       sample?std::optional<adaptive::GpuMemoryTotals>{{sample->child_bytes,sample->adapter_bytes}}:std::nullopt))
+     throw std::runtime_error("GPU memory exceeded conservative probe reservation; process tree aborted");
   }
   if(auto code=child.exit_code()){
    if(*code){std::string detail;try{detail=read_file(workspace/"process.log");if(detail.size()>2048)detail.erase(0,detail.size()-2048);}
@@ -53,8 +59,7 @@ ProbeRun run_child_probe(const std::filesystem::path& exe,const std::vector<std:
   }
   if(monotonic_ms()>=until)throw std::runtime_error("FFmpeg functional probe timed out");Sleep(100);
  }
- if(hardware_device&&(!telemetry_seen||!peak_vram))throw std::runtime_error("Windows GPU Process Memory Dedicated Usage counters did not confirm nonzero dedicated allocation for this child PID and mapped LUID");
- return {static_cast<std::uint64_t>(std::max<Tick>(1,monotonic_ms()-started)),peak_vram/(1024*1024)};
+ return {static_cast<std::uint64_t>(std::max<Tick>(1,monotonic_ms()-started)),peak_vram/(1024*1024)+(peak_vram%(1024*1024)!=0),estimated_vram};
 }
 std::optional<std::pair<std::uint32_t,std::uint32_t>> inspect_video_dimensions(const std::filesystem::path& exe,
  const std::filesystem::path& input,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits){
@@ -111,7 +116,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled){
  try{for(const auto& rendition:rendition_plan(true,false,workspace)){run_probe(c.ffmpeg,rendition.arguments,workspace,cancelled);if(!std::filesystem::file_size(workspace/rendition.filename))throw std::runtime_error("App video probe produced no output");run_probe(c.ffmpeg,{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",(workspace/rendition.filename).wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,cancelled);}p.media_video=true;}catch(const std::exception&){p.media_video=false;}
  std::filesystem::copy_file(workspace/"result.jpg",workspace/"source.bin",std::filesystem::copy_options::overwrite_existing);
  try{for(const auto& rendition:rendition_plan(false,false,workspace)){run_probe(c.ffmpeg,rendition.arguments,workspace,cancelled);if(!std::filesystem::file_size(workspace/rendition.filename))throw std::runtime_error("App image probe produced no output");run_probe(c.ffmpeg,{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",(workspace/rendition.filename).wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,cancelled);}p.media_image=true;}catch(const std::exception&){p.media_image=false;}
- std::vector<std::string> unavailable;Resources headroom{};std::vector<adaptive::Device> devices;
+ std::vector<std::string> unavailable;std::map<std::string,std::string> budget_sources;Resources headroom{};std::vector<adaptive::Device> devices;
  std::uint64_t total_ram_mb{},total_disk_mb{};
  if(p.media_video){
   const auto tune_source=workspace/"adaptive-source.mp4";
@@ -151,15 +156,14 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled){
    if(rendition==plan.end()||(d.family!=adaptive::Backend::cpu&&!rendition->hardware))throw std::runtime_error("Adapter encoder command unavailable");
     const Resources candidate_limits{512,0,128,1};
     if(probe_limits.ram_mb<512||probe_limits.scratch_mb<128||probe_limits.cpu_threads<1)throw std::runtime_error("live headroom cannot safely reserve one measured profile");
-    std::uint64_t vram_probe_cap{};
+    std::uint64_t vram_probe_cap{};bool estimated_vram=false;
     if(d.family!=adaptive::Backend::cpu){
      if(c.vram_override_set&&!c.budget.vram_mb)throw std::runtime_error("explicit global VRAM limit is zero; GPU probes are disabled");
-     auto live_sample=sample_gpu_memory(0,d);if(!live_sample)throw std::runtime_error("live adapter VRAM telemetry unavailable for conservative probe preflight");
-     const auto live_used=live_sample->adapter_bytes/(1024*1024);
-     const auto device_headroom=d.dedicated_vram_mb>live_used?d.dedicated_vram_mb-live_used:0;
-     const auto global_cap=c.vram_override_set?c.budget.vram_mb:limits.vram_mb;
-     vram_probe_cap=std::min(device_headroom,global_cap);
-     if(!vram_probe_cap)throw std::runtime_error("no safe per-device and global VRAM reservation available before probe");
+     auto live_sample=sample_gpu_memory(0,d);
+     const auto budget=adaptive::vram_budget(d.dedicated_vram_mb,
+      live_sample?std::optional<std::uint64_t>{live_sample->adapter_bytes}:std::nullopt,limits.vram_mb);
+     vram_probe_cap=budget.mb;estimated_vram=budget.estimated;
+     if(!vram_probe_cap)throw std::runtime_error("no safe VRAM budget: telemetry/declared VRAM unavailable or headroom/cap exhausted");
     }
     double slowest_fps=std::numeric_limits<double>::max();std::uint64_t peak_vram_mb=0;
    for(unsigned repeat=0;repeat<2;++repeat){
@@ -169,12 +173,17 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled){
      if(!decode_valid(output,codec_name,workspace,candidate_limits))throw std::runtime_error("Synthetic app output decode/profile validation failed");
      slowest_fps=std::min(slowest_fps,72000.0/static_cast<double>(sample.elapsed_ms+(monotonic_ms()-stage_started)));
     peak_vram_mb=std::max(peak_vram_mb,sample.peak_vram_mb);
+    if(d.family!=adaptive::Backend::cpu&&sample.estimated_vram)estimated_vram=true;
    }
    if(!slowest_fps)throw std::runtime_error("Synthetic tuning measured no useful throughput");
    std::uint64_t vram_reservation=0;
    if(d.family!=adaptive::Backend::cpu){
-    if(!peak_vram_mb)throw std::runtime_error("Windows GPU Process Memory Dedicated Usage counters did not confirm nonzero dedicated allocation for this child PID and mapped LUID");
-    vram_reservation=peak_vram_mb+std::max<std::uint64_t>(128,peak_vram_mb/4);
+    // Missing child samples reserve the entire bounded fallback, never a guessed footprint.
+    if(estimated_vram){
+     vram_probe_cap=std::min(vram_probe_cap,adaptive::vram_budget(d.dedicated_vram_mb,{},limits.vram_mb).mb);
+     vram_reservation=vram_probe_cap;
+     if(!vram_reservation||peak_vram_mb>vram_reservation)throw std::runtime_error("Observed GPU footprint exceeds declared-VRAM estimate");
+    }else vram_reservation=peak_vram_mb+std::max<std::uint64_t>(128,peak_vram_mb/4);
      if(vram_reservation>d.dedicated_vram_mb||vram_reservation>limits.vram_mb||vram_reservation>vram_probe_cap)throw std::runtime_error("Measured VRAM footprint exceeds configured, live, probe reservation or dedicated device caps");
    }
    std::uint32_t tested_concurrency=1;
@@ -204,6 +213,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled){
      if(comparison.parallel_fps>=comparison.serial_fps*1.05){slowest_fps=comparison.parallel_fps/2.0;tested_concurrency=2;}
      else unavailable.emplace_back(std::string("CPU ")+(codec==adaptive::Codec::h264?"H.264":"HEVC")+" concurrency 2 measured aggregate "+std::to_string(comparison.parallel_fps)+" fps versus equal-work serial aggregate "+std::to_string(comparison.serial_fps)+" fps; below 5% gain, retained concurrency 1");
     }
+   if(d.family!=adaptive::Backend::cpu)budget_sources[d.stable_id+":"+std::to_string(static_cast<int>(codec))]=estimated_vram?"declared-VRAM estimate":"live VRAM telemetry";
    evidence.push_back({d.stable_id,d.driver_version,c.ffmpeg_sha256,d.family,codec,true,true,true});
    tuning.push_back({d.stable_id,d.family,codec,slowest_fps,1,512,vram_reservation,128,true,true,true,tested_concurrency,640,360});
   };
@@ -239,7 +249,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled){
  p.reason="Adaptive media setup: CPU="+processor_model()+" logical="+std::to_string(GetActiveProcessorCount(ALL_PROCESSOR_GROUPS))+" RAM_total_MB="+std::to_string(total_ram_mb)+" RAM_available_MB="+std::to_string(headroom.ram_mb)+" disk_total_MB="+std::to_string(total_disk_mb)+" disk_available_MB="+std::to_string(headroom.scratch_mb)+" approved_ffmpeg_sha256="+c.ffmpeg_sha256+"; detected adapters="+std::to_string(devices.size());
  for(const auto& device:devices)p.reason+=" ["+device.name+" id="+device.stable_id+" dedicated_VRAM_MB="+std::to_string(device.dedicated_vram_mb)+" driver="+(device.driver_version.empty()?"unavailable":device.driver_version)+"]";
  p.reason+="; tested profiles="+std::to_string(p.profiles.size())+"; app video="+(p.media_video?"CPU fallback verified":"unavailable")+" app image="+(p.media_image?"verified":"unavailable");
- for(const auto& profile:p.profiles)p.reason+="; chosen "+backend_name(profile.backend)+" "+(profile.codec==adaptive::Codec::h264?"H.264":"HEVC")+" at "+std::to_string(profile.measured_frames_per_second)+" measured fps with concurrency="+std::to_string(profile.max_concurrency);
+ for(const auto& profile:p.profiles)p.reason+="; chosen "+backend_name(profile.backend)+" "+(profile.codec==adaptive::Codec::h264?"H.264":"HEVC")+" at "+std::to_string(profile.measured_frames_per_second)+" measured fps with concurrency="+std::to_string(profile.max_concurrency)+(profile.backend==adaptive::Backend::cpu?"":" ("+budget_sources[profile.stable_id+":"+std::to_string(static_cast<int>(profile.codec))]+")");
  for(const auto& reason:unavailable)p.reason+="; fallback "+reason;
  }catch(const std::exception& e){p.reason=e.what();}
  std::error_code error;std::filesystem::remove_all(workspace,error);return p;
@@ -283,10 +293,10 @@ adaptive::Scheduler::Reservation Worker::reserve_hardware_profiles(const std::ve
  for(const auto& [id,profile_cap]:device_profile_caps){
   std::uint64_t available_mb{};
   auto device=std::find_if(devices.begin(),devices.end(),[&](const auto& current){return current.stable_id==id&&current.backend_identity_verified;});
-  if(device!=devices.end())if(auto sample=sample_gpu_memory(0,*device)){
-   const auto total=device->dedicated_vram_mb*1024*1024;
-   const auto bytes=sample->adapter_bytes;
-   available_mb=bytes<total?(total-bytes)/(1024*1024):0;
+  if(device!=devices.end()){
+   auto sample=sample_gpu_memory(0,*device);
+   available_mb=adaptive::vram_budget(device->dedicated_vram_mb,
+    sample?std::optional<std::uint64_t>{sample->adapter_bytes}:std::nullopt,profile_cap).mb;
   }
   adaptive_scheduler_->set_device_available_vram(id,std::min(profile_cap,available_mb));
  }
@@ -425,11 +435,28 @@ void Worker::execute(std::shared_ptr<TaskData> data){
                    const std::string& filename,unsigned seconds,bool hardware,std::stop_token pipeline_stop=std::stop_token{}){
    if(cancelled()||pipeline_stop.stop_requested())throw std::runtime_error("Job cancelled before conversion");
    auto label="convert "+filename;
-   auto run_encoder=[&](const std::vector<std::wstring>& selected){
+   auto run_encoder=[&](const std::vector<std::wstring>& selected,bool use_hardware){
+    std::optional<adaptive::Device> gpu_device;std::uint64_t gpu_reserved{};
+    if(use_hardware){
+     const auto codec=filename=="optimized.mp4"?adaptive::Codec::hevc:adaptive::Codec::h264;
+     if(!data->profile_reservation)throw std::runtime_error("GPU reservation missing");
+     for(const auto& profile:data->profile_reservation->profiles())if(profile.backend!=adaptive::Backend::cpu&&profile.codec==codec){
+      for(const auto& device:enumerate_video_devices())if(adaptive::profile_current(profile,device,config_.ffmpeg_sha256)){gpu_device=device;gpu_reserved=profile.vram_mb;break;}
+     }
+     if(!gpu_device)throw std::runtime_error("GPU profile no longer matches installed adapter");
+    }
+    auto check_gpu=[&](std::uint32_t pid){
+     if(!gpu_device)return;
+     auto sample=sample_gpu_memory(pid,*gpu_device);
+     if(!adaptive::vram_envelope_ok(gpu_device->dedicated_vram_mb,gpu_reserved,
+       sample?std::optional<adaptive::GpuMemoryTotals>{{sample->child_bytes,sample->adapter_bytes}}:std::nullopt))
+      throw std::runtime_error("GPU runtime memory envelope exceeded; process tree aborted");
+    };
+    check_gpu(0);
     phase(label.c_str());
     const auto started=monotonic_ms();auto current=priority_.load();Child child(config_.ffmpeg,encoder_progress_arguments(selected),workspace,s.offer.resources,current);
     EncoderProgressFile encoder(workspace/"process.log");
-    for(;;){if(cancelled()||pipeline_stop.stop_requested()||monotonic_ms()-started>=static_cast<Tick>(seconds)*1000)throw std::runtime_error("Job cancelled or conversion timed out");if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Conversion process failed; see per-job log");break;}
+    for(;;){check_gpu(child.process_id());if(cancelled()||pipeline_stop.stop_requested()||monotonic_ms()-started>=static_cast<Tick>(seconds)*1000)throw std::runtime_error("Job cancelled or conversion timed out");if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Conversion process failed; see per-job log");break;}
      auto latest=priority_.load();if(latest!=current){child.priority(latest);current=latest;}
      encoder.update(data->progress,monotonic_ms());std::error_code error;auto size=std::filesystem::file_size(workspace/filename,error);if(!error&&size>s.output_max_bytes)throw std::runtime_error("Output exceeded declared byte limit");
      auto log_bytes=std::filesystem::file_size(workspace/"process.log",error);if(!error&&log_bytes>5*1024*1024)throw std::runtime_error("Child output exceeded log budget");Sleep(100);
@@ -442,14 +469,14 @@ void Worker::execute(std::shared_ptr<TaskData> data){
       [&](bool use_hardware){
        if(!use_hardware&&data->profile_reservation&&!data->profile_reservation->acquire_cpu_fallback([&]{return cancelled()||pipeline_stop.stop_requested();},30000))
         throw std::runtime_error("CPU fallback encoder slot unavailable before lease or cancellation deadline");
-       run_encoder(use_hardware?arguments:cpu_arguments);
+       run_encoder(use_hardware?arguments:cpu_arguments,use_hardware);
       },
      [&](const std::filesystem::path& path){
       if(cancelled()||pipeline_stop.stop_requested())return false;
       run_child_probe(config_.ffmpeg,{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",path.wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},s.offer.resources);
       return std::filesystem::file_size(path)>0;
      });
-   }else run_encoder(arguments);
+   }else run_encoder(arguments,false);
    data->progress.finish(true,monotonic_ms());
   };
   auto upload=[&](const std::string& filename,const std::string& url,const std::string& mime,std::stop_token pipeline_stop=std::stop_token{}){
