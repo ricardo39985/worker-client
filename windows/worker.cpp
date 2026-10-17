@@ -341,12 +341,9 @@ void Worker::network(){
   if(config_.ffmpeg.empty())record="PROBE RESULT disabled";
   else{
    // Report the encoders that actually survived probing, so the console and any operator log
-   // name a real backend instead of assuming CPU.
-   std::string encoders="cpu";
-   for(const auto& profile:probe.profiles){
-    const std::string name=profile.backend==adaptive::Backend::intel_qsv?"qsv":profile.backend==adaptive::Backend::amd_amf?"amf":profile.backend==adaptive::Backend::nvidia_nvenc?"nvenc":"cpu";
-    if(encoders.find(name)==std::string::npos)encoders+=","+name;
-   }
+   // name a real backend instead of assuming CPU. hardware_profiles_ already owns the probe
+   // result here — probing's own vector has been moved into it.
+   const std::string encoders=adaptive::encoder_tokens(hardware_profiles_);
    record="PROBE RESULT app_video="+std::to_string(probe.media_video?1:0)+" app_image="+std::to_string(probe.media_image?1:0)
     +" video="+std::to_string(probe.video?1:0)+" image="+std::to_string(probe.image?1:0)+" encoders="+encoders;
   }

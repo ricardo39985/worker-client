@@ -422,3 +422,19 @@ TEST("declared budget never substitutes for encode decode identity or tuning pro
  }
  CHECK(!vram_envelope_ok(4043,1024,GpuMemoryTotals{1024ull*1024*1024+1,1024ull*1024*1024+1}));
 }
+
+TEST("encoder tokens name every backend that survived probing") {
+ std::vector<Profile> profiles(4);
+ profiles[0].backend=Backend::cpu;
+ profiles[1].backend=Backend::intel_qsv;
+ profiles[2].backend=Backend::amd_amf;
+ profiles[3].backend=Backend::cpu;
+ CHECK(encoder_tokens(profiles)=="cpu,qsv,amf");
+}
+
+TEST("encoder tokens never claim hardware when only CPU was profiled") {
+ std::vector<Profile> profiles(1);
+ profiles[0].backend=Backend::cpu;
+ CHECK(encoder_tokens(profiles)=="cpu");
+ CHECK(encoder_tokens({})=="cpu");
+}
