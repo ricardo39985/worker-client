@@ -6,6 +6,11 @@ passed six CTest suites (187 contracts including 17 new offline policy cases).
 Sixteen additional PowerShell converter contracts are registered but unrun here;
 Windows compilation, native setup/Doctor and real published-artifact checks are
 still required. See `docs/ffmpeg-distribution.md` for the publication procedure.
+Current multi-GPU source candidate: see
+[verification/multigpu/REPORT.md](../verification/multigpu/REPORT.md) for the
+code diagnosis, red/green gates, per-card session policy and operator checklist.
+This change has no MSVC/native or physical RTX 3070/3050 execution evidence.
+No Windows machine or production server was contacted, changed or restarted.
 
 Current geometry correction evidence: see
 `verification/gpu-dimensions/REPORT.md`. The sample size no longer sets encoder

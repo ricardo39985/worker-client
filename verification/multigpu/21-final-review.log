@@ -1,0 +1,4 @@
+Owned source snapshot hash check: exit 0, 10/10 files match
+git diff --check: exit 0, 0 whitespace errors
+git diff --cached --check: exit 0, 0 whitespace errors
+Staged scope check: exit 0, 36/36 owned files only

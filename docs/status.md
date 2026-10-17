@@ -8,6 +8,11 @@ remains blocked until the operator publishes and reviews the two lock URLs.
 Linux gates pass on an isolated dependency-only snapshot; Windows PowerShell/MSVC,
 actual retained download, redistribution review and native probes remain unrun.
 No GPU behavior changes or running-host actions belong to this branch.
+Current multi-GPU source candidate: see
+[verification/multigpu/REPORT.md](../verification/multigpu/REPORT.md) for the
+code diagnosis, red/green gates, per-card session policy and operator checklist.
+This change has no MSVC/native or physical RTX 3070/3050 execution evidence.
+No Windows machine or production server was contacted, changed or restarted.
 
 Current geometry correction evidence: see
 `verification/gpu-dimensions/REPORT.md`. The sample size no longer sets encoder

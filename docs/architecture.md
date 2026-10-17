@@ -174,3 +174,39 @@ state records demotions; restart runs a fresh probe instead of trusting that fil
 Unknown dimensions and unsupported geometry take CPU, including fallback slot
 acquisition. Logs distinguish geometry rejection, unproven size, measured slower
 throughput, insufficient measured gain, and actual runtime failure/demotion.
+
+## Physical encoder placement candidate
+
+NVIDIA inventory requires both the CUDA driver LUID-to-ordinal mapping and a
+nonzero driver UUID. Duplicate stable identities, physical UUIDs or backend
+ordinals are withheld before tuning and again before scheduling. Unmapped DXGI
+aliases remain diagnostic inventory entries and contribute no GPU budget. PCI
+vendor/product/subsystem/revision is a product identity, so distinct NVIDIA
+UUIDs can qualify two identical cards. Repeated non-CUDA PCI products remain
+withheld until physical identity can be disambiguated.
+
+A hardware reservation occupies one encode session per physical card across
+its sequential H.264/HEVC renditions, and at most two NVENC sessions across this
+worker. One codec cannot evade the other codec's session reservation. Selection
+prefers the card already chosen for the job when that codec and every resource
+budget fit; different jobs can reserve different cards independently. Per-card
+VRAM is the maximum of sequential codec footprints, with a separate aggregate
+machine ceiling. CPU/RAM/scratch, job ceilings and live headroom remain binding.
+A changed device removes only its stale profiles; complete inventory failure
+still invalidates hardware globally. All active resources remain owned until
+the contained process tree drains.
+
+CPU fallback budgets do not occupy CPU encoder slots until acquired. The acquired
+slot follows reservation moves; unrelated release cannot clear it, and a new
+CPU primary cannot take an occupied fallback slot. Existing encode/decode/output
+validation and bounded cancellation-aware retry remain mandatory.
+
+The plain log names backend/codec, encoder ordinal, full device identity,
+physical UUID and child PID at actual child launch; completion is logged after
+process-tree drain. The short viewer shows the job suffix and GPU ordinal in
+blue, plus a white startup card table and schedulable-card count. Raw DXGI count
+remains separately labelled inventory evidence. These are source policies with
+portable contracts, not measured two-card Windows execution. Driver/session use
+by other programs and GPU allocation remain external constraints; CPU retry is
+required when opening a hardware session fails. See
+[the multi-GPU gate ledger](../verification/multigpu/REPORT.md).

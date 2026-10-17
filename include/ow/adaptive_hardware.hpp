@@ -15,6 +15,9 @@
 namespace ow::adaptive {
 enum class Backend { cpu, nvidia_nvenc, intel_qsv, amd_amf };
 enum class Codec { h264, hevc };
+// Only one simultaneous hardware encode per card has been proven. Consumer
+// NVENC sessions can also be limited across the entire system by the driver.
+inline constexpr std::uint32_t device_encode_sessions=1,worker_nvenc_sessions=2;
 struct Device {
     std::string stable_id;
     Backend family{Backend::cpu};
@@ -25,6 +28,8 @@ struct Device {
     std::string name;
     std::uint32_t backend_index{};
     bool backend_identity_verified{};
+    // NVIDIA driver UUID; PCI product IDs and DXGI LUIDs are not physical keys.
+    std::string physical_id;
 };
 struct ProbeEvidence {
     std::string stable_id, driver_version, ffmpeg_sha256;
@@ -72,6 +77,7 @@ struct Profile {
     // Encoder admission ceiling; every runtime hardware result is still decoded.
     std::uint32_t max_width{},max_height{};
     std::uint32_t measured_width{},measured_height{};
+    std::string physical_id,device_name;
 };
 struct TuningComparison { double serial_fps{},parallel_fps{};bool comparable{}; };
 TuningComparison compare_tuning_runs(const std::vector<std::uint64_t>& serial_stage_ms,
@@ -156,7 +162,8 @@ public:
     void invalidate_all();
     std::uint64_t active_jobs() const;
 private:
-    static void release(const std::shared_ptr<State>&, const std::vector<Profile>&) noexcept;
+    static void release(const std::shared_ptr<State>&, const std::vector<Profile>&,
+                        const std::vector<std::string>& cpu_fallback_keys) noexcept;
 };
 template<class Cancelled,class Encode,class Validate>
 bool run_with_cpu_fallback(const std::filesystem::path& output,bool try_hardware,

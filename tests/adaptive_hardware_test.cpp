@@ -2,6 +2,7 @@
 #include "ow/capability_report.hpp"
 #include "ow/operator_status.hpp"
 #include "ow/adaptive_hardware.hpp"
+#include "ow/device_identity.hpp"
 #include "ow/media_renditions.hpp"
 #include "ow/adaptive_evidence.hpp"
 #include <algorithm>
@@ -12,7 +13,7 @@ namespace {
 constexpr const char* hash = "approved-ffmpeg-hash";
 Device cpu(){return {"cpu",Backend::cpu,"",0,true,0,{},0,true};}
 Device gpu(const char* id,Backend family,std::uint64_t vram=4096,const char* driver="driver-1"){
- return {id,family,driver,vram,true,0,{},0,true};
+ auto d=Device{id,family,driver,vram,true,0,{},0,true};d.physical_id=id;return d;
 }
 ProbeEvidence probe(const Device& d,Codec c,bool pass=true){
  return {d.stable_id,d.driver_version,hash,d.family,c,pass,pass,pass};
@@ -196,7 +197,7 @@ TEST("task caps limit each reservation while global capacity admits four small j
 TEST("native drain fixture keeps its GPU reservation while admitting independent CPU work"){
  Profile gpu{"synthetic-luid","driver","hash",Backend::nvidia_nvenc,Codec::h264,1,256,512,128,1,50,0,0,true};
  Profile cpu{"cpu","","hash",Backend::cpu,Codec::h264,1,256,0,128,1,20,0,0,true};
- Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
+ gpu.physical_id="fixture-uuid";Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
  auto held=scheduler.reserve({Codec::h264});CHECK(held);
  CHECK(held.profiles().front().backend==Backend::nvidia_nvenc);
  auto independent=scheduler.reserve({Codec::h264});CHECK(independent);
@@ -214,7 +215,7 @@ TEST("native drain fixture keeps its GPU reservation while admitting independent
 TEST("temporary CPU admission and GPU reservation moves preserve separate backend capacity"){
  Profile gpu{"synthetic-luid","driver","hash",Backend::nvidia_nvenc,Codec::h264,1,256,512,128,1,50,0,0,true};
  Profile cpu{"cpu","","hash",Backend::cpu,Codec::h264,1,256,0,128,1,20,0,0,true};
- Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
+ gpu.physical_id="fixture-uuid";Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
  auto held=scheduler.reserve({Codec::h264});CHECK(held);
  CHECK(held.profiles().front().backend==Backend::nvidia_nvenc);
  // CHECK evaluates once; this temporary releases only its own CPU reservation.
@@ -233,7 +234,7 @@ TEST("exhausted backend capacity stays owned across reservation moves until rele
  for(auto backend:{Backend::cpu,Backend::nvidia_nvenc,Backend::intel_qsv,Backend::amd_amf}){
   Profile cpu{"cpu","","hash",Backend::cpu,Codec::h264,1,256,0,128,1,20,0,0,true};
   Profile gpu{"synthetic-luid","driver","hash",backend,Codec::h264,1,256,512,128,1,50,0,0,true};
-  std::vector<Profile> profiles{cpu};if(backend!=Backend::cpu)profiles.push_back(gpu);
+  gpu.physical_id="fixture-uuid";std::vector<Profile> profiles{cpu};if(backend!=Backend::cpu)profiles.push_back(gpu);
   // One CPU thread is exhausted by either primary backend's job budget.
   Scheduler scheduler({1,1024,512,512,4},profiles);
   auto held=scheduler.reserve({Codec::h264});CHECK(held);
@@ -597,4 +598,136 @@ TEST("demotion is atomic codec specific and preserves already reserved capacity"
  CHECK(scheduler.active_jobs()==1);CHECK(!active.hardware_enabled(p));
  active.release();
  auto hevc=scheduler.reserve({Codec::hevc});CHECK(hevc);CHECK(hevc.profiles().front().stable_id==g.stable_id);
+}
+
+TEST("ambiguous duplicate adapter identities never produce profiles"){
+ auto c=cpu(),a=gpu("same-adapter",Backend::nvidia_nvenc),alias=a;alias.backend_index=1;
+ auto profiles=run({c,a,alias},{probe(c,Codec::h264),probe(a,Codec::h264)},
+  {tune(c,Codec::h264,20),tune(a,Codec::h264,60,512)});
+ CHECK(profiles.size()==1);CHECK(profiles.front().backend==Backend::cpu);
+}
+TEST("one physical card shares its session budget across codecs until drain"){
+ auto c=cpu(),g=gpu("single-card",Backend::nvidia_nvenc);
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(c,Codec::hevc),probe(g,Codec::h264),probe(g,Codec::hevc)},
+  {tune(c,Codec::h264,20),tune(c,Codec::hevc,12),tune(g,Codec::h264,60,256),tune(g,Codec::hevc,55,1024)});
+ Scheduler scheduler(limits(),profiles);
+ auto first=scheduler.reserve({Codec::h264});CHECK(first);
+ scheduler.set_device_available_vram(g.stable_id,4096); // VRAM is not a session limit.
+ auto second=scheduler.reserve({Codec::hevc});CHECK(second);
+ CHECK(second.profiles().front().backend==Backend::cpu);
+ first.release();second.release();
+ auto after=scheduler.reserve({Codec::hevc});CHECK(after.profiles().front().backend==Backend::nvidia_nvenc);
+}
+TEST("complete rendition jobs use both cards concurrently with a single CPU fallback slot"){
+ auto c=cpu(),a=gpu("card-a",Backend::nvidia_nvenc),b=gpu("card-b",Backend::nvidia_nvenc);
+ a.backend_index=0;b.backend_index=1;
+ std::vector<ProbeEvidence> probes;std::vector<TuningEvidence> tuning;
+ for(auto codec:{Codec::h264,Codec::hevc})for(auto d:{c,a,b}){
+  probes.push_back(probe(d,codec));auto t=tune(d,codec,d.family==Backend::cpu?20:d.stable_id==a.stable_id?60:50,d.family==Backend::cpu?0:512);
+  t.cpu_threads=1;t.ram_mb=512;t.scratch_mb=128;tuning.push_back(t);
+ }
+ Scheduler scheduler({2,1024,1024,256,2},run({c,a,b},probes,tuning));
+ auto first=scheduler.reserve({Codec::h264,Codec::hevc}),second=scheduler.reserve({Codec::h264,Codec::hevc});
+ CHECK(first&&second);CHECK(scheduler.active_jobs()==2);
+ for(auto codec:{Codec::h264,Codec::hevc}){
+  CHECK(find(first.profiles(),a.stable_id,codec));CHECK(find(second.profiles(),b.stable_id,codec));
+ }
+ CHECK(first.acquire_cpu_fallback([]{return false;},0));
+ CHECK(!second.acquire_cpu_fallback([]{return false;},0));
+ CHECK(!scheduler.reserve({Codec::h264})); // cancellation intent alone cannot release a reservation
+ first.release();CHECK(second.acquire_cpu_fallback([]{return false;},0));second.release();
+ CHECK(scheduler.active_jobs()==0);
+}
+
+TEST("different LUID aliases of a physical UUID are withheld while identical real cards stay independent"){
+ auto c=cpu(),a=gpu("pci:10de:2488:153a10de:a1:luid:a",Backend::nvidia_nvenc),b=gpu("pci:10de:2488:153a10de:a1:luid:b",Backend::nvidia_nvenc);
+ a.backend_index=0;b.backend_index=1;b.physical_id=a.physical_id;
+ auto select=[&]{return run({c,a,b},{probe(c,Codec::h264),probe(a,Codec::h264),probe(b,Codec::h264)},
+  {tune(c,Codec::h264,20),tune(a,Codec::h264,60,512),tune(b,Codec::h264,55,512)});};
+ CHECK(select().size()==1); // two supposedly verified aliases are ambiguous: neither may schedule
+ b.physical_id="different-real-uuid";CHECK(select().size()==3);
+ b.backend_identity_verified=false;b.backend_index=0;
+ CHECK(find(select(),a.stable_id,Codec::h264)); // an unmappable alias cannot poison the real card
+ CHECK(!find(select(),b.stable_id,Codec::h264));
+ a.physical_id.clear();CHECK(select().size()==1);
+}
+TEST("scheduler rejects forged alias profiles and missing NVIDIA physical identities"){
+ auto c=cpu(),g=gpu("original",Backend::nvidia_nvenc);
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},
+  {tune(c,Codec::h264,20),tune(g,Codec::h264,60,512)});
+ auto alias=*find(profiles,g.stable_id,Codec::h264);alias.stable_id="alias";alias.backend_index=1;
+ profiles.push_back(alias);Scheduler duplicated(limits(),profiles);
+ auto reserved=duplicated.reserve({Codec::h264});CHECK(reserved);CHECK(reserved.profiles().front().backend==Backend::cpu);
+ profiles.pop_back();for(auto& p:profiles)if(p.backend!=Backend::cpu)p.physical_id.clear();
+ Scheduler missing(limits(),profiles);auto cpu_only=missing.reserve({Codec::h264});CHECK(cpu_only.profiles().front().backend==Backend::cpu);
+}
+TEST("NVIDIA worker session ceiling is shared by all cards independently of VRAM"){
+ auto c=cpu();std::vector<Device> devices{c};std::vector<ProbeEvidence> probes{probe(c,Codec::h264)};
+ auto ct=tune(c,Codec::h264,20);ct.tested_concurrency=4;std::vector<TuningEvidence> tuning{ct};
+ for(unsigned i=0;i<3;++i){auto d=gpu(("card-"+std::to_string(i)).c_str(),Backend::nvidia_nvenc);d.backend_index=i;
+  devices.push_back(d);probes.push_back(probe(d,Codec::h264));tuning.push_back(tune(d,Codec::h264,60-i,512));}
+ auto profiles=run(devices,probes,tuning);Scheduler scheduler({8,8192,8192,4096,4},profiles);
+ auto a=scheduler.reserve({Codec::h264}),b=scheduler.reserve({Codec::h264}),third=scheduler.reserve({Codec::h264});
+ CHECK(a&&b&&third);CHECK(a.profiles().front().backend==Backend::nvidia_nvenc);CHECK(b.profiles().front().backend==Backend::nvidia_nvenc);
+ CHECK(third.profiles().front().backend==Backend::cpu);
+}
+
+TEST("unrelated release and reservation moves cannot steal a running CPU fallback slot"){
+ auto c=cpu(),a=gpu("a",Backend::nvidia_nvenc),b=gpu("b",Backend::nvidia_nvenc);b.backend_index=1;
+ auto profiles=run({c,a,b},{probe(c,Codec::h264),probe(a,Codec::h264),probe(b,Codec::h264)},
+  {tune(c,Codec::h264,20),tune(a,Codec::h264,60,512),tune(b,Codec::h264,55,512)});
+ Scheduler scheduler(limits(),profiles);auto owner=scheduler.reserve({Codec::h264}),other=scheduler.reserve({Codec::h264});
+ CHECK(owner.acquire_cpu_fallback([]{return false;},0));
+ CHECK(!scheduler.reserve({Codec::h264})); // a new primary CPU job cannot steal the active fallback
+ other.release();auto replacement=scheduler.reserve({Codec::h264});CHECK(replacement);
+ CHECK(!replacement.acquire_cpu_fallback([]{return false;},0));
+ Scheduler::Reservation moved(std::move(owner));CHECK(moved.acquire_cpu_fallback([]{return false;},0));
+ Scheduler::Reservation assigned;assigned=std::move(moved);CHECK(!moved);CHECK(assigned.acquire_cpu_fallback([]{return false;},0));
+ assigned.release();CHECK(replacement.acquire_cpu_fallback([]{return false;},0));
+}
+TEST("profile device totals count encodable cards once across codecs"){
+ auto c=cpu(),g=gpu("physical",Backend::nvidia_nvenc);
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(c,Codec::hevc),probe(g,Codec::h264),probe(g,Codec::hevc)},
+  {tune(c,Codec::h264,20),tune(c,Codec::hevc,12),tune(g,Codec::h264,60,512),tune(g,Codec::hevc,55,1024)});
+ CHECK(schedulable_device_count(profiles)==1);CHECK(profile_vram_capacity(profiles)==1024);
+ auto record=profile_record(*find(profiles,g.stable_id,Codec::h264));
+ CHECK(record.at("physical_id").as_string()==g.physical_id);
+ CHECK(record.at("device_encode_sessions").to_number<unsigned>()==1);
+ CHECK(record.at("worker_nvenc_sessions").to_number<unsigned>()==2);
+ CHECK(schedulable_device_count({})==0);CHECK(profile_vram_capacity({})==0);
+}
+
+TEST("physical UUID drift invalidates a saved profile even when the DXGI identity stayed the same"){
+ auto c=cpu(),g=gpu("unchanged-luid",Backend::nvidia_nvenc);
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},
+  {tune(c,Codec::h264,20),tune(g,Codec::h264,60,512)});
+ auto p=*find(profiles,g.stable_id,Codec::h264);CHECK(profile_current(p,g,hash));
+ g.physical_id="different-physical-card";CHECK(!profile_current(p,g,hash));
+}
+TEST("simultaneous reservations cannot create a third hardware session or reuse a busy card"){
+ auto c=cpu(),a=gpu("card-a",Backend::nvidia_nvenc),b=gpu("card-b",Backend::nvidia_nvenc);b.backend_index=1;
+ auto profiles=run({c,a,b},{probe(c,Codec::h264),probe(a,Codec::h264),probe(b,Codec::h264)},
+  {tune(c,Codec::h264,20),tune(a,Codec::h264,60,512),tune(b,Codec::h264,55,512)});
+ for(auto& p:profiles){p.cpu_threads=1;p.ram_mb=256;p.scratch_mb=128;if(p.backend==Backend::cpu)p.max_concurrency=4;}
+ Scheduler scheduler({8,4096,8192,4096,8},profiles);
+ std::vector<std::future<Scheduler::Reservation>> pending;
+ for(unsigned i=0;i<8;++i)pending.push_back(std::async(std::launch::async,[&]{return scheduler.reserve({Codec::h264});}));
+ std::vector<Scheduler::Reservation> held;std::set<std::string> cards;unsigned hardware=0;
+ for(auto& future:pending){auto reservation=future.get();if(!reservation)continue;
+  const auto& primary=reservation.profiles().front();if(primary.backend!=Backend::cpu){++hardware;CHECK(cards.insert(primary.physical_id).second);}
+  held.push_back(std::move(reservation));}
+ CHECK(hardware==2);CHECK(held.size()==6);CHECK(scheduler.active_jobs()==6);
+ held.clear();CHECK(scheduler.active_jobs()==0);
+}
+TEST("opposite codec speed winners do not split each rendition job across both cards"){
+ auto c=cpu(),a=gpu("card-a",Backend::nvidia_nvenc),b=gpu("card-b",Backend::nvidia_nvenc);b.backend_index=1;
+ std::vector<ProbeEvidence> probes;std::vector<TuningEvidence> tuning;
+ for(auto codec:{Codec::h264,Codec::hevc})for(auto d:{c,a,b}){
+  probes.push_back(probe(d,codec));auto t=tune(d,codec,d.family==Backend::cpu?20:(codec==Codec::h264)==(d.stable_id==a.stable_id)?60:50,d.family==Backend::cpu?0:512);
+  t.cpu_threads=1;t.ram_mb=256;t.scratch_mb=128;tuning.push_back(t);
+ }
+ Scheduler scheduler({4,2048,1024,512,4},run({c,a,b},probes,tuning));
+ auto first=scheduler.reserve({Codec::h264,Codec::hevc}),second=scheduler.reserve({Codec::h264,Codec::hevc});
+ CHECK(first&&second);
+ for(auto codec:{Codec::h264,Codec::hevc}){CHECK(find(first.profiles(),a.stable_id,codec));CHECK(find(second.profiles(),b.stable_id,codec));}
 }

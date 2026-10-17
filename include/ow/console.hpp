@@ -173,6 +173,10 @@ class ConsoleFormatter {
   if(id.empty())return event(prefix,body,ConsoleColor::white);
   rest=strip_leading_pipe(rest.substr(id.size()));
   auto keyword_token=first_token(rest);auto keyword=upper_ascii(keyword_token);auto tail=trim(rest.substr(keyword_token.size()));
+  if(keyword=="ENCODER"){
+   auto parts=fields(strip_leading_pipe(tail));labels_.start(id);
+   return event(prefix,"job "+labels_.label(id)+" "+(parts.empty()?"encoder unknown":parts.front()),ConsoleColor::blue,id);
+  }
   if(keyword=="STAGE")return clear(id);
   if(keyword=="PROGRESS"||keyword=="WAITING"){
    auto content=strip_leading_pipe(tail);auto parts=fields(content);
@@ -280,6 +284,8 @@ public:
   if(starts(body,"PROBE RESULT"))return event(prefix,capability_from_probe(body),ConsoleColor::white,"$probe",true);
   if(starts(body,"PROBE SCOPE "))return event(prefix,body.substr(12),ConsoleColor::white);
   if(starts(body,"PROBE FALLBACK "))return event(prefix,"CPU fallback: "+body.substr(15),ConsoleColor::orange);
+  if(starts(body,"PROBE DEVICES "))return event(prefix,body.substr(14),ConsoleColor::white);
+  if(starts(body,"GPU DEVICE | "))return event(prefix,body.substr(13),ConsoleColor::white);
   if(starts(body,"PROBE DETAIL "))return {}; // Full evidence remains in the durable log.
   if(starts(body,"ENCODERS UPDATE")){
    auto tokens=probe_encoders(body);auto detail=field_value(body,"encoders");

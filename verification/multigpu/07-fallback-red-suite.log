@@ -1,0 +1,137 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found SQLite3: /usr/lib/x86_64-linux-gnu/libsqlite3.so (found suitable version "3.46.1", minimum required is "3.22")
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-gpu-on-logs/build-multigpu
+[  6%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/main.cpp.o
+[  6%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[  9%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/pipeline_test.cpp.o
+[ 12%] Linking CXX executable ow_pipeline_contract_tests
+[ 12%] Built target ow_pipeline_contract_tests
+[ 16%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/main.cpp.o
+[ 19%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 22%] Linking CXX executable ow_rendition_contract_tests
+[ 22%] Built target ow_rendition_contract_tests
+[ 25%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 29%] Linking CXX static library libow_json.a
+[ 29%] Built target ow_json
+[ 32%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/main.cpp.o
+[ 35%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 38%] Linking CXX executable ow_rendition_probe
+[ 38%] Built target ow_rendition_probe
+[ 41%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 45%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 48%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 51%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 54%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+[ 58%] Linking CXX static library libow_core.a
+[ 58%] Built target ow_core
+[ 61%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 64%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[ 67%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[ 70%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[ 74%] Linking CXX executable ow_progress_contract_tests
+[ 74%] Built target ow_progress_contract_tests
+[ 77%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/main.cpp.o
+[ 80%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 83%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[ 87%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/pairing_test.cpp.o
+[ 90%] Linking CXX executable ow_contract_tests
+[ 90%] Built target ow_contract_tests
+[ 93%] Building CXX object CMakeFiles/ow_adaptive_evidence_probe.dir/tests/adaptive_evidence_probe.cpp.o
+[ 96%] Linking CXX executable ow_adaptive_evidence_probe
+[ 96%] Built target ow_adaptive_evidence_probe
+[100%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[100%] Built target ow_adaptive_hardware_contract_tests
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-multigpu
+    Start 1: ffmpeg_dependency_contracts
+1/6 Test #1: ffmpeg_dependency_contracts ......   Passed    0.16 sec
+    Start 2: worker_contracts
+2/6 Test #2: worker_contracts .................   Passed    0.01 sec
+    Start 3: pipeline_contracts
+3/6 Test #3: pipeline_contracts ...............   Passed    0.00 sec
+    Start 4: rendition_contracts
+4/6 Test #4: rendition_contracts ..............   Passed    0.00 sec
+    Start 5: adaptive_hardware_contracts
+5/6 Test #5: adaptive_hardware_contracts ......***Failed    0.02 sec
+PASS CPU remains the safe profile when no supported GPU is installed
+PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+PASS single GPU profile requires matching encode decode and validated output
+PASS heterogeneous GPUs retain independent identities and schedules
+PASS two synthetic NVIDIA GPUs schedule independently through the production scheduler
+PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+PASS low VRAM and machine resource caps reject unsafe tuning
+PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+PASS profile invalidates on adapter identity driver or approved FFmpeg change
+PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+PASS selected hardware rendition binds an explicit adapter and conservative codec mode
+PASS Intel QSV and AMD AMF commands bind their probed DirectX adapter
+PASS hardware failure removes partial output and validates a clean CPU retry before success
+PASS cancelled hardware work does not start a CPU retry or retain partial output
+PASS runtime scheduler atomically enforces global and per-device costs until drain
+PASS task caps limit each reservation while global capacity admits four small jobs
+PASS native drain fixture keeps its GPU reservation while admitting independent CPU work
+PASS temporary CPU admission and GPU reservation moves preserve separate backend capacity
+PASS exhausted backend capacity stays owned across reservation moves until release
+PASS CUDA LUID mapping survives ordinal reorder and rejects duplicate or invalid mappings
+PASS GPU memory telemetry is child and LUID scoped and rejects ambiguous physical nodes
+PASS missing foreign invalid and zero GPU counters never mean idle headroom
+PASS serial and parallel tuning compare equal work repeated stages and child budgets
+PASS two independent GPU jobs fit with one CPU encoder slot and can wait for safe CPU retry
+PASS GPU fallback slot acquisition ignores a CPU codec already owned by the same task
+PASS runtime profile ties resolve by stable device identity and CPU profile is selectable
+PASS hardware adapter mapping ambiguity fails closed independent of enumeration order
+PASS runtime admission falls back to the measured CPU profile when configured VRAM is too small
+PASS live adapter headroom closes GPU admission and restores it after headroom returns
+PASS CPU concurrency reflects repeated tuning candidates within every configured cap
+PASS multi-codec runtime reservation uses peak per-job CPU memory and scratch costs
+PASS runtime scheduler invalidation stops stale hardware while active reservations drain
+PASS runtime command generation applies the scheduler-selected measured CPU profile
+PASS cancellation before an encode prevents every helper spawn
+PASS cancellation during output validation cannot publish a successful artifact
+PASS declared VRAM fallback permits proven hardware and retains CPU and drain budgets
+PASS VRAM budgets preserve live headroom and fail closed without either source
+PASS declared budget never substitutes for encode decode identity or tuning proof
+PASS encoder tokens name every backend that survived probing
+PASS encoder tokens never claim hardware when only CPU was profiled
+PASS a hardware-only profile set cannot imply a CPU profile
+PASS runtime hardware failure reports exactly once without changing selected profiles
+PASS reporting retains another profiled codec and handles profile removal and binary invalidation
+PASS diagnostic CPU evidence is distinct from missing adaptive profiles
+PASS converter invalidation retracts CPU as well as hardware evidence once
+PASS backup presentation promises a routing hint only
+PASS unobserved inventory is unknown while an observed zero stays zero
+PASS status evidence separates unrun checks from failed probes and requires current CPU app profiles
+PASS sample dimensions describe evidence while encoder geometry governs admission
+PASS only equal realistic measurements may withhold hardware for CPU throughput
+PASS large hardware encode or validation failure demotes once and retries CPU while capacity stays owned
+PASS saved profiles and rejected measurements name their actual tuning resolution
+PASS demotion is atomic codec specific and preserves already reserved capacity
+PASS ambiguous duplicate adapter identities never produce profiles
+PASS one physical card shares its session budget across codecs until drain
+PASS complete rendition jobs use both cards concurrently with a single CPU fallback slot
+PASS different LUID aliases of a physical UUID are withheld while identical real cards stay independent
+PASS scheduler rejects forged alias profiles and missing NVIDIA physical identities
+PASS NVIDIA worker session ceiling is shared by all cards independently of VRAM
+FAIL unrelated release and reservation moves cannot steal a running CPU fallback slot: check failed at /home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:681: !scheduler.reserve({Codec::h264})
+PASS profile device totals count encodable cards once across codecs
+61 contracts, 1 failures
+
+    Start 6: progress_contracts
+6/6 Test #6: progress_contracts ...............   Passed    0.01 sec
+
+83% tests passed, 1 tests failed out of 6
+
+Total Test time (real) =   0.21 sec
+
+The following tests FAILED:
+	  5 - adaptive_hardware_contracts (Failed)
+Errors while running CTest

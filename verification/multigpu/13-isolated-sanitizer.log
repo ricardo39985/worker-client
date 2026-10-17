@@ -1,0 +1,68 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found SQLite3: /usr/lib/x86_64-linux-gnu/libsqlite3.so (found suitable version "3.46.1", minimum required is "3.22")
+-- Configuring done (0.5s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/ow-multigpu-review-dx8ulkiu/build-sanitize
+[  6%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[  6%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/main.cpp.o
+[  9%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/pipeline_test.cpp.o
+[ 12%] Linking CXX executable ow_pipeline_contract_tests
+[ 12%] Built target ow_pipeline_contract_tests
+[ 16%] Linking CXX static library libow_json.a
+[ 19%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/main.cpp.o
+[ 19%] Built target ow_json
+[ 22%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 25%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 29%] Linking CXX executable ow_rendition_probe
+[ 29%] Built target ow_rendition_probe
+[ 32%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/main.cpp.o
+[ 35%] Linking CXX executable ow_rendition_contract_tests
+[ 38%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 38%] Built target ow_rendition_contract_tests
+[ 41%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 45%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 48%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 51%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 54%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 58%] Linking CXX executable ow_progress_contract_tests
+[ 58%] Built target ow_progress_contract_tests
+[ 61%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+[ 64%] Linking CXX static library libow_core.a
+[ 64%] Built target ow_core
+[ 70%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[ 70%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/main.cpp.o
+[ 74%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[ 77%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 80%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[ 83%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[ 87%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/pairing_test.cpp.o
+[ 90%] Linking CXX executable ow_contract_tests
+[ 90%] Built target ow_contract_tests
+[ 93%] Building CXX object CMakeFiles/ow_adaptive_evidence_probe.dir/tests/adaptive_evidence_probe.cpp.o
+[ 96%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 96%] Built target ow_adaptive_hardware_contract_tests
+[100%] Linking CXX executable ow_adaptive_evidence_probe
+[100%] Built target ow_adaptive_evidence_probe
+Test project /tmp/ow-multigpu-review-dx8ulkiu/build-sanitize
+    Start 1: worker_contracts
+1/5 Test #1: worker_contracts .................   Passed    0.08 sec
+    Start 2: pipeline_contracts
+2/5 Test #2: pipeline_contracts ...............   Passed    0.00 sec
+    Start 3: rendition_contracts
+3/5 Test #3: rendition_contracts ..............   Passed    0.00 sec
+    Start 4: adaptive_hardware_contracts
+4/5 Test #4: adaptive_hardware_contracts ......   Passed    0.07 sec
+    Start 5: progress_contracts
+5/5 Test #5: progress_contracts ...............   Passed    0.12 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Total Test time (real) =   0.28 sec
