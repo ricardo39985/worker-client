@@ -1,4 +1,5 @@
 #include "platform.hpp"
+#include "ow/progress.hpp"
 #include <shlobj.h>
 #include <bcrypt.h>
 #include <wincrypt.h>
@@ -72,8 +73,8 @@ bool elevated(){HANDLE raw{};require(OpenProcessToken(GetCurrentProcess(),TOKEN_
 void Log::open(){file_.reset(CreateFileW(path_.c_str(),FILE_APPEND_DATA,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr));if(!file_)fail("Open worker log");}
 void Log::write(const std::string& message){
  std::lock_guard lock(mutex_);LARGE_INTEGER size{};if(GetFileSizeEx(file_.get(),&size)&&size.QuadPart>5*1024*1024){file_.reset();auto old=path_;old+=L".1";DeleteFileW(old.c_str());MoveFileExW(path_.c_str(),old.c_str(),MOVEFILE_REPLACE_EXISTING);open();}
- std::string safe=message.substr(0,4096);for(char& c:safe)if(static_cast<unsigned char>(c)<32)c=' ';SYSTEMTIME now{};GetSystemTime(&now);char stamp[40]{};
- std::snprintf(stamp,sizeof(stamp),"%04u-%02u-%02u %02u:%02u:%02u.%03uZ",now.wYear,now.wMonth,now.wDay,now.wHour,now.wMinute,now.wSecond,now.wMilliseconds);
- std::string line=std::string(stamp)+" "+safe+"\r\n";DWORD n=0;require(WriteFile(file_.get(),line.data(),static_cast<DWORD>(line.size()),&n,nullptr),"Write worker log");
+ std::string safe=message.substr(0,4096);for(char& c:safe)if(static_cast<unsigned char>(c)<32)c=' ';
+ std::string line=format_utc_timestamp(utc_ms())+" "+safe+"\r\n";DWORD n=0;require(WriteFile(file_.get(),line.data(),static_cast<DWORD>(line.size()),&n,nullptr),"Write worker log");
+ if(n!=static_cast<DWORD>(line.size()))throw std::runtime_error("Short worker log write");
 }
 }

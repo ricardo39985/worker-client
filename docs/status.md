@@ -77,3 +77,20 @@ pass. Full Boost-dependent core tests and actual Windows/MSVC/PowerShell builds
 are unavailable in this authoring runtime. This source is not installed on the
 operator's machine and neither repository's new feature is merged or deployed.
 See docs/testing.md for commands and required native acceptance.
+
+## Truthful progress review candidate — October 17, 2026
+
+Conversion progress now uses FFmpeg source duration and `out_time_us`, not output
+file bytes. The controller continues to own plain rotating durable logs; the
+separate viewer owns stable ASCII progress rows, category colors and redraw.
+Redirected output, unavailable consoles and `NO_COLOR` use plain append-only
+output. Unknown extents are described once, retries carry a visible run number,
+and terminal/stage transitions remove stale rows.
+
+All four Linux CTest executables passed in Release and under ASan/UBSan with leak
+detection: 74 core contracts, 9 pipeline contracts, 3 rendition contracts and
+the progress/console executable. The installed-FFmpeg synthetic rendition smoke
+also passed. The Windows-native rotation contract covers 1,800 concurrent long
+lines across the existing cap, but it and the changed worker/viewer have not been
+compiled or run with MSVC here. No installation, startup change, deployment,
+merge, release publication or running-worker restart was performed.

@@ -44,6 +44,21 @@ non-elevated Windows user. SSH can build or update it but cannot create a visibl
 tray in its service session. Optional startup is an interactive logon task,
 not a boot service; user sign-in is required.
 
+The controller's durable log is the only input to the console viewer. It contains
+plain timestamped event and progress records, never terminal escape sequences.
+The viewer owns color, categorization and in-place dashboard redraw, so closing
+or crashing it cannot signal the controller or its contained process trees.
+Redirected output and `NO_COLOR` bypass presentation and copy the durable bytes
+as plain text. Legacy consoles use Win32 cursor/color operations and ASCII bars
+instead of assuming virtual-terminal or Unicode support.
+
+Conversion progress is an execution measurement, not a file-size estimate.
+Typed FFmpeg invocations enable its machine-readable progress stream; the worker
+tails the contained child log, parses source duration and monotonic `out_time_us`,
+and floors the ratio at 100 percent. Transfer and verification continue to use
+exact byte totals. Stage generations make a retry reset explicit, and stages
+without a defensible total emit one written explanation rather than a percentage.
+
 ## Independent concurrent jobs
 
 One logical task is one job; a retry is a different attempt. An offer reserves

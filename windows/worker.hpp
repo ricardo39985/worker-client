@@ -21,6 +21,7 @@ class Worker {
  struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;};
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
  Config config_;Store store_;Log log_;Admission admission_;
+ ProgressLogPolicy progress_log_;
  std::jthread network_,watchdog_;
  mutable std::mutex mutex_;std::unordered_map<std::string,std::unique_ptr<Running>> running_;
  std::atomic_bool paused_{},exit_requested_{},stop_{};

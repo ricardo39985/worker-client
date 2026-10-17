@@ -3,9 +3,11 @@
 #include "process.hpp"
 #include "pairing_adapter.hpp"
 #include "ow/rendition_pipeline.hpp"
+#include <algorithm>
 #include <future>
 #include <atomic>
 #include <fstream>
+#include <thread>
 using namespace ow;using namespace ow::win;
 namespace {
 struct Temp {
@@ -63,6 +65,28 @@ TEST("runtime readiness identifies this process and is removed on shutdown"){
  CHECK(text(value,"state")=="running");
  clear_runtime_ready(t.path);
  CHECK(!std::filesystem::exists(t.path/"runtime.json"));
+}
+
+TEST("durable log rotation keeps concurrent lines whole and free of terminal escapes"){
+ Temp t;auto path=t.path/"worker.log";
+ {
+  Log log(path);std::vector<std::thread> writers;
+  for(unsigned worker=0;worker<6;++worker)writers.emplace_back([&,worker]{
+   auto payload="T"+std::to_string(worker)+":"+std::string(3000,static_cast<char>('A'+worker))+"\x1b[31m";
+   for(unsigned line=0;line<300;++line)log.write(payload);
+  });
+  for(auto& writer:writers)writer.join();
+ }
+ std::size_t lines{};
+ for(const auto& file:std::vector<std::filesystem::path>{path,path.wstring()+L".1"}){
+  CHECK(std::filesystem::exists(file));std::ifstream input(file,std::ios::binary);std::string line;
+  while(std::getline(input,line)){
+   ++lines;CHECK(!line.empty()&&line.back()=='\r');line.pop_back();CHECK(line.find('\x1b')==std::string::npos);
+   CHECK(line.size()>=25+3+3000);auto marker=line.substr(25,3);CHECK(marker[0]=='T'&&marker[1]>='0'&&marker[1]<='5'&&marker[2]==':');
+   auto expected=static_cast<char>('A'+(marker[1]-'0'));CHECK(std::all_of(line.begin()+28,line.begin()+28+3000,[&](char value){return value==expected;}));
+  }
+ }
+ CHECK(lines==1800);
 }
 
 TEST("pipeline upload failure drains a real contained process tree before unwinding") {

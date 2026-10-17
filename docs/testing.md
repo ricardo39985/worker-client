@@ -145,3 +145,37 @@ contracts also pass with installed GCC using C++20, warnings as errors and pthre
 Windows/MSVC compilation and the actual tray/viewer check have not run for this
 change. Run setup's registered native tests before installing a release; observe
 an idle interval, a job and its ACK, and a disconnect/reconnect on Windows.
+
+## Truthful conversion progress and readable viewer (October 17, 2026)
+
+The progress behavior was authored contract-first. The initial standalone GCC
+compile failed with the intended missing `EncoderProgress`, timeline-total,
+remaining-time, retry-generation and live-view APIs. After implementation, the
+same warnings-as-errors command passed:
+
+```sh
+g++ -std=c++20 -Wall -Wextra -Werror -pthread -Iinclude tests/progress_test.cpp -o /tmp/ow-progress-contracts
+/tmp/ow-progress-contracts
+```
+
+The timeline contract uses a precisely simulated 120-second FFmpeg source report
+and a 30-second `out_time_us`, while deliberately supplying a 90,000,000-byte
+output counter. It requires 25 percent and a 90-second remaining estimate, which
+demonstrates that output size is ignored. Split reports, malformed values,
+backward positions, stage retry reset, four concurrent job rows, cancellation at
+0 and 99 percent, redirected/disabled presentation, human time, hour-scale work,
+millisecond completion and one-time unknown progress are also covered.
+
+The reviewed Boost 1.89.0 archive was downloaded to `/tmp`, matched lock hash
+`9de758db755e8330a01d995b0a24d09798048400ac25c03fc5ea9be364b13c93`, and was
+passed to CMake without installation. `scripts/test.sh` passed all four portable
+CTest executables: 74 core, 9 pipeline, 3 rendition, and the progress/console
+contract executable. Configure and build also exited zero under ASan/UBSan; all
+four tests passed with `detect_leaks=1` and `halt_on_error=1`. The installed
+Linux FFmpeg synthetic profile smoke decoded H.264, HEVC and WebP successfully.
+
+No PowerShell, MSVC, Windows SDK or Windows kernel is available in this authoring
+environment. The Windows console/controller code and the native 1,800-line
+concurrent rotation test are therefore authored but uncompiled and unrun. A real
+Windows gate must still run all registered CTest suites and judge cursor redraw,
+colors, legacy-console fallback, viewer close/reopen and a real conversion.

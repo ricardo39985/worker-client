@@ -106,14 +106,20 @@ Windows-to-Lightsail conversion remain required. See `docs/status.md`,
 Setup now streams native output, counts download/checksum bytes and dependency
 files, labels prompts, and reports elapsed time in quiet native stages. Boost
 extraction moves the generated tree into staging instead of copying it again.
-The worker console reports job stages, measured transfer/checksum bytes,
-conversion output bytes and quiet time. It reports active jobs and durable results awaiting acknowledgment only when
-there is outstanding work. An idle connected worker emits no periodic summary;
-connection changes, errors and named job progress remain visible. Unknown totals have no percentage.
+The worker now derives conversion progress from FFmpeg's reported media position
+against the source duration; output size remains only a safety limit. Transfer
+and verification retain exact byte totals. The separate console viewer turns
+plain durable progress records into stable in-place ASCII bars with human elapsed
+and remaining times. It colors interactive categories when supported, while
+redirected output and `NO_COLOR` remain plain append-only text. Unknown totals
+are described once without an invented percentage.
 
-Eight isolated portable progress contracts passed on Linux. Fifteen new
-PowerShell progress contracts and the updated native Windows integration are
-authored but unrun here. This is a draft source change, not a verified release.
+The current Linux run passed all four portable CTest executables (74 core, 9
+pipeline, 3 rendition and the progress/console contract executable), the same
+four under ASan/UBSan with leak detection, and the synthetic H.264/HEVC/WebP
+decode smoke. The Windows console/controller changes and native log-rotation
+contract remain uncompiled and unrun here. This is source evidence, not a
+verified or installed Windows release.
 
 
 

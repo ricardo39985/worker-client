@@ -115,11 +115,15 @@ before rerunning. No quiet warning skips tests or changes a pinned hash.
 The worker console also shows DOWNLOAD / checksum / CONVERT / UPLOAD / result
 persistence / cleanup stages, with job IDs and roughly two-second active-job
 updates. Transfer and checksum percentages use exact file totals. Conversion
-shows measured output bytes and elapsed time; a media duration is not assumed.
-Converter probes and pairing waits also print elapsed status while awaiting
-local sample processes or coordinator approval. Connection status reports active jobs and durable results awaiting ACK every
-ten seconds. An open connection or a 100% upload is not proof that a result
-was accepted: confirm RESULT ACKNOWLEDGED and coordinator `state:done`.
+uses FFmpeg's reported output timeline position against its parsed source
+duration; encoded bytes are never used as a percentage. The live viewer redraws
+one stable ASCII row per active job, with elapsed and derived remaining time,
+while `worker.log` stays timestamped plain text. Redirected output, missing
+console handles and `NO_COLOR` disable both color and redraw. Converter probes
+and other stages without a measurable extent state that once and then stay
+quiet. Connection activity is shown only while jobs or acknowledgments remain.
+An open connection or a 100% upload is not proof that a result was accepted:
+confirm RESULT ACKNOWLEDGED and coordinator `state:done`.
 
 For acceptance, run both PowerShell suites first from the source folder:
 

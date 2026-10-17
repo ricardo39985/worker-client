@@ -5,6 +5,7 @@
 #include "ow/rendition_pipeline.hpp"
 #include "pairing_adapter.hpp"
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <fstream>
 namespace ow::win {
@@ -13,6 +14,11 @@ std::string priority_name(Priority p){return p==Priority::maximum?"maximum":p==P
 Priority parse_priority(const std::string& p){if(p=="maximum")return Priority::maximum;if(p=="normal")return Priority::normal;if(p=="low")return Priority::low;if(p=="backup")return Priority::backup;throw std::runtime_error("Unknown stored priority");}
 std::string pref_name(Preference p){return p==Preference::preferred?"preferred":p==Preference::allowed?"allowed":"disabled";}
 Preference parse_pref(const std::string& p){if(p=="preferred")return Preference::preferred;if(p=="allowed")return Preference::allowed;if(p=="disabled")return Preference::disabled;throw std::runtime_error("Unknown task preference");}
+std::string job_subject(const JobSpec& spec){
+ if(spec.offer.capability=="media.video.renditions.v1")return "video renditions";
+ if(spec.offer.capability=="media.image.renditions.v1")return "image renditions";
+ return output_name(spec);
+}
 void sleep_until_stop(const std::atomic_bool& stop,unsigned milliseconds){for(unsigned elapsed=0;elapsed<milliseconds&&!stop;elapsed+=100)Sleep(std::min(100u,milliseconds-elapsed));}
 void check_protocol(const Response& r){
  if(r.status==404)throw std::runtime_error("Coordinator worker endpoints are not deployed; no pairing performed");
@@ -92,34 +98,26 @@ std::string Worker::paired_token(){
  wchar_t name[256]{};DWORD length=256;
  require(GetComputerNameW(name,&length),"Read worker display name");
  auto already_paired=secrets.read(SecretSlot::credential).has_value();
- auto pairing_started=monotonic_ms(),next_pairing_status=pairing_started+5000;
  auto token=pairing_token(config_.coordinator,utf8(std::wstring(name,length)),secrets,transport,key,
-  PairingEnvironment{[]{return utc_ms();},[this,pairing_started,&next_pairing_status](unsigned ms){
-    for(unsigned elapsed=0;elapsed<ms&&!stop_&&!exit_requested_;elapsed+=100){
-     Sleep(std::min(100u,ms-elapsed));auto now=monotonic_ms();
-     if(now>=next_pairing_status){safe_log("PAIRING WAIT | elapsed "+std::to_string((now-pairing_started)/1000)+"s | waiting for coordinator approval or credential reply");next_pairing_status=now+5000;}
-    }
+  PairingEnvironment{[]{return utc_ms();},[this](unsigned ms){
+    for(unsigned elapsed=0;elapsed<ms&&!stop_&&!exit_requested_;elapsed+=100)Sleep(std::min(100u,ms-elapsed));
    },
    [this]{return stop_.load()||exit_requested_.load();},
    [this](const std::string& code,unsigned seconds){
-    state("PAIRING CODE: "+code+" | approve this exact code on Lightsail; expires in "+std::to_string(seconds)+" seconds");
+    state("PAIRING CODE: "+code+" | approve this exact code on Lightsail; expires in "+format_duration(static_cast<std::int64_t>(seconds)*1000));
    }});
  if(!already_paired)safe_log("PAIRING APPROVED: protected identity saved; connecting to coordinator");
  return token;
 }
 void Worker::network(){
- auto probe_started=monotonic_ms(),next_probe_status=probe_started+2000;
- safe_log("PROBE | checking approved converter and real samples; percentage unavailable");
- try{auto probe=probe_ffmpeg(config_,[this,probe_started,&next_probe_status]{
-  auto now=monotonic_ms();if(now>=next_probe_status){safe_log("PROBE | elapsed "+std::to_string((now-probe_started)/1000)+"s | sample process running; percentage unavailable");next_probe_status=now+2000;}
-  return stop_||exit_requested_;
- });verified_video_=probe.video;verified_image_=probe.image;verified_media_video_=probe.media_video;verified_media_image_=probe.media_image;safe_log(probe.reason);apply_preferences();}catch(const std::exception& e){state(e.what());}
+ safe_log("PROBE | checking approved converter and real samples; this check has no measurable progress");
+ try{auto probe=probe_ffmpeg(config_,[this]{return stop_||exit_requested_;});verified_video_=probe.video;verified_image_=probe.image;verified_media_video_=probe.media_video;verified_media_image_=probe.media_image;safe_log(probe.reason);apply_preferences();}catch(const std::exception& e){state(e.what());}
  if(config_.coordinator.empty()){state("UNCONFIGURED: set coordinator_url after Lightsail worker endpoints are deployed");while(!stop_)sleep_until_stop(stop_,500);return;}
  unsigned backoff=1000;
  while(!stop_){
  try{
   auto token=paired_token();if(stop_||exit_requested_)return;Http http;check_protocol(http.request("GET",config_.coordinator+"/v1/worker/protocol"));WebSocket socket(config_.coordinator+"/v1/worker/connect",token);SecureZeroMemory(token.data(),token.size());
-  socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.2"},{"state",heartbeat()}}));state("CONNECTED: waiting for work");backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;
+  socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.2"},{"state",heartbeat()}}));state("CONNECTED: waiting for work");backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;bool activity_visible=false;
   while(!stop_){
    auto now=monotonic_ms();if(now>=next_heartbeat){
     // Specs for expired unstarted offers are not an unbounded in-memory queue.
@@ -127,7 +125,7 @@ void Worker::network(){
     socket.send(json::serialize(heartbeat()));next_heartbeat=now+5000;
    }
    if(now>=next_results){for(const auto& p:store_.pending()){auto body=parse(p.body).as_object();body["outbox_sequence"]=p.sequence;socket.send(json::serialize(body));}next_results=now+2000;}
-   if(now>=next_status){auto activity=connectionActivityLine(active_count(),store_.pending_count());if(!activity.empty())safe_log(activity);next_status=now+10000;}
+   if(now>=next_status){auto activity=connectionActivityLine(active_count(),store_.pending_count());if(!activity.empty()){safe_log(activity);activity_visible=true;}else if(activity_visible){safe_log("ACTIVITY | idle");activity_visible=false;}next_status=now+10000;}
    if(auto incoming=socket.receive()){auto value=parse(*incoming);message(socket,value.as_object());}
   }
  }catch(const PairingActionRequired& e){
@@ -145,7 +143,7 @@ void Worker::network(){
 void Worker::message(WebSocket& socket,const json::object& m){
  if(number(m,"protocol",1)!=1)throw std::runtime_error("Unsupported coordinator protocol");auto type=text(m,"type",32);
  if(type=="ping"){socket.send(json::serialize(heartbeat()));return;}
- if(type=="result_ack"){auto id=text(m,"attempt_id",128);auto seq=number(m,"outbox_sequence",INT64_MAX);if(store_.acknowledge(static_cast<std::int64_t>(seq),id))safe_log("RESULT ACKNOWLEDGED "+id);return;}
+ if(type=="result_ack"){auto id=text(m,"attempt_id",128);auto seq=number(m,"outbox_sequence",INT64_MAX);if(store_.acknowledge(static_cast<std::int64_t>(seq),id)){safe_log("RESULT ACKNOWLEDGED "+id);safe_log("JOB "+short_job_id(id)+" | ACKNOWLEDGED | completed work | coordinator durably received the terminal result; no retry is needed");}return;}
  if(type=="offer"){
   std::string id;try{id=text(m,"attempt_id",128);auto spec=decode_offer(m,monotonic_ms(),config_.storage_hosts);
    if(store_.pending_count()>=512)throw std::runtime_error("Unacknowledged result backlog is full");
@@ -155,7 +153,7 @@ void Worker::message(WebSocket& socket,const json::object& m){
     try{if(!store_.reserve(id,spec.offer.job_id,spec.offer.fingerprint))throw std::runtime_error("journal attempt conflict");offered_.insert_or_assign(id,spec);}catch(...){admission_.cancel(id);throw;}
    }
    socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",decision.accepted},{"reason",decision.reason}}));
-  }catch(const std::exception&){if(safe_id(id))socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","invalid_or_unavailable"}}));safe_log("Rejected offer: validation, dependency or journal check failed");}return;
+  }catch(const std::exception&){if(safe_id(id)){socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","invalid_or_unavailable"}}));safe_log("JOB "+short_job_id(id)+" | DECLINED | requested work | validation, dependency, capacity, or journal check did not pass");}safe_log("Rejected offer: validation, dependency or journal check failed");}return;
  }
  auto id=text(m,"attempt_id",128);if(!safe_id(id))throw std::runtime_error("Invalid attempt identity");
  if(type=="begin"||type=="renew"){
@@ -168,6 +166,7 @@ void Worker::message(WebSocket& socket,const json::object& m){
    auto data=std::make_shared<TaskData>();data->spec=i->second;data->token=token;data->hard_deadline=monotonic_ms()+static_cast<Tick>(data->spec.timeout_ms);offered_.erase(i);
    auto running=std::make_unique<Running>();running->data=data;{std::lock_guard lock(mutex_);running->thread=std::jthread([this,data]{execute(data);});running_.emplace(id,std::move(running));}
    safe_log("START "+id+" "+data->spec.offer.capability);
+   safe_log("JOB "+short_job_id(id)+" | STARTED | "+job_subject(data->spec)+" | lease accepted; preparing the workspace");
   }
   socket.send(json::serialize(json::object{{"protocol",1},{"type","begin_reply"},{"attempt_id",id},{"accepted",started!=Start::declined}}));return;
  }
@@ -180,7 +179,8 @@ void Worker::message(WebSocket& socket,const json::object& m){
 void Worker::execute(std::shared_ptr<TaskData> data){
  const auto& s=data->spec;auto id=s.offer.attempt_id;auto workspace=config_.root/"jobs"/("job-"+id);json::object result{{"protocol",1},{"type","result"},{"attempt_id",id},{"job_id",s.offer.job_id},{"lease_token",data->token}};
  auto cancelled=[&]{return stop_||data->cancel||monotonic_ms()>=data->hard_deadline;};
- auto phase=[&](const char* name,std::uint64_t total=0){data->progress.begin(name,monotonic_ms(),total);safe_log("JOB "+id+" | "+name+" started");};
+ auto subject=job_subject(s);
+ auto phase=[&](const char* name,std::uint64_t total=0){data->progress.begin(name,monotonic_ms(),total);safe_log("JOB "+short_job_id(id)+" | STAGE | "+subject+" | "+name+" started");};
  auto bytes_progress=[&](std::uint64_t bytes){if(cancelled())throw std::runtime_error("Job cancelled or lease expired");data->progress.update(bytes,monotonic_ms());};
  try{
   phase("prepare workspace");
@@ -189,19 +189,29 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   phase("verify input SHA-256",s.input_bytes);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");if(cancelled())throw std::runtime_error("Job cancelled before conversion");
   auto convert=[&](const std::vector<std::wstring>& arguments,const std::string& filename,unsigned seconds,std::stop_token pipeline_stop=std::stop_token{}){
    if(cancelled()||pipeline_stop.stop_requested())throw std::runtime_error("Job cancelled before conversion");
-   auto label="convert "+filename+" (output bytes; percentage unavailable)";phase(label.c_str());
-   const auto started=monotonic_ms();auto current=priority_.load();Child child(config_.ffmpeg,arguments,workspace,s.offer.resources,current);
+   auto label="convert "+filename;phase(label.c_str());
+   const auto started=monotonic_ms();auto current=priority_.load();Child child(config_.ffmpeg,encoder_progress_arguments(arguments),workspace,s.offer.resources,current);
+   EncoderProgress encoder;std::uint64_t log_position=0;
+   auto read_encoder_progress=[&]{
+    std::ifstream log(workspace/"process.log",std::ios::binary);if(!log)return;
+    log.seekg(0,std::ios::end);auto end=log.tellg();if(end<0)return;
+    auto length=static_cast<std::uint64_t>(end);if(length<log_position)log_position=0;
+    log.seekg(static_cast<std::streamoff>(log_position));std::array<char,8192> buffer{};
+    while(log){log.read(buffer.data(),buffer.size());auto count=log.gcount();if(count>0){encoder.consume(std::string_view(buffer.data(),static_cast<std::size_t>(count)));log_position+=static_cast<std::uint64_t>(count);}}
+    auto now=monotonic_ms();if(encoder.duration_us())data->progress.set_total(encoder.duration_us(),now);data->progress.update(encoder.position_us(),now);
+   };
    for(;;){if(cancelled()||pipeline_stop.stop_requested()||monotonic_ms()-started>=static_cast<Tick>(seconds)*1000)throw std::runtime_error("Job cancelled or conversion timed out");if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Conversion process failed; see per-job log");break;}
     auto latest=priority_.load();if(latest!=current){child.priority(latest);current=latest;}
-    std::error_code error;auto size=std::filesystem::file_size(workspace/filename,error);if(!error)data->progress.update(size,monotonic_ms());if(!error&&size>s.output_max_bytes)throw std::runtime_error("Output exceeded declared byte limit");
+    read_encoder_progress();std::error_code error;auto size=std::filesystem::file_size(workspace/filename,error);if(!error&&size>s.output_max_bytes)throw std::runtime_error("Output exceeded declared byte limit");
     auto log_bytes=std::filesystem::file_size(workspace/"process.log",error);if(!error&&log_bytes>5*1024*1024)throw std::runtime_error("Child output exceeded log budget");Sleep(100);
    }
+   read_encoder_progress();
    data->progress.finish(true,monotonic_ms());
   };
   auto upload=[&](const std::string& filename,const std::string& url,const std::string& mime,std::stop_token pipeline_stop=std::stop_token{}){
    auto transfer_cancelled=[&]{return cancelled()||pipeline_stop.stop_requested();};
    auto transfer_bytes=[&](std::uint64_t count){if(transfer_cancelled())throw std::runtime_error("Job cancelled during transfer");data->transfer_progress.update(count,monotonic_ms());};
-   auto transfer_phase=[&](const std::string& name,std::uint64_t total){data->transfer_progress.begin(name,monotonic_ms(),total);safe_log("JOB "+id+" | "+name+" started");};
+   auto transfer_phase=[&](const std::string& name,std::uint64_t total){data->transfer_progress.begin(name,monotonic_ms(),total);safe_log("JOB "+short_job_id(id)+" | STAGE | "+subject+" | "+name+" started");};
    if(transfer_cancelled())throw std::runtime_error("Job cancelled before transfer");
    auto output=workspace/filename;auto bytes=std::filesystem::file_size(output);if(!bytes||bytes>s.output_max_bytes)throw std::runtime_error("Invalid output size");
    auto label="verify "+filename+" SHA-256";transfer_phase(label,bytes);auto hash=sha256_file(output,transfer_bytes);
@@ -225,9 +235,9 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   }
   if(cancelled())throw std::runtime_error("Job cancelled before completion");
   result["status"]="succeeded";
- }catch(const std::exception& e){data->progress.finish(false,monotonic_ms());data->transfer_progress.finish(false,monotonic_ms());result["status"]="failed";result["reason"]=std::string(e.what());safe_log("END "+id+": "+e.what());}
+ }catch(const std::exception& e){data->progress.finish(false,monotonic_ms());data->transfer_progress.finish(false,monotonic_ms());result["status"]="failed";result["reason"]=std::string(e.what());safe_log("END "+id+": "+e.what());safe_log("JOB "+short_job_id(id)+(data->cancel?" | CANCELLED | ":" | FAILED | ")+subject+" | "+e.what()+"; the terminal result will be saved and retried until acknowledged");}
  phase("persist durable result");
- try{store_.result(id,json::serialize(result));safe_log("RESULT PENDING ACK "+id);}catch(...){paused_=true;admission_.pause(true);safe_log("JOURNAL FAILURE: admissions paused; coordinator must recover unacknowledged attempt");}
+ try{store_.result(id,json::serialize(result));safe_log("RESULT PENDING ACK "+id);if(result.at("status").as_string()=="succeeded")safe_log("JOB "+short_job_id(id)+" | SUCCEEDED | "+subject+" | completed; durable result awaits coordinator acknowledgment");}catch(...){paused_=true;admission_.pause(true);safe_log("JOURNAL FAILURE: admissions paused; coordinator must recover unacknowledged attempt");}
  // Media is not needed after an attempt: authoritative output is in object
  // storage, and any accepted completion is durably represented in the outbox.
  phase("clean completed attempt workspace");
@@ -257,15 +267,12 @@ void Worker::watchdog(){
   auto now=monotonic_ms();if(now>=next_progress){
    std::vector<std::shared_ptr<TaskData>> active;{std::lock_guard lock(mutex_);for(const auto& [_,r]:running_)if(!r->data->done)active.push_back(r->data);}
    for(const auto& data:active)for(auto* counter:{&data->progress,&data->transfer_progress}){auto p=counter->snapshot(now);if(p.stage.empty()||p.finished)continue;
-    std::string line="JOB "+data->spec.offer.attempt_id+" | "+p.stage+" | elapsed "+std::to_string(p.elapsed_ms/1000)+"s | "+std::to_string(p.completed)+" measured bytes";
-    if(p.percent)line+=" / "+std::to_string(p.total)+" ("+std::to_string(*p.percent)+"%)";
-    if(!p.percent)line+=" | percentage unavailable";
-    if(p.quiet)line+=" | no measured progress for "+std::to_string(p.quiet_ms/1000)+"s; may be waiting on I/O";
-    safe_log(line);
+    if(auto line=progress_log_.line(data->spec.offer.attempt_id,job_subject(data->spec),p))safe_log(*line);
    }
    next_progress=now+2000;
   }
-  std::vector<std::unique_ptr<Running>> finished;{std::lock_guard lock(mutex_);for(auto i=running_.begin();i!=running_.end();){if(i->second->data->done){finished.push_back(std::move(i->second));i=running_.erase(i);}else ++i;}}finished.clear();
+  std::vector<std::pair<std::string,std::unique_ptr<Running>>> finished;{std::lock_guard lock(mutex_);for(auto i=running_.begin();i!=running_.end();){if(i->second->data->done){finished.emplace_back(i->first,std::move(i->second));i=running_.erase(i);}else ++i;}}
+  for(const auto& item:finished)progress_log_.forget(item.first);finished.clear();
  }catch(const std::exception& e){paused_=true;admission_.pause(true);safe_log(std::string("Watchdog check failed; admissions paused: ")+e.what());}
  sleep_until_stop(stop_,100);
  }
