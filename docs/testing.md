@@ -268,3 +268,20 @@ before upload observation. Its 500 ms per-artifact transfer delay was simulated;
 it did not contact storage or the coordinator. No live config, service, pairing,
 startup or job state changed. Exact executed logs are in
 `/home/rick/.hermes/cache/scratch/worker-adaptive-hardware-implementation-r2.md`.
+
+
+## Operator truthfulness and probe visibility — October 17, 2026
+
+See [the audit and gate ledger](../verification/truthfulness/REPORT.md) for the
+findings, exact commands and Windows checklist. The portable gate passed 5/5
+suites: 75 core, 9 pipeline, 3 rendition, 48 adaptive and 28 progress/console
+contracts (163 total). Core/adaptive and a separate strict progress build also
+passed ASan/UBSan with leak detection. No MSVC/native/PowerShell or physical GPU
+check ran; these are source changes with Linux evidence only. Work stayed on
+`feat/gpu-on-logs`; nothing was pushed, installed, deployed or restarted.
+
+Probe output means startup sample evidence, not production success or arbitrary
+input support. Heartbeat `verified` retains that protocol meaning; app video
+reporting also requires current CPU H.264/HEVC fallback profiles. Runtime hardware
+failure suppression affects the reporting ledger only, leaving device selection,
+resource policy and scheduler behavior unchanged.

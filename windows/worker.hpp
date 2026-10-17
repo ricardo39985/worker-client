@@ -4,6 +4,8 @@
 #include "ow/store.hpp"
 #include "ow/progress.hpp"
 #include "ow/adaptive_hardware.hpp"
+#include "ow/probe_status.hpp"
+#include "ow/capability_report.hpp"
 #include <thread>
 #include <atomic>
 #include <unordered_map>
@@ -18,7 +20,8 @@ struct Config {
 };
 Config load_config(const std::filesystem::path& root);
 struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;};
-Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={});
+using ProbePhase=std::function<void(std::string,unsigned,unsigned)>;
+Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={},const ProbePhase& phase={});
 class Worker {
  struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::optional<adaptive::Scheduler::Reservation> profile_reservation;std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;};
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
@@ -27,7 +30,8 @@ class Worker {
  std::jthread network_,watchdog_,hash_watchdog_;
  mutable std::mutex mutex_;std::unordered_map<std::string,std::unique_ptr<Running>> running_;
  std::atomic_bool paused_{},exit_requested_{},stop_{};
- std::string last_activity_,last_capability_;bool connected_once_{};
+ ProbeStatus probe_status_;CapabilityReport capability_report_;
+ std::string last_activity_;bool connected_once_{};
  std::atomic<Priority> priority_{Priority::normal};
  std::atomic_bool verified_video_{},verified_image_{},verified_media_video_{},verified_media_image_{};std::string status_{"STARTING"};
  std::atomic_bool ffmpeg_hash_changed_{};
@@ -42,6 +46,7 @@ class Worker {
  json::object heartbeat();
  void apply_preferences();
  adaptive::Scheduler::Reservation reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,const Resources& offer);
+ void report_encoder_failure(const adaptive::Profile&);
  void safe_log(const std::string&) noexcept;
 public:
  explicit Worker(Config config);~Worker();

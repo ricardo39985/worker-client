@@ -161,7 +161,7 @@ inline std::optional<std::string> resolve_job_suffix(std::string_view durable_lo
 }
 
 inline std::string capability_summary(bool app_video,bool app_image,std::string_view encoders={}) {
- std::string out="ready: ";
+ std::string out="profiled: ";
  if(app_video&&app_image)out+="video+image";
  else if(app_video)out+="video";
  else if(app_image)out+="image";
@@ -176,10 +176,14 @@ inline std::string capability_summary(bool app_video,bool app_image,std::string_
 // Only known backend names survive, and an absent or unrecognised field yields nothing, so the
 // console never invents a backend it cannot verify.
 inline std::string probe_encoders(std::string_view body) {
- static constexpr std::string_view known[]={"cpu","qsv","amf","nvenc","vaapi","videotoolbox"};
+ static constexpr std::string_view known[]={"cpu","qsv","amf","nvenc"};
  constexpr std::string_view key="encoders=";
- auto at=body.find(key);
- if(at==std::string_view::npos)return {};
+ std::size_t at=0;
+ for(;;){
+  at=body.find(key,at);if(at==std::string_view::npos)return {};
+  if(at==0||body[at-1]==' '||body[at-1]=='\t'||body[at-1]=='\r'||body[at-1]=='\n')break;
+  at+=key.size();
+ }
  at+=key.size();
  auto end=body.find_first_of(" \t\r\n",at);
  const auto value=body.substr(at,end==std::string_view::npos?std::string_view::npos:end-at);

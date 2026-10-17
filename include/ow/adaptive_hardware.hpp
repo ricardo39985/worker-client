@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <cstdint>
 #include <filesystem>
 #include <functional>
@@ -89,22 +90,24 @@ bool profile_current(const Profile& profile, const Device& device,
                      const std::string& ffmpeg_sha256);
 bool profile_supports_dimensions(const Profile& profile,std::uint32_t width,std::uint32_t height);
 
-// Comma-separated short names of the encoders present in *profiles*, always including "cpu" so a
-// report is never empty. Used wherever an operator or console reads "which encoders exist" — the
-// names must come from the profiles that survived probing, not from an assumption.
+// Only the supplied profiles establish backend evidence. Empty means unknown/unavailable.
+inline std::string backend_token(Backend backend) {
+ switch(backend){
+  case Backend::cpu:return "cpu";
+  case Backend::intel_qsv:return "qsv";
+  case Backend::amd_amf:return "amf";
+  case Backend::nvidia_nvenc:return "nvenc";
+ }
+ return {};
+}
 inline std::string encoder_tokens(const std::vector<Profile>& profiles) {
-    static constexpr const char* known[]={"cpu","qsv","amf","nvenc","vaapi"};
-    std::string out="cpu";
-    for(const auto& profile:profiles){
-        const char* name=profile.backend==Backend::intel_qsv?"qsv"
-                        :profile.backend==Backend::amd_amf?"amf"
-                        :profile.backend==Backend::nvidia_nvenc?"nvenc":"cpu";
-        if(out.find(name)!=std::string::npos)continue;
-        bool recognised=false;
-        for(const char* k:known)if(std::string(k)==name)recognised=true;
-        if(recognised)out+=","+std::string(name);
-    }
-    return out;
+ std::string out;
+ for(const auto backend:{Backend::cpu,Backend::intel_qsv,Backend::amd_amf,Backend::nvidia_nvenc}){
+  if(std::none_of(profiles.begin(),profiles.end(),[&](const auto& p){return p.backend==backend;}))continue;
+  if(!out.empty())out+=",";
+  out+=backend_token(backend);
+ }
+ return out;
 }
 
 // Owns adaptive per-job budgets until the selected pipeline has drained.

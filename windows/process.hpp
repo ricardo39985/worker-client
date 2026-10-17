@@ -1,9 +1,10 @@
 #pragma once
+#include "ow/operator_status.hpp"
 #include "platform.hpp"
 #include "ow/protocol.hpp"
 #include <optional>
 namespace ow::win {
-enum class Priority { maximum, normal, low, backup };
+
 class Child {
  Handle job_,process_;
  Resources resources_{};

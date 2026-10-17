@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace ow;using namespace ow::win;
 int wmain(int argc,wchar_t** argv){
- json::object report{{"agent_version","0.1.2"},{"runtime_healthy",false},{"processing_ready",false}};
+ json::object report{{"agent_version","0.1.2"},{"runtime_healthy",false},{"processing_ready",nullptr},{"probe_evidence","not_run"}};
  try{
   bool probe=false,network=false,bind_journal=false;auto root=data_directory();for(int i=1;i<argc;++i){std::wstring a=argv[i];if(a==L"--json")continue;else if(a==L"--probe-ffmpeg")probe=true;else if(a==L"--check-coordinator")network=true;else if(a==L"--bind-journal")bind_journal=true;else if(a==L"--data-root"&&i+1<argc)root=argv[++i];else throw std::runtime_error("Unknown doctor argument");}
   std::filesystem::create_directories(root);auto free=available_resources(root,0);report["available_ram_mb"]=free.ram_mb;report["free_disk_mb"]=free.scratch_mb;report["logical_cpus"]=free.cpu_threads;report["elevated"]=elevated();
@@ -23,7 +23,7 @@ int wmain(int argc,wchar_t** argv){
     if(auto credential=identity.read(SecretSlot::credential))proven=text(parse(*credential).as_object(),"coordinator_url",1024);
     Store journal(root/"journal.sqlite3");bind_journal_origin(journal,c.coordinator,proven);report["journal_endpoint_bound"]=true;
    }
-   if(probe){auto p=probe_ffmpeg(c);const bool gpu=std::any_of(p.profiles.begin(),p.profiles.end(),[](const auto& item){return item.backend!=adaptive::Backend::cpu;});report["capabilities"]={{"conversion.video.h264",p.video},{"conversion.image.jpeg",p.image},{"media.video.renditions.v1",p.media_video},{"media.image.renditions.v1",p.media_image},{"inference",false},{"gpu",gpu},{"adaptive_profiles",p.profiles.size()},{"reason",p.reason}};report["processing_ready"]=p.video||p.image;}
+   if(probe){auto p=probe_ffmpeg(c);CapabilityReport evidence;evidence.probed(p.video,p.image,p.media_video,p.media_image,p.profiles);report["probe_evidence"]="startup_samples";const bool gpu=std::any_of(p.profiles.begin(),p.profiles.end(),[](const auto& item){return item.backend!=adaptive::Backend::cpu;});report["capabilities"]={{"conversion.video.h264",evidence.video()},{"conversion.image.jpeg",evidence.image()},{"media.video.renditions.v1",evidence.app_video()},{"media.image.renditions.v1",evidence.app_image()},{"inference",false},{"gpu",gpu},{"adaptive_profiles",p.profiles.size()},{"reason",p.reason}};report["processing_ready"]=evidence.processing_ready().value();}
    if(network){if(c.coordinator.empty())throw std::runtime_error("No coordinator configured");Http h;auto r=h.request("GET",c.coordinator+"/v1/worker/protocol");report["coordinator_http_status"]=r.status;if(r.status!=200)throw std::runtime_error("Lightsail worker endpoint is not ready");auto body=parse(r.body);if(number(body.as_object(),"protocol",1)!=1)throw std::runtime_error("Incompatible coordinator");report["coordinator_ready"]=true;}
   }else report["configuration_valid"]=false;
   std::cout<<json::serialize(report)<<'\n';return 0;

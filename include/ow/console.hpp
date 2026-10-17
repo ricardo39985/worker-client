@@ -114,17 +114,32 @@ inline SplitLine split_timestamp(std::string_view line) {
  if(parse_utc_prefix(line,milliseconds,consumed))return {format_local_timestamp(milliseconds)+" ",trim(line.substr(consumed))};
  return {"",trim(line)};
 }
-inline bool flag(std::string_view text,std::string_view name) {
- auto at=text.find(name);if(at==std::string_view::npos)return false;at+=name.size();
- return at<text.size()&&(text[at]=='1'||text[at]=='t'||text[at]=='T'||text[at]=='v');
+inline std::optional<std::string> field_value(std::string_view body,std::string_view name) {
+ while(!body.empty()){
+  auto token=first_token(body);
+  if(token.starts_with(name)&&token.size()>name.size()&&token[name.size()]=='=')return token.substr(name.size()+1);
+  auto end=body.find_first_of(" \t\r\n");if(end==std::string_view::npos)break;
+  body.remove_prefix(end);auto next=body.find_first_not_of(" \t\r\n");if(next==std::string_view::npos)break;body.remove_prefix(next);
+ }
+ return {};
+}
+inline std::optional<bool> flag(std::string_view body,std::string_view name) {
+ auto value=field_value(body,name);if(!value)return {};
+ if(*value=="1"||*value=="true"||*value=="verified")return true;
+ if(*value=="0"||*value=="false"||*value=="unavailable")return false;
+ return {};
 }
 inline std::string capability_from_probe(std::string_view body) {
- if(body.find("disabled")!=std::string_view::npos)return "conversion off";
- bool video=flag(body,"app_video="),image=flag(body,"app_image=");
- if(!video&&!image){video=flag(body,"video=");image=flag(body,"image=");}
- if(body.find("app video=verified")!=std::string_view::npos)video=true;
- if(body.find("app image=verified")!=std::string_view::npos)image=true;
- return capability_summary(video,image,probe_encoders(body));
+ if(trim(body)=="PROBE RESULT disabled")return "conversion off";
+ auto video=flag(body,"app_video"),image=flag(body,"app_image");
+ const bool app_fields=field_value(body,"app_video").has_value()||field_value(body,"app_image").has_value();
+ bool diagnostic=false;
+ if(!app_fields){video=flag(body,"video");image=flag(body,"image");diagnostic=video.has_value()||image.has_value();}
+ if(!video&&!image)return "profiled: unknown";
+ auto out=capability_summary(video.value_or(false),image.value_or(false),probe_encoders(body));
+ if(diagnostic)out.insert(std::string("profiled: ").size(),"diagnostics ");
+ if(!video||!image)out+="; other capability unknown";
+ return out;
 }
 inline std::optional<unsigned> percent_value(std::string_view field) {
  if(field.empty()||field.back()!='%')return {};
@@ -254,8 +269,24 @@ public:
    auto summary=connectionActivityLine(active,pending);out.text=summary.empty()?std::string{}:fit_console_line(prefix+summary);return out;
   }
   if(starts(body,"WORKER STARTED")||starts(body,"Worker starting."))return event(prefix,"worker started — tray to exit",ConsoleColor::white);
-  if(starts(body,"PROBE START")||starts(body,"PROBE |"))return event(prefix,"probing converter…",ConsoleColor::white);
-  if(starts(body,"PROBE RESULT"))return event(prefix,capability_from_probe(body),ConsoleColor::white);
+  if(starts(body,"PROBE START")||starts(body,"PROBE |"))return event(prefix,"probing converter…",ConsoleColor::white,"$probe",true);
+  if(starts(body,"PROBE PROGRESS | ")){
+   auto parts=fields(std::string_view(body).substr(17));
+   RenderedConsole out;out.kind=RenderedConsole::Kind::progress;out.key="$probe";out.prefix=prefix;
+   out.before="probing "+(parts.empty()?std::string("converter"):parts.front())+" ";
+   if(parts.size()>1&&starts(parts[1],"elapsed "))out.after=parts[1].substr(8);
+   out.color=ConsoleColor::white;return out;
+  }
+  if(starts(body,"PROBE RESULT"))return event(prefix,capability_from_probe(body),ConsoleColor::white,"$probe",true);
+  if(starts(body,"PROBE SCOPE "))return event(prefix,body.substr(12),ConsoleColor::white);
+  if(starts(body,"PROBE DETAIL "))return {}; // Full evidence remains in the durable log.
+  if(starts(body,"ENCODERS UPDATE")){
+   auto tokens=probe_encoders(body);auto detail=field_value(body,"encoders");
+   std::string text="encoders now: "+(detail&&*detail=="none"?"none":tokens.empty()?"unknown":tokens);
+   if(auto failure=field_value(body,"failed"))text+="; "+*failure+" failed";
+   if(auto fallback=field_value(body,"fallback"))text+="; retrying "+*fallback;
+   return event(prefix,text,ConsoleColor::orange);
+  }
   if(starts(body,"CPU conversion probes passed"))return event(prefix,capability_from_probe(body),ConsoleColor::white);
   if(starts(body,"PAIRING CODE")){
    auto rest=trim(body.substr(12));auto code=first_token(rest);auto seconds_text=first_token(after_first_token(rest));
@@ -291,14 +322,14 @@ public:
    if(name=="RESUMED")return event(prefix,"resumed",ConsoleColor::green);
    if(name=="DRAINING")return event(prefix,"draining",ConsoleColor::orange);
    if(name=="STOPPING")return event(prefix,"stopping jobs",ConsoleColor::orange);
-   if(name=="PRIORITY")return event(prefix,"priority "+(detail.empty()?"normal":detail),ConsoleColor::white);
+   if(name=="PRIORITY")return event(prefix,"priority "+(detail.empty()?"unknown":detail),ConsoleColor::white);
    if(name=="PREFERENCE"){
     auto value=detail;std::string key="task";
     if(starts(value,"video=")){key="video";value=value.substr(6);}else if(starts(value,"image=")){key="image";value=value.substr(6);}
     if(value=="disabled")value="off";
     return event(prefix,key+" "+value,ConsoleColor::white);
    }
-   if(name=="PROBE_FAILURE")return event(prefix,"probe failed"+(detail.empty()?std::string{}:": "+detail),ConsoleColor::red);
+   if(name=="PROBE_FAILURE")return event(prefix,"probe failed"+(detail.empty()?std::string{}:": "+detail),ConsoleColor::red,"$probe",true);
    if(name=="JOURNAL_FAILURE")return event(prefix,"journal error — jobs paused",ConsoleColor::red);
    if(name=="WATCHDOG_FAILURE")return event(prefix,"watchdog error — jobs paused"+(detail.empty()?std::string{}:": "+detail),ConsoleColor::red);
    if(name=="EXITED")return event(prefix,"worker exited",ConsoleColor::white);
@@ -358,6 +389,7 @@ public:
     auto found=std::find_if(rows_.begin(),rows_.end(),[&](const auto& row){return row.key==rendered.key;});
     LiveConsoleRow row;row.key=rendered.key;row.prefix=rendered.prefix;row.before=rendered.before;row.after=rendered.after;
     row.percent=rendered.percent;row.has_percent=rendered.has_percent;row.color=rendered.color;
+    if(rendered.key=="$probe")feed.activity=ConsoleLine{render_row(row,false),rendered.color};
     if(found==rows_.end())rows_.push_back(std::move(row));else *found=std::move(row);
     feed.redraw=true;return feed;
    }
@@ -381,7 +413,12 @@ public:
    const auto fixed=console_text_width(row.prefix+row.before+row.after);
    const auto available=fixed<console_width?console_width-fixed:0;
    const auto bar_width=available>3?std::min<std::size_t>(12,available-3):0;
-   line=row.prefix+row.before;
+   auto before=row.before;
+   if(row.key=="$probe"){
+    const auto reserved=console_text_width(row.prefix+row.after)+1;
+    before=fit_console_line(before,reserved<console_width?console_width-reserved:0)+" ";
+   }
+   line=row.prefix+before;
    if(row.has_percent){
     const auto filled=std::min<std::size_t>(bar_width,row.percent*bar_width/100);
     line+='[';line.append(filled,'#');line.append(bar_width-filled,'-');line+="] ";

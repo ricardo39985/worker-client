@@ -1,4 +1,5 @@
 #include "test.hpp"
+#include "ow/probe_status.hpp"
 #include "ow/console.hpp"
 #include "ow/progress.hpp"
 #include <array>
@@ -360,17 +361,71 @@ TEST("many jobs keep suffix-to-id resolvability and concurrent accounting") {
 
 TEST("the ready line names the encoders the worker actually reported") {
  const std::string body="PROBE RESULT app_video=1 app_image=1 video=1 image=1 encoders=cpu,qsv,amf";
- CHECK(ow::console_detail::capability_from_probe(body)=="ready: video+image (cpu, qsv, amf)");
+ CHECK(ow::console_detail::capability_from_probe(body)=="profiled: video+image (cpu, qsv, amf)");
 }
 
 TEST("a probe record without encoder detail claims no backend") {
  const std::string body="PROBE RESULT app_video=1 app_image=1 video=1 image=1";
- CHECK(ow::console_detail::capability_from_probe(body)=="ready: video+image");
+ CHECK(ow::console_detail::capability_from_probe(body)=="profiled: video+image");
  CHECK(ow::console_detail::capability_from_probe(body).find("cpu")==std::string::npos);
 }
 
 TEST("a malformed encoder list cannot invent a backend") {
  const std::string body="PROBE RESULT app_video=1 app_image=0 encoders=<script>";
- CHECK(ow::console_detail::capability_from_probe(body)=="ready: video");
+ CHECK(ow::console_detail::capability_from_probe(body)=="profiled: video");
  CHECK(ow::console_detail::capability_from_probe(body).find("script")==std::string::npos);
+}
+
+TEST("explicit failed app probes never inherit successful diagnostics") {
+ CHECK(ow::console_detail::capability_from_probe("PROBE RESULT app_video=0 app_image=0 video=1 image=1")=="profiled: none");
+}
+TEST("absent capability and priority evidence is explicitly unknown") {
+ ow::ConsoleFormatter formatter;
+ CHECK(formatter.render("PROBE RESULT").text=="profiled: unknown");
+ CHECK(formatter.render("STATE PRIORITY").text=="priority unknown");
+ CHECK(ow::console_detail::capability_from_probe("PROBE RESULT video=1 image=0")=="profiled: diagnostics video");
+}
+TEST("capability flags require complete field values and boundaries") {
+ CHECK(ow::console_detail::capability_from_probe("PROBE RESULT app_video=invalid app_image=trueish")=="profiled: unknown");
+ CHECK(ow::console_detail::capability_from_probe("PROBE RESULT not_app_video=1 note=disabled")=="profiled: unknown");
+}
+
+TEST("probe elapsed phases and remaining candidates use an injected clock") {
+ std::int64_t now=1000;ow::ProbeStatus probe([&]{return now;});
+ now=5000;probe.phase("adapters");CHECK(probe.line()=="PROBE PROGRESS | adapters | elapsed 0s");
+ now=9999;CHECK(!probe.line());now=10000;
+ CHECK(probe.line()=="PROBE PROGRESS | adapters | elapsed 5s");
+ probe.phase("tuning amf/hevc",3,8);now=55000;
+ CHECK(probe.line()=="PROBE PROGRESS | tuning amf/hevc 3/8, 5 left | elapsed 50s");
+ probe.finish();now=61000;CHECK(!probe.line());
+}
+TEST("probe has one bounded row alongside jobs and clears on result or failure") {
+ ow::LiveConsoleView view;
+ view.consume("JOB attempt-abcd PROGRESS | convert | run 1 | elapsed 3s");
+ for(int n=0;n<10;++n){auto feed=view.consume("PROBE PROGRESS | tuning amf/hevc 3/8, 5 left | elapsed 50s");CHECK(!feed.event);CHECK(feed.activity);}
+ CHECK(view.rows().size()==2);CHECK(view.render({true,false,false}).find("50s")!=std::string::npos);
+ view.consume("PROBE RESULT app_video=1 app_image=0 encoders=cpu");CHECK(view.rows().size()==1);
+ view.consume("PROBE PROGRESS | adapters | elapsed 0s");
+ view.consume("STATE PROBE_FAILURE sample failed");CHECK(view.rows().size()==1);
+ view.consume("PROBE PROGRESS | adapters | elapsed 50s");
+ view.consume("PROBE START");CHECK(view.rows().size()==1);
+}
+TEST("encoder change and sample scope fit the existing neutral and warning style") {
+ ow::ConsoleFormatter formatter;
+ auto line=formatter.render("ENCODERS UPDATE encoders=cpu failed=amf/hevc fallback=cpu");
+ CHECK(line.text=="encoders now: cpu; amf/hevc failed; retrying cpu");CHECK(line.color==ow::ConsoleColor::orange);
+ CHECK(formatter.render("ENCODERS UPDATE encoders=none").text=="encoders now: none");
+ CHECK(formatter.render("PROBE SCOPE startup samples only; job support may vary").text=="startup samples only; job support may vary");
+}
+
+TEST("an encoder substring is not backend evidence and unknown lists stay empty") {
+ CHECK(ow::probe_encoders("PROBE RESULT not_encoders=cpu").empty());
+ CHECK(ow::probe_encoders("PROBE RESULT encoders=none").empty());
+ CHECK(ow::probe_encoders("PROBE RESULT encoders=vaapi,videotoolbox").empty());
+}
+TEST("probe phase labels cannot hide elapsed time at console width") {
+ ow::LiveConsoleView view;
+ view.consume("2026-10-17 16:20:00.000Z PROBE PROGRESS | tuning nvenc/hevc adapter 123456 encode 1/2 3/8, 5 left | elapsed 50s");
+ auto line=view.render_row(view.rows().front(),false);
+ CHECK(ow::console_text_width(line)<=80);CHECK(line.ends_with("50s"));
 }

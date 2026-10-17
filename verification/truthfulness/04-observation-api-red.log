@@ -1,0 +1,22 @@
+[ 17%] Built target ow_json
+[ 17%] Built target ow_pipeline_contract_tests
+[ 34%] Built target ow_rendition_probe
+[ 34%] Built target ow_rendition_contract_tests
+[ 41%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 58%] Built target ow_core
+[ 79%] Built target ow_contract_tests
+[ 82%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/progress_test.cpp:2:10: fatal error: ow/probe_status.hpp: No such file or directory
+    2 | #include "ow/probe_status.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[2]: *** [CMakeFiles/ow_progress_contract_tests.dir/build.make:93: CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:1258: CMakeFiles/ow_progress_contract_tests.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:2:10: fatal error: ow/capability_report.hpp: No such file or directory
+    2 | #include "ow/capability_report.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+gmake[2]: *** [CMakeFiles/ow_adaptive_hardware_contract_tests.dir/build.make:93: CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:1226: CMakeFiles/ow_adaptive_hardware_contract_tests.dir/all] Error 2
+gmake: *** [Makefile:101: all] Error 2

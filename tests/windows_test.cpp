@@ -39,8 +39,9 @@ TEST("Windows adapter inventory has repeatable unique identities and real VRAM a
 }
 TEST("NoConversion setup inventories adapters before reporting disabled conversion"){
  Temp t;Config config;config.root=t.path;config.budget={256,777,256,1};auto result=probe_ffmpeg(config);
- CHECK(!result.video&&!result.media_video);CHECK(result.reason.find("NoConversion")!=std::string::npos);
+ CHECK(!result.video&&!result.media_video);CHECK(result.reason.find("converter not configured")!=std::string::npos);
  CHECK(result.reason.find("detected adapters=")!=std::string::npos);
+ CHECK(result.reason.find("configured_global_VRAM_override_MB=not_set")!=std::string::npos);
  auto saved=parse(read_file(t.path/"adaptive-hardware.json")).as_object();
  CHECK(saved.at("profiles").as_array().empty());CHECK(saved.at("devices").is_array());
  CHECK(number(saved.at("limits").as_object(),"vram_mb_override",UINT64_MAX)==777);

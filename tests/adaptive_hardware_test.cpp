@@ -1,4 +1,6 @@
 #include "test.hpp"
+#include "ow/capability_report.hpp"
+#include "ow/operator_status.hpp"
 #include "ow/adaptive_hardware.hpp"
 #include "ow/media_renditions.hpp"
 #include <algorithm>
@@ -436,5 +438,73 @@ TEST("encoder tokens never claim hardware when only CPU was profiled") {
  std::vector<Profile> profiles(1);
  profiles[0].backend=Backend::cpu;
  CHECK(encoder_tokens(profiles)=="cpu");
- CHECK(encoder_tokens({})=="cpu");
+ CHECK(encoder_tokens({}).empty());
+}
+
+TEST("a hardware-only profile set cannot imply a CPU profile") {
+ ow::adaptive::Profile p{};p.backend=ow::adaptive::Backend::amd_amf;
+ CHECK(ow::adaptive::encoder_tokens({p})=="amf");
+}
+
+TEST("runtime hardware failure reports exactly once without changing selected profiles") {
+ using namespace ow::adaptive;
+ Profile cpu{};cpu.backend=Backend::cpu;cpu.codec=Codec::hevc;
+ Profile gpu=cpu;gpu.backend=Backend::amd_amf;gpu.stable_id="amd";
+ ow::CapabilityReport report;report.probed(true,true,true,true,{cpu,gpu});
+ std::vector<std::string> lines;const auto file=std::filesystem::temp_directory_path()/"ow-report-fallback.mp4";
+ for(unsigned retry=0;retry<2;++retry){
+  CHECK(!run_with_cpu_fallback(file,true,[]{return false;},[&](bool hardware){
+   if(hardware)throw std::runtime_error("synthetic hardware failure");
+   if(auto line=report.failed(gpu))lines.push_back(*line);
+   std::ofstream(file)<<"cpu";
+  },[](const auto&){return true;}));
+ }
+ std::filesystem::remove(file);
+ CHECK(lines==std::vector<std::string>{"ENCODERS UPDATE encoders=cpu failed=amf/hevc fallback=cpu"});
+ CHECK(report.encoders()=="cpu");CHECK(report.profiles().size()==2);
+ CHECK(!report.changed({cpu})); // already stopped claiming the failed profile
+}
+TEST("reporting retains another profiled codec and handles profile removal and binary invalidation") {
+ using namespace ow::adaptive;
+ Profile cpu{};Profile gpu{};gpu.backend=Backend::amd_amf;gpu.stable_id="amd";
+ Profile hevc=gpu;hevc.codec=Codec::hevc;
+ ow::CapabilityReport report;report.probed(true,false,true,false,{cpu,gpu,hevc});
+ CHECK(report.failed(gpu));CHECK(report.encoders()=="cpu,amf");
+ CHECK(report.changed({cpu})=="ENCODERS UPDATE encoders=cpu");CHECK(!report.changed({cpu}));
+ report.probed(false,false,false,false,{});
+ CHECK(report.encoders().empty());CHECK(report.record()=="PROBE RESULT app_video=0 app_image=0 video=0 image=0 encoders=none");
+}
+TEST("diagnostic CPU evidence is distinct from missing adaptive profiles") {
+ ow::CapabilityReport report;report.probed(false,false,false,false,{});CHECK(report.encoders().empty());
+ report.probed(true,false,false,false,{});CHECK(report.encoders()=="cpu");
+ report.probed(false,true,false,false,{});CHECK(report.encoders()=="cpu");
+}
+
+TEST("converter invalidation retracts CPU as well as hardware evidence once") {
+ ow::CapabilityReport report;report.probed(true,true,true,true,{});
+ CHECK(report.disabled()=="ENCODERS UPDATE encoders=none");CHECK(!report.disabled());
+ CHECK(report.record()=="PROBE RESULT app_video=0 app_image=0 video=0 image=0 encoders=none");
+}
+TEST("backup presentation promises a routing hint only") {
+ CHECK(ow::win::priority_label(ow::win::Priority::backup)=="Backup (routing hint)");
+ CHECK(ow::win::priority_label(ow::win::Priority::normal)=="Normal");
+}
+
+TEST("unobserved inventory is unknown while an observed zero stays zero") {
+ CHECK(ow::observed_count(std::nullopt)=="unknown");
+ CHECK(ow::observed_count(0)=="0");CHECK(ow::observed_count(4043)=="4043");
+}
+
+TEST("status evidence separates unrun checks from failed probes and requires current CPU app profiles") {
+ using namespace ow::adaptive;
+ ow::CapabilityReport report;CHECK(!report.processing_ready().has_value());
+ report.probed(false,false,false,false,{});CHECK(report.processing_ready()==false);
+ report.probed(true,true,true,true,{});CHECK(!report.app_video());CHECK(report.app_image());
+ Profile h264{};h264.backend=Backend::cpu;h264.codec=Codec::h264;
+ Profile hevc=h264;hevc.codec=Codec::hevc;
+ report.probed(true,true,true,true,{h264,hevc});CHECK(report.app_video());
+ Profile gpu=hevc;gpu.backend=Backend::amd_amf;gpu.stable_id="amd";
+ CHECK(report.changed({h264,hevc,gpu}));CHECK(report.failed(gpu));CHECK(report.app_video());
+ CHECK(report.changed({h264}));CHECK(!report.app_video());
+ CHECK(report.record().starts_with("PROBE RESULT app_video=0 app_image=1"));
 }

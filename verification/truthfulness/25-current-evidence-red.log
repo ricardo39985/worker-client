@@ -1,0 +1,71 @@
+[ 13%] Built target ow_json
+[ 17%] Built target ow_pipeline_contract_tests
+[ 31%] Built target ow_rendition_probe
+[ 34%] Built target ow_rendition_contract_tests
+[ 55%] Built target ow_core
+[ 68%] Built target ow_progress_contract_tests
+[ 72%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 93%] Built target ow_contract_tests
+In file included from /home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:1:
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp: In function ‘void test_498()’:
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:500:44: error: ‘class ow::CapabilityReport’ has no member named ‘processing_ready’
+  500 |  ow::CapabilityReport report;CHECK(!report.processing_ready().has_value());
+      |                                            ^~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:501:57: error: ‘class ow::CapabilityReport’ has no member named ‘processing_ready’
+  501 |  report.probed(false,false,false,false,{});CHECK(report.processing_ready()==false);
+      |                                                         ^~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:502:54: error: ‘class ow::CapabilityReport’ has no member named ‘app_video’; did you mean ‘bool ow::CapabilityReport::app_video_’? (not accessible from this context)
+  502 |  report.probed(true,true,true,true,{});CHECK(!report.app_video());CHECK(report.app_image());
+      |                                                      ^~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+In file included from /home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:2:
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/capability_report.hpp:12:25: note: declared private here
+   12 |  bool video_{},image_{},app_video_{},app_image_{};
+      |                         ^~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:502:80: error: ‘class ow::CapabilityReport’ has no member named ‘app_image’; did you mean ‘bool ow::CapabilityReport::app_image_’? (not accessible from this context)
+  502 |  report.probed(true,true,true,true,{});CHECK(!report.app_video());CHECK(report.app_image());
+      |                                                                                ^~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/capability_report.hpp:12:38: note: declared private here
+   12 |  bool video_{},image_{},app_video_{},app_image_{};
+      |                                      ^~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:505:62: error: ‘class ow::CapabilityReport’ has no member named ‘app_video’; did you mean ‘bool ow::CapabilityReport::app_video_’? (not accessible from this context)
+  505 |  report.probed(true,true,true,true,{h264,hevc});CHECK(report.app_video());
+      |                                                              ^~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/capability_report.hpp:12:25: note: declared private here
+   12 |  bool video_{},image_{},app_video_{},app_image_{};
+      |                         ^~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:507:80: error: ‘class ow::CapabilityReport’ has no member named ‘app_video’; did you mean ‘bool ow::CapabilityReport::app_video_’? (not accessible from this context)
+  507 |  CHECK(report.changed({h264,hevc,gpu}));CHECK(report.failed(gpu));CHECK(report.app_video());
+      |                                                                                ^~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/capability_report.hpp:12:25: note: declared private here
+   12 |  bool video_{},image_{},app_video_{},app_image_{};
+      |                         ^~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:508:46: error: ‘class ow::CapabilityReport’ has no member named ‘app_video’; did you mean ‘bool ow::CapabilityReport::app_video_’? (not accessible from this context)
+  508 |  CHECK(report.changed({h264}));CHECK(!report.app_video());
+      |                                              ^~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/capability_report.hpp:12:25: note: declared private here
+   12 |  bool video_{},image_{},app_video_{},app_image_{};
+      |                         ^~~~~~~~~~
+gmake[2]: *** [CMakeFiles/ow_adaptive_hardware_contract_tests.dir/build.make:93: CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:1226: CMakeFiles/ow_adaptive_hardware_contract_tests.dir/all] Error 2
+gmake: *** [Makefile:101: all] Error 2

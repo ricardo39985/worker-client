@@ -1,0 +1,40 @@
+[ 10%] Built target ow_pipeline_contract_tests
+[ 17%] Built target ow_json
+[ 34%] Built target ow_rendition_probe
+[ 34%] Built target ow_rendition_contract_tests
+[ 37%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 58%] Built target ow_core
+[ 79%] Built target ow_contract_tests
+[ 82%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+In file included from /home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:1:
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp: In function ‘void test_487()’:
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:488:12: error: ‘priority_label’ is not a member of ‘ow’
+  488 |  CHECK(ow::priority_label(ow::Priority::backup)=="Backup (routing hint)");
+      |            ^~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:488:31: error: ‘ow::Priority’ has not been declared
+  488 |  CHECK(ow::priority_label(ow::Priority::backup)=="Backup (routing hint)");
+      |                               ^~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:489:12: error: ‘priority_label’ is not a member of ‘ow’
+  489 |  CHECK(ow::priority_label(ow::Priority::normal)=="Normal");
+      |            ^~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/adaptive_hardware_test.cpp:489:31: error: ‘ow::Priority’ has not been declared
+  489 |  CHECK(ow::priority_label(ow::Priority::normal)=="Normal");
+      |                               ^~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+gmake[2]: *** [CMakeFiles/ow_adaptive_hardware_contract_tests.dir/build.make:93: CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:1226: CMakeFiles/ow_adaptive_hardware_contract_tests.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+[ 86%] Linking CXX executable ow_progress_contract_tests
+[ 93%] Built target ow_progress_contract_tests
+gmake: *** [Makefile:101: all] Error 2

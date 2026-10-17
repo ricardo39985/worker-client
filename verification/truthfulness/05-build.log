@@ -1,0 +1,22 @@
+[ 10%] Built target ow_pipeline_contract_tests
+[ 17%] Built target ow_json
+[ 24%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 24%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+In file included from /home/rick/Downloads/worker-client-gpu-on-logs/include/ow/media_renditions.hpp:2,
+                 from /home/rick/Downloads/worker-client-gpu-on-logs/tests/media_rendition_probe.cpp:1:
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/adaptive_hardware.hpp: In function ‘std::string ow::adaptive::encoder_tokens(const std::vector<Profile>&)’:
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/adaptive_hardware.hpp:105:11: error: ‘none_of’ is not a member of ‘std’
+  105 |   if(std::none_of(profiles.begin(),profiles.end(),[&](const auto& p){return p.backend==backend;}))continue;
+      |           ^~~~~~~
+In file included from /home/rick/Downloads/worker-client-gpu-on-logs/include/ow/media_renditions.hpp:2,
+                 from /home/rick/Downloads/worker-client-gpu-on-logs/tests/media_rendition_test.cpp:2:
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/adaptive_hardware.hpp: In function ‘std::string ow::adaptive::encoder_tokens(const std::vector<Profile>&)’:
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/adaptive_hardware.hpp:105:11: error: ‘none_of’ is not a member of ‘std’
+  105 |   if(std::none_of(profiles.begin(),profiles.end(),[&](const auto& p){return p.backend==backend;}))continue;
+      |           ^~~~~~~
+gmake[2]: *** [CMakeFiles/ow_rendition_probe.dir/build.make:79: CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:1193: CMakeFiles/ow_rendition_probe.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+gmake[2]: *** [CMakeFiles/ow_rendition_contract_tests.dir/build.make:93: CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:1161: CMakeFiles/ow_rendition_contract_tests.dir/all] Error 2
+gmake: *** [Makefile:101: all] Error 2

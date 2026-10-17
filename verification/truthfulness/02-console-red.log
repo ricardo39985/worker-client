@@ -1,0 +1,24 @@
+PASS all hardware command plans retain device selection and measured timeline progress
+PASS four hardware failures reset timeline and stage generation on CPU retry independently
+PASS idle connection emits no activity and active states stay terse
+PASS encoder timeline and byte accounting behavior are preserved
+PASS unmeasurable stages say only stage and elapsed once
+PASS a repeated stage is a visible retry with one stable suffix
+PASS local timestamp format is exact through midnight month and zone changes
+PASS job suffixes are lowercase last four and stable for a job life
+PASS two live jobs with the same four characters stay distinguishable
+PASS a shown suffix resolves to exactly one full attempt id in the durable log
+PASS restart needs no counter and never implies continuation
+PASS every rendered line fits eighty columns including an impossible message
+PASS old durable lines still render plainly without breaking the viewer
+PASS exactly five colours carry one consistent meaning
+PASS progress rows keep a bounded bar and vanish on terminal events
+PASS four concurrent rows and activity stay readable and cancellation clears at any percent
+PASS many jobs keep suffix-to-id resolvability and concurrent accounting
+FAIL the ready line names the encoders the worker actually reported: check failed at /home/rick/Downloads/worker-client-gpu-on-logs/tests/progress_test.cpp:363: ow::console_detail::capability_from_probe(body)=="profiled: video+image (cpu, qsv, amf)"
+FAIL a probe record without encoder detail claims no backend: check failed at /home/rick/Downloads/worker-client-gpu-on-logs/tests/progress_test.cpp:368: ow::console_detail::capability_from_probe(body)=="profiled: video+image"
+FAIL a malformed encoder list cannot invent a backend: check failed at /home/rick/Downloads/worker-client-gpu-on-logs/tests/progress_test.cpp:374: ow::console_detail::capability_from_probe(body)=="profiled: video"
+FAIL explicit failed app probes never inherit successful diagnostics: check failed at /home/rick/Downloads/worker-client-gpu-on-logs/tests/progress_test.cpp:379: ow::console_detail::capability_from_probe("PROBE RESULT app_video=0 app_image=0 video=1 image=1")=="profiled: none"
+FAIL absent capability and priority evidence is explicitly unknown: check failed at /home/rick/Downloads/worker-client-gpu-on-logs/tests/progress_test.cpp:383: formatter.render("PROBE RESULT").text=="profiled: unknown"
+FAIL capability flags require complete field values and boundaries: check failed at /home/rick/Downloads/worker-client-gpu-on-logs/tests/progress_test.cpp:388: ow::console_detail::capability_from_probe("PROBE RESULT app_video=invalid app_image=trueish")=="profiled: unknown"
+23 contracts, 6 failures
