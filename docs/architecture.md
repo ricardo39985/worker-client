@@ -245,3 +245,12 @@ identity and approved converter hash are checked again before adoption. Diagnost
 are staged separately and the scheduler is replaced only with no active adaptive
 reservations. The network, watchdog, leases and process-tree containment remain
 independent. See `verification/second-card/REPORT.md` for gates and platform limits.
+
+## GPU child commit budgets
+
+GPU startup and runtime child RAM budgets are workload specific. The policy,
+local RAM top-up accounting, allocation-failure classification and evidence
+limits are specified in [GPU memory budgets](gpu-memory-budget.md). This commit
+budget is separate from VRAM. Runtime allocation failures under it retry CPU
+without demoting the proven card; other hardware validation failures retain the
+existing demotion rule.

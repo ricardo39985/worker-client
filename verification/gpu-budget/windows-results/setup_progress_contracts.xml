@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-MSBuild"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="DESKTOP-3FR54CB"
+	time="12"
+	timestamp="2026-10-17T23:35:15"
+	>
+	<testcase name="setup_progress_contracts" classname="setup_progress_contracts" time="12.7109" status="run">
+		<properties/>
+		<system-out>PASS unknown total never acquires a percentage just because time passes
+PASS measured work gives a percentage and successful completion ends the stage
+PASS heartbeat reports quiet activity without pretending work advanced
+PASS failure stays a failure and does not display completed work
+PASS URLs and credential values never reach a progress log
+PASS streaming checksum retains the actual SHA256 contract
+[23:35:16] [STARTED] Truncated |  | elapsed 0.0s |
+PASS stream transfer counts real bytes and rejects truncated content
+[23:35:16] [STARTED] Move extracted dependency into staging | 0 / 1 entries (0%) | elapsed 0.0s |
+[23:35:16] [DONE] Move extracted dependency into staging | 1 / 1 entries (100%) | elapsed 0.0s | Same-volume move; no duplicate tree copy
+[23:35:16] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+[23:35:16] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+[23:35:16] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s |
+[23:35:16] [D...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

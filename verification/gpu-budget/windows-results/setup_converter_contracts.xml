@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-MSBuild"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="DESKTOP-3FR54CB"
+	time="26"
+	timestamp="2026-10-17T23:35:27"
+	>
+	<testcase name="setup_converter_contracts" classname="setup_converter_contracts" time="26.5256" status="run">
+		<properties/>
+		<system-out>START a fresh machine downloads pinned bytes after consent and records acceptance
+[23:35:29] [STARTED] SHA-256 ffmpeg.exe.6f282b41b7914dfdb18aadb9ab6cab38.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+[23:35:29] [DONE] SHA-256 ffmpeg.exe.6f282b41b7914dfdb18aadb9ab6cab38.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.1s |
+PASS a fresh machine downloads pinned bytes after consent and records acceptance
+START corrupt transfers retry the supplied transport and only verified bytes publish
+[23:35:29] [STARTED] SHA-256 ffmpeg.exe.138f8cff23ff48a19ba85fe89ebb8d80.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+[23:35:29] [DONE] SHA-256 ffmpeg.exe.138f8cff23ff48a19ba85fe89ebb8d80.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s |
+[REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+[23:35:31] [STARTED] SHA-256 ffmpeg.exe.ad3f3a30b89347378dc0230aea364218.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+[23:35:31] [DONE] SHA-256 ffmpeg.exe.ad3f3a30b89347378dc0230aea364218.part | 0.0 MiB / 0.0 MiB...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

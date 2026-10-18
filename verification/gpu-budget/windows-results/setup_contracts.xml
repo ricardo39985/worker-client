@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-MSBuild"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="DESKTOP-3FR54CB"
+	time="3"
+	timestamp="2026-10-17T23:35:11"
+	>
+	<testcase name="setup_contracts" classname="setup_contracts" time="3.11335" status="run">
+		<properties/>
+		<system-out>PASS expired pairing is identified without deleting identity and healthy credentials are retained
+PASS unreadable or cross-endpoint identity requires explicit full archival
+[23:35:13] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+[23:35:14] [DONE] Enumerate dependency files | 1 files | elapsed 0.1s | 1 files found
+[23:35:14] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s |
+[23:35:14] [DONE] Build dependency checksum manifest | 1 / 1 files (100%) | elapsed 0.1s |
+[23:35:14] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+[23:35:14] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+[23:35:14] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s |
+[23:35:14] [DONE] Verify cached dependency | 1 / 1 files (100%) | elapsed 0.0s | Every cached file verified
+[23:35:14] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+[23:35:14] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+[23:35:14]...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

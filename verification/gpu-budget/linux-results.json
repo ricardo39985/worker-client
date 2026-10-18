@@ -1,0 +1,244 @@
+[
+  {
+    "gate": "linux-configure",
+    "exit": 0,
+    "args": [
+      "cmake",
+      "-S",
+      "/home/rick/Downloads/worker-client-budget",
+      "-B",
+      "/tmp/ow-gpu-budget-build-linux",
+      "-DBUILD_TESTING=ON",
+      "-DOW_BOOST_ROOT=/tmp/ow-boost.mxOndo/boost_1_89_0",
+      "-DCMAKE_BUILD_TYPE=Release"
+    ]
+  },
+  {
+    "gate": "linux-build",
+    "exit": 0,
+    "args": [
+      "cmake",
+      "--build",
+      "/tmp/ow-gpu-budget-build-linux",
+      "--parallel",
+      "2"
+    ]
+  },
+  {
+    "gate": "linux-discovery",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-linux",
+      "--show-only=json-v1"
+    ]
+  },
+  {
+    "gate": "linux-ffmpeg_dependency_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-linux",
+      "-R",
+      "^ffmpeg_dependency_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/linux-ffmpeg_dependency_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-worker_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-linux",
+      "-R",
+      "^worker_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/linux-worker_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-pipeline_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-linux",
+      "-R",
+      "^pipeline_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/linux-pipeline_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-rendition_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-linux",
+      "-R",
+      "^rendition_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/linux-rendition_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-adaptive_hardware_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-linux",
+      "-R",
+      "^adaptive_hardware_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/linux-adaptive_hardware_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-progress_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-linux",
+      "-R",
+      "^progress_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/linux-progress_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-configure",
+    "exit": 0,
+    "args": [
+      "cmake",
+      "-S",
+      "/home/rick/Downloads/worker-client-budget",
+      "-B",
+      "/tmp/ow-gpu-budget-build-sanitize",
+      "-DBUILD_TESTING=ON",
+      "-DOW_BOOST_ROOT=/tmp/ow-boost.mxOndo/boost_1_89_0",
+      "-DCMAKE_BUILD_TYPE=Debug",
+      "-DOW_SANITIZE=ON",
+      "-DOW_ENABLE_IPO=OFF",
+      "-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer",
+      "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+    ]
+  },
+  {
+    "gate": "sanitize-build",
+    "exit": 0,
+    "args": [
+      "cmake",
+      "--build",
+      "/tmp/ow-gpu-budget-build-sanitize",
+      "--parallel",
+      "2"
+    ]
+  },
+  {
+    "gate": "sanitize-discovery",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-sanitize",
+      "--show-only=json-v1"
+    ]
+  },
+  {
+    "gate": "sanitize-ffmpeg_dependency_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-sanitize",
+      "-R",
+      "^ffmpeg_dependency_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/sanitize-ffmpeg_dependency_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-worker_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-sanitize",
+      "-R",
+      "^worker_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/sanitize-worker_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-pipeline_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-sanitize",
+      "-R",
+      "^pipeline_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/sanitize-pipeline_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-rendition_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-sanitize",
+      "-R",
+      "^rendition_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/sanitize-rendition_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-adaptive_hardware_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-sanitize",
+      "-R",
+      "^adaptive_hardware_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/sanitize-adaptive_hardware_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-progress_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/tmp/ow-gpu-budget-build-sanitize",
+      "-R",
+      "^progress_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-budget/verification/gpu-budget/sanitize-progress_contracts.xml"
+    ]
+  }
+]
