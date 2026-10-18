@@ -1,5 +1,7 @@
 # Test policy and evidence
 
+Current installer swap and both-PC rollout: [Windows rollback proof and installed readbacks](../verification/installer-swap/REPORT.md).
+
 Current merged decode and completion-reporting gates: [fresh measurements and landing ledger](../verification/finish-perf/REPORT.md).
 This ledger supersedes the historical candidate snapshots below.
 

@@ -1,0 +1,27 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+USER=danny ROOT=C:\Users\Danny\AppData\Local\OrganizerWorker
+VERSION=0.1.2-db2bc15dc83612bb SHA256=DB2BC15DC83612BB3EB833A4A1B1B21B782A60F1481FDC4B360022EBA76FB278
+{"Id":20980,"Path":"C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-db2bc15dc83612bb\\OrganizerWorker.exe","SessionId":1}
+18/10 01:53:12  status
+  state      accepting                since 01:53:12
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      RTX 3070 idle         RTX 3050 idle         cpu idle
+  memory     ram free 46.0 GB   scratch free 112 GB
+  encoders   cpu,nvenc
+  uptime     00:02:04
+2026-10-18 05:53:12.342Z PROBE DEVICES schedulable GPUs=2
+2026-10-18 05:53:12.342Z GPU DEVICE | nvenc GPU 0 | NVIDIA GeForce RTX 3070 | device_id=pci:10de:2488:153a10de:a1:luid:00000000:0001418e physical_id=PCI\VEN_10DE&DEV_2488&SUBSYS_153A10DE&REV_A1\4&22651C9C&0&0008
+2026-10-18 05:53:12.342Z GPU DEVICE | nvenc GPU 1 | NVIDIA GeForce RTX 3050 | device_id=pci:10de:2507:c9781462:a1:luid:00000000:00016411 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8
+2026-10-18 05:53:12.342Z PROBE SCOPE startup samples only; job support may vary
+2026-10-18 05:53:12.342Z PROBE DETAIL Adaptive media setup: CPU=12th Gen Intel(R) Core(TM) i7-12700KF logical=20 RAM_total_MB=65381 RAM_available_MB=43864 disk_total_MB=475823 disk_available_MB=107255 approved_ffmpeg_sha256=f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4; display inventory entries=4 [NVIDIA GeForce RTX 3070 id=pci:10de:2488:153a10de:a1:luid:00000000:0001418e dedicated_VRAM_MB=8017 driver=200000.1006ce physical_id=PCI\VEN_10DE&DEV_2488&SUBSYS_153A10DE&REV_A1\4&22651C9C&0&0008 ] [NVIDIA GeForce RTX 3050 id=pci:10de:2507:c9781462:a1:luid:00000000:00016411 dedicated_VRAM_MB=8041 driver=200000.1006ce physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 ] [NVIDIA GeForce RTX 3070 id=pci:10de:2488:153a10de:a1:luid:00000000:0001e79a dedicated_VRAM_MB=8017 driver=200000.1006ce physical_id=ROOT\DISPLAY\0000 software adapter (ROOT instance); excluded from capacity and scheduling] [Microsoft Basic Render Driver id=pci:1414:008c:00000000:00:luid:00000000:000163c2 dedicated_VRAM_MB=0 driver=a0000.65f425ef physical_id= unsupported or unmappable display adapter; GPU profile withheld]; schedulable GPUs=2; retained sample profiles=6; app video=CPU fallback sampled app image=sample passed; chosen CPU H.264 at 24.340771 synthetic fps at 1920x1080 child_budget_MiB=512 with concurrency=2; chosen NVIDIA NVENC H.264 at 60.810811 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); chosen NVIDIA NVENC H.264 at 60.862215 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); chosen CPU HEVC at 6.359581 synthetic fps at 1920x1080 child_budget_MiB=512 with concurrency=2; chosen NVIDIA NVENC HEVC at 60.810811 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); chosen NVIDIA NVENC HEVC at 41.884817 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); fallback Intel QSV adapter not detected; fallback AMD AMF adapter not detected; fallback NVIDIA GeForce RTX 3070 device_id=pci:10de:2488:153a10de:a1:luid:00000000:0001e79a physical_id=ROOT\DISPLAY\0000 software adapter (ROOT instance); excluded from capacity and scheduling; fallback Microsoft Basic Render Driver device_id=pci:1414:008c:00000000:00:luid:00000000:000163c2 physical_id= unsupported or unmappable display adapter; GPU profile withheld; fallback NVIDIA GeForce RTX 3070 device_id=pci:10de:2488:153a10de:a1:luid:00000000:0001e79a physical_id=ROOT\DISPLAY\0000 software adapter (ROOT instance); excluded from capacity and scheduling; fallback Microsoft Basic Render Driver device_id=pci:1414:008c:00000000:00:luid:00000000:000163c2 physical_id= unsupported or unmappable display adapter; GPU profile withheld
+2026-10-18 05:53:12.524Z STATE CONNECTED
+2026-10-18 05:53:12.524Z acceptance: accepting: connected (since 01:53:12)
+2026-10-18 05:53:12.524Z 18/10 01:53:12 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:04 | running 0 | ram free 46.0 GB | scratch free 112 GB | priority maximum | accepting: connected (since 01:53:12)
+STAGING_EXISTS=True
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj><Obj S="progress" RefId="1"><TNRef RefId="0" /><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>SSH_EXIT=0

@@ -1,0 +1,27 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+USER=danny ROOT=C:\Users\Danny\AppData\Local\OrganizerWorker
+VERSION=0.1.2-db2bc15dc83612bb SHA256=DB2BC15DC83612BB3EB833A4A1B1B21B782A60F1481FDC4B360022EBA76FB278
+[{"Id":24520,"Path":"C:\\Users\\danny\\ffmpeg.exe","SessionId":1},{"Id":20980,"Path":"C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-db2bc15dc83612bb\\OrganizerWorker.exe","SessionId":1}]
+18/10 01:51:07  status
+  state      paused                   since 01:51:07 (starting)
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      unknown               cpu idle
+  memory     ram free 46.0 GB   scratch free 112 GB
+  encoders   unknown
+  uptime     00:00:00
+2026-10-18 05:51:18.634Z TIMING stage=startup_child artifact=none wall_us=321876 controller_cpu_us=0 child_cpu_us=265625 launch_us=4332 root_lifetime_us=282051 completed=true
+2026-10-18 05:51:21.332Z TIMING stage=startup_child artifact=none wall_us=2694413 controller_cpu_us=0 child_cpu_us=1484375 launch_us=4518 root_lifetime_us=2642013 completed=true
+2026-10-18 05:51:21.762Z TIMING stage=startup_child artifact=none wall_us=430658 controller_cpu_us=0 child_cpu_us=359375 launch_us=7239 root_lifetime_us=337816 completed=true
+2026-10-18 05:51:22.877Z PROBE PROGRESS | tuning cpu/h264 parallel 1/2 1/10, 9 left | elapsed 15s
+2026-10-18 05:51:24.345Z TIMING stage=startup_child artifact=none wall_us=2579517 controller_cpu_us=0 child_cpu_us=1640625 launch_us=4921 root_lifetime_us=2488171 completed=true
+2026-10-18 05:51:24.345Z TIMING stage=startup_child artifact=none wall_us=2577014 controller_cpu_us=0 child_cpu_us=1421875 launch_us=4031 root_lifetime_us=2508301 completed=true
+2026-10-18 05:51:24.664Z TIMING stage=startup_child artifact=none wall_us=319001 controller_cpu_us=0 child_cpu_us=296875 launch_us=4346 root_lifetime_us=298397 completed=true
+2026-10-18 05:51:24.664Z TIMING stage=startup_child artifact=none wall_us=319073 controller_cpu_us=0 child_cpu_us=296875 launch_us=4217 root_lifetime_us=298953 completed=true
+STAGING_EXISTS=True
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj><Obj S="progress" RefId="1"><TNRef RefId="0" /><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>SSH_EXIT=0

@@ -1,0 +1,40 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+INSTALLED_VERSION=0.1.2-db2bc15dc83612bb
+INSTALLED_SHA256=db2bc15dc83612bb3eb833a4a1b1b21b782a60f1481fdc4b360022eba76fb278
+INSTALLED_REVISION=369eb1f65d3ef019c7ac5698e718a31640c81014
+PROCESS_PID=24676 SESSION=1 RUNTIME_STATE=running
+2026-10-18 05:53:36.627Z WORKER STARTED | counts since this process; H for last 10 outcomes
+2026-10-18 05:53:36.633Z 18/10 01:53:36 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:00 | running 0 | ram free 1.6 GB | scratch free 460 GB | priority maximum | paused: starting (since 01:53:36)
+2026-10-18 05:53:36.636Z   encoders   unknown
+2026-10-18 05:54:06.652Z 18/10 01:54:06 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:30 | running 0 | ram free 1.4 GB | scratch free 460 GB | priority maximum | paused: starting (since 01:53:36)
+2026-10-18 05:54:36.677Z 18/10 01:54:36 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:01:00 | running 0 | ram free 1.5 GB | scratch free 460 GB | priority maximum | paused: starting (since 01:53:36)
+2026-10-18 05:55:06.753Z 18/10 01:55:06 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:01:30 | running 0 | ram free 1.2 GB | scratch free 460 GB | priority maximum | paused: starting (since 01:53:36)
+2026-10-18 05:55:36.784Z 18/10 01:55:36 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:00 | running 0 | ram free 1.4 GB | scratch free 460 GB | priority maximum | paused: starting (since 01:53:36)
+2026-10-18 05:56:06.886Z 18/10 01:56:06 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:30 | running 0 | ram free 1.0 GB | scratch free 460 GB | priority maximum | paused: starting (since 01:53:36)
+2026-10-18 05:56:36.968Z 18/10 01:56:36 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:03:00 | running 0 | ram free 1.3 GB | scratch free 459 GB | priority maximum | paused: starting (since 01:53:36)
+2026-10-18 05:57:06.988Z 18/10 01:57:06 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:03:30 | running 0 | ram free 1.7 GB | scratch free 459 GB | priority maximum | paused: starting (since 01:53:36)
+2026-10-18 05:57:22.118Z PROBE RESULT app_video=1 app_image=1 video=1 image=1 encoders=cpu,qsv,amf
+2026-10-18 05:57:22.118Z PROBE DEVICES schedulable GPUs=2
+2026-10-18 05:57:22.118Z GPU DEVICE | qsv GPU 0 | Intel(R) HD Graphics 630 | device_id=pci:8086:591b:080d1028:04:luid:00000000:00012957 physical_id=PCI\VEN_8086&DEV_591B&SUBSYS_080D1028&REV_04\3&11583659&0&10
+2026-10-18 05:57:22.118Z GPU DEVICE | amf GPU 0 | Radeon RX Vega M GL Graphics | device_id=pci:1002:694e:080d1028:c0:luid:00000000:00012cdf physical_id=PCI\VEN_1002&DEV_694E&SUBSYS_080D1028&REV_C0\4&DFEC518&0&0008
+2026-10-18 05:57:22.118Z PROBE DETAIL Adaptive media setup: CPU=Intel(R) Core(TM) i5-8305G CPU @ 2.80GHz logical=8 RAM_total_MB=8002 RAM_available_MB=1519 disk_total_MB=952696 disk_available_MB=438301 approved_ffmpeg_sha256=f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4; display inventory entries=3 [Intel(R) HD Graphics 630 id=pci:8086:591b:080d1028:04:luid:00000000:00012957 dedicated_VRAM_MB=128 driver=1b0014.6425c0 physical_id=PCI\VEN_8086&DEV_591B&SUBSYS_080D1028&REV_04\3&11583659&0&10 ] [Radeon RX Vega M GL Graphics id=pci:1002:694e:080d1028:c0:luid:00000000:00012cdf dedicated_VRAM_MB=4043 driver=1e0000.32e103e8 physical_id=PCI\VEN_1002&DEV_694E&SUBSYS_080D1028&REV_C0\4&DFEC518&0&0008 ] [Microsoft Basic Render Driver id=pci:1414:008c:00000000:00:luid:00000000:00012cad dedicated_VRAM_MB=0 driver=a0000.65f4243e physical_id= unsupported or unmappable display adapter; GPU profile withheld]; schedulable GPUs=2; retained sample profiles=6; app video=CPU fallback sampled app image=sample passed; chosen CPU H.264 at 11.883149 synthetic fps at 1920x1080 child_budget_MiB=512 with concurrency=2; chosen Intel QSV H.264 at 23.992003 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); chosen AMD AMF H.264 at 15.157895 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); chosen CPU HEVC at 3.488879 synthetic fps at 1920x1080 child_budget_MiB=512 with concurrency=2; chosen Intel QSV HEVC at 17.463012 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); chosen AMD AMF HEVC at 13.254786 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); fallback NVIDIA NVENC adapter not detected; fallback Microsoft Basic Render Driver device_id=pci:1414:008c:00000000:00:luid:00000000:00012cad physical_id= unsupported or unmappable display adapter; GPU profile withheld; fallback Microsoft Basic Render Driver device_id=pci:1414:008c:00000000:00:luid:00000000:00012cad physical_id= unsupported or unmappable display adapter; GPU profile withheld
+2026-10-18 05:57:22.326Z STATE CONNECTED
+2026-10-18 05:57:22.326Z 18/10 01:57:22 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:03:45 | running 0 | ram free 1.7 GB | scratch free 460 GB | priority maximum | accepting: connected (since 01:57:22)
+IDLE_TABLE_BEGIN
+18/10 01:57:22  status
+  state      accepting                since 01:57:22
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      Radeon RX V~ idle     HD Graphics~ idle     cpu idle
+  memory     ram free 1.7 GB   scratch free 460 GB
+  encoders   cpu,qsv,amf
+  uptime     00:03:45
+
+IDLE_TABLE_END
+ROLLBACK_PENDING=False
+CONNECTED_ACCEPTING_IDLE_VERIFIED=True
+SSH_EXIT=0

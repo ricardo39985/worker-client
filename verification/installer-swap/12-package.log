@@ -1,0 +1,8 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+PACKAGE_TAR_EXIT=0
+PACKAGE_MANIFEST_SHA256=9a075d7c6fa550202fcce23c096dcfc4d8481b6b296508e86b8d7e2b9263c811
+PACKAGE_TAR_SHA256=9ed9fc2dd44f7b005dfba07bfb03e11e83cae7ba7ddcd3b879dd568c28606aab
+PACKAGE_INFO={"schema":1,"revision":"369eb1f65d3ef019c7ac5698e718a31640c81014","files":{"OrganizerWorker.exe":"db2bc15dc83612bb3eb833a4a1b1b21b782a60f1481fdc4b360022eba76fb278","OrganizerWorkerConsole.exe":"54df2bbd4175f3222f3575c463ab62700c7db6888487d28d6e9221f8721fb713","OrganizerWorkerDoctor.exe":"0c2f70d85e21df07497fa26b641e8b2a9e32fb98ebaeec0293a498c73d0e38d1"}}
+SSH_EXIT=0

@@ -1,0 +1,27 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+USER=danny ROOT=C:\Users\Danny\AppData\Local\OrganizerWorker
+VERSION=0.1.2-db2bc15dc83612bb SHA256=DB2BC15DC83612BB3EB833A4A1B1B21B782A60F1481FDC4B360022EBA76FB278
+[{"Id":16472,"Path":"C:\\Users\\danny\\ffmpeg.exe","SessionId":1},{"Id":20980,"Path":"C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-db2bc15dc83612bb\\OrganizerWorker.exe","SessionId":1}]
+18/10 01:52:07  status
+  state      paused                   since 01:51:07 (starting)
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      RTX 3070 idle         RTX 3050 idle         cpu idle
+  memory     ram free 45.7 GB   scratch free 112 GB
+  encoders   unknown
+  uptime     00:01:00
+2026-10-18 05:51:49.797Z TIMING stage=startup_child artifact=none wall_us=750832 controller_cpu_us=0 child_cpu_us=468750 launch_us=5431 root_lifetime_us=683108 completed=true
+2026-10-18 05:51:53.113Z PROBE PROGRESS | tuning cpu/hevc encode 2/2 6/10, 4 left | elapsed 45s
+2026-10-18 05:51:58.149Z PROBE PROGRESS | tuning cpu/hevc encode 2/2 6/10, 4 left | elapsed 50s
+2026-10-18 05:51:59.981Z TIMING stage=startup_child artifact=none wall_us=10183906 controller_cpu_us=0 child_cpu_us=5593750 launch_us=2336 root_lifetime_us=10178123 completed=true
+2026-10-18 05:52:00.519Z TIMING stage=startup_child artifact=none wall_us=537696 controller_cpu_us=0 child_cpu_us=468750 launch_us=2269 root_lifetime_us=449415 completed=true
+2026-10-18 05:52:03.186Z PROBE PROGRESS | tuning cpu/hevc serial 1/2 6/10, 4 left | elapsed 55s
+2026-10-18 05:52:07.686Z 18/10 01:52:07 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:01:00 | running 0 | ram free 45.7 GB | scratch free 112 GB | priority maximum | paused: starting (since 01:51:07)
+2026-10-18 05:52:08.237Z PROBE PROGRESS | tuning cpu/hevc serial 1/2 6/10, 4 left | elapsed 1m00s
+STAGING_EXISTS=True
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj><Obj S="progress" RefId="1"><TNRef RefId="0" /><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>SSH_EXIT=0

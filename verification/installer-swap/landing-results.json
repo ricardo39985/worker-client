@@ -1,0 +1,16 @@
+[
+  {
+    "step": "merge",
+    "exit": 0
+  },
+  {
+    "step": "push",
+    "exit": 0
+  },
+  {
+    "step": "remote-readback",
+    "exit": 0,
+    "main": "369eb1f65d3ef019c7ac5698e718a31640c81014",
+    "remote_main": "369eb1f65d3ef019c7ac5698e718a31640c81014"
+  }
+]
