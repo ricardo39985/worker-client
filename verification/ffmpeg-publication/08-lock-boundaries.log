@@ -1,0 +1,5 @@
+PASS exactly two lock fields changed: url, redistribution_url
+PASS remaining dependency lock unchanged (approved SHA-256, size, version, format, license metadata)
+PASS installer and consent code unchanged from HEAD
+PASS approved binary: sha256=f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4 bytes=165167104
+exit=0

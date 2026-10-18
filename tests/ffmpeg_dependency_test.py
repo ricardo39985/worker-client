@@ -152,6 +152,21 @@ class DistributionContracts(unittest.TestCase):
             "https://release-assets.githubusercontent.com/github-production-release-asset-2e65be/1/file?sig=temporary")
         self.assertEqual(redirected.host, "release-assets.githubusercontent.com")
 
+    def test_github_namespaced_digest_tag_supports_real_release_downloads(self):
+        original = f"https://github.com/ricardo39985/worker-client/releases/download/ffmpeg/{self.digest}/ffmpeg.exe"
+        self.validate(dict(self.entry, url=original))
+        redirected = self.policy.NoRedirect(original).redirect_request(Request(original), None, 302, "Found", {},
+            "https://release-assets.githubusercontent.com/file?sig=temporary")
+        self.assertEqual(redirected.host, "release-assets.githubusercontent.com")
+        self.assertFalse(redirected.has_header("Authorization"))
+
+    def test_github_namespace_does_not_relax_digest_binding_or_redirect_scope(self):
+        for tag in (f"ffmpeg/{self.digest[:-1]}", f"ffmpeg-{self.digest}", f"other/{self.digest}"):
+            original = f"https://github.com/ricardo39985/worker-client/releases/download/{tag}/ffmpeg.exe"
+            with self.subTest(tag=tag), self.assertRaises(ValueError):
+                self.policy.NoRedirect(original).redirect_request(Request(original), None, 302, "Found", {},
+                    "https://release-assets.githubusercontent.com/file?sig=temporary")
+
     def test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials(self):
         original = f"https://github.com/ricardo39985/worker-client/releases/download/{self.digest}/ffmpeg.exe"
         for destination in ("http://release-assets.githubusercontent.com/file", "https://evil.test/file",

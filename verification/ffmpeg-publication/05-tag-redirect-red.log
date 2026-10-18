@@ -1,0 +1,17 @@
+....E..................
+======================================================================
+ERROR: test_github_namespaced_digest_tag_supports_real_release_downloads (__main__.DistributionContracts.test_github_namespaced_digest_tag_supports_real_release_downloads)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/tests/ffmpeg_dependency_test.py", line 158, in test_github_namespaced_digest_tag_supports_real_release_downloads
+    redirected = self.policy.NoRedirect(original).redirect_request(Request(original), None, 302, "Found", {},
+        "https://release-assets.githubusercontent.com/file?sig=temporary")
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/scripts/check_ffmpeg_dependency.py", line 83, in redirect_request
+    raise ValueError("Publication gate rejected artifact redirect")
+ValueError: Publication gate rejected artifact redirect
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.093s
+
+FAILED (errors=1)
+exit=1

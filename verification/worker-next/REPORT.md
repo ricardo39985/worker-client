@@ -1,5 +1,10 @@
 # fix/worker-next finish attempt — October 17, 2026
 
+Publication status below is historical. The operator subsequently authorized
+publication of the recovered source/build materials together with the binary.
+See [the new publication report](../ffmpeg-publication/REPORT.md) for the release,
+lock URL changes, actual public-download verification and source-scope limitation.
+
 ## Outcome and boundary
 
 Item 1 is implemented and verified with portable behavior contracts. Item 2 is

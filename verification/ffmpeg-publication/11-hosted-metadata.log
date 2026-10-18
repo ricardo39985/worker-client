@@ -1,0 +1,4 @@
+HTTP 200 manifest.json bytes=3939 sha256=ce14ca288fe014c8f98b51b6a95568ac77cc5bbaa1b2faedf651ba03ac045ae7 MATCH local manifest/checksums
+HTTP 200 SHA256SUMS bytes=1043 sha256=7025c5753e17c0cb448a580bbb7fa8b97127194e1c37315b76437a51ef03203b MATCH local manifest/checksums
+PASS remote release metadata: 2/2
+exit=0

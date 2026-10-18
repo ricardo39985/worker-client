@@ -3,9 +3,11 @@
 Current `fix/worker-next` evidence: see
 [verification/worker-next/REPORT.md](../verification/worker-next/REPORT.md).
 The PCI-instance source correction passes Linux contracts; Windows/MSVC and
-physical two-GPU acceptance remain unrun. The approved FFmpeg file's local hash
-and size match. Publication still requires the missing complete matching
-included-dependency source/notices materials; the lock URLs remain null.
+physical two-GPU acceptance remain unrun. The approved FFmpeg binary and recovered
+exact source/build materials are now published with both lock URLs set; see
+[the publication report](../verification/ffmpeg-publication/REPORT.md) for fresh
+anonymous download verification and the NOTICE's third-party source-scope limit.
+Historical publication-pending narratives below describe earlier states.
 
 
 Retained FFmpeg distribution: see

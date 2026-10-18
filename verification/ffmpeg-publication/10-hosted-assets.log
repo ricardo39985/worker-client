@@ -1,0 +1,14 @@
+HTTP 200 FFmpeg-46d8f462eeb87ee1f704d8c44a0ee24fca471ad1.tar.gz bytes=17330308 sha256=56999ad7cdcfbe520e989e38ac763341fab71b367ef8c20434117f8d1b7204a9 MATCH
+HTTP 200 FFmpeg-Builds-e88e49f624457c455700b058f0a84ca87d499cc2.tar.gz bytes=107871 sha256=afb0e526ee89ea9871b49b1a60bb5fdf9847f85816fb47b5bbd6528aa0643eda MATCH
+HTTP 200 NOTICE.md bytes=4545 sha256=f2f87f6e233e3d6b86a18160dc9d576de187467f1b4f975fd155794caa44158f MATCH
+HTTP 200 REBUILD.md bytes=3983 sha256=f8646c44215d55c823f185ee0415d7cb935e76232ea0cfeac2307fb18f9c1d14 MATCH
+HTTP 200 configuration.txt bytes=1905 sha256=9ea80c442a4df6646f134c01115c3c80ec7b35b2c7e6058f78262c97d8507a3d MATCH
+HTTP 200 dependency-source-references.json bytes=25003 sha256=d22388452b07dbb5a5ce80d85c8605f1a4b65c13a6b1ca3e63cdd1d3b3db7e79 MATCH
+HTTP 200 ffmpeg-n9.0.2-22-g46d8f462ee-win64-gpl-9.0-retained.zip bytes=63978318 sha256=f8c93fba344f9d3e65f085bcce58566b60697bae877d15feff707ba690247bd9 MATCH
+HTTP 200 ffmpeg-source-and-notices.tar.gz bytes=17354442 sha256=2c548177e23b942235bed6d4dd7b49324e09f3fb5c3e7b9cd7cf6df0a62119eb MATCH
+HTTP 200 ffmpeg.exe bytes=165167104 sha256=f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4 MATCH
+HTTP 200 licenses.zip bytes=34013 sha256=ee1ca575a68a4e9d8aa98824b3a0dc4e12f49935faf0f9c0a5852e0c1357ef2b MATCH
+PASS source bundle internal checksums: 12/12
+PASS downloaded ZIP executable: bytes=165167104 sha256=f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4
+PASS anonymous hosted assets: 10/10
+exit=0

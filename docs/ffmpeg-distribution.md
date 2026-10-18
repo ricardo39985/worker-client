@@ -24,88 +24,57 @@ The executable at `/tmp/ffmpeg.exe` was independently hashed on October 17,
 2026: its size and SHA-256 match the pin above. Its embedded version string is
 `n9.0.2-22-g46d8f462ee-20261001`; it has not been executed on Windows here.
 
-`url` and `redistribution_url` are deliberately `null` until the operator
-publishes. This is a blocked publication, not a working download URL or a release
-candidate ready for fresh-machine conversion. The operator has authorized a
-GitHub release asset on `ricardo39985/worker-client`, but the matching complete
-included-dependency source/notices bundle remains unavailable. Exact FFmpeg
-source and the BtbN recipe revision have been recovered; recipe references alone
-do not establish complete corresponding source/notices. See
-[the current gate ledger](../verification/worker-next/REPORT.md). A healthy configured converter still works;
-`-FfmpegPath` plus its approved hash and explicit `-NoConversion` remain available.
+The operator authorized publication of the retained binary with the recovered
+source and build materials on October 17, 2026. Both lock URLs now point at the
+[retained release](https://github.com/ricardo39985/worker-client/releases/tag/ffmpeg/f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4):
 
-## Operator publication procedure
+- `url`: the unchanged raw `ffmpeg.exe`, preserving `format: exe` and the pin.
+- `redistribution_url`: `ffmpeg-source-and-notices.tar.gz`, containing the exact
+  FFmpeg source, exact BtbN recipes/patches, licenses, configure flags and rebuild
+  instructions. The release also carries individual source/recipe archives,
+  license texts, NOTICE, checksums and a redistributable binary ZIP.
 
-1. Select an operator-controlled HTTPS/443 artifact origin that supports public
-   unauthenticated GET, valid TLS and no expiration. A direct HTTP 200 origin is
-   accepted. The explicitly approved GitHub alternative is the permanent release
-   asset URL below: the read-only Python gate allows exactly one HTTPS/443
-   redirect from that digest-tag URL to `release-assets.githubusercontent.com`,
-   requiring a final HTTP 200 and verifying the unchanged byte count and hash.
-   It rejects other redirect origins/hosts, downgrades, credentials and extra
-   hops; signed CDN transport queries are neither persisted nor logged.
-   Use a dedicated dependency bucket/origin or retained release namespace, not
-   the production worker service or a signed temporary URL. Set retention to
-   exclude these objects from lifecycle deletion; deny overwriting/deleting the
-   digest namespace, retain an independent backup and assign an owner. Keep every
-   artifact referenced by supported source packages, even after upgrades.
-2. Obtain the approved executable **once** from the existing approved offline
-   artifact/cache through an authorized operator process. Verify the exact size
-   and SHA-256 above. This initial seeding is required; no client-side fix can
-   recreate missing bytes from a hash. Do not copy binaries from PC to PC for
-   subsequent installs. If this file cannot be recovered, stop: a different build
-   requires a separate version/hash/license review and fresh Windows probes.
-3. Before redistribution, review this exact build's GPL configuration, included
-   libraries and notices. Retain matching corresponding source, patches and build
-   instructions for FFmpeg and included dependencies, and license/attribution
-   texts. Publish them with a permanent explanatory index on the same retained
-   origin. Link that index in `redistribution_url`. The generic FFmpeg legal page
-   is guidance, not proof that this exact build is redistributable or that source
-   is available. If matching source/notices cannot be established, publication
-   remains blocked. See [FFmpeg's legal information](https://ffmpeg.org/legal.html).
-4. Upload the unchanged executable to this exact path structure, substituting
-   the real origin (this example is intentionally not a working endpoint):
+See [NOTICE](ffmpeg/NOTICE.md), [rebuild instructions](ffmpeg/REBUILD.md) and
+[the publication evidence](../verification/ffmpeg-publication/REPORT.md).
+The attached FFmpeg revision is
+`46d8f462eeb87ee1f704d8c44a0ee24fca471ad1`; the `n9.0.2` tag alone is not the
+matching source. BtbN recipes are retained at
+`e88e49f624457c455700b058f0a84ca87d499cc2`, the successful upstream run's revision,
+instead of today's moving `master`.
 
-   ```text
-   https://<owned-artifact-origin>/ffmpeg/f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4/ffmpeg.exe
-   ```
+The recipes fetch additional third-party dependency sources/submodules and build
+tools. Those source trees and individual notices are not vendored in the bundle.
+The NOTICE explicitly records this source-scope limitation; publication and a
+successful integrity gate do not independently certify complete GPL compliance.
+The reconstruction has not been executed and does not establish byte-for-byte
+reproducibility of the original toolchain environment.
 
-   For the authorized GitHub release alternative, create a dedicated release
-   tagged with the complete SHA-256 and upload the unchanged asset `ffmpeg.exe`:
+## Retention and verification
 
-   ```text
-   https://github.com/ricardo39985/worker-client/releases/download/f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4/ffmpeg.exe
-   ```
+Retain all assets under the full executable-digest tag for every supported
+worker package that refers to it. Do not replace files under this tag or prune
+this dependency release with daily autobuilds. Keep the source and binary
+available together and preserve an independent backup. No repository visibility,
+CI trigger, production storage or machine settings change is needed.
 
-   Use a source/notices index asset on that same release for `redistribution_url`.
-   This is a proposed publication path, not evidence that an asset exists.
-   Never replace the content at an existing hash path. Publish source/notices
-   first, then the binary. Nothing here uploads or makes this repository public.
-5. Change only the two null URLs in the reviewed lock to the permanent artifact
-   and source/notices-index URLs. Keep format, version, byte count and SHA-256.
-   Before approving the URL change, verify local bytes and then anonymously fetch
-   the published bytes on the review machine:
+```sh
+python3 scripts/check_ffmpeg_dependency.py --artifact-file /path/to/approved/ffmpeg.exe
+python3 scripts/check_ffmpeg_dependency.py --download
+python3 tests/ffmpeg_dependency_test.py
+```
 
-   ```sh
-   python3 scripts/check_ffmpeg_dependency.py --artifact-file /path/to/approved/ffmpeg.exe
-   python3 scripts/check_ffmpeg_dependency.py --download
-   python3 tests/ffmpeg_dependency_test.py
-   ```
+The checker validates the permanent HTTPS/443 URL, exactly one allowed GitHub
+release-to-CDN redirect, final HTTP 200, byte count and SHA-256. It never executes
+the downloaded binary. Signed CDN queries are transient and never recorded.
+The source/notices bundle is separately downloaded and verified against the
+release manifest and its internal source checksums in the publication evidence.
+The checker and unchanged consent behavior still reject a missing/partial lock,
+changed bytes, unsafe URLs and expiring upstream replacements. The existing
+Windows transport retains its bounded HTTPS-only redirects.
 
-   The checker never uploads, edits the lock or executes the binary. It rejects
-   expiring/`latest` upstream paths, missing full hash directories, signed query
-   URLs, unsafe TLS locations and changed bytes. The online gate requires a
-   final 200 and permits only the GitHub release/CDN exception above; the existing Windows transfer transport
-   still permits its bounded HTTPS-only redirects. URL shape cannot prove
-   ownership, retention or license completeness: those require operator review.
-6. Run the real Windows checks below before distributing an approved worker
-   package. Repeat the read-only `--download` availability/integrity gate during
-   each future release review; add monitoring only through separately authorized
-   infrastructure work. The manual-only CI policy is unchanged.
-
-No publication has occurred in this branch. Fresh-machine automatic conversion
-remains blocked until steps 1–6 are completed. Thereafter ordinary `setup.cmd`
-needs no per-machine file relay or `-FfmpegPath` override.
+Repeat the anonymous download/integrity checks at future release reviews. The
+Windows setup/consent/native/Doctor gates below remain separate; this publication
+is not a compiled worker release or a fresh Windows installation test.
 
 ## Setup mechanism
 

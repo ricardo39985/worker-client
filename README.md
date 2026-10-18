@@ -33,12 +33,13 @@ hosts. Missing dependency downloads, damaged extraction, build cache failures
 and startup registration/readback have bounded repair paths. Persistent failures
 stay visible in the setup window and reports.
 
-FFmpeg distribution is currently **publication blocked**: the old upstream
-autobuild was deleted. The reviewed executable pin is retained, but an operator
-must publish its permanent download and matching source/notices URLs before fresh
-machines can install conversion automatically. See
-[the publication procedure](docs/ffmpeg-distribution.md). Existing approved
-converters remain usable; `-NoConversion` is an explicit pairing-only choice.
+The approved FFmpeg executable and its exact FFmpeg source, BtbN build recipes,
+licenses and rebuild notice are now hosted together on the retained dependency
+release. Fresh downloads preserve the reviewed executable checksum and explicit
+license consent. See [the distribution record](docs/ffmpeg-distribution.md) for
+public-download evidence, the notice's third-party source-scope limitation and
+separate unrun Windows installation/probe gates. Existing approved converters
+remain usable; `-NoConversion` is an explicit pairing-only choice.
 
 Normal-user startup is verified using SID account identity. If Task Scheduler is
 unavailable, setup uses a verified shortcut in this user's Startup folder. It

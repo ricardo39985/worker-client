@@ -75,7 +75,7 @@ class NoRedirect(HTTPRedirectHandler):
         # logged. No other origin, host, port, downgrade or further hop is allowed.
         if (self.redirected or req is None or req.full_url != self.original
                 or origin.scheme != "https" or origin.hostname != "github.com"
-                or not re.fullmatch(r"/[^/]+/[^/]+/releases/download/[a-f0-9]{64}/ffmpeg\.exe", origin.path)
+                or not re.fullmatch(r"/[^/]+/[^/]+/releases/download/(?:ffmpeg/)?[a-f0-9]{64}/ffmpeg\.exe", origin.path)
                 or origin.username or origin.password or origin.query or origin.fragment or origin.port not in (None, 443)
                 or code not in (302, 303, 307, 308)
                 or target.scheme != "https" or target.hostname != "release-assets.githubusercontent.com"

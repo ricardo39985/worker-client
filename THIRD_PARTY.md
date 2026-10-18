@@ -11,10 +11,12 @@ The bootstrap uses the Microsoft-signed VS2022 installer channel; Windows APIs
 and WinSQLite are OS-supplied components, not DLLs fetched from arbitrary sites.
 FFmpeg licensing depends on the approved build configuration. This source package
 selects the previously approved static GPL executable by hash but bundles no
-binary. Operator publication of that exact build, matching source, build details
-and license notices remains blocked pending redistribution review. See
-`docs/ffmpeg-distribution.md`; the generic FFmpeg legal page is not a substitute
-for retained corresponding source and notices. No license for this
+binary. The retained dependency release now carries that exact executable,
+its exact FFmpeg source, BtbN recipes/patches, build details and license texts.
+See `docs/ffmpeg-distribution.md` and `docs/ffmpeg/NOTICE.md`: additional third-party
+dependency sources and their individual notices are fetched by the recipes and
+are not vendored in this bundle. The publication/integrity gate is not independent
+certification of full corresponding-source completeness. No license for this
 project's own code is selected; do not make it public without the owner's decision.
 
 Primary references consulted while writing this implementation (not proof of
