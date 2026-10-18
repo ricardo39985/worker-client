@@ -1,7 +1,8 @@
 # Worker-flex r2: verified compute, rollout held
 
-Branch: `fix/worker-flex`; implementation checkpoint `41cbb42`, following
-`f2b52d5`. This report supersedes the checkpoint's pending measurement statements.
+Branch: `fix/worker-flex`; verified C++/measurement commit **`3ba4a8f`**, following
+implementation checkpoint `41cbb42` and first-pass `f2b52d5`. This report
+supersedes the checkpoint's pending measurement statements.
 The operator authorized related Windows staging/build/test/encode work and
 **conditional** merge/push/install. Production-server changes are not authorized.
 
@@ -239,4 +240,24 @@ version `0.1.2-1b4042d3bbfa85cc`, executable SHA
 Readbacks show **accepting, zero running jobs, idle cards**: cpu/qsv/amf on Rick,
 cpu/nvenc on Danny. This verifies unchanged installed-worker continuity, **not**
 the candidate running live. No merge/push/release/install/startup or production
-write occurred. Cleanup of owned observers/tasks/staging is recorded separately.
+write occurred.
+
+## Cleanup and final continuity
+
+Both cleanup processes exited **0**, then independent fresh SSH sessions verified:
+
+- `%LOCALAPPDATA%\\Temp\\ow-worker-flex-20261018-r2` **absent**;
+- owned `OrganizerWorker-Flex-20261018-r2` task **absent**;
+- **zero** executable processes under the owned staging path;
+- installed manifest/config/protected identity files unchanged by cleanup;
+- unchanged installed SHA above, same original process: Rick **19528**, Danny
+  **36272**, both interactive session 1; fresh status **accepting**, running 0,
+  idle encoder/card rows; last connection state CONNECTED.
+
+Evidence: `*-cleanup.log`, `*-final-absence.log`, all numeric exits 0. Only the
+owned observer was stopped/unregistered; neither installed worker was restarted.
+Four clean-build artifacts per PC were retained privately in ignored local cache,
+with all hashes matching readback; they were not published, installed or released.
+Real source/outputs are not committed. Future rollout remains conditional on the
+missing active-foreground qualification (and honest treatment of unretained
+GPU-engine/disk peak aggregates), not merely these cleanup/native successes.
