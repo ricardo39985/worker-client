@@ -65,6 +65,17 @@ public:
  std::string state_line() const{return state_+(reason_.empty()?"":": "+reason_)+" (since "+status_detail::time(since_wall_)+")";}
  void start(const std::string& id,std::string subject,std::int64_t wall,std::int64_t mono){active_.try_emplace(id,Active{std::move(subject),{},wall,mono});dirty_=true;}
  void placement(const std::string& id,std::string device,std::uint64_t budget_mb=0){if(auto it=active_.find(id);it!=active_.end()){it->second.device=std::move(device);it->second.child_budget_mb=budget_mb;dirty_=true;}}
+ // Completion describes the drained encoder, retaining its identity for stats.
+ // The next actual encoder launch replaces this reporting-only placement.
+ std::string encoder_line(const std::string& id,const std::string& encoder,const std::string& file,
+  const std::string& device,std::uint64_t budget_mb,const StatusReadings& readings,bool done){
+  placement(id,device,budget_mb);
+  std::string card=device=="cpu"?"cpu":"unknown";
+  for(const auto& entry:status_detail::cards(readings))if(entry.id==device)card=entry.name;
+  card=status_detail::safe(std::move(card));std::replace(card.begin(),card.end(),' ','_');
+  return "JOB "+id+" ENCODER | "+encoder+(done?" done":"")+" | file="+file+" card="+card+
+   (done?"":" child_budget_MiB="+std::to_string(budget_mb));
+ }
  bool finish(const std::string& id,JobOutcome outcome,std::string reason,std::int64_t wall,std::int64_t mono){
   auto it=active_.find(id);if(it==active_.end())return false;
   if(outcome==JobOutcome::succeeded)++ok_;else if(outcome==JobOutcome::failed)++failed_;else ++cancelled_;

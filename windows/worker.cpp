@@ -617,9 +617,9 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     StageTimer timing(filename=="poster.webp"?"poster":"transcode",filename,timing_sink,timing_wall_us,thread_cpu_us,true);
     const auto started=monotonic_ms();auto current=priority_.load();Child child(config_.ffmpeg,encoder_progress_arguments(selected),workspace,Resources{child_ram,0,s.offer.resources.scratch_mb,s.offer.resources.cpu_threads},current);
     ChildTimingCapture capture(child,&timing);
-    {std::lock_guard lock(report_mutex_);report_.placement(id,gpu_device?gpu_device->physical_id:"cpu",child_ram);}
-    auto card_label=gpu_device?status_detail::card_name(gpu_device->name):"cpu";std::replace(card_label.begin(),card_label.end(),' ','_');
-    safe_log("JOB "+id+" ENCODER | "+encoder_label+" | file="+filename+" decode="+(std::find(selected.begin(),selected.end(),L"-hwaccel_output_format")!=selected.end()?"cuda":"software")+" scale="+(filename=="poster.webp"?"software":"none")+" card="+card_label+" child_budget_MiB="+std::to_string(child_ram)+" pid="+std::to_string(child.process_id())+" device_id="+(gpu_device?gpu_device->stable_id:"cpu")+" physical_id="+(gpu_device?gpu_device->physical_id:"cpu"));
+    std::string encoder_start;
+    {std::lock_guard lock(report_mutex_);encoder_start=report_.encoder_line(id,encoder_label,filename,gpu_device?gpu_device->physical_id:"cpu",child_ram,readings_,false);}
+    safe_log(encoder_start+" decode="+(std::find(selected.begin(),selected.end(),L"-hwaccel_output_format")!=selected.end()?"cuda":"software")+" scale="+(filename=="poster.webp"?"software":"none")+" pid="+std::to_string(child.process_id())+" device_id="+(gpu_device?gpu_device->stable_id:"cpu")+" physical_id="+(gpu_device?gpu_device->physical_id:"cpu"));
     EncoderProgressFile encoder(workspace/"process.log");
     for(;;){check_gpu(child.process_id());if(cancelled()||pipeline_stop.stop_requested()||monotonic_ms()-started>=static_cast<Tick>(seconds)*1000)throw std::runtime_error("Job cancelled or conversion timed out");if(auto code=child.exit_code()){if(*code){
       if(input_dimensions)if(auto reason=child_memory_failure(read_file(workspace/"process.log"),input_dimensions->first,input_dimensions->second,child_ram))throw std::runtime_error(*reason);
@@ -630,8 +630,9 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     }
     encoder.update(data->progress,monotonic_ms());
     child.stop();
-    {std::lock_guard lock(report_mutex_);report_.placement(id,"cpu");}
-    safe_log("JOB "+id+" ENCODER | "+encoder_label+" done | file="+filename+" card=cpu");
+    std::string encoder_done;
+    {std::lock_guard lock(report_mutex_);encoder_done=report_.encoder_line(id,encoder_label,filename,gpu_device?gpu_device->physical_id:"cpu",child_ram,readings_,true);}
+    safe_log(encoder_done);
    };
    if(hardware){
     const auto output=workspace/filename;

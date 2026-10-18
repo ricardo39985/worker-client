@@ -158,3 +158,27 @@ TEST("active status exposes the actual selected child memory budget"){
  status.placement("attempt-1234","3070",1792);
  CHECK(status.summary(1000,1000,readings).find("child budget 1792 MiB")!=std::string::npos);
 }
+
+TEST("encoder start completion and stats name the actual GPU for the same file"){
+ ow::WorkerStatus s(wall,0);s.start("gpu-job","video renditions",wall,0);
+ auto r=readings();r.cards=std::vector<ow::StatusCard>{{"pci-a","NVIDIA GeForce RTX 3070"},{"pci-b","NVIDIA GeForce RTX 3050"}};
+ for(const auto& file:{std::string("feed.mp4"),std::string("optimized.mp4")}){
+  const auto encoder=file=="feed.mp4"?"nvenc/h264 GPU 1":"nvenc/hevc GPU 1";
+  const auto start=s.encoder_line("gpu-job",encoder,file,"pci-b",768,r,false);
+  CHECK(start=="JOB gpu-job ENCODER | "+std::string(encoder)+" | file="+file+" card=RTX_3050 child_budget_MiB=768");
+  const auto done=s.encoder_line("gpu-job",encoder,file,"pci-b",768,r,true);
+  CHECK(done=="JOB gpu-job ENCODER | "+std::string(encoder)+" done | file="+file+" card=RTX_3050");
+  CHECK(s.summary(wall+1000,1000,r).find("job gpu-job=RTX 3050 child budget 768 MiB")!=std::string::npos);
+  CHECK(done.find("card=cpu")==std::string::npos);
+ }
+}
+TEST("CPU encoder including a retry reports CPU at start completion and in stats"){
+ ow::WorkerStatus s(wall,0);s.start("retry-job","video renditions",wall,0);auto r=readings();
+ s.encoder_line("retry-job","nvenc/hevc GPU 1","optimized.mp4","pci-b",768,r,false);
+ auto start=s.encoder_line("retry-job","cpu/hevc","optimized.mp4","cpu",512,r,false);
+ auto done=s.encoder_line("retry-job","cpu/hevc","optimized.mp4","cpu",512,r,true);
+ CHECK(start=="JOB retry-job ENCODER | cpu/hevc | file=optimized.mp4 card=cpu child_budget_MiB=512");
+ CHECK(done=="JOB retry-job ENCODER | cpu/hevc done | file=optimized.mp4 card=cpu");
+ CHECK(s.summary(wall+1000,1000,r).find("job retry-job=cpu child budget 512 MiB")!=std::string::npos);
+ CHECK(s.summary(wall+1000,1000,r).find("job retry-job=3050")==std::string::npos);
+}
