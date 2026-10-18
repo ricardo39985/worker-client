@@ -1,0 +1,33 @@
+UpdateCTestConfiguration  from :/home/rick/Downloads/worker-client-fps/build-final/DartConfiguration.tcl
+Parse Config file:/home/rick/Downloads/worker-client-fps/build-final/DartConfiguration.tcl
+Test project /home/rick/Downloads/worker-client-fps/build-final
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 3
+    Start 3: pipeline_contracts
+
+3: Test command: /home/rick/Downloads/worker-client-fps/build-final/ow_pipeline_contract_tests
+3: Working Directory: /home/rick/Downloads/worker-client-fps/build-final
+3: Test timeout computed to be: 30
+3: PASS rendition pipeline returns ordered metadata for every artifact
+3: PASS next encode overlaps previous transfer
+3: PASS empty rendition pipeline starts no stages
+3: PASS transfer backpressure keeps one encoder and one transfer at a time
+3: PASS final transfer must join before result is returned
+3: PASS transfer failure cancels next encode and preserves original cause
+3: PASS encode failure cancels and joins transfer before unwinding
+3: PASS failed final checksum cannot return a successful partial result
+3: PASS independent pipelines do not share cancellation or metadata
+3: 9 contracts, 0 failures
+1/1 Test #3: pipeline_contracts ...............   Passed    0.00 sec
+
+The following tests passed:
+	pipeline_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec

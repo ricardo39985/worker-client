@@ -1,0 +1,24 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+generate-integer EXIT=0 MS=143
+generate-fractional EXIT=0 MS=139
+generate-vfr EXIT=0 MS=111
+rotate EXIT=0 MS=28
+integer-software-h264 EXIT=0 MS=322
+integer-software-hevc EXIT=0 MS=258
+integer-cuda-h264 EXIT=0 MS=263
+integer-cuda-hevc EXIT=0 MS=262
+fractional-software-h264 EXIT=0 MS=291
+fractional-software-hevc EXIT=0 MS=262
+fractional-cuda-h264 EXIT=0 MS=263
+fractional-cuda-hevc EXIT=0 MS=288
+vfr-software-h264 EXIT=0 MS=252
+vfr-software-hevc EXIT=0 MS=249
+vfr-cuda-h264 EXIT=0 MS=256
+vfr-cuda-hevc EXIT=0 MS=291
+rotated-software-h264 EXIT=0 MS=259
+rotated-software-hevc EXIT=0 MS=256
+rotated-cuda-h264 EXIT=0 MS=258
+rotated-cuda-hevc EXIT=0 MS=293
+SSH_EXIT=0

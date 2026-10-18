@@ -1,0 +1,1 @@
+$ErrorActionPreference='Stop';$p=Join-Path $env:LOCALAPPDATA 'Temp\ow-fps-20261018';if(Test-Path $p){throw 'Existing staging root'};New-Item -ItemType Directory $p | Out-Null;Write-Output ('STAGING='+$p)

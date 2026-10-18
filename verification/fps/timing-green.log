@@ -1,0 +1,7 @@
+integer feed source= {'r_frame_rate': '30/1', 'avg_frame_rate': '30/1', 'nb_frames': '90'} output= {'r_frame_rate': '30/1', 'avg_frame_rate': '30/1', 'nb_frames': '90'}
+integer feed_optimized source= {'r_frame_rate': '30/1', 'avg_frame_rate': '30/1', 'nb_frames': '90'} output= {'r_frame_rate': '30/1', 'avg_frame_rate': '30/1', 'nb_frames': '90'}
+fractional feed source= {'r_frame_rate': '30000/1001', 'avg_frame_rate': '30000/1001', 'nb_frames': '90'} output= {'r_frame_rate': '30000/1001', 'avg_frame_rate': '30000/1001', 'nb_frames': '90'}
+fractional feed_optimized source= {'r_frame_rate': '30000/1001', 'avg_frame_rate': '30000/1001', 'nb_frames': '90'} output= {'r_frame_rate': '30000/1001', 'avg_frame_rate': '30000/1001', 'nb_frames': '90'}
+vfr feed source= {'r_frame_rate': '30/1', 'avg_frame_rate': '4050000/134999', 'nb_frames': '90'} output= {'r_frame_rate': '30/1', 'avg_frame_rate': '4050000/134999', 'nb_frames': '90'}
+vfr feed_optimized source= {'r_frame_rate': '30/1', 'avg_frame_rate': '4050000/134999', 'nb_frames': '90'} output= {'r_frame_rate': '30/1', 'avg_frame_rate': '4050000/134999', 'nb_frames': '90'}
+Frame timing contracts passed

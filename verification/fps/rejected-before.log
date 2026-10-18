@@ -1,0 +1,8 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+software EXIT=0 MS=847
+cuda EXIT=0 MS=738
+cuda-demux EXIT=0 MS=738
+software-demux EXIT=0 MS=750
+SSH_EXIT=0

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="rick-Inspiron-16-5625"
+	time="0"
+	timestamp="2026-10-18T02:15:58"
+	>
+	<testcase name="adaptive_hardware_contracts" classname="adaptive_hardware_contracts" time="0.0914847" status="run">
+		<properties/>
+		<system-out>PASS CPU remains the safe profile when no supported GPU is installed
+PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+PASS single GPU profile requires matching encode decode and validated output
+PASS heterogeneous GPUs retain independent identities and schedules
+PASS two synthetic NVIDIA GPUs schedule independently through the production scheduler
+PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+PASS low VRAM and machine resource caps reject unsafe tuning
+PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+PASS profile invalidates on adapter identity driver or approved FFmpeg change
+PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+PASS selected hardware rendition binds an explicit adapter and conservative codec mode
+PASS Intel QSV and AMD AMF commands bind their probed DirectX adapter
+PASS hardware failure removes partial output and validates a clean CPU retry before success
+PASS cancelled ha...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

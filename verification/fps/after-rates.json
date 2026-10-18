@@ -1,0 +1,462 @@
+[
+  {
+    "sample": "fractional",
+    "mode": "after-fractional-nvenc",
+    "output": "feed.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "fractional",
+    "mode": "after-fractional-nvenc",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "fractional",
+    "mode": "after-fractional-nvenc-software",
+    "output": "feed.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "fractional",
+    "mode": "after-fractional-nvenc-software",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "integer",
+    "mode": "after-integer-nvenc",
+    "output": "feed.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "30/1",
+      "time_base": "1/15360",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "30/1",
+      "time_base": "1/15360",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "integer",
+    "mode": "after-integer-nvenc",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "30/1",
+      "time_base": "1/15360",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "30/1",
+      "time_base": "1/15360",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "integer",
+    "mode": "after-integer-nvenc-software",
+    "output": "feed.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "30/1",
+      "time_base": "1/15360",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "30/1",
+      "time_base": "1/15360",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "integer",
+    "mode": "after-integer-nvenc-software",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "30/1",
+      "time_base": "1/15360",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "30/1",
+      "time_base": "1/15360",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "rejected",
+    "mode": "after-rejected-nvenc",
+    "output": "feed.mp4",
+    "source": {
+      "width": 580,
+      "height": 1280,
+      "r_frame_rate": "90000/1",
+      "avg_frame_rate": "4662000/114113",
+      "time_base": "1/90000",
+      "nb_frames": "518"
+    },
+    "result": {
+      "width": 580,
+      "height": 1280,
+      "r_frame_rate": "90000/1",
+      "avg_frame_rate": "666000/16261",
+      "time_base": "1/90000",
+      "nb_frames": "518"
+    },
+    "frames": 518,
+    "exact_pts": true
+  },
+  {
+    "sample": "rejected",
+    "mode": "after-rejected-nvenc",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 580,
+      "height": 1280,
+      "r_frame_rate": "90000/1",
+      "avg_frame_rate": "4662000/114113",
+      "time_base": "1/90000",
+      "nb_frames": "518"
+    },
+    "result": {
+      "width": 580,
+      "height": 1280,
+      "r_frame_rate": "90000/1",
+      "avg_frame_rate": "485625/11857",
+      "time_base": "1/90000",
+      "nb_frames": "518"
+    },
+    "frames": 518,
+    "exact_pts": true
+  },
+  {
+    "sample": "rejected2",
+    "mode": "after-rejected2-nvenc",
+    "output": "feed.mp4",
+    "source": {
+      "width": 720,
+      "height": 1408,
+      "r_frame_rate": "24/1",
+      "avg_frame_rate": "24/1",
+      "time_base": "1/90000",
+      "nb_frames": "426"
+    },
+    "result": {
+      "width": 720,
+      "height": 1408,
+      "r_frame_rate": "24/1",
+      "avg_frame_rate": "24/1",
+      "time_base": "1/90000",
+      "nb_frames": "426"
+    },
+    "frames": 426,
+    "exact_pts": true
+  },
+  {
+    "sample": "rejected2",
+    "mode": "after-rejected2-nvenc",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 720,
+      "height": 1408,
+      "r_frame_rate": "24/1",
+      "avg_frame_rate": "24/1",
+      "time_base": "1/90000",
+      "nb_frames": "426"
+    },
+    "result": {
+      "width": 720,
+      "height": 1408,
+      "r_frame_rate": "24/1",
+      "avg_frame_rate": "24/1",
+      "time_base": "1/90000",
+      "nb_frames": "426"
+    },
+    "frames": 426,
+    "exact_pts": true
+  },
+  {
+    "sample": "rejected2",
+    "mode": "after-rejected2-nvenc-software",
+    "output": "feed.mp4",
+    "source": {
+      "width": 720,
+      "height": 1408,
+      "r_frame_rate": "24/1",
+      "avg_frame_rate": "24/1",
+      "time_base": "1/90000",
+      "nb_frames": "426"
+    },
+    "result": {
+      "width": 720,
+      "height": 1408,
+      "r_frame_rate": "24/1",
+      "avg_frame_rate": "24/1",
+      "time_base": "1/90000",
+      "nb_frames": "426"
+    },
+    "frames": 426,
+    "exact_pts": true
+  },
+  {
+    "sample": "rejected2",
+    "mode": "after-rejected2-nvenc-software",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 720,
+      "height": 1408,
+      "r_frame_rate": "24/1",
+      "avg_frame_rate": "24/1",
+      "time_base": "1/90000",
+      "nb_frames": "426"
+    },
+    "result": {
+      "width": 720,
+      "height": 1408,
+      "r_frame_rate": "24/1",
+      "avg_frame_rate": "24/1",
+      "time_base": "1/90000",
+      "nb_frames": "426"
+    },
+    "frames": 426,
+    "exact_pts": true
+  },
+  {
+    "sample": "rotated",
+    "mode": "after-rotated-nvenc",
+    "output": "feed.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "rotated",
+    "mode": "after-rotated-nvenc",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "rotated",
+    "mode": "after-rotated-nvenc-software",
+    "output": "feed.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "rotated",
+    "mode": "after-rotated-nvenc-software",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30000/1001",
+      "avg_frame_rate": "30000/1001",
+      "time_base": "1/30000",
+      "nb_frames": "90"
+    },
+    "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "vfr",
+    "mode": "after-vfr-nvenc",
+    "output": "feed.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "18/1",
+      "time_base": "1/15360",
+      "nb_frames": "54"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "18/1",
+      "time_base": "1/15360",
+      "nb_frames": "54"
+    },
+    "frames": 54,
+    "exact_pts": true
+  },
+  {
+    "sample": "vfr",
+    "mode": "after-vfr-nvenc",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "18/1",
+      "time_base": "1/15360",
+      "nb_frames": "54"
+    },
+    "result": {
+      "width": 320,
+      "height": 240,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "18/1",
+      "time_base": "1/15360",
+      "nb_frames": "54"
+    },
+    "frames": 54,
+    "exact_pts": true
+  }
+]

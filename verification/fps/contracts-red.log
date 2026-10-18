@@ -1,0 +1,42 @@
+tests/media_rendition_test.cpp: In function ‘void test_111()’:
+tests/media_rendition_test.cpp:112:24: error: ‘video_timing’ is not a member of ‘ow’
+  112 |  const auto source=ow::video_timing("#tb 0: 1/30000\n0, 0, 0, 1001, 9, x\n0, 1001, 1001, 1001, 9, x\n0, 2002, 2002, 1001, 9, x\n");
+      |                        ^~~~~~~~~~~~
+In file included from tests/media_rendition_test.cpp:1:
+tests/media_rendition_test.cpp:114:12: error: ‘same_video_timing’ is not a member of ‘ow’
+  114 |  CHECK(ow::same_video_timing(*source,*source));
+      |            ^~~~~~~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/media_rendition_test.cpp:117:19: error: ‘video_timing’ is not a member of ‘ow’
+  117 |   auto output=ow::video_timing(bad);CHECK(output);CHECK(!ow::same_video_timing(*source,*output));
+      |                   ^~~~~~~~~~~~
+tests/media_rendition_test.cpp:117:62: error: ‘same_video_timing’ is not a member of ‘ow’
+  117 |   auto output=ow::video_timing(bad);CHECK(output);CHECK(!ow::same_video_timing(*source,*output));
+      |                                                              ^~~~~~~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/media_rendition_test.cpp:119:13: error: ‘video_timing’ is not a member of ‘ow’
+  119 |  CHECK(!ow::video_timing("#tb 0: 0/0\n"));
+      |             ^~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/media_rendition_test.cpp:120:13: error: ‘video_timing’ is not a member of ‘ow’
+  120 |  CHECK(!ow::video_timing("#tb 0: 1/30\n0, 0, 0, 1, 9, x\n0, 1, 0, 1, 9, x\n"));
+      |             ^~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/media_rendition_test.cpp: In function ‘void test_122()’:
+tests/media_rendition_test.cpp:123:21: error: ‘video_timing’ is not a member of ‘ow’
+  123 |  const auto vfr=ow::video_timing("#tb 0: 1/90000\n0, 0, 0, 3000, 9, x\n0, 3000, 3000, 3001, 9, x\n0, 6001, 6001, 3000, 9, x\n");
+      |                     ^~~~~~~~~~~~
+tests/media_rendition_test.cpp:125:12: error: ‘same_video_timing’ is not a member of ‘ow’
+  125 |  CHECK(ow::same_video_timing(*vfr,*vfr));
+      |            ^~~~~~~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~

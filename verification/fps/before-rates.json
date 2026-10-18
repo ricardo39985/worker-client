@@ -1,0 +1,170 @@
+[
+  {
+    "file": "fractional-cuda-h264.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "fractional-cuda-hevc.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "fractional-software-h264.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "fractional-software-hevc.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "fractional.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "integer-cuda-h264.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "time_base": "1/15360",
+    "duration": "3.000000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "integer-cuda-hevc.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "time_base": "1/15360",
+    "duration": "3.000000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "integer-software-h264.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "time_base": "1/15360",
+    "duration": "3.000000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "integer-software-hevc.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "time_base": "1/15360",
+    "duration": "3.000000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "integer.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "time_base": "1/15360",
+    "duration": "3.000000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "real-source.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "766440000/25548029",
+    "time_base": "1/9000000",
+    "duration": "141.933494",
+    "nb_frames": "4258"
+  },
+  {
+    "file": "rotated-cuda-h264.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "rotated-cuda-hevc.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "rotated-software-h264.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "rotated-software-hevc.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "rotated.mp4",
+    "r_frame_rate": "30000/1001",
+    "avg_frame_rate": "30000/1001",
+    "time_base": "1/30000",
+    "duration": "3.003000",
+    "nb_frames": "90"
+  },
+  {
+    "file": "vfr-cuda-h264.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "1620/91",
+    "time_base": "1/15360",
+    "duration": "3.000000",
+    "nb_frames": "54"
+  },
+  {
+    "file": "vfr-cuda-hevc.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "1620/91",
+    "time_base": "1/15360",
+    "duration": "3.000000",
+    "nb_frames": "54"
+  },
+  {
+    "file": "vfr-software-h264.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "1620/91",
+    "time_base": "1/15360",
+    "duration": "3.000000",
+    "nb_frames": "54"
+  },
+  {
+    "file": "vfr-software-hevc.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "1620/91",
+    "time_base": "1/15360",
+    "duration": "3.000000",
+    "nb_frames": "54"
+  },
+  {
+    "file": "vfr.mp4",
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "18/1",
+    "time_base": "1/15360",
+    "duration": "2.966992",
+    "nb_frames": "54"
+  }
+]

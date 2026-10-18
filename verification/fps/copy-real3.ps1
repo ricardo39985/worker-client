@@ -1,0 +1,1 @@
+$ErrorActionPreference='Stop';$r=Join-Path $env:LOCALAPPDATA 'Temp\ow-fps-20261018';Copy-Item (Join-Path $env:LOCALAPPDATA 'OrganizerWorker\jobs\job-9fedceb6-e7fe-426d-967b-078cee8992fe\source.bin') (Join-Path $r 'real3.mp4');Write-Output 'MEASUREMENT_COPY_EXIT=0' 

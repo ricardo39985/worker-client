@@ -1,0 +1,42 @@
+[
+  {
+    "file": "rejected-cuda-demux.mp4",
+    "r_frame_rate": "20427/250",
+    "avg_frame_rate": "64750/1581",
+    "time_base": "1/90000",
+    "duration": "12.648000",
+    "nb_frames": "518"
+  },
+  {
+    "file": "rejected-cuda.mp4",
+    "r_frame_rate": "41/1",
+    "avg_frame_rate": "2103153055/51280669",
+    "time_base": "1/4662000",
+    "duration": "12.630268",
+    "nb_frames": "518"
+  },
+  {
+    "file": "rejected-software-demux.mp4",
+    "r_frame_rate": "20427/250",
+    "avg_frame_rate": "64750/1581",
+    "time_base": "1/90000",
+    "duration": "12.648000",
+    "nb_frames": "518"
+  },
+  {
+    "file": "rejected-software.mp4",
+    "r_frame_rate": "41/1",
+    "avg_frame_rate": "2103153055/51280669",
+    "time_base": "1/4662000",
+    "duration": "12.630268",
+    "nb_frames": "518"
+  },
+  {
+    "file": "rejected-source.mp4",
+    "r_frame_rate": "90000/1",
+    "avg_frame_rate": "4662000/114113",
+    "time_base": "1/90000",
+    "duration": "12.679222",
+    "nb_frames": "518"
+  }
+]

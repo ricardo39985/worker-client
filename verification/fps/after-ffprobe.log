@@ -1,0 +1,21 @@
+FFPROBE_RATE_AND_TIMESTAMP_CHECK_EXIT=0 OUTPUTS=20
+fractional after-fractional-nvenc feed.mp4 30000/1001 -> 30000/1001 FRAMES=90 EXACT_PTS=True
+fractional after-fractional-nvenc optimized.mp4 30000/1001 -> 30000/1001 FRAMES=90 EXACT_PTS=True
+fractional after-fractional-nvenc-software feed.mp4 30000/1001 -> 30000/1001 FRAMES=90 EXACT_PTS=True
+fractional after-fractional-nvenc-software optimized.mp4 30000/1001 -> 30000/1001 FRAMES=90 EXACT_PTS=True
+integer after-integer-nvenc feed.mp4 30/1 -> 30/1 FRAMES=90 EXACT_PTS=True
+integer after-integer-nvenc optimized.mp4 30/1 -> 30/1 FRAMES=90 EXACT_PTS=True
+integer after-integer-nvenc-software feed.mp4 30/1 -> 30/1 FRAMES=90 EXACT_PTS=True
+integer after-integer-nvenc-software optimized.mp4 30/1 -> 30/1 FRAMES=90 EXACT_PTS=True
+rejected after-rejected-nvenc feed.mp4 90000/1 -> 90000/1 FRAMES=518 EXACT_PTS=True
+rejected after-rejected-nvenc optimized.mp4 90000/1 -> 90000/1 FRAMES=518 EXACT_PTS=True
+rejected2 after-rejected2-nvenc feed.mp4 24/1 -> 24/1 FRAMES=426 EXACT_PTS=True
+rejected2 after-rejected2-nvenc optimized.mp4 24/1 -> 24/1 FRAMES=426 EXACT_PTS=True
+rejected2 after-rejected2-nvenc-software feed.mp4 24/1 -> 24/1 FRAMES=426 EXACT_PTS=True
+rejected2 after-rejected2-nvenc-software optimized.mp4 24/1 -> 24/1 FRAMES=426 EXACT_PTS=True
+rotated after-rotated-nvenc feed.mp4 30000/1001 -> 30000/1001 FRAMES=90 EXACT_PTS=True
+rotated after-rotated-nvenc optimized.mp4 30000/1001 -> 30000/1001 FRAMES=90 EXACT_PTS=True
+rotated after-rotated-nvenc-software feed.mp4 30000/1001 -> 30000/1001 FRAMES=90 EXACT_PTS=True
+rotated after-rotated-nvenc-software optimized.mp4 30000/1001 -> 30000/1001 FRAMES=90 EXACT_PTS=True
+vfr after-vfr-nvenc feed.mp4 30/1 -> 30/1 FRAMES=54 EXACT_PTS=True
+vfr after-vfr-nvenc optimized.mp4 30/1 -> 30/1 FRAMES=54 EXACT_PTS=True

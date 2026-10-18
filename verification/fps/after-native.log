@@ -1,0 +1,35 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+integer input-timing EXIT=0 MS=40
+integer nvenc feed EXIT=0 MS=289
+integer nvenc feed_optimized EXIT=0 MS=253
+integer input-timing EXIT=0 MS=31
+integer nvenc-software feed EXIT=0 MS=309
+integer nvenc-software feed_optimized EXIT=0 MS=253
+fractional input-timing EXIT=0 MS=32
+fractional nvenc feed EXIT=0 MS=256
+fractional nvenc feed_optimized EXIT=0 MS=295
+fractional input-timing EXIT=0 MS=33
+fractional nvenc-software feed EXIT=0 MS=258
+fractional nvenc-software feed_optimized EXIT=0 MS=250
+vfr input-timing EXIT=0 MS=31
+vfr nvenc feed EXIT=0 MS=88
+vfr nvenc feed_optimized EXIT=0 MS=391
+rotated input-timing EXIT=0 MS=31
+rotated nvenc feed EXIT=0 MS=257
+rotated nvenc feed_optimized EXIT=0 MS=254
+rotated input-timing EXIT=0 MS=32
+rotated nvenc-software feed EXIT=0 MS=296
+rotated nvenc-software feed_optimized EXIT=0 MS=252
+rejected input-timing EXIT=0 MS=54
+rejected nvenc feed EXIT=0 MS=2633
+rejected nvenc feed_optimized EXIT=0 MS=10867
+rejected2 input-timing EXIT=0 MS=43
+rejected2 nvenc feed EXIT=0 MS=807
+rejected2 nvenc feed_optimized EXIT=0 MS=858
+rejected2 input-timing EXIT=0 MS=44
+rejected2 nvenc-software feed EXIT=0 MS=1392
+rejected2 nvenc-software feed_optimized EXIT=0 MS=1376
+real3 input-timing EXIT=0 MS=85
+real3 nvenc feed EXIT=0 MS=64992

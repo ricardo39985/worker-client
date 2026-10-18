@@ -1,0 +1,232 @@
+[
+  {
+    "gate": "linux-configure",
+    "exit": 0,
+    "args": [
+      "cmake",
+      "-S",
+      "/home/rick/Downloads/worker-client-fps",
+      "-B",
+      "/home/rick/Downloads/worker-client-fps/build-final",
+      "-DBUILD_TESTING=ON",
+      "-DOW_BOOST_ROOT=/home/rick/.hermes/cache/scratch/boost-extract",
+      "-DCMAKE_BUILD_TYPE=Release"
+    ]
+  },
+  {
+    "gate": "linux-build",
+    "exit": 0,
+    "args": [
+      "cmake",
+      "--build",
+      "/home/rick/Downloads/worker-client-fps/build-final",
+      "--parallel",
+      "2"
+    ]
+  },
+  {
+    "gate": "linux-discovery",
+    "exit": 0
+  },
+  {
+    "gate": "linux-ffmpeg_dependency_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-final",
+      "-R",
+      "^ffmpeg_dependency_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/linux-ffmpeg_dependency_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-worker_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-final",
+      "-R",
+      "^worker_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/linux-worker_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-pipeline_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-final",
+      "-R",
+      "^pipeline_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/linux-pipeline_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-rendition_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-final",
+      "-R",
+      "^rendition_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/linux-rendition_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-adaptive_hardware_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-final",
+      "-R",
+      "^adaptive_hardware_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/linux-adaptive_hardware_contracts.xml"
+    ]
+  },
+  {
+    "gate": "linux-progress_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-final",
+      "-R",
+      "^progress_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/linux-progress_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-configure",
+    "exit": 0,
+    "args": [
+      "cmake",
+      "-S",
+      "/home/rick/Downloads/worker-client-fps",
+      "-B",
+      "/home/rick/Downloads/worker-client-fps/build-sanitize-final",
+      "-DBUILD_TESTING=ON",
+      "-DOW_BOOST_ROOT=/home/rick/.hermes/cache/scratch/boost-extract",
+      "-DCMAKE_BUILD_TYPE=Debug",
+      "-DOW_SANITIZE=ON",
+      "-DOW_ENABLE_IPO=OFF",
+      "-DCMAKE_CXX_FLAGS=-fsanitize=address,undefined -fno-omit-frame-pointer",
+      "-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address,undefined"
+    ]
+  },
+  {
+    "gate": "sanitize-build",
+    "exit": 0,
+    "args": [
+      "cmake",
+      "--build",
+      "/home/rick/Downloads/worker-client-fps/build-sanitize-final",
+      "--parallel",
+      "2"
+    ]
+  },
+  {
+    "gate": "sanitize-discovery",
+    "exit": 0
+  },
+  {
+    "gate": "sanitize-ffmpeg_dependency_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-sanitize-final",
+      "-R",
+      "^ffmpeg_dependency_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/sanitize-ffmpeg_dependency_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-worker_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-sanitize-final",
+      "-R",
+      "^worker_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/sanitize-worker_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-pipeline_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-sanitize-final",
+      "-R",
+      "^pipeline_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/sanitize-pipeline_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-rendition_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-sanitize-final",
+      "-R",
+      "^rendition_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/sanitize-rendition_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-adaptive_hardware_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-sanitize-final",
+      "-R",
+      "^adaptive_hardware_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/sanitize-adaptive_hardware_contracts.xml"
+    ]
+  },
+  {
+    "gate": "sanitize-progress_contracts",
+    "exit": 0,
+    "args": [
+      "ctest",
+      "--test-dir",
+      "/home/rick/Downloads/worker-client-fps/build-sanitize-final",
+      "-R",
+      "^progress_contracts$",
+      "-V",
+      "--output-junit",
+      "/home/rick/Downloads/worker-client-fps/verification/fps/sanitize-progress_contracts.xml"
+    ]
+  }
+]
