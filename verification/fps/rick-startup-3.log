@@ -1,0 +1,24 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+{
+    "schema":  1,
+    "directory":  "C:\\Users\\reald\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-1b4042d3bbfa85cc",
+    "sha256":  "1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f"
+}
+18/10 02:33:08  status
+  state      paused                   since 02:31:08 (starting)
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      Radeon RX V~ idle     HD Graphics~ idle     cpu idle
+  memory     ram free 1.5 GB   scratch free 459 GB
+  encoders   unknown
+  uptime     00:02:00
+2026-10-18 06:33:10.207Z PROBE PROGRESS | tuning cpu/hevc serial 1/2 5/8, 3 left | elapsed 2m01s
+2026-10-18 06:33:15.224Z PROBE PROGRESS | tuning cpu/hevc serial 1/2 5/8, 3 left | elapsed 2m06s
+2026-10-18 06:33:18.977Z TIMING stage=startup_child artifact=none wall_us=16500202 controller_cpu_us=0 child_cpu_us=8203125 launch_us=8745 root_lifetime_us=16481627 completed=true
+2026-10-18 06:33:20.225Z PROBE PROGRESS | tuning cpu/hevc serial 1/2 5/8, 3 left | elapsed 2m11s
+2026-10-18 06:33:20.304Z TIMING stage=startup_child artifact=none wall_us=1326417 controller_cpu_us=0 child_cpu_us=750000 launch_us=9811 root_lifetime_us=1237239 completed=true
+SSH_EXIT=0

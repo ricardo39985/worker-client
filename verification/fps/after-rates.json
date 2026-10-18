@@ -1,7 +1,7 @@
 [
   {
     "sample": "fractional",
-    "mode": "after-fractional-nvenc",
+    "mode": "after-r2-fractional-nvenc",
     "output": "feed.mp4",
     "source": {
       "width": 320,
@@ -24,7 +24,7 @@
   },
   {
     "sample": "fractional",
-    "mode": "after-fractional-nvenc",
+    "mode": "after-r2-fractional-nvenc",
     "output": "optimized.mp4",
     "source": {
       "width": 320,
@@ -47,7 +47,7 @@
   },
   {
     "sample": "fractional",
-    "mode": "after-fractional-nvenc-software",
+    "mode": "after-r2-fractional-nvenc-software",
     "output": "feed.mp4",
     "source": {
       "width": 320,
@@ -70,7 +70,7 @@
   },
   {
     "sample": "fractional",
-    "mode": "after-fractional-nvenc-software",
+    "mode": "after-r2-fractional-nvenc-software",
     "output": "optimized.mp4",
     "source": {
       "width": 320,
@@ -93,7 +93,7 @@
   },
   {
     "sample": "integer",
-    "mode": "after-integer-nvenc",
+    "mode": "after-r2-integer-nvenc",
     "output": "feed.mp4",
     "source": {
       "width": 320,
@@ -116,7 +116,7 @@
   },
   {
     "sample": "integer",
-    "mode": "after-integer-nvenc",
+    "mode": "after-r2-integer-nvenc",
     "output": "optimized.mp4",
     "source": {
       "width": 320,
@@ -139,7 +139,7 @@
   },
   {
     "sample": "integer",
-    "mode": "after-integer-nvenc-software",
+    "mode": "after-r2-integer-nvenc-software",
     "output": "feed.mp4",
     "source": {
       "width": 320,
@@ -162,7 +162,7 @@
   },
   {
     "sample": "integer",
-    "mode": "after-integer-nvenc-software",
+    "mode": "after-r2-integer-nvenc-software",
     "output": "optimized.mp4",
     "source": {
       "width": 320,
@@ -181,11 +181,57 @@
       "nb_frames": "90"
     },
     "frames": 90,
+    "exact_pts": true
+  },
+  {
+    "sample": "real3",
+    "mode": "after-r2-real3-nvenc",
+    "output": "feed.mp4",
+    "source": {
+      "width": 1080,
+      "height": 1920,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "766440000/25548029",
+      "time_base": "1/9000000",
+      "nb_frames": "4258"
+    },
+    "result": {
+      "width": 1080,
+      "height": 1920,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "1916100000/63870029",
+      "time_base": "1/9000000",
+      "nb_frames": "4258"
+    },
+    "frames": 4258,
+    "exact_pts": true
+  },
+  {
+    "sample": "real3",
+    "mode": "after-r2-real3-nvenc",
+    "output": "optimized.mp4",
+    "source": {
+      "width": 1080,
+      "height": 1920,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "766440000/25548029",
+      "time_base": "1/9000000",
+      "nb_frames": "4258"
+    },
+    "result": {
+      "width": 1080,
+      "height": 1920,
+      "r_frame_rate": "30/1",
+      "avg_frame_rate": "1916100000/63870029",
+      "time_base": "1/9000000",
+      "nb_frames": "4258"
+    },
+    "frames": 4258,
     "exact_pts": true
   },
   {
     "sample": "rejected",
-    "mode": "after-rejected-nvenc",
+    "mode": "after-r2-rejected-nvenc",
     "output": "feed.mp4",
     "source": {
       "width": 580,
@@ -208,7 +254,7 @@
   },
   {
     "sample": "rejected",
-    "mode": "after-rejected-nvenc",
+    "mode": "after-r2-rejected-nvenc",
     "output": "optimized.mp4",
     "source": {
       "width": 580,
@@ -231,7 +277,7 @@
   },
   {
     "sample": "rejected2",
-    "mode": "after-rejected2-nvenc",
+    "mode": "after-r2-rejected2-nvenc",
     "output": "feed.mp4",
     "source": {
       "width": 720,
@@ -254,7 +300,7 @@
   },
   {
     "sample": "rejected2",
-    "mode": "after-rejected2-nvenc",
+    "mode": "after-r2-rejected2-nvenc",
     "output": "optimized.mp4",
     "source": {
       "width": 720,
@@ -277,7 +323,7 @@
   },
   {
     "sample": "rejected2",
-    "mode": "after-rejected2-nvenc-software",
+    "mode": "after-r2-rejected2-nvenc-software",
     "output": "feed.mp4",
     "source": {
       "width": 720,
@@ -300,7 +346,7 @@
   },
   {
     "sample": "rejected2",
-    "mode": "after-rejected2-nvenc-software",
+    "mode": "after-r2-rejected2-nvenc-software",
     "output": "optimized.mp4",
     "source": {
       "width": 720,
@@ -323,7 +369,7 @@
   },
   {
     "sample": "rotated",
-    "mode": "after-rotated-nvenc",
+    "mode": "after-r2-rotated-nvenc",
     "output": "feed.mp4",
     "source": {
       "width": 320,
@@ -346,7 +392,7 @@
   },
   {
     "sample": "rotated",
-    "mode": "after-rotated-nvenc",
+    "mode": "after-r2-rotated-nvenc",
     "output": "optimized.mp4",
     "source": {
       "width": 320,
@@ -369,7 +415,7 @@
   },
   {
     "sample": "rotated",
-    "mode": "after-rotated-nvenc-software",
+    "mode": "after-r2-rotated-nvenc-software",
     "output": "feed.mp4",
     "source": {
       "width": 320,
@@ -392,7 +438,7 @@
   },
   {
     "sample": "rotated",
-    "mode": "after-rotated-nvenc-software",
+    "mode": "after-r2-rotated-nvenc-software",
     "output": "optimized.mp4",
     "source": {
       "width": 320,
@@ -415,7 +461,7 @@
   },
   {
     "sample": "vfr",
-    "mode": "after-vfr-nvenc",
+    "mode": "after-r2-vfr-nvenc",
     "output": "feed.mp4",
     "source": {
       "width": 320,
@@ -429,7 +475,7 @@
       "width": 320,
       "height": 240,
       "r_frame_rate": "30/1",
-      "avg_frame_rate": "18/1",
+      "avg_frame_rate": "1620/91",
       "time_base": "1/15360",
       "nb_frames": "54"
     },
@@ -438,7 +484,7 @@
   },
   {
     "sample": "vfr",
-    "mode": "after-vfr-nvenc",
+    "mode": "after-r2-vfr-nvenc",
     "output": "optimized.mp4",
     "source": {
       "width": 320,
@@ -452,7 +498,7 @@
       "width": 320,
       "height": 240,
       "r_frame_rate": "30/1",
-      "avg_frame_rate": "18/1",
+      "avg_frame_rate": "1620/91",
       "time_base": "1/15360",
       "nb_frames": "54"
     },

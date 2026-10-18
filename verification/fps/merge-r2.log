@@ -1,0 +1,7 @@
+Updating 591748a..456eecc
+Fast-forward
+ include/ow/media_renditions.hpp |  2 +-
+ tests/media_rendition_probe.cpp |  6 ++++++
+ tests/media_rendition_test.cpp  |  2 +-
+ windows/worker.cpp              | 12 ++++++------
+ 4 files changed, 14 insertions(+), 8 deletions(-)

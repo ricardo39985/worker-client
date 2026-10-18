@@ -92,11 +92,11 @@ test 5
 5: PASS larger GPU memory is reserved atomically and held until the job drains
 5: PASS allocation failures under a child cap retain resolution and budget through recovery status
 5: 78 contracts, 0 failures
-1/1 Test #5: adaptive_hardware_contracts ......   Passed    0.09 sec
+1/1 Test #5: adaptive_hardware_contracts ......   Passed    0.08 sec
 
 The following tests passed:
 	adaptive_hardware_contracts
 
 100% tests passed, 0 tests failed out of 1
 
-Total Test time (real) =   0.09 sec
+Total Test time (real) =   0.08 sec

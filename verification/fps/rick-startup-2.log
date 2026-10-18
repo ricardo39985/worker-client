@@ -1,0 +1,24 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+{
+    "schema":  1,
+    "directory":  "C:\\Users\\reald\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-1b4042d3bbfa85cc",
+    "sha256":  "1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f"
+}
+18/10 02:32:08  status
+  state      paused                   since 02:31:08 (starting)
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      Radeon RX V~ idle     HD Graphics~ idle     cpu idle
+  memory     ram free 1.4 GB   scratch free 459 GB
+  encoders   unknown
+  uptime     00:01:00
+2026-10-18 06:32:24.673Z PROBE PROGRESS | tuning cpu/hevc encode 1/2 5/8, 3 left | elapsed 1m15s
+2026-10-18 06:32:27.450Z TIMING stage=startup_child artifact=none wall_us=17124553 controller_cpu_us=15625 child_cpu_us=8968750 launch_us=4173 root_lifetime_us=17053185 completed=true
+2026-10-18 06:32:28.652Z TIMING stage=startup_child artifact=none wall_us=1201630 controller_cpu_us=15625 child_cpu_us=781250 launch_us=7481 root_lifetime_us=1123848 completed=true
+2026-10-18 06:32:29.758Z PROBE PROGRESS | tuning cpu/hevc encode 2/2 5/8, 3 left | elapsed 1m21s
+2026-10-18 06:32:34.778Z PROBE PROGRESS | tuning cpu/hevc encode 2/2 5/8, 3 left | elapsed 1m26s
+SSH_EXIT=0

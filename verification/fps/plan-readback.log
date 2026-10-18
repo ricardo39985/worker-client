@@ -1,0 +1,26 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+after-fractional-nvenc feed decode=cuda encoder=h264_nvenc
+after-fractional-nvenc feed_optimized decode=cuda encoder=hevc_nvenc
+after-fractional-nvenc-software feed decode=software encoder=h264_nvenc
+after-fractional-nvenc-software feed_optimized decode=software encoder=hevc_nvenc
+after-integer-nvenc feed decode=cuda encoder=h264_nvenc
+after-integer-nvenc feed_optimized decode=cuda encoder=hevc_nvenc
+after-integer-nvenc-software feed decode=software encoder=h264_nvenc
+after-integer-nvenc-software feed_optimized decode=software encoder=hevc_nvenc
+after-real3-nvenc feed decode=software encoder=libx264
+after-real3-nvenc feed_optimized decode=software encoder=libx265
+after-rejected-nvenc feed decode=software encoder=libx264
+after-rejected-nvenc feed_optimized decode=software encoder=libx265
+after-rejected2-nvenc feed decode=cuda encoder=h264_nvenc
+after-rejected2-nvenc feed_optimized decode=cuda encoder=hevc_nvenc
+after-rejected2-nvenc-software feed decode=software encoder=h264_nvenc
+after-rejected2-nvenc-software feed_optimized decode=software encoder=hevc_nvenc
+after-rotated-nvenc feed decode=cuda encoder=h264_nvenc
+after-rotated-nvenc feed_optimized decode=cuda encoder=hevc_nvenc
+after-rotated-nvenc-software feed decode=software encoder=h264_nvenc
+after-rotated-nvenc-software feed_optimized decode=software encoder=hevc_nvenc
+after-vfr-nvenc feed decode=software encoder=libx264
+after-vfr-nvenc feed_optimized decode=software encoder=libx265
+SSH_EXIT=0

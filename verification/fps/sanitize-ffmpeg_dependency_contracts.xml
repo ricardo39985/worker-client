@@ -6,13 +6,13 @@
 	skipped="0"
 	hostname="rick-Inspiron-16-5625"
 	time="0"
-	timestamp="2026-10-18T02:15:58"
+	timestamp="2026-10-18T02:24:51"
 	>
-	<testcase name="ffmpeg_dependency_contracts" classname="ffmpeg_dependency_contracts" time="0.197046" status="run">
+	<testcase name="ffmpeg_dependency_contracts" classname="ffmpeg_dependency_contracts" time="0.152399" status="run">
 		<properties/>
 		<system-out>.......................
 ----------------------------------------------------------------------
-Ran 23 tests in 0.114s
+Ran 23 tests in 0.090s
 
 OK
 </system-out>

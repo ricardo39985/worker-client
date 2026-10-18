@@ -6,9 +6,9 @@
 	skipped="0"
 	hostname="rick-Inspiron-16-5625"
 	time="0"
-	timestamp="2026-10-18T02:15:58"
+	timestamp="2026-10-18T02:24:51"
 	>
-	<testcase name="worker_contracts" classname="worker_contracts" time="0.106377" status="run">
+	<testcase name="worker_contracts" classname="worker_contracts" time="0.0921396" status="run">
 		<properties/>
 		<system-out>PASS verified capabilities accept independent jobs concurrently
 PASS four single-CPU app jobs reserve and begin independently within configured limits

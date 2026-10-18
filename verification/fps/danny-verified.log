@@ -1,0 +1,40 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+INSTALLED_VERSION=0.1.2-1b4042d3bbfa85cc
+INSTALLED_SHA256=1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f
+INSTALLED_REVISION=456eecca81635c30b7edb524165010f8fb9218ff
+PROCESS_PID=36272 SESSION=1 RUNTIME_STATE=running
+2026-10-18 06:27:58.959Z WORKER STARTED | counts since this process; H for last 10 outcomes
+2026-10-18 06:27:58.962Z 18/10 02:27:58 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:00 | running 0 | ram free 45.9 GB | scratch free 111 GB | priority maximum | paused: starting (since 02:27:58)
+2026-10-18 06:27:58.963Z   encoders   unknown
+2026-10-18 06:28:28.995Z 18/10 02:28:28 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:30 | running 0 | ram free 45.6 GB | scratch free 111 GB | priority maximum | paused: starting (since 02:27:58)
+2026-10-18 06:28:59.017Z 18/10 02:28:59 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:01:00 | running 0 | ram free 45.6 GB | scratch free 111 GB | priority maximum | paused: starting (since 02:27:58)
+2026-10-18 06:29:29.040Z 18/10 02:29:29 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:01:30 | running 0 | ram free 45.6 GB | scratch free 111 GB | priority maximum | paused: starting (since 02:27:58)
+2026-10-18 06:29:59.071Z 18/10 02:29:59 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:00 | running 0 | ram free 45.4 GB | scratch free 111 GB | priority maximum | paused: starting (since 02:27:58)
+2026-10-18 06:30:05.380Z PROBE RESULT app_video=1 app_image=1 video=1 image=1 encoders=cpu,nvenc
+2026-10-18 06:30:05.380Z PROBE DEVICES schedulable GPUs=2
+2026-10-18 06:30:05.380Z GPU DEVICE | nvenc GPU 0 | NVIDIA GeForce RTX 3070 | device_id=pci:10de:2488:153a10de:a1:luid:00000000:0001418e physical_id=PCI\VEN_10DE&DEV_2488&SUBSYS_153A10DE&REV_A1\4&22651C9C&0&0008
+2026-10-18 06:30:05.380Z GPU DEVICE | nvenc GPU 1 | NVIDIA GeForce RTX 3050 | device_id=pci:10de:2507:c9781462:a1:luid:00000000:00016411 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8
+2026-10-18 06:30:05.380Z PROBE DETAIL Adaptive media setup: CPU=12th Gen Intel(R) Core(TM) i7-12700KF logical=20 RAM_total_MB=65381 RAM_available_MB=43765 disk_total_MB=475823 disk_available_MB=106312 approved_ffmpeg_sha256=f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4; display inventory entries=4 [NVIDIA GeForce RTX 3070 id=pci:10de:2488:153a10de:a1:luid:00000000:0001418e dedicated_VRAM_MB=8017 driver=200000.1006ce physical_id=PCI\VEN_10DE&DEV_2488&SUBSYS_153A10DE&REV_A1\4&22651C9C&0&0008 ] [NVIDIA GeForce RTX 3050 id=pci:10de:2507:c9781462:a1:luid:00000000:00016411 dedicated_VRAM_MB=8041 driver=200000.1006ce physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 ] [NVIDIA GeForce RTX 3070 id=pci:10de:2488:153a10de:a1:luid:00000000:0001e79a dedicated_VRAM_MB=8017 driver=200000.1006ce physical_id=ROOT\DISPLAY\0000 software adapter (ROOT instance); excluded from capacity and scheduling] [Microsoft Basic Render Driver id=pci:1414:008c:00000000:00:luid:00000000:000163c2 dedicated_VRAM_MB=0 driver=a0000.65f425ef physical_id= unsupported or unmappable display adapter; GPU profile withheld]; schedulable GPUs=2; retained sample profiles=6; app video=CPU fallback sampled app image=sample passed; chosen CPU H.264 at 20.002778 synthetic fps at 1920x1080 child_budget_MiB=512 with concurrency=2; chosen NVIDIA NVENC H.264 at 60.965284 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); chosen NVIDIA NVENC H.264 at 60.965284 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); chosen CPU HEVC at 6.212520 synthetic fps at 1920x1080 child_budget_MiB=512 with concurrency=2; chosen NVIDIA NVENC HEVC at 60.657119 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); chosen NVIDIA NVENC HEVC at 55.857254 synthetic fps at 1920x1080 child_budget_MiB=768 with concurrency=1 (declared-VRAM estimate); fallback Intel QSV adapter not detected; fallback AMD AMF adapter not detected; fallback NVIDIA GeForce RTX 3070 device_id=pci:10de:2488:153a10de:a1:luid:00000000:0001e79a physical_id=ROOT\DISPLAY\0000 software adapter (ROOT instance); excluded from capacity and scheduling; fallback Microsoft Basic Render Driver device_id=pci:1414:008c:00000000:00:luid:00000000:000163c2 physical_id= unsupported or unmappable display adapter; GPU profile withheld; fallback NVIDIA GeForce RTX 3070 device_id=pci:10de:2488:153a10de:a1:luid:00000000:0001e79a physical_id=ROOT\DISPLAY\0000 software adapter (ROOT instance); excluded from capacity and scheduling; fallback Microsoft Basic Render Driver device_id=pci:1414:008c:00000000:00:luid:00000000:000163c2 physical_id= unsupported or unmappable display adapter; GPU profile withheld
+2026-10-18 06:30:05.570Z STATE CONNECTED
+2026-10-18 06:30:05.570Z 18/10 02:30:05 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:06 | running 0 | ram free 45.9 GB | scratch free 111 GB | priority maximum | accepting: connected (since 02:30:05)
+2026-10-18 06:30:35.668Z 18/10 02:30:35 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:36 | running 0 | ram free 46.1 GB | scratch free 111 GB | priority maximum | accepting: connected (since 02:30:05)
+IDLE_TABLE_BEGIN
+18/10 02:30:35  status
+  state      accepting                since 02:30:05
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      RTX 3070 idle         RTX 3050 idle         cpu idle
+  memory     ram free 46.1 GB   scratch free 111 GB
+  encoders   cpu,nvenc
+  uptime     00:02:36
+
+IDLE_TABLE_END
+ROLLBACK_PENDING=False
+CONNECTED_ACCEPTING_IDLE_VERIFIED=True
+PREVIOUS_VERSION_RETAINED=True SHA256=db2bc15dc83612bb3eb833a4a1b1b21b782a60f1481fdc4b360022eba76fb278
+STAGING_EXISTS=True
+SSH_EXIT=0

@@ -28,11 +28,11 @@ test 4
 4: PASS timing inspection tolerates B frame packet order and equivalent time bases
 4: PASS CUDA decode requires complete constant rate evidence
 4: 14 contracts, 0 failures
-1/1 Test #4: rendition_contracts ..............   Passed    0.05 sec
+1/1 Test #4: rendition_contracts ..............   Passed    0.04 sec
 
 The following tests passed:
 	rendition_contracts
 
 100% tests passed, 0 tests failed out of 1
 
-Total Test time (real) =   0.05 sec
+Total Test time (real) =   0.04 sec

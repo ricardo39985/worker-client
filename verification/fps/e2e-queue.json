@@ -1,0 +1,7 @@
+{
+  "queue_exit": 1,
+  "queued_app_jobs": 0,
+  "transaction_rolled_back": true,
+  "reason": "Approved source parent item is deleted; not restored",
+  "acceptance": "unverified"
+}

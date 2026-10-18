@@ -78,11 +78,11 @@ test 6
 6: PASS encoder placement remains short blue activity with distinct device and CPU retry
 6: PASS the short log distinguishes schedulable card count from raw DXGI inventory
 6: 64 contracts, 0 failures
-1/1 Test #6: progress_contracts ...............   Passed    0.02 sec
+1/1 Test #6: progress_contracts ...............   Passed    0.01 sec
 
 The following tests passed:
 	progress_contracts
 
 100% tests passed, 0 tests failed out of 1
 
-Total Test time (real) =   0.02 sec
+Total Test time (real) =   0.01 sec

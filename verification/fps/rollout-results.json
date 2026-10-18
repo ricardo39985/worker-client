@@ -1,0 +1,26 @@
+{
+  "danny": {
+    "version": "0.1.2-1b4042d3bbfa85cc",
+    "sha256": "1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f",
+    "revision": "456eecca81635c30b7edb524165010f8fb9218ff",
+    "process": "36272 SESSION=1 RUNTIME_STATE=running",
+    "install_exit": 0,
+    "independent_verify_exit": 0,
+    "connected_accepting_idle": true,
+    "staging_exists": false,
+    "previous_version_retained": true,
+    "identity_and_configuration_unchanged": true
+  },
+  "rick": {
+    "version": "0.1.2-1b4042d3bbfa85cc",
+    "sha256": "1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f",
+    "revision": "456eecca81635c30b7edb524165010f8fb9218ff",
+    "process": "19528 SESSION=1 RUNTIME_STATE=running",
+    "install_exit": 0,
+    "independent_verify_exit": 0,
+    "connected_accepting_idle": true,
+    "staging_exists": false,
+    "previous_version_retained": true,
+    "identity_and_configuration_unchanged": true
+  }
+}

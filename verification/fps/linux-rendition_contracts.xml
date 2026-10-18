@@ -6,9 +6,9 @@
 	skipped="0"
 	hostname="rick-Inspiron-16-5625"
 	time="0"
-	timestamp="2026-10-18T02:15:57"
+	timestamp="2026-10-18T02:24:27"
 	>
-	<testcase name="rendition_contracts" classname="rendition_contracts" time="0.00337187" status="run">
+	<testcase name="rendition_contracts" classname="rendition_contracts" time="0.00253376" status="run">
 		<properties/>
 		<system-out>PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
 PASS app image renders a full-size WebP and bounded poster with independent destinations

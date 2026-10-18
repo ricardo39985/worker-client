@@ -6,9 +6,9 @@
 	skipped="0"
 	hostname="rick-Inspiron-16-5625"
 	time="0"
-	timestamp="2026-10-18T02:15:57"
+	timestamp="2026-10-18T02:24:27"
 	>
-	<testcase name="adaptive_hardware_contracts" classname="adaptive_hardware_contracts" time="0.0250006" status="run">
+	<testcase name="adaptive_hardware_contracts" classname="adaptive_hardware_contracts" time="0.0242727" status="run">
 		<properties/>
 		<system-out>PASS CPU remains the safe profile when no supported GPU is installed
 PASS GPU adapter and compiled encoder listing do not qualify a broken driver

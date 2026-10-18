@@ -93,11 +93,11 @@ test 2
 2: PASS rate limited polling waits and remains bounded by pairing expiry
 2: PASS invalid permanent tokens and worker ids never reach credential storage
 2: 79 contracts, 0 failures
-1/1 Test #2: worker_contracts .................   Passed    0.11 sec
+1/1 Test #2: worker_contracts .................   Passed    0.09 sec
 
 The following tests passed:
 	worker_contracts
 
 100% tests passed, 0 tests failed out of 1
 
-Total Test time (real) =   0.11 sec
+Total Test time (real) =   0.09 sec

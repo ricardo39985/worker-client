@@ -78,11 +78,11 @@ test 6
 6: PASS one unavailable CPU measurement makes aggregate CPU unavailable
 6: PASS job CPU includes main thread once plus background CPU and all child trees
 6: 64 contracts, 0 failures
-1/1 Test #6: progress_contracts ...............   Passed    0.56 sec
+1/1 Test #6: progress_contracts ...............   Passed    0.50 sec
 
 The following tests passed:
 	progress_contracts
 
 100% tests passed, 0 tests failed out of 1
 
-Total Test time (real) =   0.56 sec
+Total Test time (real) =   0.50 sec

@@ -1,0 +1,3 @@
+EXISTING_RENDITIONS=[]
+JOB_COLUMNS=[["id"], ["item_id"], ["kind"], ["state"], ["attempts"], ["run_after"], ["lease_until"], ["lease_token"], ["last_error"], ["created_at"], ["payload"], ["profile_user_id"]]
+READONLY_EXIT=0

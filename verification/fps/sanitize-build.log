@@ -1,9 +1,21 @@
 [  9%] Built target ow_pipeline_contract_tests
 [ 15%] Built target ow_json
-[ 27%] Built target ow_rendition_probe
-[ 30%] Built target ow_rendition_contract_tests
-[ 48%] Built target ow_progress_contract_tests
-[ 66%] Built target ow_core
-[ 75%] Built target ow_adaptive_hardware_contract_tests
-[ 93%] Built target ow_contract_tests
-[100%] Built target ow_adaptive_evidence_probe
+[ 21%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 21%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 24%] Linking CXX executable ow_rendition_probe
+[ 24%] Built target ow_rendition_probe
+[ 27%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 30%] Linking CXX executable ow_rendition_contract_tests
+[ 33%] Built target ow_rendition_contract_tests
+[ 36%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 39%] Linking CXX static library libow_core.a
+[ 51%] Built target ow_core
+[ 54%] Linking CXX executable ow_contract_tests
+[ 69%] Built target ow_contract_tests
+[ 72%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 75%] Linking CXX executable ow_progress_contract_tests
+[ 87%] Built target ow_progress_contract_tests
+[ 90%] Linking CXX executable ow_adaptive_evidence_probe
+[ 93%] Built target ow_adaptive_evidence_probe
+[ 96%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[100%] Built target ow_adaptive_hardware_contract_tests

@@ -2,7 +2,7 @@
 ** This session may be vulnerable to "store now, decrypt later" attacks.
 ** The server may need to be upgraded. See https://openssh.com/pq.html
 PACKAGE_TAR_EXIT=0
-PACKAGE_MANIFEST_SHA256=8d29ee6567518c73a00b59061a267bfdd095d21f058137d5338995e1e039a9c4
-PACKAGE_TAR_SHA256=db9a5210aaa327a5358b27b4c40913d6eaeee328bc0726cacda16c97efcdd29b
-PACKAGE_INFO={"schema":1,"revision":"1d21709963fda04349699ba6494a22cc24ef6adc","files":{"OrganizerWorker.exe":"e45b21c7bba070cf5cc31710b128c5e6ea97eda8c2fc9c3e9627265cbe7b490b","OrganizerWorkerConsole.exe":"95ab3df3b0d8300bf2234705c39f7d9c12d70ed443edafa1f16dbaa5b7767ce7","OrganizerWorkerDoctor.exe":"e98f9900630f90e519897ebc62815a330b63b7c4f8b35305b1428d5e4e54a497"}}
+PACKAGE_MANIFEST_SHA256=820ce6b4d55ab2bc15485aa81fc39bf9eb5738a6192078da6057c5c45263cf45
+PACKAGE_TAR_SHA256=31ff97c98796feb6c71d76b6c5733ca0af016b60612b7c2c6ad9b09eda2b0bd9
+PACKAGE_INFO={"schema":1,"revision":"456eecca81635c30b7edb524165010f8fb9218ff","files":{"OrganizerWorker.exe":"1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f","OrganizerWorkerConsole.exe":"09d512b6d3259cc46dc968d237b301dfe8b4dc6989944a5298245085539cf5fc","OrganizerWorkerDoctor.exe":"60a4ed35de2c9470c91ac1dd18a42ed1d36e193ea1f804b633c2a25b761291f0"}}
 SSH_EXIT=0

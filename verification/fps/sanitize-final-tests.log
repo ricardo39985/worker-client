@@ -1,0 +1,17 @@
+Test project /home/rick/Downloads/worker-client-fps/build-sanitize-final
+    Start 1: ffmpeg_dependency_contracts
+1/6 Test #1: ffmpeg_dependency_contracts ......   Passed    0.16 sec
+    Start 2: worker_contracts
+2/6 Test #2: worker_contracts .................   Passed    0.09 sec
+    Start 3: pipeline_contracts
+3/6 Test #3: pipeline_contracts ...............   Passed    0.02 sec
+    Start 4: rendition_contracts
+4/6 Test #4: rendition_contracts ..............   Passed    0.04 sec
+    Start 5: adaptive_hardware_contracts
+5/6 Test #5: adaptive_hardware_contracts ......   Passed    0.08 sec
+    Start 6: progress_contracts
+6/6 Test #6: progress_contracts ...............   Passed    0.48 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) =   0.87 sec

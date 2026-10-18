@@ -1,0 +1,24 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+{
+    "schema":  1,
+    "directory":  "C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-1b4042d3bbfa85cc",
+    "sha256":  "1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f"
+}
+18/10 02:29:29  status
+  state      paused                   since 02:27:58 (starting)
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      RTX 3070 idle         RTX 3050 idle         cpu idle
+  memory     ram free 45.6 GB   scratch free 111 GB
+  encoders   unknown
+  uptime     00:01:30
+2026-10-18 06:29:39.879Z PROBE PROGRESS | tuning cpu/hevc serial 2/2 6/10, 4 left | elapsed 1m40s
+2026-10-18 06:29:44.926Z PROBE PROGRESS | tuning cpu/hevc serial 2/2 6/10, 4 left | elapsed 1m45s
+2026-10-18 06:29:47.865Z TIMING stage=startup_child artifact=none wall_us=10413920 controller_cpu_us=0 child_cpu_us=5562500 launch_us=4323 root_lifetime_us=10395438 completed=true
+2026-10-18 06:29:48.617Z TIMING stage=startup_child artifact=none wall_us=751323 controller_cpu_us=0 child_cpu_us=468750 launch_us=4730 root_lifetime_us=710236 completed=true
+2026-10-18 06:29:49.967Z PROBE PROGRESS | tuning cpu/hevc parallel 2/2 6/10, 4 left | elapsed 1m51s
+SSH_EXIT=0

@@ -1,0 +1,3 @@
+$ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue';$r=Join-Path $env:LOCALAPPDATA 'Temp\ow-fps-20261018';$p=Join-Path $r 'ow_rendition_probe.exe'
+foreach($w in Get-ChildItem $r -Directory -Filter 'after-*'){$mode=if($w.Name.EndsWith('nvenc-software')){'nvenc-software'}else{'nvenc'}
+foreach($line in (& $p $mode encode $w.FullName)){$parts=$line -split "`t";if($parts[0] -eq 'thumbnail'){continue};$codec=$parts[[array]::IndexOf($parts,'-c:v')+1];$decode=if('-hwaccel_output_format' -in $parts){'cuda'}else{'software'};Write-Output ($w.Name+' '+$parts[0]+' decode='+$decode+' encoder='+$codec)}}

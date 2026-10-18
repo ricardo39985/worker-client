@@ -1,0 +1,24 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+{
+    "schema":  1,
+    "directory":  "C:\\Users\\reald\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-1b4042d3bbfa85cc",
+    "sha256":  "1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f"
+}
+18/10 02:31:08  status
+  state      paused                   since 02:31:08 (starting)
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      unknown               cpu idle
+  memory     ram free 1.7 GB   scratch free 459 GB
+  encoders   unknown
+  uptime     00:00:00
+2026-10-18 06:31:34.138Z PROBE PROGRESS | tuning cpu/h264 parallel 1/2 1/8, 7 left | elapsed 25s
+2026-10-18 06:31:37.018Z TIMING stage=startup_child artifact=none wall_us=5293822 controller_cpu_us=0 child_cpu_us=2828125 launch_us=9642 root_lifetime_us=5242244 completed=true
+2026-10-18 06:31:37.018Z TIMING stage=startup_child artifact=none wall_us=5299814 controller_cpu_us=0 child_cpu_us=2890625 launch_us=9444 root_lifetime_us=5253410 completed=true
+2026-10-18 06:31:37.779Z TIMING stage=startup_child artifact=none wall_us=760183 controller_cpu_us=0 child_cpu_us=578125 launch_us=8266 root_lifetime_us=629373 completed=true
+2026-10-18 06:31:37.779Z TIMING stage=startup_child artifact=none wall_us=760128 controller_cpu_us=0 child_cpu_us=578125 launch_us=9240 root_lifetime_us=643062 completed=true
+SSH_EXIT=0

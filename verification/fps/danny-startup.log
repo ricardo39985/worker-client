@@ -1,0 +1,24 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+{
+    "schema":  1,
+    "directory":  "C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-1b4042d3bbfa85cc",
+    "sha256":  "1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f"
+}
+18/10 02:27:58  status
+  state      paused                   since 02:27:58 (starting)
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      unknown               cpu idle
+  memory     ram free 45.9 GB   scratch free 111 GB
+  encoders   unknown
+  uptime     00:00:00
+2026-10-18 06:28:19.015Z TIMING stage=startup_child artifact=none wall_us=2579988 controller_cpu_us=15625 child_cpu_us=1562500 launch_us=4255 root_lifetime_us=2533337 completed=true
+2026-10-18 06:28:19.244Z PROBE PROGRESS | tuning cpu/h264 serial 2/2 1/10, 9 left | elapsed 20s
+2026-10-18 06:28:19.444Z TIMING stage=startup_child artifact=none wall_us=428712 controller_cpu_us=0 child_cpu_us=296875 launch_us=4491 root_lifetime_us=326834 completed=true
+2026-10-18 06:28:22.032Z TIMING stage=startup_child artifact=none wall_us=2585210 controller_cpu_us=0 child_cpu_us=1468750 launch_us=4354 root_lifetime_us=2492574 completed=true
+2026-10-18 06:28:22.354Z TIMING stage=startup_child artifact=none wall_us=321437 controller_cpu_us=0 child_cpu_us=328125 launch_us=4321 root_lifetime_us=283446 completed=true
+SSH_EXIT=0

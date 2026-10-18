@@ -1,0 +1,20 @@
+[
+  {
+    "step": "fetch",
+    "exit": 0
+  },
+  {
+    "step": "merge",
+    "exit": 0
+  },
+  {
+    "step": "push",
+    "exit": 0
+  },
+  {
+    "step": "remote_readback",
+    "exit": 0,
+    "local_main": "456eecca81635c30b7edb524165010f8fb9218ff",
+    "remote_main": "456eecca81635c30b7edb524165010f8fb9218ff"
+  }
+]

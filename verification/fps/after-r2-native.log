@@ -1,0 +1,87 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+integer input-timing EXIT=0 MS=41
+integer nvenc feed EXIT=0 MS=284
+integer feed output-timing EXIT=0 MS=27
+FINAL_TIMING_VALIDATION integer feed EXIT=0
+integer nvenc feed_optimized EXIT=0 MS=262
+integer feed_optimized output-timing EXIT=0 MS=26
+FINAL_TIMING_VALIDATION integer feed_optimized EXIT=0
+integer input-timing EXIT=0 MS=31
+integer nvenc-software feed EXIT=0 MS=264
+integer feed output-timing EXIT=0 MS=27
+FINAL_TIMING_VALIDATION integer feed EXIT=0
+integer nvenc-software feed_optimized EXIT=0 MS=255
+integer feed_optimized output-timing EXIT=0 MS=25
+FINAL_TIMING_VALIDATION integer feed_optimized EXIT=0
+fractional input-timing EXIT=0 MS=31
+fractional nvenc feed EXIT=0 MS=264
+fractional feed output-timing EXIT=0 MS=27
+FINAL_TIMING_VALIDATION fractional feed EXIT=0
+fractional nvenc feed_optimized EXIT=0 MS=295
+fractional feed_optimized output-timing EXIT=0 MS=36
+FINAL_TIMING_VALIDATION fractional feed_optimized EXIT=0
+fractional input-timing EXIT=0 MS=31
+fractional nvenc-software feed EXIT=0 MS=259
+fractional feed output-timing EXIT=0 MS=28
+FINAL_TIMING_VALIDATION fractional feed EXIT=0
+fractional nvenc-software feed_optimized EXIT=0 MS=260
+fractional feed_optimized output-timing EXIT=0 MS=25
+FINAL_TIMING_VALIDATION fractional feed_optimized EXIT=0
+vfr input-timing EXIT=0 MS=31
+vfr nvenc feed EXIT=0 MS=286
+vfr feed output-timing EXIT=0 MS=27
+FINAL_TIMING_VALIDATION vfr feed EXIT=0
+vfr nvenc feed_optimized EXIT=0 MS=241
+vfr feed_optimized output-timing EXIT=0 MS=25
+FINAL_TIMING_VALIDATION vfr feed_optimized EXIT=0
+rotated input-timing EXIT=0 MS=31
+rotated nvenc feed EXIT=0 MS=259
+rotated feed output-timing EXIT=0 MS=27
+FINAL_TIMING_VALIDATION rotated feed EXIT=0
+rotated nvenc feed_optimized EXIT=0 MS=291
+rotated feed_optimized output-timing EXIT=0 MS=25
+FINAL_TIMING_VALIDATION rotated feed_optimized EXIT=0
+rotated input-timing EXIT=0 MS=34
+rotated nvenc-software feed EXIT=0 MS=254
+rotated feed output-timing EXIT=0 MS=27
+FINAL_TIMING_VALIDATION rotated feed EXIT=0
+rotated nvenc-software feed_optimized EXIT=0 MS=251
+rotated feed_optimized output-timing EXIT=0 MS=26
+FINAL_TIMING_VALIDATION rotated feed_optimized EXIT=0
+rejected input-timing EXIT=0 MS=48
+rejected nvenc feed EXIT=0 MS=822
+rejected feed output-timing EXIT=0 MS=46
+REJECTED_HARDWARE_RATE rejected feed VALIDATION_EXIT=1
+rejected CPU_RETRY feed EXIT=0 MS=2791
+rejected CPU_RETRY output-timing EXIT=0 MS=33
+FINAL_TIMING_VALIDATION rejected feed EXIT=0
+rejected nvenc feed_optimized EXIT=0 MS=807
+rejected feed_optimized output-timing EXIT=0 MS=31
+REJECTED_HARDWARE_RATE rejected feed_optimized VALIDATION_EXIT=1
+rejected CPU_RETRY feed_optimized EXIT=0 MS=10897
+rejected CPU_RETRY output-timing EXIT=0 MS=31
+FINAL_TIMING_VALIDATION rejected feed_optimized EXIT=0
+rejected2 input-timing EXIT=0 MS=42
+rejected2 nvenc feed EXIT=0 MS=805
+rejected2 feed output-timing EXIT=0 MS=35
+FINAL_TIMING_VALIDATION rejected2 feed EXIT=0
+rejected2 nvenc feed_optimized EXIT=0 MS=823
+rejected2 feed_optimized output-timing EXIT=0 MS=33
+FINAL_TIMING_VALIDATION rejected2 feed_optimized EXIT=0
+rejected2 input-timing EXIT=0 MS=40
+rejected2 nvenc-software feed EXIT=0 MS=1407
+rejected2 feed output-timing EXIT=0 MS=35
+FINAL_TIMING_VALIDATION rejected2 feed EXIT=0
+rejected2 nvenc-software feed_optimized EXIT=0 MS=1376
+rejected2 feed_optimized output-timing EXIT=0 MS=30
+FINAL_TIMING_VALIDATION rejected2 feed_optimized EXIT=0
+real3 input-timing EXIT=0 MS=88
+real3 nvenc feed EXIT=0 MS=14197
+real3 feed output-timing EXIT=0 MS=93
+FINAL_TIMING_VALIDATION real3 feed EXIT=0
+real3 nvenc feed_optimized EXIT=0 MS=14297
+real3 feed_optimized output-timing EXIT=0 MS=79
+FINAL_TIMING_VALIDATION real3 feed_optimized EXIT=0
+SSH_EXIT=0

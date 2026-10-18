@@ -1,0 +1,13 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+WORKER_STOPPED_IDLE=True
+START_TASK_EXIT=0
+VERIFIED_SHA256=1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f PROCESS_PID=19528 SESSION=1
+VERSION_SWAP_VERIFIED=True
+INSTALLED_VERSION=0.1.2-1b4042d3bbfa85cc
+INSTALLED_SHA256=1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f
+INSTALLED_REVISION=456eecca81635c30b7edb524165010f8fb9218ff
+IDENTITY_AND_CONFIGURATION_UNCHANGED=True
+INSTALL_EXIT=0
+SSH_EXIT=0

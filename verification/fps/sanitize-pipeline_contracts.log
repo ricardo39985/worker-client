@@ -23,11 +23,11 @@ test 3
 3: PASS failed final checksum cannot return a successful partial result
 3: PASS independent pipelines do not share cancellation or metadata
 3: 9 contracts, 0 failures
-1/1 Test #3: pipeline_contracts ...............   Passed    0.03 sec
+1/1 Test #3: pipeline_contracts ...............   Passed    0.02 sec
 
 The following tests passed:
 	pipeline_contracts
 
 100% tests passed, 0 tests failed out of 1
 
-Total Test time (real) =   0.03 sec
+Total Test time (real) =   0.02 sec
