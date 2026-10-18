@@ -1,5 +1,6 @@
 #pragma once
 #include "ow/adaptive_hardware.hpp"
+#include "ow/child_memory.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <stdexcept>
@@ -9,6 +10,7 @@ namespace ow {
 // An NVENC allocation error does not distinguish session pressure, driver
 // state and actual memory pressure. Never label it permanent incompatibility.
 inline std::string probe_failure_reason(const std::string& error){
+ if(insufficient_child_budget(error))return error;
  if(error.find("out of memory")!=std::string::npos||error.find("Cannot allocate memory")!=std::string::npos||
     error.find("No free encode sessions")!=std::string::npos||error.find("too many concurrent sessions")!=std::string::npos||
     error.find("ENCODER_BUSY")!=std::string::npos||error.find("temporarily unavailable")!=std::string::npos)
@@ -35,7 +37,7 @@ inline RetainedProbeEvidence retain_current_profiles(const std::vector<adaptive:
   if(std::none_of(devices.begin(),devices.end(),[&](const auto& d){return adaptive::profile_current(p,d,hash);}))continue;
   out.probes.push_back({p.stable_id,p.driver_version,p.ffmpeg_sha256,p.backend,p.codec,true,true,true});
   out.tuning.push_back({p.stable_id,p.backend,p.codec,p.measured_frames_per_second,p.cpu_threads,p.ram_mb,p.vram_mb,p.scratch_mb,
-   true,true,true,p.max_concurrency,p.measured_width,p.measured_height});
+   true,true,true,p.max_concurrency,p.measured_width,p.measured_height,p.child_memory_overhead_mb});
  }
  return out;
 }

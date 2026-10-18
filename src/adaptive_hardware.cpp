@@ -27,6 +27,26 @@ const TuningEvidence* find_tuning(const std::vector<TuningEvidence>& all,const D
 }
 std::uint64_t concurrency(std::uint64_t cap,std::uint64_t each){return each?cap/each:0;}
 }
+namespace {
+std::uint64_t footprint_mb(std::uint32_t width,std::uint32_t height,Codec codec,InputMemory input){
+ // Envelope fitted above the successful 460x390..1080p samples in the A/B
+ // ledger. HEVC and device surfaces have separate pool slopes. Above 1080p
+ // this is a conservative extrapolation, never evidence of encode support.
+ if(!width||!height||width>16384||height>16384)throw std::invalid_argument("GPU budget requires supported dimensions");
+ const std::uint64_t bytes_per_pixel=input==InputMemory::host?(codec==Codec::h264?128:120):(codec==Codec::h264?112:108);
+ return 256+(std::uint64_t{width}*height*bytes_per_pixel+1048575)/1048576;
+}
+}
+std::uint64_t gpu_child_memory_mb(std::uint32_t width,std::uint32_t height,Codec codec,InputMemory input,std::uint64_t overhead){
+ if(overhead>1048576)throw std::invalid_argument("GPU card overhead exceeds supported RAM budget");
+ const auto footprint=footprint_mb(width,height,codec,input)+overhead;
+ const auto guarded=footprint+std::max<std::uint64_t>(128,(footprint+3)/4);
+ return ((guarded+127)/128)*128;
+}
+std::uint64_t gpu_card_overhead_mb(std::uint32_t width,std::uint32_t height,Codec codec,InputMemory input,std::uint64_t peak){
+ const auto base=footprint_mb(width,height,codec,input);
+ return std::max<std::uint64_t>(64,peak>base?peak-base:0);
+}
 VramBudget vram_budget(std::uint64_t declared,std::optional<std::uint64_t> bytes,std::uint64_t global){
  // With no usage sample, leave at least half the declared memory unbudgeted.
  if(!bytes)return {std::min({global,declared/2,std::uint64_t{1024}}),true};
@@ -65,21 +85,22 @@ std::vector<Profile> choose_profiles(const std::vector<Device>& devices,
   }
   if(!cpu_device||!cpu_tuning)continue;
   auto add=[&](const Device& d,const TuningEvidence& t){
+   const auto ram=d.family==Backend::cpu?t.ram_mb:std::max(t.ram_mb,gpu_child_memory_mb(t.measured_width,t.measured_height,codec,InputMemory::host,t.child_memory_overhead_mb));
    auto concurrency_cap=std::min<std::uint64_t>(t.tested_concurrency,limits.max_jobs);
    concurrency_cap=std::min(concurrency_cap,concurrency(limits.cpu_threads,t.cpu_threads));
-   concurrency_cap=std::min(concurrency_cap,concurrency(limits.ram_mb,t.ram_mb));
+   concurrency_cap=std::min(concurrency_cap,concurrency(limits.ram_mb,ram));
    concurrency_cap=std::min(concurrency_cap,concurrency(limits.scratch_mb,t.scratch_mb));
    if(d.family!=Backend::cpu){
     concurrency_cap=std::min<std::uint64_t>(concurrency_cap,device_encode_sessions);
     concurrency_cap=std::min(concurrency_cap,concurrency(limits.vram_mb,t.vram_mb));
     concurrency_cap=std::min(concurrency_cap,concurrency(d.dedicated_vram_mb,t.vram_mb));
    }
-   if(!concurrency_cap||t.cpu_threads>limits.cpu_threads||t.ram_mb>limits.ram_mb||
+   if(!concurrency_cap||t.cpu_threads>limits.cpu_threads||ram>limits.ram_mb||
       t.scratch_mb>limits.scratch_mb||
       (d.family!=Backend::cpu&&(!d.driver_healthy||d.dedicated_vram_mb<t.vram_mb||t.vram_mb>limits.vram_mb)))return;
    const auto geometry=encoder_geometry(d.family);
-   out.push_back({d.stable_id,d.driver_version,hash,d.family,codec,t.cpu_threads,t.ram_mb,t.vram_mb,
-                  t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,geometry.max_width,geometry.max_height,t.measured_width,t.measured_height,d.physical_id,d.name});
+   out.push_back({d.stable_id,d.driver_version,hash,d.family,codec,t.cpu_threads,ram,t.vram_mb,
+                  t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,geometry.max_width,geometry.max_height,t.measured_width,t.measured_height,d.physical_id,d.name,t.child_memory_overhead_mb});
   };
   add(*cpu_device,*cpu_tuning);
   for(const auto& d:verified){
@@ -241,6 +262,23 @@ bool Scheduler::Reservation::hardware_enabled(const Profile& profile) const{
  return std::any_of(state_->profiles.begin(),state_->profiles.end(),[&](const auto& p){
   return p.stable_id==profile.stable_id&&p.backend==profile.backend&&p.codec==profile.codec;
  });
+}
+std::uint64_t Scheduler::Reservation::memory_for_dimensions(std::uint32_t width,std::uint32_t height) const{
+ std::uint64_t ram=0;
+ for(const auto& p:profiles_)ram=std::max(ram,p.backend==Backend::cpu?p.ram_mb:
+  std::max(p.ram_mb,gpu_child_memory_mb(width,height,p.codec,InputMemory::host,p.child_memory_overhead_mb)));
+ return ram;
+}
+bool Scheduler::Reservation::resize_memory(std::uint32_t width,std::uint32_t height,const Limits& task){
+ if(!active_||!state_)return false;
+ const auto ram=memory_for_dimensions(width,height);
+ std::lock_guard lock(state_->mutex);
+ const auto old=aggregate_cost(profiles_).ram;
+ if(ram>task.ram_mb||state_->ram>state_->limits.ram_mb||ram-old>state_->limits.ram_mb-state_->ram)return false;
+ state_->ram+=ram-old;
+ for(auto& p:profiles_)if(p.backend!=Backend::cpu)p.ram_mb=std::max(p.ram_mb,
+  gpu_child_memory_mb(width,height,p.codec,InputMemory::host,p.child_memory_overhead_mb));
+ return true;
 }
 bool Scheduler::Reservation::acquire_cpu_fallback(const std::function<bool()>& cancelled,std::uint32_t wait_ms){
  if(!active_||!state_)return false;

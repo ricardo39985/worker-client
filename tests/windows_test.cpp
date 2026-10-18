@@ -212,3 +212,15 @@ TEST("pipeline upload failure drains a real contained process tree before unwind
  CHECK(WaitForSingleObject(leaf.get(),1000)==WAIT_OBJECT_0);
  CHECK(std::filesystem::exists(t.path/"source.marker"));
 }
+
+TEST("native Job Object cap rejects old footprint and admits workload budget while remaining bounded"){
+ for(const auto cap:{std::uint64_t{512},adaptive::gpu_child_memory_mb(1920,1080,adaptive::Codec::h264)}){
+  Temp work;Child child(executable_directory()/"ow_test_child.exe",{L"--commit-mb",L"563"},work.path,{cap,0,16,64},Priority::maximum);
+  std::optional<DWORD> code;const auto until=monotonic_ms()+15000;
+  while(!(code=child.exit_code())&&monotonic_ms()<until)Sleep(25);
+  CHECK(code);CHECK(*code==(cap==512?12u:0u));
+  if(cap>512){CHECK(child.peak_commit_mb()>=563);CHECK(child.peak_commit_mb()<cap);}
+  else CHECK(read_file(work.path/"allocation.txt")=="Cannot allocate memory");
+  child.stop();
+ }
+}

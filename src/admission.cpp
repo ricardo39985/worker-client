@@ -61,9 +61,18 @@ bool Admission::cancel(const std::string& id){
  std::lock_guard lock(mutex_);auto i=active_.find(id);if(i==active_.end())return false;
  if(i->second.phase==Phase::reserved){release(i->second.offer.resources);active_.erase(i);}else i->second.phase=Phase::cancelling;return true;
 }
+bool Admission::reserve_ram(const std::string& id,std::uint64_t total,Resources available,Tick now){
+ std::lock_guard lock(mutex_);auto i=active_.find(id);
+ if(i==active_.end()||i->second.phase!=Phase::running||i->second.deadline<=now)return false;
+ auto& a=i->second;const auto current=a.offer.resources.ram_mb+a.extra_ram_mb;
+ if(total<=current)return true;
+ const Resources delta{total-current,0,0,0};
+ if(!fits(delta,budget_,used_)||!fits(delta,available,used_))return false;
+ used_.ram_mb+=delta.ram_mb;a.extra_ram_mb+=delta.ram_mb;return true;
+}
 bool Admission::finish(const std::string& id){
  std::lock_guard lock(mutex_);auto i=active_.find(id);if(i==active_.end())return false;
- release(i->second.offer.resources);active_.erase(i);return true;
+ used_.ram_mb-=i->second.extra_ram_mb;release(i->second.offer.resources);active_.erase(i);return true;
 }
 std::vector<Expired> Admission::expire(Tick now){
  std::lock_guard lock(mutex_);std::vector<Expired> out;
