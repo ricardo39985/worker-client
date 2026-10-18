@@ -1,5 +1,8 @@
 # Candidate status — 0.1.2
 
+Current merged decode and completion-reporting gates: [fresh measurements and landing ledger](../verification/finish-perf/REPORT.md).
+This ledger supersedes the historical candidate snapshots below.
+
 Current measured-decode candidate: see [the full performance ledger](../verification/gpu-performance/MEASURED.md).
 CUDA/NVDEC device frames feed the unchanged NVENC encoders for conservative SDR
 8-bit 4:2:0 profiles, with the existing software fallback and full validation.

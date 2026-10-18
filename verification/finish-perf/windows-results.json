@@ -1,0 +1,24 @@
+{
+  "host": "reald@192.168.1.10",
+  "application_revision": "f56952e",
+  "configure_exit": 0,
+  "build_exit": 0,
+  "discovery_exit": 0,
+  "suites": {
+    "worker_contracts": 0,
+    "pipeline_contracts": 0,
+    "rendition_contracts": 0,
+    "adaptive_hardware_contracts": 0,
+    "progress_contracts": 0,
+    "windows_contracts": 0,
+    "setup_contracts": 0,
+    "setup_progress_contracts": 0,
+    "setup_converter_contracts": 0
+  },
+  "gate_exit": 0,
+  "optional_python_dependency": "Not registered: Python3 unavailable on Rick. All 23 dependency contracts passed on Linux and sanitizers. No Python installed, no host PATH change.",
+  "harness_diagnostic_exit": 1,
+  "harness_correction": "Incorrect hardcoded ten-suite assertion replaced with required native suite names; execute every discovered suite.",
+  "final_build_exit": 0,
+  "final_log": "18-final-native.log"
+}

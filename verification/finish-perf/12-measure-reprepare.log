@@ -1,0 +1,16 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+MEASUREMENT_ROOT=C:\Users\Danny\AppData\Local\Temp\ow-perf-finish-20261018
+18/10 00:36:53  status
+  state      accepting                since 00:06:22
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     1 ok    0 failed   0 cancelled
+  last job   00:14:52  video renditions          7s
+  cards      RTX 3070 idle         RTX 3050 idle         cpu idle
+  memory     ram free 44.9 GB   scratch free 112 GB
+  encoders   cpu,nvenc
+  uptime     00:32:42
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj><Obj S="progress" RefId="1"><TNRef RefId="0" /><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>SSH_EXIT=0

@@ -1,0 +1,34 @@
+UpdateCTestConfiguration  from :/home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/DartConfiguration.tcl
+Parse Config file:/home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/DartConfiguration.tcl
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 4
+    Start 4: rendition_contracts
+
+4: Test command: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize/ow_rendition_contract_tests
+4: Working Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-sanitize
+4: Test timeout computed to be: 30
+4: PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
+4: PASS app image renders a full-size WebP and bounded poster with independent destinations
+4: PASS non-AAC audio uses the existing app delivery bitrate
+4: PASS common SDR H264 and HEVC use device frames on the selected NVENC device
+4: PASS unproven source formats retain the original software decode and encoding options
+4: PASS decode selection inspects the first input video only and leaves other backends and posters unchanged
+4: PASS output descriptions and metadata cannot qualify an unknown input for CUDA decode
+4: PASS device decode preserves every existing output encoder option
+4: PASS input inspection can produce the identical fixed poster from the same decode
+4: PASS poster reuse is restricted to a single ordinary unrotated SDR video stream
+4: 10 contracts, 0 failures
+1/1 Test #4: rendition_contracts ..............   Passed    0.04 sec
+
+The following tests passed:
+	rendition_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.04 sec

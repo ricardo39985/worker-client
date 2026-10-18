@@ -1,0 +1,16 @@
+linux-configure EXIT=0
+linux-build EXIT=0
+linux-ffmpeg_dependency_contracts EXIT=0
+linux-worker_contracts EXIT=0
+linux-pipeline_contracts EXIT=0
+linux-rendition_contracts EXIT=0
+linux-adaptive_hardware_contracts EXIT=0
+linux-progress_contracts EXIT=0
+sanitize-configure EXIT=0
+sanitize-build EXIT=0
+sanitize-ffmpeg_dependency_contracts EXIT=0
+sanitize-worker_contracts EXIT=0
+sanitize-pipeline_contracts EXIT=0
+sanitize-rendition_contracts EXIT=0
+sanitize-adaptive_hardware_contracts EXIT=0
+sanitize-progress_contracts EXIT=0

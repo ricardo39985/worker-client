@@ -1,0 +1,234 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+EXPERIMENT mode=generate gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+TIMING stage=generation artifact=source wall_us=1185022 controller_cpu_us=0 child_cpu_us=5718750 launch_us=4960 root_lifetime_us=1140537 completed=true
+TIMING stage=generation artifact=source wall_us=4095855 controller_cpu_us=0 child_cpu_us=20421875 launch_us=4369 root_lifetime_us=4019822 completed=true
+EXPERIMENT_PASS mode=generate
+MEASUREMENT_EXIT=generate/0
+EXPERIMENT mode=baseline gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=baseline repeat=0
+TIMING stage=transcode artifact=feed.mp4 wall_us=6656446 controller_cpu_us=0 child_cpu_us=3734375 launch_us=4606 root_lifetime_us=6613323 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8350107 controller_cpu_us=0 child_cpu_us=4531250 launch_us=5018 root_lifetime_us=8286183 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=5258109 controller_cpu_us=0 child_cpu_us=3718750 launch_us=5738 root_lifetime_us=5192319 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10729221 controller_cpu_us=15625 child_cpu_us=5625000 launch_us=5011 root_lifetime_us=10699521 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106594 controller_cpu_us=0 child_cpu_us=62500 launch_us=4543 root_lifetime_us=50906 completed=true
+TIMING total job_wall_us=31100627 stage_wall_sum_us=31100477 cpu_us=17687500 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=17687500 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=baseline repeat=0
+TIMING stage=transcode artifact=feed.mp4 wall_us=19081758 controller_cpu_us=15625 child_cpu_us=10171875 launch_us=4281 root_lifetime_us=19008800 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33001190 controller_cpu_us=15625 child_cpu_us=17031250 launch_us=5237 root_lifetime_us=32959718 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=19640577 controller_cpu_us=0 child_cpu_us=9437500 launch_us=5951 root_lifetime_us=19544729 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=32705602 controller_cpu_us=15625 child_cpu_us=16718750 launch_us=4795 root_lifetime_us=32593989 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=108145 controller_cpu_us=0 child_cpu_us=109375 launch_us=5135 root_lifetime_us=82060 completed=true
+TIMING total job_wall_us=104537407 stage_wall_sum_us=104537272 cpu_us=53515625 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=53515625 job_cpu_scope=main_thread_background_stages_and_child_trees
+EXPERIMENT_PASS mode=baseline
+MEASUREMENT_EXIT=baseline/0
+EXPERIMENT mode=baseline-normal gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=normal poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=baseline-normal repeat=0
+TIMING stage=input_hash artifact=source.bin wall_us=90758 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=112095 controller_cpu_us=0 child_cpu_us=62500 launch_us=4785 root_lifetime_us=62518 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=3540658 controller_cpu_us=15625 child_cpu_us=3890625 launch_us=4688 root_lifetime_us=3469884 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=4499962 controller_cpu_us=0 child_cpu_us=4484375 launch_us=4559 root_lifetime_us=4444105 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=3118210 controller_cpu_us=0 child_cpu_us=3640625 launch_us=4582 root_lifetime_us=3044464 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=5802320 controller_cpu_us=0 child_cpu_us=5718750 launch_us=4596 root_lifetime_us=5733057 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107384 controller_cpu_us=0 child_cpu_us=31250 launch_us=5047 root_lifetime_us=50043 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=43812 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=42461 controller_cpu_us=31250 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=397 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=17358258 stage_wall_sum_us=17358057 cpu_us=18015625 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=18015625 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=baseline-normal repeat=0 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-normal repeat=0 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-normal repeat=0 artifact=poster.webp bytes_equal_original=true
+JOB size=1080p mode=baseline-normal repeat=1
+TIMING stage=input_hash artifact=source.bin wall_us=91046 controller_cpu_us=78125 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=119648 controller_cpu_us=15625 child_cpu_us=125000 launch_us=5027 root_lifetime_us=63832 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=3210460 controller_cpu_us=0 child_cpu_us=3656250 launch_us=4636 root_lifetime_us=3183406 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=4496279 controller_cpu_us=0 child_cpu_us=4453125 launch_us=4969 root_lifetime_us=4418052 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=3332501 controller_cpu_us=0 child_cpu_us=3562500 launch_us=5720 root_lifetime_us=3268990 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=5679070 controller_cpu_us=0 child_cpu_us=5515625 launch_us=4388 root_lifetime_us=5572202 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107684 controller_cpu_us=0 child_cpu_us=46875 launch_us=4553 root_lifetime_us=49684 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=44650 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=43325 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=425 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=17125281 stage_wall_sum_us=17125088 cpu_us=17546875 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=17546875 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=baseline-normal repeat=1 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-normal repeat=1 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-normal repeat=1 artifact=poster.webp bytes_equal_original=true
+JOB size=1080p mode=baseline-normal repeat=2
+TIMING stage=input_hash artifact=source.bin wall_us=93857 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=120801 controller_cpu_us=0 child_cpu_us=62500 launch_us=5045 root_lifetime_us=63669 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=3335180 controller_cpu_us=0 child_cpu_us=3593750 launch_us=4750 root_lifetime_us=3257908 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=4498906 controller_cpu_us=0 child_cpu_us=4531250 launch_us=4633 root_lifetime_us=4414270 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=3443905 controller_cpu_us=0 child_cpu_us=3734375 launch_us=4616 root_lifetime_us=3369255 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=5802091 controller_cpu_us=0 child_cpu_us=5703125 launch_us=4501 root_lifetime_us=5728969 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=120458 controller_cpu_us=0 child_cpu_us=93750 launch_us=5096 root_lifetime_us=49889 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=43632 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=42168 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=366 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=17501553 stage_wall_sum_us=17501364 cpu_us=17906250 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=17906250 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=baseline-normal repeat=2 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-normal repeat=2 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-normal repeat=2 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=baseline-normal repeat=0
+TIMING stage=input_hash artifact=source.bin wall_us=354202 controller_cpu_us=359375 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=224786 controller_cpu_us=0 child_cpu_us=234375 launch_us=4888 root_lifetime_us=123320 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=10081767 controller_cpu_us=0 child_cpu_us=10687500 launch_us=4657 root_lifetime_us=10043139 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=17012201 controller_cpu_us=15625 child_cpu_us=16921875 launch_us=4998 root_lifetime_us=16899228 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=10196591 controller_cpu_us=0 child_cpu_us=10750000 launch_us=5137 root_lifetime_us=10140466 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=16984062 controller_cpu_us=15625 child_cpu_us=16968750 launch_us=4899 root_lifetime_us=16919531 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=121546 controller_cpu_us=0 child_cpu_us=125000 launch_us=5948 root_lifetime_us=91221 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=166613 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=93036 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=432 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=55235434 stage_wall_sum_us=55235236 cpu_us=56343750 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=56343750 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=baseline-normal repeat=0 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-normal repeat=0 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-normal repeat=0 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=baseline-normal repeat=1
+TIMING stage=input_hash artifact=source.bin wall_us=351312 controller_cpu_us=359375 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=225130 controller_cpu_us=0 child_cpu_us=203125 launch_us=4776 root_lifetime_us=122499 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=10089144 controller_cpu_us=0 child_cpu_us=10953125 launch_us=4696 root_lifetime_us=10070782 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=16928324 controller_cpu_us=15625 child_cpu_us=16843750 launch_us=4916 root_lifetime_us=16909160 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=10089346 controller_cpu_us=0 child_cpu_us=10968750 launch_us=5022 root_lifetime_us=10071294 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=17241454 controller_cpu_us=0 child_cpu_us=17265625 launch_us=5010 root_lifetime_us=17163383 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107449 controller_cpu_us=0 child_cpu_us=78125 launch_us=4562 root_lifetime_us=83023 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=171286 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=92689 controller_cpu_us=78125 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=436 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=55296775 stage_wall_sum_us=55296570 cpu_us=56937500 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=56937500 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=baseline-normal repeat=1 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-normal repeat=1 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-normal repeat=1 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=baseline-normal repeat=2
+TIMING stage=input_hash artifact=source.bin wall_us=352609 controller_cpu_us=359375 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=227533 controller_cpu_us=0 child_cpu_us=218750 launch_us=4786 root_lifetime_us=124004 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=10300627 controller_cpu_us=15625 child_cpu_us=10046875 launch_us=4958 root_lifetime_us=10212420 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=17043369 controller_cpu_us=0 child_cpu_us=16937500 launch_us=4426 root_lifetime_us=16971537 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=10199110 controller_cpu_us=15625 child_cpu_us=10250000 launch_us=4506 root_lifetime_us=10104856 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=17109439 controller_cpu_us=0 child_cpu_us=17000000 launch_us=4837 root_lifetime_us=17062961 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107271 controller_cpu_us=15625 child_cpu_us=109375 launch_us=5846 root_lifetime_us=91435 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=177720 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=93501 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=446 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=55611841 stage_wall_sum_us=55611625 cpu_us=55234375 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=55234375 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=baseline-normal repeat=2 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-normal repeat=2 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-normal repeat=2 artifact=poster.webp bytes_equal_original=true
+EXPERIMENT_PASS mode=baseline-normal
+MEASUREMENT_EXIT=baseline-normal/0
+EXPERIMENT mode=fused-normal gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=normal poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=fused-normal repeat=0
+TIMING stage=input_hash artifact=source.bin wall_us=90685 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=119714 controller_cpu_us=0 child_cpu_us=93750 launch_us=4982 root_lifetime_us=77944 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=2473996 controller_cpu_us=0 child_cpu_us=1500000 launch_us=4224 root_lifetime_us=2430230 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=4403608 controller_cpu_us=0 child_cpu_us=4437500 launch_us=4435 root_lifetime_us=4389789 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=2684240 controller_cpu_us=0 child_cpu_us=1546875 launch_us=5104 root_lifetime_us=2671127 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=5680875 controller_cpu_us=0 child_cpu_us=5718750 launch_us=4610 root_lifetime_us=5657116 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=43674 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=42432 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=392 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=15539932 stage_wall_sum_us=15539616 cpu_us=13484375 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=13484375 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=fused-normal repeat=0 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-normal repeat=0 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-normal repeat=0 artifact=poster.webp bytes_equal_original=true
+JOB size=1080p mode=fused-normal repeat=1
+TIMING stage=input_hash artifact=source.bin wall_us=90742 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=106817 controller_cpu_us=0 child_cpu_us=93750 launch_us=5343 root_lifetime_us=74516 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=2467423 controller_cpu_us=15625 child_cpu_us=1640625 launch_us=4445 root_lifetime_us=2435545 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=4504458 controller_cpu_us=0 child_cpu_us=4437500 launch_us=4550 root_lifetime_us=4421588 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=2687851 controller_cpu_us=0 child_cpu_us=1593750 launch_us=6331 root_lifetime_us=2637748 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=5773677 controller_cpu_us=0 child_cpu_us=5625000 launch_us=4699 root_lifetime_us=5655104 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=43606 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=42716 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=385 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=15717961 stage_wall_sum_us=15717675 cpu_us=13593750 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=13593750 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=fused-normal repeat=1 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-normal repeat=1 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-normal repeat=1 artifact=poster.webp bytes_equal_original=true
+JOB size=1080p mode=fused-normal repeat=2
+TIMING stage=input_hash artifact=source.bin wall_us=90949 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=106697 controller_cpu_us=0 child_cpu_us=109375 launch_us=4941 root_lifetime_us=73450 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=2576288 controller_cpu_us=0 child_cpu_us=1531250 launch_us=4646 root_lifetime_us=2471267 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=4502717 controller_cpu_us=0 child_cpu_us=4484375 launch_us=4252 root_lifetime_us=4476190 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=2682924 controller_cpu_us=0 child_cpu_us=1484375 launch_us=4468 root_lifetime_us=2630294 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=5782173 controller_cpu_us=0 child_cpu_us=5718750 launch_us=5379 root_lifetime_us=5702590 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=43422 controller_cpu_us=31250 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=43220 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=378 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=15829057 stage_wall_sum_us=15828768 cpu_us=13500000 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=13500000 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=fused-normal repeat=2 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-normal repeat=2 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-normal repeat=2 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=fused-normal repeat=0
+TIMING stage=input_hash artifact=source.bin wall_us=351434 controller_cpu_us=359375 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=224358 controller_cpu_us=0 child_cpu_us=265625 launch_us=5311 root_lifetime_us=139889 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=8683436 controller_cpu_us=0 child_cpu_us=2140625 launch_us=4479 root_lifetime_us=8618593 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=16950703 controller_cpu_us=0 child_cpu_us=16968750 launch_us=4921 root_lifetime_us=16896734 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=9095219 controller_cpu_us=0 child_cpu_us=1906250 launch_us=5167 root_lifetime_us=9049756 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=17110199 controller_cpu_us=0 child_cpu_us=16953125 launch_us=5389 root_lifetime_us=17020054 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=167745 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=92000 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=456 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=52675844 stage_wall_sum_us=52675550 cpu_us=38859375 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=38859375 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=fused-normal repeat=0 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-normal repeat=0 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-normal repeat=0 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=fused-normal repeat=1
+TIMING stage=input_hash artifact=source.bin wall_us=350675 controller_cpu_us=343750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=220075 controller_cpu_us=0 child_cpu_us=296875 launch_us=5552 root_lifetime_us=143158 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=8676784 controller_cpu_us=15625 child_cpu_us=2156250 launch_us=4339 root_lifetime_us=8613015 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=17056036 controller_cpu_us=0 child_cpu_us=16968750 launch_us=4868 root_lifetime_us=16959914 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=9215922 controller_cpu_us=0 child_cpu_us=1812500 launch_us=5149 root_lifetime_us=9124640 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=16974638 controller_cpu_us=15625 child_cpu_us=16890625 launch_us=5403 root_lifetime_us=16947186 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=167394 controller_cpu_us=156250 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=90078 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=367 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=52752258 stage_wall_sum_us=52751969 cpu_us=38750000 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=38750000 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=fused-normal repeat=1 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-normal repeat=1 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-normal repeat=1 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=fused-normal repeat=2
+TIMING stage=input_hash artifact=source.bin wall_us=354680 controller_cpu_us=359375 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=228099 controller_cpu_us=0 child_cpu_us=265625 launch_us=5261 root_lifetime_us=146261 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=8684702 controller_cpu_us=0 child_cpu_us=1937500 launch_us=4340 root_lifetime_us=8630957 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=17015188 controller_cpu_us=15625 child_cpu_us=16921875 launch_us=4358 root_lifetime_us=16928286 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=9113972 controller_cpu_us=0 child_cpu_us=1968750 launch_us=4579 root_lifetime_us=9037172 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=17046420 controller_cpu_us=0 child_cpu_us=17000000 launch_us=4410 root_lifetime_us=17027785 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=169667 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=90082 controller_cpu_us=78125 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=390 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=52703487 stage_wall_sum_us=52703200 cpu_us=38718750 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=38718750 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=fused-normal repeat=2 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-normal repeat=2 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-normal repeat=2 artifact=poster.webp bytes_equal_original=true
+EXPERIMENT_PASS mode=fused-normal
+MEASUREMENT_EXIT=fused-normal/0
+QUALITY size=1080p file=feed.mp4
+
+  ssim:default -> Stream #0:0 (wrapped_avframe)
+  psnr:default -> Stream #0:1 (wrapped_avframe)
+[Parsed_psnr_3 @ 000001c716535d40] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+[Parsed_ssim_2 @ 000001c71655c4c0] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+QUALITY_EXIT=1080p/feed.mp4/0
+QUALITY size=1080p file=optimized.mp4
+  ssim:default -> Stream #0:0 (wrapped_avframe)
+  psnr:default -> Stream #0:1 (wrapped_avframe)
+[Parsed_psnr_3 @ 000001d0dfff69c0] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+[Parsed_ssim_2 @ 000001d0dfff6bc0] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+QUALITY_EXIT=1080p/optimized.mp4/0
+QUALITY size=4k file=feed.mp4
+  ssim:default -> Stream #0:0 (wrapped_avframe)
+  psnr:default -> Stream #0:1 (wrapped_avframe)
+[Parsed_psnr_3 @ 000001bae0fd0400] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+[Parsed_ssim_2 @ 000001bae0fcea00] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+QUALITY_EXIT=4k/feed.mp4/0
+QUALITY size=4k file=optimized.mp4
+  ssim:default -> Stream #0:0 (wrapped_avframe)
+  psnr:default -> Stream #0:1 (wrapped_avframe)
+[Parsed_psnr_3 @ 000001e1be7c64c0] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+[Parsed_ssim_2 @ 000001e1be7c6240] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+QUALITY_EXIT=4k/optimized.mp4/0
+PERFORMANCE_GATE_EXIT=0
+
+
+SSH_EXIT=0

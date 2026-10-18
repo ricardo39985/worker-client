@@ -1,0 +1,14 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+EXPERIMENT mode=generate gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+TIMING stage=generation artifact=source wall_us=1186148 controller_cpu_us=0 child_cpu_us=6078125 launch_us=4583 root_lifetime_us=1151144 completed=true
+TIMING stage=generation artifact=source wall_us=4078655 controller_cpu_us=0 child_cpu_us=21093750 launch_us=4049 root_lifetime_us=4014776 completed=true
+EXPERIMENT_PASS mode=generate
+MEASUREMENT_EXIT=generate/0
+EXPERIMENT mode=baseline gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=baseline repeat=0
+TIMING stage=transcode artifact=feed.mp4 wall_us=6552049 controller_cpu_us=0 child_cpu_us=3468750 launch_us=5341 root_lifetime_us=6526027 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8260865 controller_cpu_us=0 child_cpu_us=4468750 launch_us=4872 root_lifetime_us=8194465 completed=true
+MEASUREMENT_EXIT=baseline/-1
+SSH_EXIT=255

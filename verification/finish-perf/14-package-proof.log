@@ -1,0 +1,5 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+[{"File":"OrganizerWorker.exe","Hash":"1D7644CBF404158A9CB3E62F814A946733EBD5D778F952E10FB6558341C7412A"},{"File":"OrganizerWorkerConsole.exe","Hash":"927982E4F3E93475389373AE1068E8A4D23F7699234C1DCD245AE0CE5840583C"},{"File":"OrganizerWorkerDoctor.exe","Hash":"81D91B7336DA83348F6ED71DA2CA652E0D32874E9A1F9BAF63560584C9B369DA"},{"File":"ow_gpu_measurements.exe","Hash":"0DDBE7181D70EE627486A54DD49F050CE98C8DBA8D81FE11CC9291E08EC23245"}]
+SSH_EXIT=0

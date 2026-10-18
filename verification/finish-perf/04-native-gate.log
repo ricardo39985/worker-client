@@ -1,0 +1,179 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+EXTRACT_EXIT=0
+SOURCE_ARCHIVE_SHA256=408978CF1A283F4EE680BAE5E81ED0BE47B0392B921E7D86C4DEC4940B9A1BC7
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- Configuring done (11.9s)
+-- Generating done (0.4s)
+-- Build files have been written to: C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/build
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  boost_json.cpp
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  main.cpp
+  main.cpp
+  pipeline_test.cpp
+  progress_test.cpp
+  encoder_run_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2390 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_pipeline_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  main.cpp
+  ow_json.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_json.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  media_rendition_probe.cpp
+  media_rendition_test.cpp
+  status_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 478 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  admission.cpp
+  ow_rendition_probe.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_rendition_probe.exe
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  store.cpp
+  All 1882 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  stage_timing_test.cpp
+  ow_rendition_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_rendition_contract_tests.exe
+  protocol.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  pairing.cpp
+  All 5108 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_progress_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_progress_contract_tests.exe
+  adaptive_hardware.cpp
+  ow_core.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_core.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  adaptive_evidence_probe.cpp
+  main.cpp
+  platform.cpp
+  admission_test.cpp
+  store_test.cpp
+  main.cpp
+  process.cpp
+  adaptive_hardware_test.cpp
+  protocol_test.cpp
+  http.cpp
+  pairing_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  worker.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  All 5531 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  ow_adaptive_evidence_probe.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_adaptive_evidence_probe.exe
+  Finished generating code
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_adaptive_hardware_contract_tests.exe
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\source\windows\worker.cpp(742,207): warning C4456: declaration of 'cancelled' hides previous local declaration [C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\ow_windows.vcxproj]
+      C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\source\windows\worker.cpp(573,7):
+      see declaration of 'cancelled'
+  
+  All 2908 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_contract_tests.exe
+  probe_recovery.cpp
+  pairing_adapter.cpp
+  hardware.cpp
+  physical_adapters.cpp
+  ow_windows.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_windows.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  windows_gpu_budget_probe.cpp
+  console.cpp
+  windows_child.cpp
+  doctor.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1565 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OrganizerWorkerConsole.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\OrganizerWorkerConsole.exe
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 756 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  All 2696 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_test_child.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_test_child.exe
+  windows_pipeline_smoke.cpp
+  windows_gpu_measurements.cpp
+  ow_gpu_budget_probe.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_gpu_budget_probe.exe
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 8679 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OrganizerWorkerDoctor.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\OrganizerWorkerDoctor.exe
+  tray.cpp
+  All 2886 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_gpu_measurements.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_gpu_measurements.exe
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 8976 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_pipeline_smoke.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_pipeline_smoke.exe
+  windows_gpu_baseline.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2785 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_gpu_baseline.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_gpu_baseline.exe
+  All 9000 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OrganizerWorker.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\OrganizerWorker.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+  main.cpp
+  windows_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 9147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_windows_tests.vcxproj -> C:\Users\reald\AppData\Local\OrganizerWorker\perf-land-0771b79\build\Release\ow_windows_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/OrganizerWorker/perf-land-0771b79/source/CMakeLists.txt
+BUILD_EXIT=0
+DISCOVERY_EXIT=0
+#< CLIXML
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><S S="Error">Expected all ten native suites_x000D__x000A_</S><S S="Error">At line:20 char:26_x000D__x000A_</S><S S="Error">+ if($suites.Count -ne 10){throw 'Expected all ten native suites'}_x000D__x000A_</S><S S="Error">+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_x000D__x000A_</S><S S="Error">    + CategoryInfo          : OperationStopped: (Expected all ten native suites:String) [], RuntimeException_x000D__x000A_</S><S S="Error">    + FullyQualifiedErrorId : Expected all ten native suites_x000D__x000A_</S><S S="Error"> _x000D__x000A_</S></Objs>SSH_EXIT=1

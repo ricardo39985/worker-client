@@ -1,0 +1,103 @@
+UpdateCTestConfiguration  from :/home/rick/Downloads/worker-client-gpu-on-logs/build-tests/DartConfiguration.tcl
+Parse Config file:/home/rick/Downloads/worker-client-gpu-on-logs/build-tests/DartConfiguration.tcl
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 2
+    Start 2: worker_contracts
+
+2: Test command: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests/ow_contract_tests
+2: Working Directory: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+2: Test timeout computed to be: 30
+2: PASS endpoint supplied by operator has a stable HTTPS origin
+2: PASS missing unsafe or ambiguous endpoints cannot become network destinations
+2: PASS an absent endpoint fails before enrollment or key disclosure
+2: PASS credential reopen reconnects without a new enrollment
+2: PASS credential canonicalization allows same origin but never a different server
+2: PASS corrupt saved credential never triggers silent reenrollment
+2: PASS successful pairing persists identity before returning and removes pending secret
+2: PASS incompatible coordinator receives no public key or enrollment request
+2: PASS lost initial response reuses durable request id rather than inventing another enrollment
+2: PASS lost approval response resumes same enrollment with its private key proof
+2: PASS pending enrollment is never sent to a different endpoint
+2: PASS failed credential persistence preserves resumable approval and returns no success
+2: PASS pending cleanup failure cannot discard an already durable credential
+2: PASS late approval after cancellation does not publish credentials
+2: PASS denial is explicit and cannot erase an existing pending record
+2: PASS server revocation does not silently start another pairing
+2: PASS rate limited polling waits and remains bounded by pairing expiry
+2: PASS invalid permanent tokens and worker ids never reach credential storage
+2: PASS media transfer requires exact approved HTTPS host
+2: PASS well formed offer translates to validated typed job
+2: PASS wire requests cannot smuggle arbitrary commands as capabilities
+2: PASS negative or floating resource values are rejected
+2: PASS unverified GPU is never requested by the CPU converter
+2: PASS download digest is mandatory and strictly encoded
+2: PASS input and output must fit declared temporary storage
+2: PASS control message size and parser nesting are bounded
+2: PASS null bytes cannot reach Win32 URL or process APIs
+2: PASS Windows argument quoting preserves spaces quotes and trailing slashes
+2: PASS converter receives local files not remote URLs or shell commands
+2: PASS leases use the shorter of local and server remaining time
+2: PASS expired and unsigned-underflow lease cases fail closed
+2: PASS lease duration and monotonic addition cannot overflow
+2: PASS app rendition contract requires every fixed output and budgets all simultaneous files
+2: PASS app jobs refuse arbitrary output roles and mixed media type declarations
+2: PASS accepted attempt and pending result survive journal reopen
+2: PASS outbox cannot be acknowledged with wrong attempt or sequence
+2: PASS repeated result does not create duplicate outbox entry
+2: PASS attempt collision cannot change persisted payload
+2: PASS restart exposes interrupted work without automatically rerunning it
+2: PASS denied BEGIN capacity is terminally never-started across journal restart
+2: PASS priority settings survive restart
+2: PASS result without accepted job fails instead of making orphan output
+2: PASS pending counter follows durable results and acknowledgements
+2: PASS journal coordinator binding survives reopen and rejects a different server
+2: PASS legacy pending results cannot be adopted without endpoint provenance
+2: PASS legacy interrupted attempt needs the same protected coordinator origin
+2: PASS verified capabilities accept independent jobs concurrently
+2: PASS four single-CPU app jobs reserve and begin independently within configured limits
+2: PASS missing capability fails closed
+2: PASS installed but unverified does not mean capable
+2: PASS local disabled vetoes a preferred server offer
+2: PASS reservation consumes capacity before execution
+2: PASS dynamic low memory rejects despite configured budget
+2: PASS duplicate offer is idempotent
+2: PASS changed duplicate payload is rejected
+2: PASS same content job cannot run in two attempts on one host
+2: PASS job guardrail is independent of resource budget
+2: PASS oversized resource numbers cannot overflow accounting
+2: PASS zero CPU or memory declaration is rejected
+2: PASS invalid IDs cannot become filesystem paths
+2: PASS expired reservation cannot be started
+2: PASS start without lease is rejected
+2: PASS replayed begin does not start a second process
+2: PASS pause refuses new work but preserves active execution
+2: PASS pause prevents an unstarted reservation from beginning
+2: PASS only a valid fresh renewal extends the lease
+2: PASS expired running lease cannot be revived by late renewal
+2: PASS expiry returns unused reservations to the budget
+2: PASS expired running job retains resources until child shutdown
+2: PASS cancelling one job preserves the other
+2: PASS duplicate finish cannot release resources twice
+2: PASS simultaneous offers never oversubscribe
+2: PASS two outstanding offers cannot both reserve the same live free memory
+2: PASS disabling a capability prevents a reserved job from starting
+2: PASS a duplicate offer cannot extend a reservation indefinitely
+2: PASS a recovery probe cannot overlap reserved running or cancelling work
+2: PASS concurrent probe and offer admission have exactly one owner
+2: PASS local child RAM topups are atomic preserve offer identity and last through cancellation
+2: PASS competing local RAM increases cannot oversubscribe host capacity
+2: 79 contracts, 0 failures
+1/1 Test #2: worker_contracts .................   Passed    0.02 sec
+
+The following tests passed:
+	worker_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.02 sec

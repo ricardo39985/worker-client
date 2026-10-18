@@ -1,5 +1,8 @@
 # Organizer Windows worker — 0.1.2 source candidate
 
+Current merged decode and completion-reporting gates: [fresh measurements and landing ledger](verification/finish-perf/REPORT.md).
+This ledger supersedes the historical candidate snapshots below.
+
 Measured decode continuation: [per-stage performance, quality and gates](verification/gpu-performance/MEASURED.md).
 The isolated RTX 3050 candidate preserves output bytes while reducing CPU time;
 Normal-priority offline job speedups are 1.123× at 1080p and 1.047× at 4K.

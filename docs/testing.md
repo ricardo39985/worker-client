@@ -1,5 +1,8 @@
 # Test policy and evidence
 
+Current merged decode and completion-reporting gates: [fresh measurements and landing ledger](../verification/finish-perf/REPORT.md).
+This ledger supersedes the historical candidate snapshots below.
+
 Current measured-decode gates and exact stage/quality numbers are in
 [verification/gpu-performance/MEASURED.md](../verification/gpu-performance/MEASURED.md).
 Linux passed six suites / 245 cases; MSVC compiled the current source and Windows
