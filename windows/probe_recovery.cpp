@@ -1,6 +1,7 @@
 #include "worker.hpp"
 #include "hardware.hpp"
 #include "ow/adaptive_evidence.hpp"
+#include "ow/device_identity.hpp"
 namespace ow::win {
 void Worker::recover_gpus(){
  while(!stop_&&!exit_requested_){
