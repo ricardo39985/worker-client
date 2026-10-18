@@ -1,5 +1,14 @@
 # Organizer Windows worker — 0.1.2 source candidate
 
+Current worker-console reporting evidence: see
+[the log-content gate ledger](verification/log-content/REPORT.md) and
+[the reporting contract](docs/worker-console.md).
+The controller counts local outcomes, emits complete stats, and publishes an
+idle table on independent live/durable cadences. This change has portable source
+verification only; MSVC, native console rendering and actual Windows jobs remain
+unrun. No Windows machine or production environment was contacted or changed.
+
+
 A native Windows tray worker with typed conversion jobs, durable results and
 operator-approved pairing. This candidate contains source, not a compiled or
 signed Windows release. Adaptive hardware corrections passed isolated native

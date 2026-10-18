@@ -1,0 +1,19 @@
+PASS outcomes increment once per executed attempt and survive pause resume
+PASS fixed clock summary has exact finish time duration queue and computed idle
+PASS idle table is fixed width deterministic and derives since and uptime
+PASS missing readings and last job stay unknown never numeric zero
+PASS idle live and durable cadence are independent and no table runs during work
+PASS physical cards deduplicate by identity truncate names and wrap fixed cells
+PASS outcome and state colours have only nonzero failures red
+PASS placement describes actual running encoder and clears on drain
+PASS status sidecar rows roundtrip colours and durable blocks stay out of live scrollback
+PASS live idle frame is suppressed until the last concurrent job terminates
+PASS bounded history survives new jobs and derives duration across wall clock correction
+PASS asset stages retries completions and full summaries keep observable words
+PASS idle ticks do not reset state since and nonzero failed span roundtrips
+PASS redirected durable table keeps the same fixed width plain block
+PASS summary carries running placement free resources priority and accepting state
+PASS totals keep outcome columns at fixed positions as counts grow
+PASS encoder and failure records retain asset names and failure colour
+FAIL running progress row retains the physical card across asset updates: check failed at tests/status_test.cpp:125: frame.find("feed.mp4 (RTX 3050)")!=std::string::npos
+18 contracts, 1 failures

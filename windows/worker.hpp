@@ -6,6 +6,7 @@
 #include "ow/adaptive_hardware.hpp"
 #include "ow/probe_status.hpp"
 #include "ow/capability_report.hpp"
+#include "ow/worker_status.hpp"
 #include <thread>
 #include <atomic>
 #include <unordered_map>
@@ -27,9 +28,13 @@ class Worker {
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
  Config config_;Store store_;Log log_;Admission admission_;
  ProgressLogPolicy progress_log_;
+ std::mutex report_mutex_;WorkerStatus report_{utc_ms(),monotonic_ms()};StatusReadings readings_;bool report_io_failed_{};
+ void publish_report(const std::filesystem::path&,const std::string&) noexcept;
+ void report_status() noexcept;
+ void report_state(std::string name,std::string reason);
  std::jthread network_,watchdog_,hash_watchdog_;
  mutable std::mutex mutex_;std::unordered_map<std::string,std::unique_ptr<Running>> running_;
- std::atomic_bool paused_{},exit_requested_{},stop_{};
+ std::atomic_bool paused_{},exit_requested_{},stop_{},report_connected_{};
  ProbeStatus probe_status_;CapabilityReport capability_report_;
  std::string last_activity_;bool connected_once_{};
  std::atomic<Priority> priority_{Priority::normal};

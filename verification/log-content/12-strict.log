@@ -1,0 +1,46 @@
+PASS idle connection emits no activity and active states stay terse
+PASS encoder timeline and byte accounting behavior are preserved
+PASS unmeasurable stages say only stage and elapsed once
+PASS a repeated stage is a visible retry with one stable suffix
+PASS local timestamp format is exact through midnight month and zone changes
+PASS job suffixes are lowercase last four and stable for a job life
+PASS two live jobs with the same four characters stay distinguishable
+PASS a shown suffix resolves to exactly one full attempt id in the durable log
+PASS restart needs no counter and never implies continuation
+PASS every rendered line fits eighty columns including an impossible message
+PASS old durable lines still render plainly without breaking the viewer
+PASS exactly five colours carry one consistent meaning
+PASS progress rows keep a bounded bar and vanish on terminal events
+PASS four concurrent rows and activity stay readable and cancellation clears at any percent
+PASS many jobs keep suffix-to-id resolvability and concurrent accounting
+PASS the ready line names the encoders the worker actually reported
+PASS a probe record without encoder detail claims no backend
+PASS a malformed encoder list cannot invent a backend
+PASS explicit failed app probes never inherit successful diagnostics
+PASS absent capability and priority evidence is explicitly unknown
+PASS capability flags require complete field values and boundaries
+PASS probe elapsed phases and remaining candidates use an injected clock
+PASS probe has one bounded row alongside jobs and clears on result or failure
+PASS encoder change and sample scope fit the existing neutral and warning style
+PASS an encoder substring is not backend evidence and unknown lists stay empty
+PASS probe phase labels cannot hide elapsed time at console width
+PASS hardware demotion is one short warning line in the existing console style
+PASS geometry and performance fallback reasons remain distinct and readable
+PASS encoder placement remains short blue activity with distinct device and CPU retry
+PASS the short log distinguishes schedulable card count from raw DXGI inventory
+PASS all hardware command plans retain device selection and measured timeline progress
+PASS four hardware failures reset timeline and stage generation on CPU retry independently
+PASS outcomes increment once per executed attempt and survive pause resume
+PASS fixed clock summary has exact finish time duration queue and computed idle
+PASS idle table is fixed width deterministic and derives since and uptime
+PASS missing readings and last job stay unknown never numeric zero
+PASS idle live and durable cadence are independent and no table runs during work
+PASS physical cards deduplicate by identity truncate names and wrap fixed cells
+PASS outcome and state colours have only nonzero failures red
+PASS placement describes actual running encoder and clears on drain
+PASS status sidecar rows roundtrip colours and durable blocks stay out of live scrollback
+PASS live idle frame is suppressed until the last concurrent job terminates
+PASS bounded history survives new jobs and derives duration across wall clock correction
+PASS asset stages retries completions and full summaries keep observable words
+PASS idle ticks do not reset state since and nonzero failed span roundtrips
+45 contracts, 0 failures

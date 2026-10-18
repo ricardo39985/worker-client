@@ -44,7 +44,9 @@ non-elevated Windows user. SSH can build or update it but cannot create a visibl
 tray in its service session. Optional startup is an interactive logon task,
 not a boot service; user sign-in is required.
 
-The controller's durable log is the only input to the console viewer. It contains
+The controller's durable log supplies the console's events and progress. Atomic
+read-only status/history files supply the latest idle frame and requested recent
+outcomes; the viewer has no control channel. The durable log contains
 plain timestamped event and progress records, never terminal escape sequences.
 Durable lines keep a UTC millisecond timestamp and the complete attempt id, so
 they remain unambiguous evidence and a displayed suffix can be grepped back to
@@ -52,7 +54,10 @@ the real attempt. The viewer owns the short local presentation, color and
 in-place dashboard redraw, so closing or crashing it cannot signal the controller
 or its contained process trees.
 
-Console lines are capped at 80 columns and target roughly 60. The viewer renders
+Ordinary console lines and idle table rows are capped at 80 columns and target
+roughly 60; the specified complete one-line stats report is retained without
+truncation. See [worker console reporting](worker-console.md) for its fields and
+independent 30-second live / five-minute durable idle cadence. The viewer renders
 `dd/mm hh:mm:ss` in local time, shows a job as `job ` plus the last four attempt
 characters (`job 93c7`), and grows that suffix only while another live job would
 otherwise be indistinguishable. One short line records a meaningful transition;
@@ -63,8 +68,9 @@ ordinary job activity/progress and white system/configuration text. White uses
 the terminal default foreground. On a 16-color Windows console orange is the
 closest legible analogue: dark yellow (`FOREGROUND_RED|FOREGROUND_GREEN`, ANSI
 33), which retains contrast on both dark and light backgrounds. Redirected
-output and `NO_COLOR` remain plain append-only event text with no escape codes;
-redirected output also suppresses dashboard-only progress rows. Legacy consoles
+output remains plain append-only text with no escape codes and includes the
+slower durable status blocks. `NO_COLOR` keeps in-place rows uncolored using
+Win32 cursor operations; redirected output suppresses dashboard-only progress rows. Legacy consoles
 use Win32 cursor/color operations and ASCII bars instead of assuming
 virtual-terminal support.
 

@@ -1,0 +1,43 @@
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+[  9%] Built target ow_pipeline_contract_tests
+[ 15%] Built target ow_json
+[ 28%] Built target ow_rendition_probe
+[ 31%] Built target ow_rendition_contract_tests
+[ 34%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 53%] Built target ow_core
+[ 56%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o
+[ 75%] Built target ow_contract_tests
+[ 84%] Built target ow_adaptive_hardware_contract_tests
+[ 90%] Built target ow_adaptive_evidence_probe
+[ 93%] Linking CXX executable ow_progress_contract_tests
+In function ‘copy’,
+    inlined from ‘__ct ’ at /usr/include/c++/15/bits/basic_string.h:748:23,
+    inlined from ‘cell’ at /home/rick/Downloads/worker-client-gpu-on-logs/include/ow/worker_status.hpp:18:132,
+    inlined from ‘table’ at /home/rick/Downloads/worker-client-gpu-on-logs/include/ow/worker_status.hpp:88:154:
+/usr/include/c++/15/bits/char_traits.h:429:56: warning: ‘__builtin_memcpy’ writing 23 bytes into a region of size 16 overflows the destination [-Wstringop-overflow=]
+  429 |         return static_cast<char_type*>(__builtin_memcpy(__s1, __s2, __n));
+      |                                                        ^
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/worker_status.hpp: In member function ‘table’:
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/worker_status.hpp:88:184: note: at offset 16 into destination object ‘<anonymous>’ of size 32
+   88 |   for(std::size_t i=0;i<entries.size();i+=3){std::string row;for(std::size_t j=i;j<std::min(i+3,entries.size());++j)row+=j+1<std::min(i+3,entries.size())?cell(entries[j],22):entries[j];add(i==0?"cards":"",row);}
+      |                                                                                                                                                                                        ^
+[100%] Built target ow_progress_contract_tests
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+    Start 1: ffmpeg_dependency_contracts
+1/6 Test #1: ffmpeg_dependency_contracts ......   Passed    0.16 sec
+    Start 2: worker_contracts
+2/6 Test #2: worker_contracts .................   Passed    0.01 sec
+    Start 3: pipeline_contracts
+3/6 Test #3: pipeline_contracts ...............   Passed    0.00 sec
+    Start 4: rendition_contracts
+4/6 Test #4: rendition_contracts ..............   Passed    0.00 sec
+    Start 5: adaptive_hardware_contracts
+5/6 Test #5: adaptive_hardware_contracts ......   Passed    0.02 sec
+    Start 6: progress_contracts
+6/6 Test #6: progress_contracts ...............   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) =   0.21 sec

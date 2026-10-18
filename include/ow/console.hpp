@@ -25,7 +25,8 @@ inline const char* ansi_color(ConsoleColor color) {
  return "\x1b[39m";
 }
 
-struct ConsoleLine {std::string text;ConsoleColor color{ConsoleColor::white};};
+struct ConsoleSpan {std::size_t offset{},length{};ConsoleColor color{ConsoleColor::white};};
+struct ConsoleLine {std::string text;ConsoleColor color{ConsoleColor::white};std::vector<ConsoleSpan> spans{};};
 struct ConsolePresentation {bool interactive{},color{},unicode{};};
 
 inline std::size_t console_text_width(std::string_view text) {
@@ -160,6 +161,7 @@ struct RenderedConsole {
 
 class ConsoleFormatter {
  JobLabels labels_;
+ std::map<std::string,std::string> placement_;
  static RenderedConsole event(std::string prefix,std::string body,ConsoleColor color,std::string key={},bool clear=false) {
   RenderedConsole out;out.kind=RenderedConsole::Kind::event;out.prefix=std::move(prefix);out.key=std::move(key);
   out.text=fit_console_line(out.prefix+console_detail::trim(body));out.color=color;out.clear_job=clear;return out;
@@ -175,9 +177,14 @@ class ConsoleFormatter {
   auto keyword_token=first_token(rest);auto keyword=upper_ascii(keyword_token);auto tail=trim(rest.substr(keyword_token.size()));
   if(keyword=="ENCODER"){
    auto parts=fields(strip_leading_pipe(tail));labels_.start(id);
-   return event(prefix,"job "+labels_.label(id)+" "+(parts.empty()?"encoder unknown":parts.front()),ConsoleColor::blue,id);
+   if(auto card=field_value(body,"card")){auto name=*card;std::replace(name.begin(),name.end(),'_',' ');placement_[id]=parts.front().ends_with(" done")?"cpu":fit_console_line(name,12);}
+   auto detail=parts.empty()?"encoder unknown":parts.front();if(auto file=field_value(body,"file"))detail="convert "+*file+" "+detail;
+   return event(prefix,"job "+labels_.label(id)+" "+detail,ConsoleColor::blue,id);
   }
-  if(keyword=="STAGE")return clear(id);
+  if(keyword=="STAGE"){
+   auto parts=fields(strip_leading_pipe(tail));labels_.start(id);
+   return event(prefix,"job "+labels_.label(id)+" "+(parts.empty()?"stage unknown":parts.front()),ConsoleColor::blue,id,true);
+  }
   if(keyword=="PROGRESS"||keyword=="WAITING"){
    auto content=strip_leading_pipe(tail);auto parts=fields(content);
    std::string stage,elapsed,remaining;std::optional<unsigned> percent;
@@ -195,11 +202,13 @@ class ConsoleFormatter {
    if(auto marker=stage.find(" progress cannot be measured");marker!=std::string::npos)stage.resize(marker);
    if(stage.empty())stage="work";
    RenderedConsole out;out.kind=RenderedConsole::Kind::progress;out.key=id;
-   out.prefix=prefix;out.before="job "+(labels_.live(id)?labels_.label(id):labels_.start(id))+" "+stage+" ";
+   out.prefix=prefix;out.before="job "+(labels_.live(id)?labels_.label(id):labels_.start(id))+" "+stage;
+   if(auto card=placement_.find(id);card!=placement_.end())out.before+=" ("+card->second+")";
+   out.before+=" ";
    if(percent){
     out.has_percent=true;out.percent=*percent;out.after=std::to_string(*percent)+"%";
     if(!elapsed.empty())out.after+=" "+elapsed;
-    if(!remaining.empty())out.after+=" eta "+remaining;
+    if(!remaining.empty())out.after+=" "+remaining+" left";
    }else{
     out.after=elapsed;
    }
@@ -207,14 +216,15 @@ class ConsoleFormatter {
   }
   if(keyword=="RETRY"){
    auto content=strip_leading_pipe(tail);auto parts=fields(content);auto stage=parts.empty()?"work":parts.front();
-   labels_.start(id);return event(prefix,"job "+labels_.label(id)+" retrying "+stage,ConsoleColor::orange,id,true);
+   std::string reason;if(parts.size()>1&&!starts(parts[1],"run "))reason=": "+parts[1];
+   labels_.start(id);return event(prefix,"job "+labels_.label(id)+" retrying "+stage+reason,ConsoleColor::orange,id,true);
   }
   auto terminal=[&](const char* verb,ConsoleColor color){
    const bool reason_only=starts(trim(tail),"|");
    auto content=strip_leading_pipe(tail);auto parts=fields(content);std::string subject,reason;
    if(parts.size()>1){subject=parts.front();for(std::size_t i=1;i<parts.size();++i){if(!reason.empty())reason+=" | ";reason+=parts[i];}}
-   else if(parts.size()==1){auto value=parts.front();if(reason_only)reason=value;else{auto colon=value.find(": ");if(colon!=std::string::npos){subject=value.substr(0,colon);reason=value.substr(colon+2);}else subject=value;}}
-   labels_.finish(id);std::string text="job "+labels_.label(id)+" "+verb;
+   else if(parts.size()==1){auto value=parts.front();if(reason_only&&!starts(value,"done in "))reason=value;else{auto colon=value.find(": ");if(colon!=std::string::npos){subject=value.substr(0,colon);reason=value.substr(colon+2);}else subject=value;}}
+   placement_.erase(id);labels_.finish(id);std::string text="job "+labels_.label(id)+" "+verb;
    if(!subject.empty())text+=" "+subject;
    if(!reason.empty())text+=": "+reason;
    return event(prefix,std::move(text),color,id,true);
@@ -222,14 +232,15 @@ class ConsoleFormatter {
   if(keyword=="FAILED")return terminal("failed",ConsoleColor::red);
   if(keyword=="CANCELLED")return terminal("cancelled",ConsoleColor::orange);
   if(keyword=="DECLINED")return terminal("declined",ConsoleColor::orange);
-  if(keyword=="SUCCEEDED")return terminal("done",ConsoleColor::green);
+  if(keyword=="SUCCEEDED")return terminal("succeeded",ConsoleColor::green);
   if(keyword=="ACKNOWLEDGED"){
-   labels_.finish(id);return event(prefix,"job "+labels_.label(id)+" acknowledged",ConsoleColor::green,id,true);
+   placement_.erase(id);labels_.finish(id);return event(prefix,"job "+labels_.label(id)+" acknowledged",ConsoleColor::green,id,true);
   }
   if(keyword=="STARTED"){
    auto content=strip_leading_pipe(tail);auto parts=fields(content);auto subject=parts.empty()?"":parts.front();
    labels_.start(id);std::string text="job "+labels_.label(id)+" started";
    if(!subject.empty())text+=" "+subject;
+   if(content.find("outcome unknown")!=std::string::npos)text+=" (outcome unknown)";
    return event(prefix,std::move(text),ConsoleColor::blue,id);
   }
   auto lowered=lower_ascii(rest);
@@ -241,13 +252,19 @@ class ConsoleFormatter {
    if(!subject.empty())text+=" "+subject;
    return event(prefix,std::move(text),ConsoleColor::blue,id);
   }
-  return event(prefix,"job "+labels_.label(id)+" "+rest,ConsoleColor::white,id);
+  return event(prefix,"job "+labels_.label(id)+" "+rest,starts(lowered,"cpu fallback")?ConsoleColor::orange:ConsoleColor::blue,id);
  }
 public:
  RenderedConsole render(std::string_view line) {
   using namespace console_detail;
   auto split=split_timestamp(line);const auto& prefix=split.prefix;const auto& body=split.body;
   if(body.empty())return {};
+  if(body.size()>14&&(body.substr(14).starts_with(" stats:")||body.substr(14).starts_with(" worker started;"))){
+   RenderedConsole out;out.kind=RenderedConsole::Kind::event;out.text=body;out.color=body.find(" | running ")!=std::string::npos&&body.find(" | running 0 ")==std::string::npos?ConsoleColor::blue:ConsoleColor::white;
+   std::size_t at=0;while((at=out.text.find(" | job ",at))!=std::string::npos){at+=7;auto end=out.text.find('=',at);if(end==std::string::npos)break;auto label=labels_.label(out.text.substr(at,end-at));out.text.replace(at,end-at,label);at+=label.size();}
+   return out;
+  }
+  if(starts(body,"acceptance: ")){auto value=body.substr(12);return event(prefix,value,starts(value,"accepting")?ConsoleColor::green:ConsoleColor::orange);}
   if(starts(body,"START ")){
    auto rest=trim(body.substr(6));auto id=first_token(rest);
    if(id.empty())return event(prefix,body,ConsoleColor::white);
@@ -305,12 +322,12 @@ public:
   if(starts(body,"PAIRING APPROVED"))return event(prefix,"pairing approved",ConsoleColor::green);
   if(starts(body,"RESULT PENDING ACK ")){
    auto rest=trim(body.substr(19));auto id=first_token(rest);auto status=lower_ascii(first_token(after_first_token(rest)));
-   auto color=status.find("fail")!=std::string::npos||status.find("cancel")!=std::string::npos?ConsoleColor::orange:ConsoleColor::green;
+   auto color=status.find("fail")!=std::string::npos?ConsoleColor::red:status.find("cancel")!=std::string::npos?ConsoleColor::orange:status=="succeeded"?ConsoleColor::green:ConsoleColor::white;
    return event(prefix,"job "+labels_.label(id)+" result queued",color,id);
   }
   if(starts(body,"RESULT ACKNOWLEDGED ")){
    auto id=first_token(trim(body.substr(20)));
-   labels_.finish(id);return event(prefix,"job "+labels_.label(id)+" acknowledged",ConsoleColor::green,id,true);
+   placement_.erase(id);labels_.finish(id);return event(prefix,"job "+labels_.label(id)+" acknowledged",ConsoleColor::green,id,true);
   }
   if(starts(body,"JOB "))return render_job(prefix,body);
   if(starts(body,"END ")){
@@ -377,15 +394,36 @@ struct LiveConsoleRow {
 struct ConsoleFeed {
  std::optional<ConsoleLine> event;
  std::optional<ConsoleLine> activity;
+ std::optional<ConsoleLine> durable_status;
  bool redraw{};
 };
 
 class LiveConsoleView {
  std::vector<LiveConsoleRow> rows_;
  ConsoleFormatter formatter_;
+ bool status_block_{};
+ std::set<std::string> running_jobs_;
  void erase(const std::string& key){rows_.erase(std::remove_if(rows_.begin(),rows_.end(),[&](const auto& row){return row.key==key;}),rows_.end());}
 public:
  ConsoleFeed consume(const std::string& line) {
+  auto body=console_detail::split_timestamp(line).body;
+  auto status_feed=[&]{std::int64_t wall{};std::size_t consumed{};auto text=console_detail::parse_utc_prefix(line,wall,consumed)?line.substr(consumed):line;ConsoleFeed feed;feed.durable_status=ConsoleLine{text,ConsoleColor::white};return feed;};
+  if(body.size()>=22&&body.substr(14)=="  status"){status_block_=true;return status_feed();}
+  if(status_block_){
+   const auto key=console_detail::first_token(body);
+   if(key=="state"||key=="priority"||key=="jobs"||key=="totals"||key=="last"||key=="cards"||key=="memory"||key=="encoders"||key=="uptime"||line.find("             ")!=std::string::npos)return status_feed();
+   status_block_=false;
+  }
+  if(body.starts_with("WORKER STARTED")){running_jobs_.clear();rows_.clear();formatter_=ConsoleFormatter{};}
+  if(body.starts_with("START "))running_jobs_.insert(console_detail::first_token(console_detail::trim(std::string_view(body).substr(6))));
+  if(body.starts_with("JOB ")){
+   auto rest=console_detail::trim(std::string_view(body).substr(4));auto id=console_detail::first_token(rest);
+   auto verb=console_detail::upper_ascii(console_detail::first_token(console_detail::strip_leading_pipe(rest.substr(id.size()))));
+   if(verb=="STARTED"||verb=="STAGE"||verb=="ENCODER"||verb=="PROGRESS"||verb=="WAITING"||verb=="RETRY")running_jobs_.insert(id);
+   if(verb=="SUCCEEDED"||verb=="FAILED"||verb=="CANCELLED"||verb=="ACKNOWLEDGED"||verb=="DECLINED")running_jobs_.erase(id);
+  }
+  if(body.starts_with("RESULT ACKNOWLEDGED "))running_jobs_.erase(console_detail::first_token(std::string_view(body).substr(20)));
+  if(body.starts_with("END ")){auto rest=std::string_view(body).substr(4);running_jobs_.erase(std::string(rest.substr(0,rest.find_first_of(": "))));}
   auto rendered=formatter_.render(line);ConsoleFeed feed;
   switch(rendered.kind){
    case RenderedConsole::Kind::hidden:return feed;
@@ -413,6 +451,7 @@ public:
   }
   return feed;
  }
+ std::size_t jobs_running() const{return running_jobs_.size();}
  const std::vector<LiveConsoleRow>& rows() const{return rows_;}
  std::string render_row(const LiveConsoleRow& row,bool color) const {
   std::string line;

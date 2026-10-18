@@ -1,5 +1,14 @@
 # Candidate status — 0.1.2
 
+Current worker-console reporting evidence: see
+[the log-content gate ledger](../verification/log-content/REPORT.md) and
+[the reporting contract](worker-console.md).
+The controller counts local outcomes, emits complete stats, and publishes an
+idle table on independent live/durable cadences. This change has portable source
+verification only; MSVC, native console rendering and actual Windows jobs remain
+unrun. No Windows machine or production environment was contacted or changed.
+
+
 Current `fix/worker-next` evidence: see
 [verification/worker-next/REPORT.md](../verification/worker-next/REPORT.md).
 The PCI-instance source correction passes Linux contracts; Windows/MSVC and

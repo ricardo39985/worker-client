@@ -1,0 +1,44 @@
+In file included from tests/status_test.cpp:1:
+tests/status_test.cpp: In function ‘void test_70()’:
+tests/status_test.cpp:71:38: error: ‘class ow::LiveConsoleView’ has no member named ‘jobs_running’
+   71 |  ow::LiveConsoleView view;CHECK(view.jobs_running()==0);
+      |                                      ^~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/status_test.cpp:72:169: error: ‘class ow::LiveConsoleView’ has no member named ‘jobs_running’
+   72 |  view.consume("START attempt-abcd media.video.renditions.v1 video renditions");view.consume("START attempt-efgh media.image.renditions.v1 image renditions");CHECK(view.jobs_running()==2);
+      |                                                                                                                                                                         ^~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/status_test.cpp:73:79: error: ‘class ow::LiveConsoleView’ has no member named ‘jobs_running’
+   73 |  view.consume("JOB attempt-abcd STAGE | convert feed.mp4 | run 1");CHECK(view.jobs_running()==2);
+      |                                                                               ^~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/status_test.cpp:74:89: error: ‘class ow::LiveConsoleView’ has no member named ‘jobs_running’
+   74 |  view.consume("JOB attempt-abcd succeeded | done in 19s (video renditions)");CHECK(view.jobs_running()==1);
+      |                                                                                         ^~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/status_test.cpp:75:99: error: ‘class ow::LiveConsoleView’ has no member named ‘jobs_running’
+   75 |  view.consume("JOB attempt-efgh cancelled | done in 2s (image renditions) | operator");CHECK(view.jobs_running()==0);
+      |                                                                                                   ^~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/status_test.cpp:76:100: error: ‘class ow::LiveConsoleView’ has no member named ‘jobs_running’
+   76 |  view.consume("JOB attempt-ijkl PROGRESS | convert feed.mp4 | run 1 | 5% | elapsed 2s");CHECK(view.jobs_running()==1);
+      |                                                                                                    ^~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+tests/status_test.cpp:77:44: error: ‘class ow::LiveConsoleView’ has no member named ‘jobs_running’
+   77 |  view.consume("WORKER STARTED");CHECK(view.jobs_running()==0);CHECK(view.rows().empty());
+      |                                            ^~~~~~~~~~~~
+tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
