@@ -20,6 +20,10 @@ void Admission::capability(std::string name,bool verified,Preference preference)
  std::lock_guard lock(mutex_);capabilities_.insert_or_assign(std::move(name),Capability{verified,preference});
 }
 void Admission::pause(bool value){std::lock_guard lock(mutex_);paused_=value;}
+bool Admission::begin_probe(){
+ std::lock_guard lock(mutex_);if(probing_||!active_.empty())return false;probing_=true;return true;
+}
+void Admission::end_probe(){std::lock_guard lock(mutex_);probing_=false;}
 Decision Admission::offer(const Offer& o,Tick now,Resources available){
  std::lock_guard lock(mutex_);
  if(!safe_id(o.job_id)||!safe_id(o.attempt_id)||o.fingerprint.empty()||!o.resources.ram_mb||!o.resources.cpu_threads||o.reserve_until<=now||o.reserve_until-now>60000)return {false,"invalid_offer"};
@@ -29,6 +33,7 @@ Decision Admission::offer(const Offer& o,Tick now,Resources available){
    return {i->second.phase!=Phase::cancelling && (i->second.phase==Phase::running?i->second.deadline>now:i->second.offer.reserve_until>now),"duplicate"};
  }
  if(paused_)return {false,"paused"};
+ if(probing_)return {false,"gpu_probe"};
  auto c=capabilities_.find(o.capability);
  if(c==capabilities_.end()||!c->second.verified)return {false,"unsupported"};
  if(c->second.preference==Preference::disabled)return {false,"disabled"};
@@ -43,7 +48,7 @@ Start Admission::begin(const std::string& id,std::string token,Tick deadline,Tic
  auto& a=i->second;
  if(a.phase==Phase::running)return a.lease_token==token&&a.deadline>now?Start::already_running:Start::declined;
  auto cap=capabilities_.find(a.offer.capability);
- if(paused_||a.phase!=Phase::reserved||a.offer.reserve_until<=now||cap==capabilities_.end()||!cap->second.verified||cap->second.preference==Preference::disabled)return Start::declined;
+ if(paused_||probing_||a.phase!=Phase::reserved||a.offer.reserve_until<=now||cap==capabilities_.end()||!cap->second.verified||cap->second.preference==Preference::disabled)return Start::declined;
  a.phase=Phase::running;a.lease_token=std::move(token);a.deadline=deadline;return Start::started;
 }
 bool Admission::renew(const std::string& id,const std::string& token,std::uint64_t seq,Tick deadline,Tick now){

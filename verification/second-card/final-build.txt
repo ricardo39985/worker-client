@@ -1,0 +1,11 @@
+[ 15%] Built target ow_json
+[ 15%] Built target ow_pipeline_contract_tests
+[ 28%] Built target ow_rendition_probe
+[ 31%] Built target ow_rendition_contract_tests
+[ 50%] Built target ow_core
+[ 53%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o
+[ 71%] Built target ow_contract_tests
+[ 81%] Built target ow_adaptive_hardware_contract_tests
+[ 87%] Built target ow_adaptive_evidence_probe
+[ 90%] Linking CXX executable ow_progress_contract_tests
+[100%] Built target ow_progress_contract_tests

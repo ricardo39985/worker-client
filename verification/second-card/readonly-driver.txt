@@ -1,0 +1,85 @@
+2026-10-17T22:34:42.1911896-04:00
+index, name, pci.bus_id, driver_version, memory.total [MiB], memory.used [MiB], memory.free [MiB], utilization.encoder [%], encoder.stats.sessionCount
+0, NVIDIA GeForce RTX 3070, 00000000:01:00.0, 617.42, 8192 MiB, 1373 MiB, 6645 MiB, 0 %, 0
+1, NVIDIA GeForce RTX 3050, 00000000:05:00.0, 617.42, 8192 MiB, 370 MiB, 7672 MiB, 0 %, 0
+
+
+Name            : OrganizerWorker.exe
+ProcessId       : 33992
+ParentProcessId : 34488
+CreationDate    : 10/17/2026 10:18:29 PM
+ExecutablePath  : C:\Users\Danny\AppData\Local\OrganizerWorker\versions\0.1.2-c4d13ceb69b8ff7c\OrganizerWorker.exe
+
+
+
+
+
+TimeCreated : 10/17/2026 10:20:27 PM
+Message     : Faulting application name: ffmpeg.exe, version: 0.0.0.0, time stamp: 0x6abe54f6
+              Faulting module name: ntdll.dll, version: 10.0.26100.9711, time stamp: 0x5fd39a05
+              Exception code: 0xc0000374
+              Fault offset: 0x0000000000118095
+              Faulting process id: 0x7A60
+              Faulting application start time: 0x1DD5EA73D46AE5D
+              Faulting application path: C:\Users\danny\ffmpeg.exe
+              Faulting module path: C:\WINDOWS\SYSTEM32\ntdll.dll
+              Report Id: 42ca4a10-9ea6-4096-a362-d97cccaac057
+              Faulting package full name:
+              Faulting package-relative application ID:
+
+TimeCreated : 10/17/2026 7:22:53 PM
+Message     : Faulting application name: ffmpeg.exe, version: 0.0.0.0, time stamp: 0x6abe54f6
+              Faulting module name: ntdll.dll, version: 10.0.26100.9711, time stamp: 0x5fd39a05
+              Exception code: 0xc0000374
+              Fault offset: 0x0000000000118095
+              Faulting process id: 0x8844
+              Faulting application start time: 0x1DD5E8E6F2BF3C3
+              Faulting application path: C:\Users\danny\ffmpeg.exe
+              Faulting module path: C:\WINDOWS\SYSTEM32\ntdll.dll
+              Report Id: 8417dc6c-75c8-4bf8-bef6-23b9529ef1cc
+              Faulting package full name:
+              Faulting package-relative application ID:
+
+TimeCreated : 10/17/2026 7:20:51 PM
+Message     : Faulting application name: ffmpeg.exe, version: 0.0.0.0, time stamp: 0x6abe54f6
+              Faulting module name: ntdll.dll, version: 10.0.26100.9711, time stamp: 0x5fd39a05
+              Exception code: 0xc0000374
+              Fault offset: 0x0000000000118095
+              Faulting process id: 0x7080
+              Faulting application start time: 0x1DD5E8E263FFF9F
+              Faulting application path: C:\Users\danny\ffmpeg.exe
+              Faulting module path: C:\WINDOWS\SYSTEM32\ntdll.dll
+              Report Id: 5279cf07-dc2a-40eb-a7bc-d9937802b550
+              Faulting package full name:
+              Faulting package-relative application ID:
+
+TimeCreated : 10/17/2026 7:08:35 PM
+Message     : Faulting application name: ffmpeg.exe, version: 0.0.0.0, time stamp: 0x6abe54f6
+              Faulting module name: ntdll.dll, version: 10.0.26100.9711, time stamp: 0x5fd39a05
+              Exception code: 0xc0000374
+              Fault offset: 0x0000000000118095
+              Faulting process id: 0x4504
+              Faulting application start time: 0x1DD5E8C6F5E58FC
+              Faulting application path: C:\Users\danny\ffmpeg.exe
+              Faulting module path: C:\WINDOWS\SYSTEM32\ntdll.dll
+              Report Id: 41d4434c-b0ba-4f94-9ddc-91cec50cc66d
+              Faulting package full name:
+              Faulting package-relative application ID:
+
+TimeCreated : 10/17/2026 7:07:01 PM
+Message     : Faulting application name: ffmpeg.exe, version: 0.0.0.0, time stamp: 0x6abe54f6
+              Faulting module name: ntdll.dll, version: 10.0.26100.9711, time stamp: 0x5fd39a05
+              Exception code: 0xc0000374
+              Fault offset: 0x0000000000118095
+              Faulting process id: 0x2B28
+              Faulting application start time: 0x1DD5E8C376FABC5
+              Faulting application path: C:\Users\danny\ffmpeg.exe
+              Faulting module path: C:\WINDOWS\SYSTEM32\ntdll.dll
+              Report Id: 9be1cc32-80f5-48fa-8ee2-8943f3d28926
+              Faulting package full name:
+              Faulting package-relative application ID:
+
+
+
+
+SSH_EXIT=1

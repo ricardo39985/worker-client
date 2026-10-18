@@ -1,0 +1,41 @@
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+[ 12%] Built target ow_json
+[ 15%] Built target ow_pipeline_contract_tests
+[ 31%] Built target ow_rendition_probe
+[ 31%] Built target ow_rendition_contract_tests
+[ 34%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o
+[ 37%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 40%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 43%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 46%] Linking CXX executable ow_progress_contract_tests
+[ 50%] Linking CXX static library libow_core.a
+[ 56%] Built target ow_core
+[ 59%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[ 68%] Built target ow_progress_contract_tests
+[ 71%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 75%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[ 78%] Linking CXX executable ow_contract_tests
+[ 81%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 90%] Built target ow_contract_tests
+[ 93%] Linking CXX executable ow_adaptive_evidence_probe
+[ 96%] Built target ow_adaptive_evidence_probe
+[100%] Built target ow_adaptive_hardware_contract_tests
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+    Start 1: ffmpeg_dependency_contracts
+1/6 Test #1: ffmpeg_dependency_contracts ......   Passed    0.16 sec
+    Start 2: worker_contracts
+2/6 Test #2: worker_contracts .................   Passed    0.01 sec
+    Start 3: pipeline_contracts
+3/6 Test #3: pipeline_contracts ...............   Passed    0.00 sec
+    Start 4: rendition_contracts
+4/6 Test #4: rendition_contracts ..............   Passed    0.00 sec
+    Start 5: adaptive_hardware_contracts
+5/6 Test #5: adaptive_hardware_contracts ......   Passed    0.02 sec
+    Start 6: progress_contracts
+6/6 Test #6: progress_contracts ...............   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) =   0.21 sec

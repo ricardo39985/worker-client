@@ -1,0 +1,20 @@
+2026-10-17T22:42:57.8685185-04:00
+index, name, memory.free [MiB], encoder.stats.sessionCount
+0, NVIDIA GeForce RTX 3070, 6644 MiB, 0
+1, NVIDIA GeForce RTX 3050, 7672 MiB, 0
+
+
+ProcessId       : 24992
+ParentProcessId : 9160
+CreationDate    : 10/17/2026 10:29:27 PM
+CommandLine     : nvidia-smi  encodersessions
+
+ProcessId       : 36304
+ParentProcessId : 17748
+CreationDate    : 10/17/2026 10:32:10 PM
+CommandLine     : "C:\Windows\system32\nvidia-smi.exe" encodersessions
+
+
+
+
+SSH_EXIT=0

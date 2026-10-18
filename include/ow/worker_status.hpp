@@ -8,6 +8,7 @@ struct StatusReadings {
  std::optional<std::uint64_t> queue,ram_bytes,scratch_bytes;
  std::optional<std::string> encoders;
  std::optional<std::vector<StatusCard>> cards;
+ std::vector<std::string> gpu_recovery;
 };
 enum class JobOutcome {succeeded,failed,cancelled};
 inline std::string outcome_word(JobOutcome o){return o==JobOutcome::succeeded?"succeeded":o==JobOutcome::failed?"failed":"cancelled";}
@@ -97,7 +98,11 @@ public:
    for(std::size_t j=i;j<end;++j){row+=entries[j];if(j+1<end)row.append(22-entries[j].size(),' ');}
    add(i==0?"cards":"",row);
   }
-  add("memory","ram free "+gb(r.ram_bytes,true)+"   scratch free "+gb(r.scratch_bytes,false));add("encoders",r.encoders?truncate(*r.encoders,67):"unknown");add("uptime",hms(mono-started_));return out;
+  add("memory","ram free "+gb(r.ram_bytes,true)+"   scratch free "+gb(r.scratch_bytes,false));add("encoders",r.encoders?truncate(*r.encoders,67):"unknown");for(const auto& reason:r.gpu_recovery){
+   // Wrap, do not truncate away the retry or the failure classification.
+   for(std::size_t at=0;at<reason.size();at+=67)add(at==0?"gpu probe":"",safe(reason.substr(at,67)));
+  }
+  add("uptime",hms(mono-started_));return out;
  }
  Emission poll(std::int64_t mono){
   Emission e;e.summary=dirty_;if(!active_.empty()){dirty_=false;return e;}
