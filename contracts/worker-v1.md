@@ -234,6 +234,25 @@ the server uses local fallback instead. No inference adapter or protocol-level
 GPU requirement is added. Worker-local adaptive media profiles do not change
 this wire contract.
 
+### Worker-flex stage reservations candidate (not deployed)
+
+After input inspection children drain, job-wide CPU/RAM escrow can hand off to
+atomic stage claims. Scratch and the original offer/fingerprint remain intact.
+Renditions use distinct child directories/logs and may prepare concurrently;
+codec/device leases end only after their encoder trees drain. Full validation,
+CPU retry and transfer have separate claims. Cancelling never releases a live
+child's capacity. A ready artifact may upload before a slower rendition finishes;
+only the complete fixed result role map can claim success. Early scratch-envelope
+retirement follows writer drain and deletion, not an attempted cancellation.
+
+A ~90% utilization feedback target does not authorize exceeding machine budgets
+or a physical backend's successfully tested session count. Pressure and recent
+foreground use defer new offers and reserved BEGINs, not duplicate running BEGINs
+or valid renewals. Running work drains at conservative capacity. Missing/stale
+telemetry cannot qualify increased concurrency. CPU/committed-memory child-job
+limits are enforced; physical RAM, GPU/VRAM, disk and desktop effects are sampled,
+not universal hard OS quotas. One active encoder can still reach 100% GPU usage.
+
 ### Worker-flex timing validation candidate (not deployed)
 
 A nominal/VUI frame rate, including FFmpeg's rounded human-readable `tbr`, is

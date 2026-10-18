@@ -1,8 +1,10 @@
 # Candidate status — 0.1.2
 
-Worker-flex investigation and partial candidate: [findings and current gates](../verification/worker-flex/REPORT.md).
-Linux/sanitizer checks pass; native gates and sustainable-capacity/throughput
-measurements require operator permission. This is not release or deployment evidence.
+Worker-flex stage-concurrency checkpoint: [implementation, enforced/sampled limits and gates](../verification/worker-flex-r2/REPORT.md).
+Linux Release and both-PC MSVC/native suites pass. Throughput, foreground impact,
+exact-asset replay and rollout acceptance remain separate open gates. The operator
+has authorized the related Windows experiments; installed workers are unchanged.
+The [first-pass investigation](../verification/worker-flex/REPORT.md) is historical.
 
 Current frame-timing correction: [measurement, gates and rollout ledger](../verification/fps/REPORT.md).
 

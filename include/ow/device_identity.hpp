@@ -51,7 +51,7 @@ inline std::size_t schedulable_device_count(const std::vector<Profile>& profiles
 inline std::uint64_t profile_vram_capacity(const std::vector<Profile>& profiles){
  std::map<std::string,std::uint64_t> capacities;
  for(const auto& p:profiles)if(p.backend!=Backend::cpu&&p.backend_identity_verified&&p.max_concurrency&&pci_instance_id(p.physical_id))
-  capacities[canonical_instance_id(p.physical_id)]=std::max(capacities[canonical_instance_id(p.physical_id)],p.vram_mb);
+  capacities[canonical_instance_id(p.physical_id)]=std::max(capacities[canonical_instance_id(p.physical_id)],p.vram_mb*p.proven_sessions);
  std::uint64_t total=0;for(const auto& [_,mb]:capacities)total+=mb;return total;
 }
 }

@@ -1,0 +1,84 @@
+PASS drained renditions release their card while the job still owns another codec
+PASS completing one codec cannot release a shared card still needed by the other codec
+PASS a slower but proven encoder remains available when the faster CPU slot is occupied
+PASS simultaneous encode proof permits two sessions on one card and a third cannot evade the limit
+FAIL successfully probed child RAM budgets are not replaced by a larger geometry prediction: check failed at /home/rick/Downloads/worker-client-flex/tests/adaptive_hardware_test.cpp:95: a&&b
+PASS CPU remains the safe profile when no supported GPU is installed
+PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+PASS single GPU profile requires matching encode decode and validated output
+PASS heterogeneous GPUs retain independent identities and schedules
+PASS two synthetic NVIDIA GPUs schedule independently through the production scheduler
+PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+PASS low VRAM and machine resource caps reject unsafe tuning
+PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+PASS profile invalidates on adapter identity driver or approved FFmpeg change
+PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+PASS selected hardware rendition binds an explicit adapter and conservative codec mode
+PASS Intel QSV and AMD AMF commands bind their probed DirectX adapter
+PASS hardware failure removes partial output and validates a clean CPU retry before success
+PASS cancelled hardware work does not start a CPU retry or retain partial output
+PASS runtime scheduler atomically enforces global and per-device costs until drain
+PASS task caps limit each reservation while global capacity admits four small jobs
+PASS native drain fixture keeps its GPU reservation while admitting independent CPU work
+PASS temporary CPU admission and GPU reservation moves preserve separate backend capacity
+PASS exhausted backend capacity stays owned across reservation moves until release
+PASS CUDA LUID mapping survives ordinal reorder and rejects duplicate or invalid mappings
+PASS GPU memory telemetry is child and LUID scoped and rejects ambiguous physical nodes
+PASS missing foreign invalid and zero GPU counters never mean idle headroom
+PASS serial and parallel tuning compare equal work repeated stages and child budgets
+PASS two independent GPU jobs fit with one CPU encoder slot and can wait for safe CPU retry
+PASS GPU fallback slot acquisition ignores a CPU codec already owned by the same task
+PASS runtime profile ties resolve by stable device identity and CPU profile is selectable
+PASS hardware adapter mapping ambiguity fails closed independent of enumeration order
+PASS runtime admission falls back to the measured CPU profile when configured VRAM is too small
+PASS live adapter headroom closes GPU admission and restores it after headroom returns
+PASS CPU concurrency reflects repeated tuning candidates within every configured cap
+PASS multi-codec runtime reservation uses peak per-job CPU memory and scratch costs
+PASS runtime scheduler invalidation stops stale hardware while active reservations drain
+PASS runtime command generation applies the scheduler-selected measured CPU profile
+PASS cancellation before an encode prevents every helper spawn
+PASS cancellation during output validation cannot publish a successful artifact
+PASS declared VRAM fallback permits proven hardware and retains CPU and drain budgets
+PASS VRAM budgets preserve live headroom and fail closed without either source
+PASS declared budget never substitutes for encode decode identity or tuning proof
+PASS encoder tokens name every backend that survived probing
+PASS encoder tokens never claim hardware when only CPU was profiled
+PASS a hardware-only profile set cannot imply a CPU profile
+PASS runtime hardware failure reports exactly once without changing selected profiles
+PASS reporting retains another profiled codec and handles profile removal and binary invalidation
+PASS diagnostic CPU evidence is distinct from missing adaptive profiles
+PASS converter invalidation retracts CPU as well as hardware evidence once
+PASS backup presentation promises a routing hint only
+PASS unobserved inventory is unknown while an observed zero stays zero
+PASS status evidence separates unrun checks from failed probes and requires current CPU app profiles
+PASS sample dimensions describe evidence while encoder geometry governs admission
+PASS realistic throughput evidence informs ranking without erasing a proven backend
+PASS large hardware encode or validation failure demotes once and retries CPU while capacity stays owned
+PASS saved profiles and rejected measurements name their actual tuning resolution
+PASS demotion is atomic codec specific and preserves already reserved capacity
+PASS ambiguous duplicate adapter identities never produce profiles
+PASS one physical card shares its session budget across codecs until drain
+PASS complete rendition jobs use both cards concurrently with a single CPU fallback slot
+PASS different LUID aliases of a PCI instance are withheld while identical real cards stay independent
+PASS scheduler rejects forged alias profiles and missing NVIDIA PCI identities
+PASS NVIDIA worker session ceiling is shared by all cards independently of VRAM
+PASS unrelated release and reservation moves cannot steal a running CPU fallback slot
+PASS profile device totals count encodable cards once across codecs
+PASS PCI instance drift invalidates a saved profile even when the DXGI identity stayed the same
+PASS simultaneous reservations cannot create a third hardware session or reuse a busy card
+PASS opposite codec speed winners do not split each rendition job across both cards
+PASS Windows ROOT display instances never become capacity even with successful encoder evidence
+PASS missing PCI instance withholds every backend including non NVIDIA devices
+PASS two PCI instances and a ROOT alias report two independently schedulable cards
+PASS PCI instance aliases are case insensitive and never create two placements
+PASS physical card exclusions explain software identity session and VRAM denial
+PASS saved ROOT profiles cannot bypass PCI admission in reporting or scheduling
+PASS temporary NVENC allocation failure is retried before discarding a capable card
+PASS failed GPU probes remain due with bounded cooldown until fresh proof succeeds
+PASS probe retry exhaustion stays withheld and cancellation never opens another session
+PASS recovery retains current successful samples while failed cards require a new encode
+PASS 1080p GPU child budget covers the measured display adapter commit footprint
+PASS GPU commit budgets distinguish geometry codec surfaces and measured card overhead
+PASS larger GPU memory is reserved atomically and held until the job drains
+PASS allocation failures under a child cap retain resolution and budget through recovery status
+83 contracts, 1 failures

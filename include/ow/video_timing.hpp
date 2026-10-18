@@ -18,6 +18,7 @@ struct VideoTiming {
  std::string reported_rate;
  // Total demuxed sample duration, independent of B-frame packet order.
  std::int64_t duration_ticks{};
+ std::uint32_t width{},height{};
  bool constant_rate() const {
   if(pts.size()<2)return false;
   const auto step=pts[1]-pts[0];
@@ -35,6 +36,9 @@ inline std::optional<VideoTiming> video_timing(const std::string& text){
    std::istringstream rate(line.substr(7));char slash{};
    if(!(rate>>out.numerator>>slash>>out.denominator)||slash!='/'||out.numerator<=0||out.denominator<=0||out.numerator>1000000000||out.denominator>1000000000)return std::nullopt;
    header=true;
+  }else if(line.rfind("#dimensions 0: ",0)==0){
+   std::istringstream geometry(line.substr(15));std::uint32_t width{},height{};char separator{};
+   if(geometry>>width>>separator>>height&&separator=='x'&&width&&height&&width<=1000000&&height<=1000000){out.width=width;out.height=height;}
   }else if(line.rfind("0,",0)==0){
    std::replace(line.begin(),line.end(),',',' ');std::istringstream row(line);
    std::int64_t stream{},dts{},pts{},duration{};

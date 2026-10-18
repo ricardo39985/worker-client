@@ -69,6 +69,41 @@ TEST("completing one codec cannot release a shared card still needed by the othe
  auto hardware=scheduler.reserve({Codec::h264});CHECK(hardware);
  CHECK(hardware.profiles().front().backend==Backend::nvidia_nvenc);
 }
+TEST("a slower but proven encoder remains available when the faster CPU slot is occupied"){
+ auto c=cpu(),g=gpu("usable-slower",Backend::nvidia_nvenc);
+ auto ct=tune(c,Codec::h264,25),gt=tune(g,Codec::h264,24,512);
+ ct.measured_width=gt.measured_width=1920;ct.measured_height=gt.measured_height=1080;
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt});
+ CHECK(find(profiles,g.stable_id,Codec::h264));Scheduler scheduler(limits(),profiles);
+ auto first=scheduler.reserve({Codec::h264});CHECK(first&&first.profiles().front().backend==Backend::cpu);
+ auto next=scheduler.reserve({Codec::h264});CHECK(next&&next.profiles().front().backend==Backend::nvidia_nvenc);
+}
+TEST("simultaneous encode proof permits two sessions on one card and a third cannot evade the limit"){
+ auto c=cpu(),g=gpu("two-proven-sessions",Backend::nvidia_nvenc);
+ auto ct=tune(c,Codec::h264,20),gt=tune(g,Codec::h264,60,512);gt.tested_concurrency=2;
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt});Scheduler scheduler(limits(),profiles);
+ auto a=scheduler.reserve({Codec::h264}),b=scheduler.reserve({Codec::h264}),third=scheduler.reserve({Codec::h264});
+ CHECK(a&&b&&third);CHECK(a.profiles().front().backend==Backend::nvidia_nvenc);CHECK(b.profiles().front().backend==Backend::nvidia_nvenc);
+ CHECK(third.profiles().front().backend==Backend::cpu);
+}
+TEST("successfully probed child RAM budgets are not replaced by a larger geometry prediction"){
+ auto c=cpu(),g=gpu("measured-small-commit",Backend::nvidia_nvenc);
+ auto ct=tune(c,Codec::h264,20),gt=tune(g,Codec::h264,60,256);
+ ct.cpu_threads=gt.cpu_threads=1;ct.ram_mb=gt.ram_mb=512;gt.measured_width=1920;gt.measured_height=1080;gt.tested_concurrency=2;
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt});
+ Scheduler s(Limits{4,1024,1024,4096,4},profiles);auto a=s.reserve({Codec::h264}),b=s.reserve({Codec::h264});
+ CHECK(a&&b);CHECK(a.profiles().front().backend==Backend::nvidia_nvenc&&b.profiles().front().backend==Backend::nvidia_nvenc);
+ CHECK(a.memory_for_dimensions(1920,1080)==512);CHECK(!a.resize_memory(3840,2160,Limits{4,1024,1024,4096,4}));
+}
+TEST("pressure lowers future device concurrency without evicting or unaccounting active encodes"){
+ auto c=cpu(),g=gpu("feedback-card",Backend::nvidia_nvenc);auto gt=tune(g,Codec::h264,60,512);gt.tested_concurrency=2;
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{tune(c,Codec::h264,20),gt});Scheduler s(limits(),profiles);
+ auto a=s.reserve({Codec::h264}),b=s.reserve({Codec::h264});CHECK(a&&b);CHECK(s.device_concurrency(g.stable_id)==2);
+ s.set_device_concurrency_limit(g.stable_id,1);CHECK(s.device_concurrency(g.stable_id)==2);CHECK(b.hardware_enabled(b.profiles().front()));
+ auto cpu_job=s.reserve({Codec::h264});CHECK(cpu_job&&cpu_job.profiles().front().backend==Backend::cpu);
+ a.release();CHECK(!s.reserve({Codec::h264}));b.release();
+ auto next=s.reserve({Codec::h264});CHECK(next&&next.profiles().front().backend==Backend::nvidia_nvenc);
+}
 TEST("CPU remains the safe profile when no supported GPU is installed"){
  auto c=cpu();auto profiles=run({c},{probe(c,Codec::h264),probe(c,Codec::hevc)},
   {tune(c,Codec::h264,20),tune(c,Codec::hevc,12)});
@@ -566,7 +601,7 @@ TEST("sample dimensions describe evidence while encoder geometry governs admissi
   CHECK(geometry_reason(GeometryEvidence::unproven)!=geometry_reason(GeometryEvidence::unsupported));
  }
 }
-TEST("only equal realistic measurements may withhold hardware for CPU throughput"){
+TEST("realistic throughput evidence informs ranking without erasing a proven backend"){
  auto c=cpu(),g=gpu("fixture:comparison",Backend::intel_qsv);
  auto ct=tune(c,Codec::h264,100),gt=tune(g,Codec::h264,20,512);
  ct.measured_width=gt.measured_width=640;ct.measured_height=gt.measured_height=360;
@@ -574,7 +609,7 @@ TEST("only equal realistic measurements may withhold hardware for CPU throughput
  CHECK(find(run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt}),g.stable_id,Codec::h264));
  ct.measured_width=gt.measured_width=1920;ct.measured_height=gt.measured_height=1080;
  CHECK(comparable_resolution(gt,ct));
- CHECK(!find(run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt}),g.stable_id,Codec::h264));
+ CHECK(find(run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt}),g.stable_id,Codec::h264));
  gt.measured_width=3840;gt.measured_height=2160;CHECK(!comparable_resolution(gt,ct));
 }
 TEST("large hardware encode or validation failure demotes once and retries CPU while capacity stays owned"){
@@ -896,6 +931,10 @@ TEST("1080p GPU child budget covers the measured display adapter commit footprin
  auto ct=tune(c,Codec::h264,20);ct.ram_mb=512;
  auto gt=tune(g,Codec::h264,100,512);gt.ram_mb=512;
  gt.measured_width=1920;gt.measured_height=1080;
+ auto failed_512=gt;failed_512.completed=false;
+ CHECK(!find(run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,failed_512}),g.stable_id,Codec::h264));
+ // Only the actually successful larger-cap probe establishes this budget.
+ gt.ram_mb=768;
  auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt});
  auto hardware=find(profiles,g.stable_id,Codec::h264);CHECK(hardware);
  // The observed 562.32 MiB child cannot finish under the previous 512 MiB cap.

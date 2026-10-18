@@ -82,6 +82,35 @@ TEST("failed final checksum cannot return a successful partial result") {
  }catch(const std::exception& e){error=e.what();}
  CHECK(error=="checksum failed");CHECK(completed==2);
 }
+TEST("independent video renditions and poster prepare together when three slots exist") {
+ std::promise<void> all_started;auto ready=all_started.get_future().share();std::atomic_int preparing{},peak{};
+ auto result=ow::run_rendition_pipeline(std::vector<int>{0,1,2},[&](int,std::stop_token){
+  const auto n=++preparing;auto old=peak.load();while(n>old&&!peak.compare_exchange_weak(old,n)){}
+  if(n==3)all_started.set_value();signalled(ready);--preparing;
+ },[](int i,std::stop_token){return i;},3);
+ CHECK(result==std::vector<int>({0,1,2}));CHECK(peak==3);
+}
+TEST("a slow rendition cannot prevent an already prepared poster from being delivered") {
+ std::promise<void> poster_delivered;auto ready=poster_delivered.get_future().share();
+ auto result=ow::run_rendition_pipeline(std::vector<int>{0,1},[&](int i,std::stop_token){if(i==0)signalled(ready);},
+  [&](int i,std::stop_token){if(i==1)poster_delivered.set_value();return i;},2);
+ CHECK(result==std::vector<int>({0,1}));
+}
+TEST("parallel encode failure stops and drains sibling preparations before returning") {
+ std::promise<void> sibling_started;auto ready=sibling_started.get_future().share();std::atomic_bool drained{};std::string error;
+ try{ow::run_rendition_pipeline(std::vector<int>{0,1},[&](int i,std::stop_token stop){
+  if(i==0){signalled(ready);throw std::runtime_error("encode rejected");}
+  sibling_started.set_value();auto until=std::chrono::steady_clock::now()+2s;
+  while(!stop.stop_requested()&&std::chrono::steady_clock::now()<until)std::this_thread::yield();
+  CHECK(stop.stop_requested());drained=true;
+ },[](int i,std::stop_token){return i;},2);}catch(const std::exception& e){error=e.what();}
+ CHECK(error=="encode rejected");CHECK(drained);
+}
+TEST("parallel pipelines reject zero or unbounded preparation limits") {
+ auto prepare=[](int,std::stop_token){};auto deliver=[](int i,std::stop_token){return i;};
+ THROWS(ow::run_rendition_pipeline(std::vector<int>{0},prepare,deliver,0));
+ THROWS(ow::run_rendition_pipeline(std::vector<int>{0},prepare,deliver,65));
+}
 TEST("independent pipelines do not share cancellation or metadata") {
  auto good=std::async(std::launch::async,[]{return ow::run_rendition_pipeline(std::vector<int>{4,5},
   [](int,std::stop_token stop){CHECK(!stop.stop_requested());},[](int i,std::stop_token stop){CHECK(!stop.stop_requested());return i;});});

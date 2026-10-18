@@ -1,0 +1,223 @@
+[  3%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/pipeline_test.cpp.o
+[  9%] Built target ow_json
+[ 18%] Built target ow_rendition_contract_tests
+[ 24%] Built target ow_rendition_probe
+[ 42%] Built target ow_progress_contract_tests
+[ 60%] Built target ow_core
+[ 63%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+In file included from /home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:1:
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp: In function ‘void test_32()’:
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:34:61: error: ‘class ow::Admission’ has no member named ‘release_compute’
+   34 |  CHECK(a.begin("a","token",5000,1)==Start::started);CHECK(a.release_compute("a"));
+      |                                                             ^~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:36:10: error: ‘class ow::Admission’ has no member named ‘stage’
+   36 |  CHECK(a.stage("a","feed",{768,0,0,1},2,budget).accepted);
+      |          ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:37:10: error: ‘class ow::Admission’ has no member named ‘stage’
+   37 |  CHECK(a.stage("a","optimized",{768,0,0,1},2,budget).accepted);
+      |          ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:38:10: error: ‘class ow::Admission’ has no member named ‘stage’
+   38 |  CHECK(a.stage("a","poster",{512,0,0,1},2,budget).accepted);
+      |          ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:40:16: error: ‘class ow::Admission’ has no member named ‘stage’
+   40 |  auto denied=a.stage("a","extra",{512,0,0,1},2,budget);CHECK(!denied.accepted);CHECK(!denied.reason.empty());
+      |                ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:41:32: error: ‘class ow::Admission’ has no member named ‘finish_stage’
+   41 |  CHECK(!a.finish("a"));CHECK(a.finish_stage("a","feed"));
+      |                                ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:43:10: error: ‘class ow::Admission’ has no member named ‘finish_stage’
+   43 |  CHECK(a.finish_stage("a","optimized"));CHECK(a.finish_stage("a","poster"));CHECK(a.finish("a"));CHECK(a.used()==Resources{});
+      |          ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:43:49: error: ‘class ow::Admission’ has no member named ‘finish_stage’
+   43 |  CHECK(a.finish_stage("a","optimized"));CHECK(a.finish_stage("a","poster"));CHECK(a.finish("a"));CHECK(a.used()==Resources{});
+      |                                                 ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp: In function ‘void test_45()’:
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:47:10: error: ‘class ow::Admission’ has no member named ‘release_compute’
+   47 |  CHECK(a.release_compute("a"));CHECK(a.stage("a","feed",{1000,0,0,2},2,budget).accepted);
+      |          ^~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:47:40: error: ‘class ow::Admission’ has no member named ‘stage’
+   47 |  CHECK(a.release_compute("a"));CHECK(a.stage("a","feed",{1000,0,0,2},2,budget).accepted);
+      |                                        ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:49:11: error: ‘class ow::Admission’ has no member named ‘stage’
+   49 |  CHECK(!a.stage("a","poster",{256,0,0,1},3,budget).accepted);
+      |           ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:50:10: error: ‘class ow::Admission’ has no member named ‘finish_stage’
+   50 |  CHECK(a.finish_stage("a","feed"));CHECK(a.finish("a"));CHECK(a.used()==Resources{});
+      |          ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp: In function ‘void test_52()’:
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:54:10: error: ‘class ow::Admission’ has no member named ‘release_compute’
+   54 |  CHECK(a.release_compute("a"));CHECK(!a.release_compute("a"));
+      |          ^~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:54:41: error: ‘class ow::Admission’ has no member named ‘release_compute’
+   54 |  CHECK(a.release_compute("a"));CHECK(!a.release_compute("a"));
+      |                                         ^~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:55:10: error: ‘class ow::Admission’ has no member named ‘stage’
+   55 |  CHECK(a.stage("a","feed",{1000,0,0,2},2,budget).accepted);CHECK(a.stage("a","feed",{1000,0,0,2},3,budget).accepted);
+      |          ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:55:68: error: ‘class ow::Admission’ has no member named ‘stage’
+   55 |  CHECK(a.stage("a","feed",{1000,0,0,2},2,budget).accepted);CHECK(a.stage("a","feed",{1000,0,0,2},3,budget).accepted);
+      |                                                                    ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:56:11: error: ‘class ow::Admission’ has no member named ‘stage’
+   56 |  CHECK(!a.stage("a","feed",{2000,0,0,2},3,budget).accepted);CHECK(a.used().ram_mb==1000);
+      |           ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:57:10: error: ‘class ow::Admission’ has no member named ‘finish_stage’
+   57 |  CHECK(a.finish_stage("a","feed"));CHECK(!a.finish_stage("a","feed"));CHECK(a.used().ram_mb==0);
+      |          ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:57:45: error: ‘class ow::Admission’ has no member named ‘finish_stage’
+   57 |  CHECK(a.finish_stage("a","feed"));CHECK(!a.finish_stage("a","feed"));CHECK(a.used().ram_mb==0);
+      |                                             ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp: In function ‘void test_59()’:
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:61:142: error: ‘class ow::Admission’ has no member named ‘release_compute’
+   61 |  for(const auto id:{"a","b"}){CHECK(a.offer(task(id,{512,0,100,1}),0,budget).accepted);CHECK(a.begin(id,"t",5000,1)==Start::started);CHECK(a.release_compute(id));}
+      |                                                                                                                                              ^~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:13:28: note: in definition of macro ‘CHECK’
+   13 | #define CHECK(...) do{if(!(__VA_ARGS__))throw std::runtime_error(std::string("check failed at ")+__FILE__+":"+std::to_string(__LINE__)+": " #__VA_ARGS__);}while(false)
+      |                            ^~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp: In lambda function:
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:62:52: error: ‘class ow::Admission’ has no member named ‘stage’
+   62 |  std::atomic_int accepted{};std::thread x([&]{if(a.stage("a","feed",{768,0,0,1},2,budget).accepted)++accepted;}),y([&]{if(a.stage("b","feed",{768,0,0,1},2,budget).accepted)++accepted;});x.join();y.join();
+      |                                                    ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp: In lambda function:
+/home/rick/Downloads/worker-client-flex/tests/admission_test.cpp:62:125: error: ‘class ow::Admission’ has no member named ‘stage’
+   62 |  std::atomic_int accepted{};std::thread x([&]{if(a.stage("a","feed",{768,0,0,1},2,budget).accepted)++accepted;}),y([&]{if(a.stage("b","feed",{768,0,0,1},2,budget).accepted)++accepted;});x.join();y.join();
+      |                                                                                                                             ^~~~~
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp: In function ‘void test_85()’:
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:87:40: error: no matching function for call to ‘run_rendition_pipeline(std::vector<int>, test_85()::<lambda(int, std::stop_token)>, test_85()::<lambda(int, std::stop_token)>, int)’
+   87 |  auto result=ow::run_rendition_pipeline(std::vector<int>{0,1,2},[&](int,std::stop_token){
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   88 |   const auto n=++preparing;auto old=peak.load();while(n>old&&!peak.compare_exchange_weak(old,n)){}
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   89 |   if(n==3)all_started.set_value();signalled(ready);--preparing;
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   90 |  },[](int i,std::stop_token){return i;},3);
+      |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:87:40: note: there is 1 candidate
+In file included from /home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:2:
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate 1: ‘template<class Range, class Prepare, class Deliver> auto ow::run_rendition_pipeline(const Range&, Prepare, Deliver)’
+   14 | auto run_rendition_pipeline(const Range& items,Prepare prepare,Deliver deliver) {
+      |      ^~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate expects 3 arguments, 4 provided
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp: In function ‘void test_93()’:
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:95:40: error: no matching function for call to ‘run_rendition_pipeline(std::vector<int>, test_93()::<lambda(int, std::stop_token)>, test_93()::<lambda(int, std::stop_token)>, int)’
+   95 |  auto result=ow::run_rendition_pipeline(std::vector<int>{0,1},[&](int i,std::stop_token){if(i==0)signalled(ready);},
+      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   96 |   [&](int i,std::stop_token){if(i==1)poster_delivered.set_value();return i;},2);
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:95:40: note: there is 1 candidate
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate 1: ‘template<class Range, class Prepare, class Deliver> auto ow::run_rendition_pipeline(const Range&, Prepare, Deliver)’
+   14 | auto run_rendition_pipeline(const Range& items,Prepare prepare,Deliver deliver) {
+      |      ^~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate expects 3 arguments, 4 provided
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp: In function ‘void test_99()’:
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:101:32: error: no matching function for call to ‘run_rendition_pipeline(std::vector<int>, test_99()::<lambda(int, std::stop_token)>, test_99()::<lambda(int, std::stop_token)>, int)’
+  101 |  try{ow::run_rendition_pipeline(std::vector<int>{0,1},[&](int i,std::stop_token stop){
+      |      ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  102 |   if(i==0){signalled(ready);throw std::runtime_error("encode rejected");}
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  103 |   sibling_started.set_value();auto until=std::chrono::steady_clock::now()+2s;
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  104 |   while(!stop.stop_requested()&&std::chrono::steady_clock::now()<until)std::this_thread::yield();
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  105 |   CHECK(stop.stop_requested());drained=true;
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  106 |  },[](int i,std::stop_token){return i;},2);}catch(const std::exception& e){error=e.what();}
+      |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:101:32: note: there is 1 candidate
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate 1: ‘template<class Range, class Prepare, class Deliver> auto ow::run_rendition_pipeline(const Range&, Prepare, Deliver)’
+   14 | auto run_rendition_pipeline(const Range& items,Prepare prepare,Deliver deliver) {
+      |      ^~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate expects 3 arguments, 4 provided
+In file included from /home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:1:
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp: In function ‘void test_109()’:
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:111:35: error: no matching function for call to ‘run_rendition_pipeline(std::vector<int>, test_109()::<lambda(int, std::stop_token)>&, test_109()::<lambda(int, std::stop_token)>&, int)’
+  111 |  THROWS(ow::run_rendition_pipeline(std::vector<int>{0},prepare,deliver,0));
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:14:47: note: in definition of macro ‘THROWS’
+   14 | #define THROWS(expr) do{bool caught=false;try{expr;}catch(const std::exception&){caught=true;}CHECK(caught);}while(false)
+      |                                               ^~~~
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:111:35: note: there is 1 candidate
+  111 |  THROWS(ow::run_rendition_pipeline(std::vector<int>{0},prepare,deliver,0));
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:14:47: note: in definition of macro ‘THROWS’
+   14 | #define THROWS(expr) do{bool caught=false;try{expr;}catch(const std::exception&){caught=true;}CHECK(caught);}while(false)
+      |                                               ^~~~
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate 1: ‘template<class Range, class Prepare, class Deliver> auto ow::run_rendition_pipeline(const Range&, Prepare, Deliver)’
+   14 | auto run_rendition_pipeline(const Range& items,Prepare prepare,Deliver deliver) {
+      |      ^~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate expects 3 arguments, 4 provided
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:112:35: error: no matching function for call to ‘run_rendition_pipeline(std::vector<int>, test_109()::<lambda(int, std::stop_token)>&, test_109()::<lambda(int, std::stop_token)>&, int)’
+  112 |  THROWS(ow::run_rendition_pipeline(std::vector<int>{0},prepare,deliver,65));
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:14:47: note: in definition of macro ‘THROWS’
+   14 | #define THROWS(expr) do{bool caught=false;try{expr;}catch(const std::exception&){caught=true;}CHECK(caught);}while(false)
+      |                                               ^~~~
+/home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:112:35: note: there is 1 candidate
+  112 |  THROWS(ow::run_rendition_pipeline(std::vector<int>{0},prepare,deliver,65));
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/test.hpp:14:47: note: in definition of macro ‘THROWS’
+   14 | #define THROWS(expr) do{bool caught=false;try{expr;}catch(const std::exception&){caught=true;}CHECK(caught);}while(false)
+      |                                               ^~~~
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate 1: ‘template<class Range, class Prepare, class Deliver> auto ow::run_rendition_pipeline(const Range&, Prepare, Deliver)’
+   14 | auto run_rendition_pipeline(const Range& items,Prepare prepare,Deliver deliver) {
+      |      ^~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/include/ow/rendition_pipeline.hpp:14:6: note: candidate expects 3 arguments, 4 provided
+gmake[2]: *** [CMakeFiles/ow_contract_tests.dir/build.make:93: CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:1100: CMakeFiles/ow_contract_tests.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+gmake[2]: *** [CMakeFiles/ow_pipeline_contract_tests.dir/build.make:93: CMakeFiles/ow_pipeline_contract_tests.dir/tests/pipeline_test.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:1132: CMakeFiles/ow_pipeline_contract_tests.dir/all] Error 2
+gmake: *** [Makefile:101: all] Error 2

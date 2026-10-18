@@ -1,0 +1,14 @@
+PASS rendition pipeline returns ordered metadata for every artifact
+PASS next encode overlaps previous transfer
+PASS empty rendition pipeline starts no stages
+PASS transfer backpressure keeps one encoder and one transfer at a time
+PASS final transfer must join before result is returned
+PASS transfer failure cancels next encode and preserves original cause
+PASS encode failure cancels and joins transfer before unwinding
+PASS failed final checksum cannot return a successful partial result
+FAIL independent video renditions and poster prepare together when three slots exist: pipeline failed to overlap encode and transfer
+FAIL a slow rendition cannot prevent an already prepared poster from being delivered: pipeline failed to overlap encode and transfer
+FAIL parallel encode failure stops and drains sibling preparations before returning: check failed at /home/rick/Downloads/worker-client-flex/tests/pipeline_test.cpp:107: error=="encode rejected"
+PASS parallel pipelines reject zero or unbounded preparation limits
+PASS independent pipelines do not share cancellation or metadata
+13 contracts, 3 failures

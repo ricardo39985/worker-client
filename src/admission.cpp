@@ -19,6 +19,7 @@ Admission::Admission(Resources b,std::size_t m):budget_(b),max_jobs_(m){
 void Admission::capability(std::string name,bool verified,Preference preference){
  std::lock_guard lock(mutex_);capabilities_.insert_or_assign(std::move(name),Capability{verified,preference});
 }
+void Admission::defer_new_starts(std::string reason){std::lock_guard lock(mutex_);deferred_reason_=std::move(reason);}
 void Admission::pause(bool value){std::lock_guard lock(mutex_);paused_=value;}
 bool Admission::begin_probe(){
  std::lock_guard lock(mutex_);if(probing_||!active_.empty())return false;probing_=true;return true;
@@ -33,6 +34,7 @@ Decision Admission::offer(const Offer& o,Tick now,Resources available){
    return {i->second.phase!=Phase::cancelling && (i->second.phase==Phase::running?i->second.deadline>now:i->second.offer.reserve_until>now),"duplicate"};
  }
  if(paused_)return {false,"paused"};
+ if(!deferred_reason_.empty())return {false,deferred_reason_};
  if(probing_)return {false,"gpu_probe"};
  auto c=capabilities_.find(o.capability);
  if(c==capabilities_.end()||!c->second.verified)return {false,"unsupported"};
@@ -48,7 +50,7 @@ Start Admission::begin(const std::string& id,std::string token,Tick deadline,Tic
  auto& a=i->second;
  if(a.phase==Phase::running)return a.lease_token==token&&a.deadline>now?Start::already_running:Start::declined;
  auto cap=capabilities_.find(a.offer.capability);
- if(paused_||probing_||a.phase!=Phase::reserved||a.offer.reserve_until<=now||cap==capabilities_.end()||!cap->second.verified||cap->second.preference==Preference::disabled)return Start::declined;
+ if(paused_||probing_||!deferred_reason_.empty()||a.phase!=Phase::reserved||a.offer.reserve_until<=now||cap==capabilities_.end()||!cap->second.verified||cap->second.preference==Preference::disabled)return Start::declined;
  a.phase=Phase::running;a.lease_token=std::move(token);a.deadline=deadline;return Start::started;
 }
 bool Admission::renew(const std::string& id,const std::string& token,std::uint64_t seq,Tick deadline,Tick now){
@@ -63,16 +65,71 @@ bool Admission::cancel(const std::string& id){
 }
 bool Admission::reserve_ram(const std::string& id,std::uint64_t total,Resources available,Tick now){
  std::lock_guard lock(mutex_);auto i=active_.find(id);
- if(i==active_.end()||i->second.phase!=Phase::running||i->second.deadline<=now)return false;
+ if(i==active_.end()||i->second.phase!=Phase::running||i->second.deadline<=now||i->second.compute_released)return false;
  auto& a=i->second;const auto current=a.offer.resources.ram_mb+a.extra_ram_mb;
  if(total<=current)return true;
  const Resources delta{total-current,0,0,0};
  if(!fits(delta,budget_,used_)||!fits(delta,available,used_))return false;
  used_.ram_mb+=delta.ram_mb;a.extra_ram_mb+=delta.ram_mb;return true;
 }
-bool Admission::finish(const std::string& id){
+bool Admission::release_compute(const std::string& id){
+ std::lock_guard lock(mutex_);auto i=active_.find(id);
+ if(i==active_.end()||i->second.phase!=Phase::running||i->second.compute_released)return false;
+ auto& a=i->second;used_.ram_mb-=a.offer.resources.ram_mb+a.extra_ram_mb;used_.cpu_threads-=a.offer.resources.cpu_threads;
+ a.extra_ram_mb=0;a.compute_released=true;return true;
+}
+Decision Admission::stage(const std::string& id,const std::string& name,Resources cost,Tick now,Resources available,unsigned concurrent_limit){
+ std::lock_guard lock(mutex_);auto i=active_.find(id);
+ if(i==active_.end()||i->second.phase!=Phase::running||i->second.deadline<=now||!i->second.compute_released||
+    !safe_id(name)||!cost.ram_mb||!cost.cpu_threads||cost.scratch_mb||cost.vram_mb)return {false,"stage_unavailable"};
+ auto& stages=i->second.stages;
+ if(auto existing=stages.find(name);existing!=stages.end())return {existing->second==cost,"duplicate_stage"};
+ std::string reason;std::size_t concurrent=0;for(const auto& [_,active]:active_)concurrent+=active.stages.size();
+ if(concurrent>=concurrent_limit)reason="measured_stage_limit";
+ else if(used_.cpu_threads>budget_.cpu_threads||cost.cpu_threads>budget_.cpu_threads-used_.cpu_threads)reason="cpu_budget";
+ else if(used_.ram_mb>budget_.ram_mb||cost.ram_mb>budget_.ram_mb-used_.ram_mb)reason="ram_budget";
+ // Physical free RAM already excludes resident running children. The atomic
+ // sum of their full child caps is independently bounded by budget_ above.
+ // This live check is sampled headroom, not an OS-wide physical RAM quota.
+ else if(!fits(cost,available))reason="live_headroom";
+ if(!reason.empty()){waiting_[{id,name}]=reason;return {false,reason};}
+ waiting_.erase({id,name});stages.emplace(name,cost);used_.ram_mb+=cost.ram_mb;used_.cpu_threads+=cost.cpu_threads;
+ return {true,"stage_ready"};
+}
+void Admission::waiting(const std::string& id,const std::string& name,const std::string& reason){
+ std::lock_guard lock(mutex_);if(active_.contains(id)&&safe_id(name))waiting_[{id,name}]=reason.substr(0,128);
+}
+std::string Admission::queue_reason(const std::string& id,const std::string& stage) const{
+ std::lock_guard lock(mutex_);auto i=waiting_.find({id,stage});return i==waiting_.end()?"encoder_capacity":i->second;
+}
+unsigned Admission::stage_count() const{
+ std::lock_guard lock(mutex_);std::size_t n=0;for(const auto& [_,a]:active_)n+=a.stages.size();return static_cast<unsigned>(n);
+}
+bool Admission::finish_stage(const std::string& id,const std::string& name){
  std::lock_guard lock(mutex_);auto i=active_.find(id);if(i==active_.end())return false;
- used_.ram_mb-=i->second.extra_ram_mb;release(i->second.offer.resources);active_.erase(i);return true;
+ auto s=i->second.stages.find(name);if(s==i->second.stages.end())return false;
+ release(s->second);i->second.stages.erase(s);waiting_.erase({id,name});return true;
+}
+bool Admission::release_scratch(const std::string& id,std::uint64_t mb){
+ std::lock_guard lock(mutex_);auto i=active_.find(id);
+ if(i==active_.end()||i->second.phase==Phase::reserved||mb>i->second.offer.resources.scratch_mb-i->second.released_scratch_mb)return false;
+ i->second.released_scratch_mb+=mb;used_.scratch_mb-=mb;return true;
+}
+std::vector<std::string> Admission::capacity_lines() const{
+ std::lock_guard lock(mutex_);
+ std::vector<std::string> out{
+  "capacity CPU "+std::to_string(used_.cpu_threads)+"/"+std::to_string(budget_.cpu_threads)+" reserved threads",
+  "capacity RAM "+std::to_string(used_.ram_mb)+"/"+std::to_string(budget_.ram_mb)+" MiB reserved",
+  "capacity scratch "+std::to_string(used_.scratch_mb)+"/"+std::to_string(budget_.scratch_mb)+" MiB reserved",
+  "local stage queue "+std::to_string(waiting_.size())+"; remote queue unknown"};
+ for(const auto& [key,reason]:waiting_)out.push_back("queued "+key.first.substr(key.first.size()>4?key.first.size()-4:0)+" "+key.second+": "+reason);
+ return out;
+}
+bool Admission::finish(const std::string& id){
+ std::lock_guard lock(mutex_);auto i=active_.find(id);if(i==active_.end()||!i->second.stages.empty())return false;
+ auto resources=i->second.offer.resources;resources.scratch_mb-=i->second.released_scratch_mb;if(i->second.compute_released){resources.ram_mb=0;resources.cpu_threads=0;}
+ used_.ram_mb-=i->second.extra_ram_mb;release(resources);active_.erase(i);
+ std::erase_if(waiting_,[&](const auto& entry){return entry.first.first==id;});return true;
 }
 std::vector<Expired> Admission::expire(Tick now){
  std::lock_guard lock(mutex_);std::vector<Expired> out;

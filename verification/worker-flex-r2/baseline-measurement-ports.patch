@@ -1,0 +1,80 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -98,6 +98,9 @@
+  add_executable(OrganizerWorkerDoctor windows/doctor.cpp)
+  target_link_libraries(OrganizerWorkerDoctor PRIVATE ow_windows)
+  if(BUILD_TESTING)
++   add_executable(ow_flex_benchmark tests/windows_flex_benchmark.cpp windows/offline_media.cpp windows/capacity.cpp)
++   target_compile_definitions(ow_flex_benchmark PRIVATE OW_FLEX_BASELINE=1)
++   target_link_libraries(ow_flex_benchmark PRIVATE ow_windows wtsapi32)
+    add_executable(ow_gpu_budget_probe tests/windows_gpu_budget_probe.cpp)
+    target_link_libraries(ow_gpu_budget_probe PRIVATE ow_windows)
+    add_executable(ow_pipeline_smoke tests/windows_pipeline_smoke.cpp)
+--- a/windows/worker.hpp
++++ b/windows/worker.hpp
+@@ -19,6 +19,7 @@
+  Resources budget{2048,0,8192,2};
+  bool vram_override_set{};
+  std::uint64_t reserve_ram_mb{0};std::size_t max_jobs{4};
++ std::function<bool()> capacity_foreground; // measurement-only passive observer
+ };
+ Config load_config(const std::filesystem::path& root);
+ struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;std::vector<std::string> fallback_notes;std::vector<ProbeFailure> gpu_failures;bool complete{};};
+@@ -26,7 +27,10 @@
+ using ProbeTiming=std::function<void(const std::string&)>;
+ // retained may refer only to current successful in-process evidence, never disk profiles.
+ Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={},const ProbePhase& phase={},const Probe* retained=nullptr,const ProbeTiming& timing={});
++class OfflineMediaHarness;
+ class Worker {
++ friend class OfflineMediaHarness;
++ Worker(Config config,bool isolated);
+  struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::optional<adaptive::Scheduler::Reservation> profile_reservation;std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;};
+  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
+  Config config_;Store store_;Log log_;Admission admission_;
+@@ -48,6 +52,8 @@
+  std::unordered_map<std::string,JobSpec> offered_; // network thread only
+  std::vector<adaptive::Profile> hardware_profiles_;
+  std::unique_ptr<adaptive::Scheduler> adaptive_scheduler_;
++ bool isolated_{};std::filesystem::path offline_source_,offline_output_;
++ std::map<adaptive::Codec,std::string> offline_pins_;
+  std::atomic<Preference> video_{Preference::allowed},image_{Preference::allowed};
+  void recover_gpus();
+  void network();void watchdog();void execute(std::shared_ptr<TaskData>);
+--- a/windows/worker.cpp
++++ b/windows/worker.cpp
+@@ -323,7 +323,8 @@
+   totals.add(s,std::this_thread::get_id()!=main_thread);if(timing)timing(stage_record(s));
+  });
+ }
+-Worker::Worker(Config config):config_(std::move(config)),store_(config_.root/"journal.sqlite3"),log_(config_.root/"worker.log"),admission_(config_.budget,config_.max_jobs){
++Worker::Worker(Config config):Worker(std::move(config),false){}
++Worker::Worker(Config config,bool isolated):config_(std::move(config)),store_(config_.root/"journal.sqlite3"),log_(config_.root/"worker.log"),admission_(config_.budget,config_.max_jobs),isolated_(isolated){
+  std::optional<std::string> proven_origin;
+  ProtectedPairingSecrets identity(config_.root);
+  if(auto credential=identity.read(SecretSlot::credential)) {
+@@ -339,6 +340,7 @@
+  {std::lock_guard lock(report_mutex_);report_.priority(priority_name(priority_));report_.state("paused",paused_?"operator":"starting",utc_ms(),monotonic_ms());publish_report(config_.root/"worker-status.txt","");publish_report(config_.root/"worker-history.txt","");}
+  safe_log("STATE PRIORITY "+priority_name(priority_));
+  report_status();
++ if(isolated_)return;
+  // Slow capability probes run on the background thread, never blocking tray creation.
+  network_=std::jthread([this]{network();});try{watchdog_=std::jthread([this]{watchdog();});hash_watchdog_=std::jthread([this]{
+   while(!stop_){for(unsigned elapsed=0;elapsed<60000&&!stop_;elapsed+=100)Sleep(100);if(stop_)break;
+@@ -580,7 +582,7 @@
+   phase("prepare source.bin workspace");
+   if(std::filesystem::exists(workspace))throw std::runtime_error("Attempt workspace already exists; refusing unsafe reuse");std::filesystem::create_directories(workspace);
+   Http http;phase("download source.bin",s.input_bytes);
+-  {StageTimer timing("download","source.bin",timing_sink,timing_wall_us,thread_cpu_us);http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);}
++  {StageTimer timing("download","source.bin",timing_sink,timing_wall_us,thread_cpu_us);if(offline_source_.empty())http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);else{std::filesystem::copy_file(offline_source_,workspace/"source.bin");if(std::filesystem::file_size(workspace/"source.bin")!=s.input_bytes)throw std::runtime_error("Offline input size differs");bytes_progress(s.input_bytes);}}
+   phase("verify source.bin sha256",s.input_bytes);
+   {StageTimer timing("input_hash","source.bin",timing_sink,timing_wall_us,thread_cpu_us);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");}
+   if(cancelled())throw std::runtime_error("Job cancelled before conversion");
+@@ -677,7 +679,7 @@
+    auto label="verify "+filename+" SHA-256";transfer_phase(label,bytes);std::string hash;
+    {StageTimer timing("output_hash",filename,timing_sink,timing_wall_us,thread_cpu_us);hash=sha256_file(output,transfer_bytes);}
+    label="upload "+filename;transfer_phase(label,bytes);Http transfer_http;
+-   {StageTimer timing("upload",filename,timing_sink,timing_wall_us,thread_cpu_us);transfer_http.upload(url,output,mime,transfer_cancelled,transfer_bytes);}
++   {StageTimer timing("upload",filename,timing_sink,timing_wall_us,thread_cpu_us);if(offline_output_.empty())transfer_http.upload(url,output,mime,transfer_cancelled,transfer_bytes);else{auto target=offline_output_/id/filename;std::filesystem::create_directories(target.parent_path());std::filesystem::copy_file(output,target);if(sha256_file(target)!=hash)throw std::runtime_error("Offline delivered file integrity differs");transfer_bytes(bytes);}}
+    data->transfer_progress.finish(true,monotonic_ms());return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
+   };
+   if(!s.artifacts.empty()){

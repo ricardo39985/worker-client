@@ -1,0 +1,145 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+SOURCE_ARCHIVE_SHA=40ca9ba7848a3a48c81754eb991efbe2204b263658ce04301448a5cfa4fc05ae
+EXTRACT_EXIT=0
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- Configuring done (6.8s)
+-- Generating done (0.8s)
+-- Build files have been written to: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  ow_json.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_json.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  adaptive_hardware.cpp
+  admission.cpp
+  ow_core.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_core.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  worker.cpp
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\worker.cpp(837,289): warning C4456: declaration of 'cancelled' hides previous local declaration [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+      C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\worker.cpp(636,7):
+      see declaration of 'cancelled'
+  
+  capacity.cpp
+  ow_windows.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_windows.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  tray.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\functional(1055): warning C4789: in function 'void __cdecl ow::win::Worker::recover_gpus(void) __ptr64' buffer 'isolated' of size 208 bytes will be overrun; 8 bytes will be written starting at offset 264 [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\OrganizerWorker.vcxproj]
+  All 10603 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OrganizerWorker.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\OrganizerWorker.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  console.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1621 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OrganizerWorkerConsole.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\OrganizerWorkerConsole.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  doctor.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\functional(1055): warning C4789: in function 'void __cdecl ow::win::Worker::recover_gpus(void) __ptr64' buffer 'isolated' of size 208 bytes will be overrun; 8 bytes will be written starting at offset 264 [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\OrganizerWorkerDoctor.vcxproj]
+  All 10234 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OrganizerWorkerDoctor.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\OrganizerWorkerDoctor.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  Generating code
+  0 of 1147 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_adaptive_evidence_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_adaptive_evidence_probe.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  adaptive_hardware_test.cpp
+  Generating code
+  747 of 5568 functions (13.4%) were compiled, the rest were copied from previous compilation.
+    693 functions were new in current compilation
+    84 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_adaptive_hardware_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  admission_test.cpp
+  capacity_test.cpp
+  Generating code
+  347 of 3287 functions (10.6%) were compiled, the rest were copied from previous compilation.
+    248 functions were new in current compilation
+    111 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  windows_flex_benchmark.cpp
+  offline_media.cpp
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\offline_media.cpp(21,32): error C2039: 'proven_nvenc_session_limit': is not a member of 'ow::adaptive' [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_flex_benchmark.vcxproj]
+      C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\include\ow\device_identity.hpp(4,11):
+      see declaration of 'ow::adaptive'
+  
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\offline_media.cpp(21,32): error C3861: 'proven_nvenc_session_limit': identifier not found [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_flex_benchmark.vcxproj]
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  windows_foreground_probe.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 984 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_foreground_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_foreground_probe.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  windows_gpu_baseline.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2962 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_gpu_baseline.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_gpu_baseline.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  windows_gpu_budget_probe.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2879 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_gpu_budget_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_gpu_budget_probe.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  windows_gpu_measurements.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 3063 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_gpu_measurements.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_gpu_measurements.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_pipeline_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  windows_pipeline_smoke.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\functional(1055): warning C4789: in function 'void __cdecl ow::win::Worker::recover_gpus(void) __ptr64' buffer 'isolated' of size 208 bytes will be overrun; 8 bytes will be written starting at offset 264 [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_pipeline_smoke.vcxproj]
+  All 10544 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_pipeline_smoke.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_pipeline_smoke.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  ow_progress_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_progress_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  ow_rendition_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_rendition_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  ow_rendition_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_rendition_probe.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  windows_child.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 760 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_test_child.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_test_child.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  main.cpp
+  windows_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\functional(1055): warning C4789: in function 'void __cdecl ow::win::Worker::recover_gpus(void) __ptr64' buffer 'isolated' of size 208 bytes will be overrun; 8 bytes will be written starting at offset 264 [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows_tests.vcxproj]
+  All 10766 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_windows_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_windows_tests.exe
+BUILD_EXIT=1
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>

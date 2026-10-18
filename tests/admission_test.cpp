@@ -11,6 +11,15 @@ Offer task(std::string id="a",Resources need={1000,0,100,2}){
 }
 void ready(Admission& a){a.capability("conversion.video.h264",true,Preference::preferred);}
 }
+TEST("pressure defers reserved BEGIN as well as new offers without cancelling running work") {
+ Admission a(budget,8);ready(a);CHECK(a.offer(task("a"),0,budget).accepted);CHECK(a.offer(task("b"),0,budget).accepted);
+ CHECK(a.begin("a","live",5000,1)==Start::started);const auto before=a.used();
+ a.defer_new_starts("foreground_activity");CHECK(!a.offer(task("new"),2,budget).accepted);
+ CHECK(a.begin("b","not-started",5000,2)==Start::declined);CHECK(a.used()==before);
+ CHECK(a.begin("a","live",5000,2)==Start::already_running);CHECK(a.renew("a","live",1,6000,2));
+ CHECK(a.offer(task("a"),2,budget).accepted);CHECK(a.finish("a"));
+ a.defer_new_starts("");CHECK(a.begin("b","not-started",5000,3)==Start::started);
+}
 TEST("verified capabilities accept independent jobs concurrently") {
  Admission a(budget,8);ready(a);
  CHECK(a.offer(task("a"),0,budget).accepted);CHECK(a.offer(task("b"),0,budget).accepted);
@@ -28,6 +37,51 @@ TEST("four single-CPU app jobs reserve and begin independently within configured
  CHECK(admission.used()==Resources{2048,0,4096,4});
  CHECK(admission.cancel("0"));CHECK(!admission.offer(fifth,0,capacity).accepted);
  CHECK(admission.finish("0"));CHECK(admission.offer(fifth,0,capacity).accepted);
+}
+TEST("drained input resources hand off to atomic concurrent stage claims") {
+ Admission a({2048,0,1000,3},4);ready(a);CHECK(a.offer(task("a",{512,0,200,1}),0,budget).accepted);
+ CHECK(a.begin("a","token",5000,1)==Start::started);CHECK(a.release_compute("a"));
+ CHECK(a.used()==Resources{0,0,200,0});
+ CHECK(a.stage("a","feed",{768,0,0,1},2,budget).accepted);
+ CHECK(a.stage("a","optimized",{768,0,0,1},2,budget).accepted);
+ CHECK(a.stage("a","poster",{512,0,0,1},2,budget).accepted);
+ CHECK(a.used()==Resources{2048,0,200,3});
+ auto denied=a.stage("a","extra",{512,0,0,1},2,budget);CHECK(!denied.accepted);CHECK(!denied.reason.empty());
+ CHECK(!a.finish("a"));CHECK(a.finish_stage("a","feed"));
+ CHECK(a.used()==Resources{1280,0,200,2});
+ CHECK(a.finish_stage("a","optimized"));CHECK(a.finish_stage("a","poster"));CHECK(a.finish("a"));CHECK(a.used()==Resources{});
+}
+TEST("cancellation keeps stage claims until contained children drain") {
+ Admission a(budget,4);ready(a);CHECK(a.offer(task(),0,budget).accepted);CHECK(a.begin("a","t",5000,1)==Start::started);
+ CHECK(a.release_compute("a"));CHECK(a.stage("a","feed",{1000,0,0,2},2,budget).accepted);
+ CHECK(a.cancel("a"));CHECK(a.used().ram_mb==1000);CHECK(!a.finish("a"));
+ CHECK(!a.stage("a","poster",{256,0,0,1},3,budget).accepted);
+ CHECK(a.finish_stage("a","feed"));CHECK(a.finish("a"));CHECK(a.used()==Resources{});
+}
+TEST("stage retries cannot double charge or silently change a resource promise") {
+ Admission a(budget,4);ready(a);CHECK(a.offer(task(),0,budget).accepted);CHECK(a.begin("a","t",5000,1)==Start::started);
+ CHECK(a.release_compute("a"));CHECK(!a.release_compute("a"));
+ CHECK(a.stage("a","feed",{1000,0,0,2},2,budget).accepted);CHECK(a.stage("a","feed",{1000,0,0,2},3,budget).accepted);
+ CHECK(!a.stage("a","feed",{2000,0,0,2},3,budget).accepted);CHECK(a.used().ram_mb==1000);
+ CHECK(a.finish_stage("a","feed"));CHECK(!a.finish_stage("a","feed"));CHECK(a.used().ram_mb==0);
+}
+TEST("stage costs compete atomically across independent jobs without altering offer identity") {
+ Admission a({1024,0,1000,2},4);ready(a);
+ for(const auto id:{"a","b"}){CHECK(a.offer(task(id,{512,0,100,1}),0,budget).accepted);CHECK(a.begin(id,"t",5000,1)==Start::started);CHECK(a.release_compute(id));}
+ std::atomic_int accepted{};std::thread x([&]{if(a.stage("a","feed",{768,0,0,1},2,budget).accepted)++accepted;}),y([&]{if(a.stage("b","feed",{768,0,0,1},2,budget).accepted)++accepted;});x.join();y.join();
+ CHECK(accepted==1);CHECK(a.used().ram_mb==768);
+ for(const auto& active:a.active())CHECK(active.offer.resources==Resources{512,0,100,1});
+}
+TEST("live stage RAM headroom is not charged twice against already allocated children") {
+ Admission a(budget,4);ready(a);CHECK(a.offer(task(),0,budget).accepted);CHECK(a.begin("a","t",5000,1)==Start::started);CHECK(a.release_compute("a"));
+ CHECK(a.stage("a","feed",{1000,0,0,1},2,budget).accepted);
+ CHECK(a.stage("a","poster",{400,0,0,1},3,{500,0,10000,6}).accepted);
+ CHECK(a.used().ram_mb==1400);CHECK(!a.stage("a","extra",{600,0,0,1},3,{500,0,10000,6}).accepted);
+}
+TEST("freed source and uploaded output scratch can be reclaimed before the remaining job completes") {
+ Admission a(budget,4);ready(a);CHECK(a.offer(task(),0,budget).accepted);CHECK(a.begin("a","t",5000,1)==Start::started);
+ CHECK(a.release_scratch("a",30));CHECK(a.used().scratch_mb==70);CHECK(!a.release_scratch("a",71));
+ CHECK(a.active()[0].offer.resources.scratch_mb==100);CHECK(a.finish("a"));CHECK(a.used()==Resources{});
 }
 TEST("missing capability fails closed"){Admission a(budget,8);CHECK(!a.offer(task(),0,budget).accepted);}
 TEST("installed but unverified does not mean capable"){Admission a(budget,8);a.capability("conversion.video.h264",false,Preference::preferred);CHECK(!a.offer(task(),0,budget).accepted);}

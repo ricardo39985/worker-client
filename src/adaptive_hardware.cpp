@@ -20,7 +20,7 @@ const TuningEvidence* find_tuning(const std::vector<TuningEvidence>& all,const D
  auto i=std::find_if(all.begin(),all.end(),[&](const auto& t){
   return t.stable_id==d.stable_id&&t.backend==d.family&&t.codec==codec&&t.completed&&
          t.output_valid&&t.cancelled_cleanly&&std::isfinite(t.frames_per_second)&&t.frames_per_second>0&&
-         t.cpu_threads>0&&t.ram_mb>0&&t.scratch_mb>0&&t.tested_concurrency>0&&
+         t.cpu_threads>0&&t.ram_mb>0&&t.scratch_mb>0&&t.tested_concurrency>0&&t.tested_concurrency<=64&&
          (d.family==Backend::cpu?t.vram_mb==0:(t.vram_mb>0&&t.measured_width>0&&t.measured_height>0));
  });
  return i==all.end()?nullptr:&*i;
@@ -85,13 +85,13 @@ std::vector<Profile> choose_profiles(const std::vector<Device>& devices,
   }
   if(!cpu_device||!cpu_tuning)continue;
   auto add=[&](const Device& d,const TuningEvidence& t){
-   const auto ram=d.family==Backend::cpu?t.ram_mb:std::max(t.ram_mb,gpu_child_memory_mb(t.measured_width,t.measured_height,codec,InputMemory::host,t.child_memory_overhead_mb));
+   const auto ram=t.ram_mb; // this exact child cap already encoded and decoded the measured sample
    auto concurrency_cap=std::min<std::uint64_t>(t.tested_concurrency,limits.max_jobs);
    concurrency_cap=std::min(concurrency_cap,concurrency(limits.cpu_threads,t.cpu_threads));
    concurrency_cap=std::min(concurrency_cap,concurrency(limits.ram_mb,ram));
    concurrency_cap=std::min(concurrency_cap,concurrency(limits.scratch_mb,t.scratch_mb));
    if(d.family!=Backend::cpu){
-    concurrency_cap=std::min<std::uint64_t>(concurrency_cap,device_encode_sessions);
+    concurrency_cap=std::min<std::uint64_t>(concurrency_cap,t.tested_concurrency);
     concurrency_cap=std::min(concurrency_cap,concurrency(limits.vram_mb,t.vram_mb));
     concurrency_cap=std::min(concurrency_cap,concurrency(d.dedicated_vram_mb,t.vram_mb));
    }
@@ -101,17 +101,15 @@ std::vector<Profile> choose_profiles(const std::vector<Device>& devices,
    const auto geometry=encoder_geometry(d.family);
    out.push_back({d.stable_id,d.driver_version,hash,d.family,codec,t.cpu_threads,ram,t.vram_mb,
                   t.scratch_mb,static_cast<std::uint32_t>(concurrency_cap),t.frames_per_second,d.adapter_index,d.backend_index,d.backend_identity_verified,geometry.max_width,geometry.max_height,t.measured_width,t.measured_height,d.physical_id,d.name,t.child_memory_overhead_mb});
+   if(d.family!=Backend::cpu)out.back().proven_sessions=t.tested_concurrency;
   };
   add(*cpu_device,*cpu_tuning);
   for(const auto& d:verified){
    if(d.family==Backend::cpu||!d.driver_healthy||!d.backend_identity_verified||d.stable_id.empty()||d.driver_version.empty()||
       !d.dedicated_vram_mb||!find_probe(probes,d,codec,hash))continue;
    auto t=find_tuning(tuning,d,codec);if(!t||t->vram_mb>d.dedicated_vram_mb)continue;
-   // Only comparable 1080p-or-larger evidence can withhold a functional
-   // profile for speed. A tiny or mismatched sample cannot decide real-video
-   // performance; runtime still uses guarded validation and resource caps.
-   // CRF/quality equivalence is never inferred.
-   if(comparable_resolution(*t,*cpu_tuning)&&t->frames_per_second<cpu_tuning->frames_per_second*1.05)continue;
+   // Throughput ranks candidates; it cannot erase a successfully probed
+   // backend which may be useful while a faster encoder is occupied.
    add(d,*t);
   }
  }
@@ -204,7 +202,7 @@ struct Scheduler::State {
  std::vector<Profile> profiles;
  std::uint64_t jobs{},cpu{},ram{},scratch{},vram{},nvenc_jobs{};
  std::map<std::string,std::uint64_t> device_vram,device_caps;
- std::map<std::string,std::uint32_t> device_jobs;
+ std::map<std::string,std::uint32_t> device_jobs,session_caps,live_session_caps;
  std::map<std::string,std::uint32_t> primary_jobs;
  std::map<std::string,bool> fallback_busy;
 };
@@ -237,12 +235,15 @@ Scheduler::Scheduler(Limits limits,std::vector<Profile> profiles):state_(std::ma
  verify_device_identities(devices);
  for(auto p:profiles){
   if(p.backend!=Backend::cpu){
+   if(!p.proven_sessions||p.proven_sessions>64||p.vram_mb>UINT64_MAX/p.proven_sessions)continue;
    auto d=std::find_if(devices.begin(),devices.end(),[&](const auto& current){return current.stable_id==p.stable_id&&current.backend_identity_verified;});
    if(d==devices.end()||!p.vram_mb)continue;
    // Only one simultaneous encode was measured on each card. H.264 and HEVC
    // are sequential within a job and share this physical session reservation.
-   p.max_concurrency=std::min(p.max_concurrency,device_encode_sessions);
-   state_->device_caps[card_key(p)]=std::max(state_->device_caps[card_key(p)],p.vram_mb);
+   p.max_concurrency=std::min(p.max_concurrency,p.proven_sessions);
+   auto& sessions=state_->session_caps[card_key(p)];sessions=sessions?std::min(sessions,p.proven_sessions):p.proven_sessions;
+   state_->live_session_caps[card_key(p)]=sessions;
+   state_->device_caps[card_key(p)]=std::max(state_->device_caps[card_key(p)],p.vram_mb*p.proven_sessions);
   }
   state_->profiles.push_back(std::move(p));
  }
@@ -293,19 +294,19 @@ bool Scheduler::Reservation::hardware_enabled(const Profile& profile) const{
 std::uint64_t Scheduler::Reservation::memory_for_dimensions(std::uint32_t width,std::uint32_t height) const{
  std::uint64_t ram=0;
  for(const auto& p:profiles_)ram=std::max(ram,p.backend==Backend::cpu?p.ram_mb:
-  std::max(p.ram_mb,gpu_child_memory_mb(width,height,p.codec,InputMemory::host,p.child_memory_overhead_mb)));
+  (width&&height&&width<=p.measured_width&&height<=p.measured_height?p.ram_mb:std::max(p.ram_mb,gpu_child_memory_mb(width,height,p.codec,InputMemory::host,p.child_memory_overhead_mb))));
  return ram;
 }
 bool Scheduler::Reservation::resize_memory(std::uint32_t width,std::uint32_t height,const Limits& task){
  if(!active_||!state_)return false;
- const auto ram=memory_for_dimensions(width,height);
- std::lock_guard lock(state_->mutex);
- const auto old=aggregate_cost(profiles_).ram;
+ return grow_memory(memory_for_dimensions(width,height),task);
+}
+bool Scheduler::Reservation::grow_memory(std::uint64_t ram,const Limits& task){
+ if(!active_||!state_)return false;
+ std::lock_guard lock(state_->mutex);const auto old=aggregate_cost(profiles_).ram;
+ if(ram<=old)return true;
  if(ram>task.ram_mb||state_->ram>state_->limits.ram_mb||ram-old>state_->limits.ram_mb-state_->ram)return false;
- state_->ram+=ram-old;
- for(auto& p:profiles_)if(p.backend!=Backend::cpu)p.ram_mb=std::max(p.ram_mb,
-  gpu_child_memory_mb(width,height,p.codec,InputMemory::host,p.child_memory_overhead_mb));
- return true;
+ state_->ram+=ram-old;for(auto& p:profiles_)p.ram_mb=std::max(p.ram_mb,ram);return true;
 }
 bool Scheduler::Reservation::acquire_cpu_fallback(const std::function<bool()>& cancelled,std::uint32_t wait_ms){
  if(!active_||!state_)return false;
@@ -340,7 +341,7 @@ void Scheduler::release(const std::shared_ptr<State>& state,const std::vector<Pr
 Scheduler::Reservation Scheduler::reserve(const std::vector<Codec>& codecs){
  return reserve(codecs,state_->limits);
 }
-Scheduler::Reservation Scheduler::reserve(const std::vector<Codec>& codecs,const Limits& task_limits,std::vector<std::string>* exclusions){
+Scheduler::Reservation Scheduler::reserve(const std::vector<Codec>& codecs,const Limits& task_limits,std::vector<std::string>* exclusions,bool cpu_only,std::uint32_t width,std::uint32_t height,const std::string& pinned_primary){
  auto s=state_;std::lock_guard lock(s->mutex);
  if(!s->limits.max_jobs||s->jobs>=s->limits.max_jobs)return {};
  // Task limits describe the maximum cost of this one job. Machine limits
@@ -359,7 +360,9 @@ Scheduler::Reservation Scheduler::reserve(const std::vector<Codec>& codecs,const
  for(auto codec:codecs){
   std::vector<const Profile*> candidates;
   for(const auto& p:s->profiles){
-   if(p.codec!=codec||!p.max_concurrency||p.stable_id.empty())continue;
+   if(p.codec!=codec||!p.max_concurrency||p.stable_id.empty()||(cpu_only&&p.backend!=Backend::cpu))continue;
+   if(!cpu_only&&!pinned_primary.empty()&&p.stable_id!=pinned_primary)continue;
+   if(width&&height&&!profile_supports_dimensions(p,width,height)){excluded(p,"geometry requires CPU");continue;}
    if(p.backend!=Backend::cpu&&!p.backend_identity_verified)continue;
    if(p.backend==Backend::cpu){if(s->primary_jobs[profile_key(p)]>=p.max_concurrency||s->fallback_busy[profile_key(p)])continue;}
    else if(s->primary_jobs[profile_key(p)]>=p.max_concurrency){excluded(p,"encoder session limit");continue;}
@@ -388,13 +391,13 @@ Scheduler::Reservation Scheduler::reserve(const std::vector<Codec>& codecs,const
       projected.cpu+s->cpu>s->limits.cpu_threads||projected.ram+s->ram>s->limits.ram_mb||projected.scratch+s->scratch>s->limits.scratch_mb){excluded(*candidate,"CPU/RAM/scratch budget exhausted");continue;}
    bool device_fit=true;
    for(const auto& [id,mb]:projected.devices){
-    if(s->device_jobs[id]>=device_encode_sessions){excluded(*candidate,"per-card encoder session limit");device_fit=false;}
+    if(s->device_jobs[id]>=s->live_session_caps[id]){excluded(*candidate,"per-card encoder session limit");device_fit=false;}
     if(mb+s->device_vram[id]>s->device_caps[id]){excluded(*candidate,"insufficient VRAM");device_fit=false;}
    }
    // Historical consumer drivers have a system-wide limit, not one limit
    // per card. Stay at two worker sessions even on newer drivers with more.
    if(!device_fit)continue;
-   if(s->nvenc_jobs+projected.nvenc_devices.size()>worker_nvenc_sessions){excluded(*candidate,"worker encoder session limit");continue;}
+   if(s->nvenc_jobs+projected.nvenc_devices.size()>s->limits.nvenc_sessions){excluded(*candidate,"worker encoder session limit");continue;}
    chosen.insert(chosen.end(),for_job.begin(),for_job.end());admitted=true;break;
   }
   if(!admitted)return {};
@@ -404,13 +407,20 @@ Scheduler::Reservation Scheduler::reserve(const std::vector<Codec>& codecs,const
     cost.scratch>task_caps.scratch_mb||cost.vram>task_caps.vram_mb)return {};
  if(cost.cpu+s->cpu>s->limits.cpu_threads||cost.ram+s->ram>s->limits.ram_mb||
     cost.scratch+s->scratch>s->limits.scratch_mb||cost.vram+s->vram>s->limits.vram_mb)return {};
- for(const auto& [id,mb]:cost.devices)if(mb+s->device_vram[id]>s->device_caps[id]||s->device_jobs[id]>=device_encode_sessions)return {};
- if(s->nvenc_jobs+cost.nvenc_devices.size()>worker_nvenc_sessions)return {};
+ for(const auto& [id,mb]:cost.devices)if(mb+s->device_vram[id]>s->device_caps[id]||s->device_jobs[id]>=s->live_session_caps[id])return {};
+ if(s->nvenc_jobs+cost.nvenc_devices.size()>s->limits.nvenc_sessions)return {};
  s->nvenc_jobs+=cost.nvenc_devices.size();
  s->cpu+=cost.cpu;s->ram+=cost.ram;s->scratch+=cost.scratch;s->vram+=cost.vram;++s->jobs;
  for(const auto& [id,mb]:cost.devices){s->device_vram[id]+=mb;++s->device_jobs[id];}
  for(const auto& p:chosen)if(p.backend!=Backend::cpu||std::count_if(chosen.begin(),chosen.end(),[&](const auto& q){return q.codec==p.codec&&q.backend!=Backend::cpu;})==0)++s->primary_jobs[profile_key(p)];
  return Reservation(s,std::move(chosen));
+}
+std::uint32_t Scheduler::device_concurrency(const std::string& id) const{
+ auto s=state_;std::lock_guard lock(s->mutex);for(const auto& p:s->profiles)if(p.stable_id==id&&p.backend!=Backend::cpu)return s->device_jobs[card_key(p)];return 0;
+}
+void Scheduler::set_device_concurrency_limit(const std::string& id,std::uint32_t limit){
+ auto s=state_;std::lock_guard lock(s->mutex);
+ for(const auto& p:s->profiles)if(p.stable_id==id&&p.backend!=Backend::cpu)s->live_session_caps[card_key(p)]=std::min(limit,s->session_caps[card_key(p)]);
 }
 void Scheduler::set_device_available_vram(const std::string& id,std::uint64_t mb){
  auto s=state_;std::lock_guard lock(s->mutex);
@@ -420,6 +430,15 @@ void Scheduler::set_device_available_vram(const std::string& id,std::uint64_t mb
  if(found!=s->device_caps.end())found->second=mb;
 }
 std::uint64_t Scheduler::active_jobs() const{auto s=state_;std::lock_guard lock(s->mutex);return s->jobs;}
+std::vector<std::string> Scheduler::capacity_lines() const{
+ auto s=state_;std::lock_guard lock(s->mutex);std::vector<std::string> lines;std::set<std::string> seen;
+ for(const auto& p:s->profiles)if(p.backend!=Backend::cpu&&seen.insert(card_key(p)).second){
+  const auto key=card_key(p);
+  lines.push_back("capacity "+backend_token(p.backend)+" GPU "+std::to_string(p.backend_index)+" sessions "+std::to_string(s->device_jobs[key])+"/"+std::to_string(s->live_session_caps[key])+" trial / "+std::to_string(s->session_caps[key])+" proven");
+  lines.push_back("  VRAM "+std::to_string(s->device_vram[key])+"/"+std::to_string(s->device_caps[key])+" MiB reserved; not a quota");
+ }
+ return lines;
+}
 bool Scheduler::demote_profile(const Profile& profile){
  if(profile.backend==Backend::cpu)return false;
  auto s=state_;std::lock_guard lock(s->mutex);const auto before=s->profiles.size();
