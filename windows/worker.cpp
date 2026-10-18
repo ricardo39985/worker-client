@@ -585,6 +585,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   {StageTimer timing("input_hash","source.bin",timing_sink,timing_wall_us,thread_cpu_us);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");}
   if(cancelled())throw std::runtime_error("Job cancelled before conversion");
   std::optional<std::pair<std::uint32_t,std::uint32_t>> input_dimensions;
+  std::optional<VideoTiming> source_timing;
   auto convert=[&](const std::vector<std::wstring>& arguments,const std::vector<std::wstring>& cpu_arguments,
                    const std::string& filename,unsigned seconds,bool hardware,std::stop_token pipeline_stop=std::stop_token{}){
    if(cancelled()||pipeline_stop.stop_requested())throw std::runtime_error("Job cancelled before conversion");
@@ -634,6 +635,13 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     {std::lock_guard lock(report_mutex_);encoder_done=report_.encoder_line(id,encoder_label,filename,gpu_device?gpu_device->physical_id:"cpu",child_ram,readings_,true,gpu_device?gpu_device->name:"cpu");}
     safe_log(encoder_done);
    };
+   auto validate_timing=[&]{
+    if(!source_timing || (filename!="feed.mp4"&&filename!="optimized.mp4"))return;
+    StageTimer timing("output_timing",filename,timing_sink,timing_wall_us,thread_cpu_us,true);
+    run_child_probe(config_.ffmpeg,video_timing_arguments(workspace/filename),workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},s.offer.resources,nullptr,UINT64_MAX,30000,0,0,&timing);
+    auto output_timing=video_timing(read_file(workspace/"process.log",5*1024*1024));
+    if(!output_timing||!same_video_timing(*source_timing,*output_timing))throw std::runtime_error("Output video frame rate or timestamps differ from source");
+   };
    if(hardware){
     const auto output=workspace/filename;
     adaptive::run_with_cpu_fallback(output,true,[&]{return cancelled()||pipeline_stop.stop_requested();},
@@ -653,9 +661,10 @@ void Worker::execute(std::shared_ptr<TaskData> data){
       try{run_child_probe(config_.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-xerror",L"-threads",L"1",L"-i",path.wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},validation_limits,nullptr,UINT64_MAX,30000,input_dimensions?input_dimensions->first:0,input_dimensions?input_dimensions->second:0,&timing);}catch(const std::exception& e){retry_reason=e.what();throw;}
       const bool valid=input_dimensions&&adaptive::video_geometry_valid(read_file(workspace/"process.log"),filename=="optimized.mp4"?"hevc":"h264",input_dimensions->first,input_dimensions->second);
       if(!valid)retry_reason="GPU output geometry or codec validation failed";
+      if(valid)validate_timing();
       return valid;
      });
-   }else run_encoder(arguments,false);
+   }else {run_encoder(arguments,false);validate_timing();}
    data->progress.finish(true,monotonic_ms());
   };
   auto upload=[&](const std::string& filename,const std::string& url,const std::string& mime,std::stop_token pipeline_stop=std::stop_token{}){
@@ -674,8 +683,19 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    const bool video=s.offer.capability=="media.video.renditions.v1";
    const auto selected_profiles=data->profile_reservation?data->profile_reservation->profiles():std::vector<adaptive::Profile>{};
    auto applicable_profiles=selected_profiles;std::string source_info;bool poster_ready=false;
-   const auto has_hardware=std::any_of(applicable_profiles.begin(),applicable_profiles.end(),[](const auto& p){return p.backend!=adaptive::Backend::cpu;});
-   if(video&&has_hardware){
+   if(video){
+    StageTimer timing("input_timing","source.bin",timing_sink,timing_wall_us,thread_cpu_us,true);
+    run_child_probe(config_.ffmpeg,video_timing_arguments(workspace/"source.bin"),workspace,cancelled,s.offer.resources,nullptr,UINT64_MAX,30000,0,0,&timing);
+    source_timing=video_timing(read_file(workspace/"process.log",5*1024*1024));
+    if(!source_timing||source_timing->reported_rate.empty()||!source_timing->rate())throw std::runtime_error("Source video timing cannot be verified; refusing unvalidated output");
+    // NVENC's VUI rate may disagree with the packet-derived rate on VFR even
+    // with exact PTS. Preserve both through the existing software encoders.
+    if(!source_timing->constant_rate()){
+     applicable_profiles.erase(std::remove_if(applicable_profiles.begin(),applicable_profiles.end(),[](const auto& p){return p.backend!=adaptive::Backend::cpu;}),applicable_profiles.end());
+     safe_log("JOB "+id+" variable frame timing: decode=software encode=software; preserve source time base");
+    }
+   }
+   if(video){
     std::optional<std::pair<std::uint32_t,std::uint32_t>> dimensions;
     try{StageTimer timing("input_inspection_poster","source.bin+poster.webp",timing_sink,timing_wall_us,thread_cpu_us,true);dimensions=inspect_video_dimensions(config_.ffmpeg,workspace/"source.bin",workspace,cancelled,Resources{s.offer.resources.ram_mb,0,s.offer.resources.scratch_mb,s.offer.resources.cpu_threads},&timing,&source_info,true);
      poster_ready=inspection_poster_reusable(source_info)&&std::filesystem::is_regular_file(workspace/"poster.webp")&&std::filesystem::file_size(workspace/"poster.webp")>0;}
@@ -701,11 +721,11 @@ void Worker::execute(std::shared_ptr<TaskData> data){
      }
      safe_log("JOB "+id+" selected "+name+" "+size+
        (evidence==adaptive::GeometryEvidence::unproven?"; not yet proven; guarded":"; sampled; guarded")+
-       " decode="+(profile.backend==adaptive::Backend::nvidia_nvenc&&cuda_sdr_decode_eligible(source_info)?"cuda":"software")+" scale=none encode="+name);
+       " decode="+(profile.backend==adaptive::Backend::nvidia_nvenc&&source_timing&&source_timing->constant_rate()&&cuda_sdr_decode_eligible(source_info)?"cuda":"software")+" scale=none encode="+name);
      return false;
     }),applicable_profiles.end());
    }
-   auto plan=rendition_plan(video,s.copy_audio,workspace,applicable_profiles,source_info);
+   auto plan=rendition_plan(video,s.copy_audio,workspace,applicable_profiles,source_info,source_timing?&*source_timing:nullptr);
    // Deliver the prepared poster first, keeping the existing one-artifact
    // backpressure bound while its upload overlaps the first video encode.
    if(poster_ready)std::rotate(plan.begin(),plan.end()-1,plan.end());
@@ -717,7 +737,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
      safe_log("JOB "+id+" selected cpu/"+(codec==adaptive::Codec::hevc?"hevc":"h264")+" decode=software scale=none encode=software");
    }
    std::vector<adaptive::Profile> cpu_profiles;{std::lock_guard lock(mutex_);for(const auto& profile:hardware_profiles_)if(profile.backend==adaptive::Backend::cpu)cpu_profiles.push_back(profile);}
-   auto cpu_plan=rendition_plan(video,s.copy_audio,workspace,cpu_profiles);json::object outputs;
+   auto cpu_plan=rendition_plan(video,s.copy_audio,workspace,cpu_profiles,source_info,source_timing?&*source_timing:nullptr);json::object outputs;
    auto metadata=run_rendition_pipeline(plan,[&](const Rendition& rendition,std::stop_token stop){
     if(rendition.filename=="poster.webp"&&poster_ready){
      if(cancelled()||stop.stop_requested())throw std::runtime_error("Job cancelled before poster reuse");

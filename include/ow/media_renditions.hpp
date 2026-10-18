@@ -1,6 +1,7 @@
 #pragma once
 #include "ow/adaptive_hardware.hpp"
 #include "ow/device_decode.hpp"
+#include "ow/video_timing.hpp"
 #include <algorithm>
 #include <filesystem>
 #include <string>
@@ -27,7 +28,7 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
   args.insert(args.end(),{L"-c:a",copy_audio?L"copy":L"aac"});
   if(!copy_audio)args.insert(args.end(),{L"-b:a",L"160k"});
   auto file=hevc?"optimized.mp4":"feed.mp4";
-  args.insert(args.end(),{L"-fps_mode",L"passthrough",L"-movflags",L"+faststart",(workspace/file).wstring()});
+  args.insert(args.end(),{L"-fps_mode",L"passthrough",L"-enc_time_base:v",L"demux",L"-movflags",L"+faststart",(workspace/file).wstring()});
   plan.push_back({hevc?"feed_optimized":"feed","video/mp4",file,std::move(args),hevc?240u:180u});
  }
  for(bool poster:{false,true}) {
@@ -50,9 +51,17 @@ inline std::vector<std::wstring> rendition_inspection_arguments(const std::files
  return args;
 }
 inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const std::filesystem::path& workspace,
-                                               const std::vector<adaptive::Profile>& profiles, const std::string& source_info={}) {
+                                               const std::vector<adaptive::Profile>& profiles, const std::string& source_info={},const VideoTiming* timing=nullptr) {
 
  auto plan=rendition_plan(video,copy_audio,workspace);
+ if(timing){
+  const auto rate=timing->rate();
+  if(!rate)throw std::runtime_error("Exact source video frame rate unavailable");
+  // libx265 otherwise signals the average filter rate for irregular sources,
+  // even with exact PTS. Set its VUI rate without resampling the frame stream.
+  auto& args=plan[1].arguments;auto params=std::find(args.begin(),args.end(),L"-x265-params");
+  if(params!=args.end())*(params+1)+=L":fps="+std::to_wstring(rate->first)+L"/"+std::to_wstring(rate->second);
+ }
  for(auto& rendition:plan){
   if(rendition.role!="feed"&&rendition.role!="feed_optimized")continue;
   const auto codec=rendition.role=="feed_optimized"?adaptive::Codec::hevc:adaptive::Codec::h264;
@@ -61,7 +70,7 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
     (!cpu_profile||p.measured_frames_per_second>cpu_profile->measured_frames_per_second))cpu_profile=&p;
   auto selected=profiles.end();
   for(auto i=profiles.begin();i!=profiles.end();++i)
-   if(i->codec==codec&&i->backend!=adaptive::Backend::cpu&&
+   if(i->codec==codec&&i->backend!=adaptive::Backend::cpu&&(!timing||timing->constant_rate())&&
       (selected==profiles.end()||i->measured_frames_per_second>selected->measured_frames_per_second))selected=i;
   if(selected==profiles.end()){
    if(cpu_profile){const auto threads=std::to_wstring(cpu_profile->cpu_threads);auto& args=rendition.arguments;
@@ -92,7 +101,7 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
    args.erase(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),args.begin()+static_cast<std::ptrdiff_t>(encoder_position+3));
    args.insert(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),{L"-quality",L"speed",L"-rc",L"cqp",L"-qp_i",L"24",L"-qp_p",L"26"});
   }
-  if(selected->backend==adaptive::Backend::nvidia_nvenc&&cuda_sdr_decode_eligible(source_info)){
+  if(selected->backend==adaptive::Backend::nvidia_nvenc&&timing&&timing->constant_rate()&&cuda_sdr_decode_eligible(source_info)){
    // Keep decoded frames on the same CUDA device as this reserved encoder.
    // The underlying format is the inspected 8-bit 4:2:0; cuda is a frame type.
    args.insert(std::find(args.begin(),args.end(),L"-i"),{L"-hwaccel",L"cuda",L"-hwaccel_device",std::to_wstring(selected->backend_index),L"-hwaccel_output_format",L"cuda"});

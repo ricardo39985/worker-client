@@ -1,6 +1,7 @@
 #include "test.hpp"
 #include "ow/media_renditions.hpp"
 #include <algorithm>
+namespace { const ow::VideoTiming cfr{1,30,{0,1,2},{}}; }
 TEST("app video rendition commands preserve dimensions and frame timing and copy existing AAC") {
  auto plan=ow::rendition_plan(true,true,"workspace");
  CHECK(plan.size()==3);
@@ -34,7 +35,7 @@ TEST("common SDR H264 and HEVC use device frames on the selected NVENC device") 
                          std::string("hevc (Main) (hvc1 / 0x31637668), yuv420p(tv, bt709, progressive), 1920x1080")}) {
   for(const auto codec:{ow::adaptive::Codec::h264,ow::adaptive::Codec::hevc}){
    gpu.codec=codec;
-   auto plan=ow::rendition_plan(true,false,"workspace",std::vector<ow::adaptive::Profile>{gpu},"Input #0, mov:\n  Stream #0:0: Video: "+source+"\nOutput #0, null:\n");
+   auto plan=ow::rendition_plan(true,false,"workspace",std::vector<ow::adaptive::Profile>{gpu},"Input #0, mov:\n  Stream #0:0: Video: "+source+"\nOutput #0, null:\n",&cfr);
    const auto& args=plan[codec==ow::adaptive::Codec::h264?0:1].arguments;
    auto input=std::find(args.begin(),args.end(),L"-i");auto device=std::find(args.begin(),args.end(),L"-hwaccel_device");
    CHECK(device<input && *(device+1)==L"3");
@@ -80,8 +81,8 @@ TEST("device decode preserves every existing output encoder option") {
  ow::adaptive::Profile gpu;gpu.backend=ow::adaptive::Backend::nvidia_nvenc;
  for(const auto codec:{ow::adaptive::Codec::h264,ow::adaptive::Codec::hevc}){
   gpu.codec=codec;const std::vector<ow::adaptive::Profile> profiles{gpu};
-  auto before=ow::rendition_plan(true,true,"workspace",profiles);
-  auto after=ow::rendition_plan(true,true,"workspace",profiles,"Input #0, mov:\n Stream #0:0[0x1](und): Video: h264 (High), yuv420p(tv, bt709, progressive), 1920x1080\n");
+  auto before=ow::rendition_plan(true,true,"workspace",profiles,"",&cfr);
+  auto after=ow::rendition_plan(true,true,"workspace",profiles,"Input #0, mov:\n Stream #0:0[0x1](und): Video: h264 (High), yuv420p(tv, bt709, progressive), 1920x1080\n",&cfr);
   const unsigned index=codec==ow::adaptive::Codec::h264?0:1;auto& args=after[index].arguments;
   for(const auto flag:{L"-hwaccel",L"-hwaccel_device",L"-hwaccel_output_format"}){auto p=std::find(args.begin(),args.end(),flag);CHECK(p!=args.end());args.erase(p,p+2);}
   auto pix=std::find(args.begin(),args.end(),L"-pix_fmt");*(pix+1)=L"yuv420p";
@@ -106,4 +107,39 @@ TEST("poster reuse is restricted to a single ordinary unrotated SDR video stream
  for(const auto extra:{" Side data:\n  displaymatrix: rotation of -90.00 degrees\n", " Metadata:\n  rotate: 180\n", " Stream #0:2: Video: h264 (High), yuv420p, 640x480\n"})
   CHECK(!ow::inspection_poster_reusable(source+extra));
  CHECK(!ow::inspection_poster_reusable("Input #0, mov:\n Stream #0:0: Video: hevc (Main 10), yuv420p10le, 1920x1080\n"));
+}
+
+TEST("output with changed rate or dropped duplicated retimed frames is rejected") {
+ const auto source=ow::video_timing("#tb 0: 1/30000\n0, 0, 0, 1001, 9, x\n0, 1001, 1001, 1001, 9, x\n0, 2002, 2002, 1001, 9, x\n");
+ CHECK(source && source->constant_rate());
+ CHECK(ow::same_video_timing(*source,*source));
+ auto wrong_nominal=*source;wrong_nominal.reported_rate="25";CHECK(!ow::same_video_timing(*source,wrong_nominal));
+ for(const auto bad:{"#tb 0: 1/30\n0, 0, 0, 1, 9, x\n0, 1, 1, 1, 9, x\n0, 2, 2, 1, 9, x\n",
+  "#tb 0: 1/30000\n0, 0, 0, 1001, 9, x\n0, 2002, 2002, 1001, 9, x\n"}){
+  auto output=ow::video_timing(bad);CHECK(output);CHECK(!ow::same_video_timing(*source,*output));
+ }
+ CHECK(!ow::video_timing("#tb 0: 0/0\n"));
+ CHECK(!ow::video_timing("#tb 0: 1/30\n0, 0, 0, 1, 9, x\n0, 1, 0, 1, 9, x\n"));
+}
+TEST("variable frame timing keeps all source timestamps and requires software decode") {
+ const auto vfr=ow::video_timing("Input #0, mov:\n Stream #0:0: Video: h264 (High), yuv420p, 1920x1080, 30 tbr, 1k tbn\nOutput #0, framehash:\n#tb 0: 1/90000\n0, 0, 0, 3000, 9, x\n0, 3000, 3000, 3001, 9, x\n0, 6001, 6001, 3000, 9, x\n");
+ CHECK(vfr && !vfr->constant_rate());
+ CHECK(ow::same_video_timing(*vfr,*vfr));
+ ow::adaptive::Profile gpu;gpu.backend=ow::adaptive::Backend::nvidia_nvenc;
+ auto plan=ow::rendition_plan(true,false,"workspace",std::vector<ow::adaptive::Profile>{gpu},"Input #0, mov:\n Stream #0:0: Video: h264 (High), yuv420p, 1920x1080\n",&*vfr);
+ CHECK(!plan[0].hardware);
+ CHECK(std::find(plan[0].arguments.begin(),plan[0].arguments.end(),L"-hwaccel")==plan[0].arguments.end());
+}
+
+TEST("timing inspection tolerates B frame packet order and equivalent time bases") {
+ auto a=ow::video_timing("#tb 0: 1/30\n0, -1, 0, 1, 1, x\n0, 0, 2, 1, 1, x\n0, 1, 1, 1, 1, x\n");
+ auto b=ow::video_timing("#tb 0: 1/90000\n0, 0, 0, 3000, 1, x\n0, 3000, 3000, 3000, 1, x\n0, 6000, 6000, 3000, 1, x\n");
+ CHECK(a&&b&&ow::same_video_timing(*a,*b));
+ auto unknown=*a;unknown.pts={0,1,3};unknown.reported_rate="29.97";CHECK(!unknown.rate());
+}
+TEST("CUDA decode requires complete constant rate evidence") {
+ ow::adaptive::Profile gpu;gpu.backend=ow::adaptive::Backend::nvidia_nvenc;
+ auto plan=ow::rendition_plan(true,false,"workspace",std::vector<ow::adaptive::Profile>{gpu},"Input #0, mov:\n Stream #0:0: Video: h264 (High), yuv420p, 1920x1080\n");
+ CHECK(plan[0].hardware);
+ CHECK(std::find(plan[0].arguments.begin(),plan[0].arguments.end(),L"-hwaccel")==plan[0].arguments.end());
 }
