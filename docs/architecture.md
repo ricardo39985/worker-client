@@ -177,13 +177,22 @@ throughput, insufficient measured gain, and actual runtime failure/demotion.
 
 ## Physical encoder placement candidate
 
-NVIDIA inventory requires both the CUDA driver LUID-to-ordinal mapping and a
-nonzero driver UUID. Duplicate stable identities, physical UUIDs or backend
-ordinals are withheld before tuning and again before scheduling. Unmapped DXGI
-aliases remain diagnostic inventory entries and contribute no GPU budget. PCI
-vendor/product/subsystem/revision is a product identity, so distinct NVIDIA
-UUIDs can qualify two identical cards. Repeated non-CUDA PCI products remain
-withheld until physical identity can be disambiguated.
+The Windows Display setup-class inventory is the physical source of truth.
+`DisplayConfigGetDeviceInfo` resolves each DXGI LUID to its adapter interface;
+SetupAPI resolves that interface to a present Display device instance. Only a
+complete `PCI\...\location` instance can establish a physical card. `ROOT\...`
+instances are software adapters, retained as explicit exclusions, with no profile,
+VRAM capacity or placement. Unmappable adapters remain withheld. PnP-only devices
+remain diagnostic entries, including software displays absent from DXGI.
+
+The case-normalized PCI instance is the physical identity used for card counts,
+VRAM and session reservations. LUIDs still select child-scoped telemetry and
+CUDA ordinal mapping; they cannot create another card. NVIDIA also requires a
+nonzero CUDA UUID as encoder mapping evidence, not as physical identity. Two
+verified aliases of one instance are ambiguous and both withheld; an unproven
+or software alias cannot poison a separately proven real card. Equal product
+IDs on different PCI instances do not collapse two real cards. Every backend
+still needs successful encode/decode and bounded tuning before admission.
 
 A hardware reservation occupies one encode session per physical card across
 its sequential H.264/HEVC renditions, and at most two NVENC sessions across this
@@ -202,10 +211,11 @@ CPU primary cannot take an occupied fallback slot. Existing encode/decode/output
 validation and bounded cancellation-aware retry remain mandatory.
 
 The plain log names backend/codec, encoder ordinal, full device identity,
-physical UUID and child PID at actual child launch; completion is logged after
+physical PCI instance and child PID at actual child launch; completion is logged after
 process-tree drain. The short viewer shows the job suffix and GPU ordinal in
-blue, plus a white startup card table and schedulable-card count. Raw DXGI count
-remains separately labelled inventory evidence. These are source policies with
+blue, plus a white startup card table and schedulable-card count. The raw display inventory count
+remains separately labelled diagnostic evidence. Exclusion records distinguish
+software/unmappable adapters, session exhaustion and insufficient VRAM. These are source policies with
 portable contracts, not measured two-card Windows execution. Driver/session use
 by other programs and GPU allocation remain external constraints; CPU retry is
 required when opening a hardware session fails. See

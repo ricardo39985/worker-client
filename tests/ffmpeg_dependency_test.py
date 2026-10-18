@@ -9,6 +9,7 @@ import sys
 import tempfile
 import unittest
 from urllib.error import HTTPError
+from urllib.request import Request
 
 sys.dont_write_bytecode = True
 
@@ -143,6 +144,37 @@ class DistributionContracts(unittest.TestCase):
         self.assertEqual(entry["bytes"], 165167104)
         self.assertEqual(entry["format"], "exe")
         self.validate(entry, allow_unpublished=True)
+
+    def test_github_release_download_allows_only_the_asset_cdn_redirect(self):
+        original = f"https://github.com/ricardo39985/worker-client/releases/download/{self.digest}/ffmpeg.exe"
+        handler = self.policy.NoRedirect(original)
+        redirected = handler.redirect_request(Request(original), None, 302, "Found", {},
+            "https://release-assets.githubusercontent.com/github-production-release-asset-2e65be/1/file?sig=temporary")
+        self.assertEqual(redirected.host, "release-assets.githubusercontent.com")
+
+    def test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials(self):
+        original = f"https://github.com/ricardo39985/worker-client/releases/download/{self.digest}/ffmpeg.exe"
+        for destination in ("http://release-assets.githubusercontent.com/file", "https://evil.test/file",
+                            "https://user:secret@release-assets.githubusercontent.com/file",
+                            "https://release-assets.githubusercontent.com:8443/file"):
+            with self.subTest(destination=destination), self.assertRaises(ValueError):
+                self.policy.NoRedirect(original).redirect_request(Request(original), None, 302, "Found", {}, destination)
+
+    def test_github_redirect_is_bounded_and_never_forwards_authorization(self):
+        original = f"https://github.com/ricardo39985/worker-client/releases/download/{self.digest}/ffmpeg.exe"
+        handler = self.policy.NoRedirect(original)
+        request = Request(original, headers={"Authorization": "secret", "Cookie": "secret"})
+        destination = "https://release-assets.githubusercontent.com/file?sig=hidden"
+        redirected = handler.redirect_request(request, None, 302, "Found", {}, destination)
+        self.assertFalse(redirected.has_header("Authorization"))
+        self.assertFalse(redirected.has_header("Cookie"))
+        with self.assertRaises(ValueError):
+            handler.redirect_request(redirected, None, 302, "Found", {}, destination)
+
+    def test_generic_origin_cannot_redirect_into_github_cdn(self):
+        with self.assertRaises(ValueError):
+            self.policy.NoRedirect(self.entry["url"]).redirect_request(Request(self.entry["url"]), None, 302,
+                "Found", {}, "https://release-assets.githubusercontent.com/file?sig=hidden")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,68 @@
+..EEEEEEE...............
+======================================================================
+ERROR: test_generic_origin_cannot_redirect_into_github_cdn (__main__.DistributionContracts.test_generic_origin_cannot_redirect_into_github_cdn)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/tests/ffmpeg_dependency_test.py", line 176, in test_generic_origin_cannot_redirect_into_github_cdn
+    self.policy.NoRedirect(self.entry["url"]).redirect_request(Request(self.entry["url"]), None, 302,
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+TypeError: NoRedirect() takes no arguments
+
+======================================================================
+ERROR: test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials (__main__.DistributionContracts.test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials) (destination='http://release-assets.githubusercontent.com/file')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/tests/ffmpeg_dependency_test.py", line 161, in test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials
+    self.policy.NoRedirect(original).redirect_request(Request(original), None, 302, "Found", {}, destination)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+TypeError: NoRedirect() takes no arguments
+
+======================================================================
+ERROR: test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials (__main__.DistributionContracts.test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials) (destination='https://evil.test/file')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/tests/ffmpeg_dependency_test.py", line 161, in test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials
+    self.policy.NoRedirect(original).redirect_request(Request(original), None, 302, "Found", {}, destination)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+TypeError: NoRedirect() takes no arguments
+
+======================================================================
+ERROR: test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials (__main__.DistributionContracts.test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials) (destination='https://user:secret@release-assets.githubusercontent.com/file')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/tests/ffmpeg_dependency_test.py", line 161, in test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials
+    self.policy.NoRedirect(original).redirect_request(Request(original), None, 302, "Found", {}, destination)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+TypeError: NoRedirect() takes no arguments
+
+======================================================================
+ERROR: test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials (__main__.DistributionContracts.test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials) (destination='https://release-assets.githubusercontent.com:8443/file')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/tests/ffmpeg_dependency_test.py", line 161, in test_github_redirect_does_not_allow_downgrade_foreign_host_or_credentials
+    self.policy.NoRedirect(original).redirect_request(Request(original), None, 302, "Found", {}, destination)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+TypeError: NoRedirect() takes no arguments
+
+======================================================================
+ERROR: test_github_redirect_is_bounded_and_never_forwards_authorization (__main__.DistributionContracts.test_github_redirect_is_bounded_and_never_forwards_authorization)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/tests/ffmpeg_dependency_test.py", line 165, in test_github_redirect_is_bounded_and_never_forwards_authorization
+    handler = self.policy.NoRedirect(original)
+TypeError: NoRedirect() takes no arguments
+
+======================================================================
+ERROR: test_github_release_download_allows_only_the_asset_cdn_redirect (__main__.DistributionContracts.test_github_release_download_allows_only_the_asset_cdn_redirect)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-gpu-on-logs/tests/ffmpeg_dependency_test.py", line 150, in test_github_release_download_allows_only_the_asset_cdn_redirect
+    handler = self.policy.NoRedirect(original)
+TypeError: NoRedirect() takes no arguments
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.106s
+
+FAILED (errors=7)
+
+exit=1

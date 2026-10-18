@@ -1,0 +1,4 @@
+COMMAND: python3 tests/adaptive_probe_smoke.py --evidence-probe build-tests/ow_adaptive_evidence_probe --rendition-probe build-tests/ow_rendition_probe
+2/2 real 1920x1080 tuning outputs passed codec, geometry, 72 frames, AAC and decode validation
+
+exit=0

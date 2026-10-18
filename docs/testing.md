@@ -1,5 +1,13 @@
 # Test policy and evidence
 
+Current `fix/worker-next` evidence: see
+[verification/worker-next/REPORT.md](../verification/worker-next/REPORT.md).
+The PCI-instance source correction passes Linux contracts; Windows/MSVC and
+physical two-GPU acceptance remain unrun. The approved FFmpeg file's local hash
+and size match. Publication still requires the missing complete matching
+included-dependency source/notices materials; the lock URLs remain null.
+
+
 Retained FFmpeg distribution evidence is in
 `verification/ffmpeg-dependency/REPORT.md`. The dependency-only Linux snapshot
 passed six CTest suites (187 contracts including 17 new offline policy cases).

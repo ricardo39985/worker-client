@@ -1,0 +1,3 @@
+FFmpeg dependency gate FAILED: publication, lock policy or artifact integrity incomplete. See docs/ffmpeg-distribution.md.
+
+exit=1

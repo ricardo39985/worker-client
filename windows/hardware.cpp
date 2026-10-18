@@ -1,4 +1,5 @@
 #include "hardware.hpp"
+#include "physical_adapters.hpp"
 #include "ow/device_identity.hpp"
 #include <windows.h>
 #include <dxgi1_2.h>
@@ -28,7 +29,7 @@ std::string adapter_id(const DXGI_ADAPTER_DESC1& desc){
    <<":luid:"<<std::setw(8)<<static_cast<unsigned long>(desc.AdapterLuid.HighPart)<<":"
    <<std::setw(8)<<desc.AdapterLuid.LowPart;return id.str();
 }
-struct CudaMapping { std::vector<adaptive::BackendIdentity> devices;std::map<std::string,std::string> physical_ids; };
+struct CudaMapping { std::vector<adaptive::BackendIdentity> devices; };
 CudaMapping cuda_mappings(){
  CudaMapping result;
  std::unique_ptr<std::remove_pointer_t<HMODULE>,ModuleRelease> module(
@@ -50,9 +51,6 @@ CudaMapping cuda_mappings(){
   DWORD low{};LONG high{};std::memcpy(&low,bytes,sizeof(low));std::memcpy(&high,bytes+sizeof(low),sizeof(high));
   std::ostringstream key;key<<std::hex<<std::setfill('0')<<std::setw(8)<<static_cast<unsigned long>(high)<<":"<<std::setw(8)<<low;
   result.devices.push_back({key.str(),static_cast<std::uint32_t>(ordinal),node_mask});
-  std::ostringstream physical_key;physical_key<<"cuda-uuid:"<<std::hex<<std::setfill('0');
-  for(unsigned char byte:physical.bytes)physical_key<<std::setw(2)<<static_cast<unsigned>(byte);
-  result.physical_ids[key.str()]=physical_key.str();
  }
  return result;
 }
@@ -85,14 +83,15 @@ std::vector<adaptive::Device> enumerate_video_devices(bool resolve_encoder_ident
  if(FAILED(hr))throw std::runtime_error("DirectX adapter inventory unavailable");
  std::unique_ptr<IDXGIFactory1,ComRelease> factory(raw_factory);
  std::vector<adaptive::Device> out;
+ const auto display_instances=present_display_instances();
  const auto cuda=resolve_encoder_identity?cuda_mappings():CudaMapping{};std::map<adaptive::Backend,std::uint32_t> backend_indices;
  for(UINT index=0;;++index){
   IDXGIAdapter1* raw_adapter=nullptr;hr=factory->EnumAdapters1(index,&raw_adapter);
   if(hr==DXGI_ERROR_NOT_FOUND)break;
   if(FAILED(hr))throw std::runtime_error("DirectX adapter enumeration failed");
   std::unique_ptr<IDXGIAdapter1,ComRelease> adapter(raw_adapter);DXGI_ADAPTER_DESC1 desc{};
-  if(FAILED(adapter->GetDesc1(&desc))||(desc.Flags&DXGI_ADAPTER_FLAG_SOFTWARE))continue;
-  const auto family=backend_for(desc.VendorId);if(family==adaptive::Backend::cpu)continue;
+  if(FAILED(adapter->GetDesc1(&desc)))continue;
+  const auto family=backend_for(desc.VendorId);
   LARGE_INTEGER driver{};const auto driver_hr=adapter->CheckInterfaceSupport(__uuidof(IDXGIDevice),&driver);
   const auto id=adapter_id(desc);
   std::string driver_version;
@@ -102,11 +101,23 @@ std::vector<adaptive::Device> enumerate_video_devices(bool resolve_encoder_ident
   int utf8_length=WideCharToMultiByte(CP_UTF8,0,description.data(),static_cast<int>(description.size()),nullptr,0,nullptr,nullptr);
   std::string name(utf8_length>0?static_cast<std::size_t>(utf8_length):0,0);
   if(utf8_length>0)WideCharToMultiByte(CP_UTF8,0,description.data(),static_cast<int>(description.size()),name.data(),utf8_length,nullptr,nullptr);
-  std::uint32_t backend_index=index;bool mapped=false;std::string physical_id;
+  std::uint32_t backend_index=index;bool mapped=false;auto physical_id=adaptive::canonical_instance_id(display_instance_id(desc.AdapterLuid));
   if(family==adaptive::Backend::nvidia_nvenc){
-   if(auto ordinal=adaptive::resolve_unique_backend_ordinal(cuda.devices,luid_key(id))){backend_index=*ordinal;physical_id=cuda.physical_ids.at(luid_key(id));mapped=true;}
-  }else if(resolve_encoder_identity) { backend_index=backend_indices[family]++;mapped=true; }
-  out.push_back({id,family,driver_version,vram,SUCCEEDED(driver_hr)&&vram>0,index,std::move(name),backend_index,mapped,std::move(physical_id)});
+   if(auto ordinal=adaptive::resolve_unique_backend_ordinal(cuda.devices,luid_key(id))){backend_index=*ordinal;mapped=true;}
+  }else if(resolve_encoder_identity&&family!=adaptive::Backend::cpu) { backend_index=backend_indices[family]++;mapped=true; }
+  if(desc.Flags&DXGI_ADAPTER_FLAG_SOFTWARE)mapped=false;
+  out.push_back({id,family,driver_version,vram,SUCCEEDED(driver_hr)&&vram>0,index,std::move(name),backend_index,mapped,std::move(physical_id),{}});
+  if(family==adaptive::Backend::cpu)out.back().exclusion_reason=out.back().physical_id.rfind("ROOT\\",0)==0?"software adapter (ROOT instance); excluded from capacity and scheduling":"unsupported or unmappable display adapter; GPU profile withheld";
+ }
+ // Windows can list software displays that expose no usable DXGI interface.
+ // Preserve those exclusions too, rather than hiding them with a DXGI filter.
+ for(const auto& instance:display_instances){
+  const auto physical=adaptive::canonical_instance_id(instance.id);
+  if(std::any_of(out.begin(),out.end(),[&](const auto& d){return d.physical_id==physical;}))continue;
+  const auto reason=physical.rfind("ROOT\\",0)==0?
+   "software adapter (ROOT instance); excluded from capacity and scheduling":
+   "unmappable display instance: no verified DXGI/encoder mapping; GPU profile withheld";
+  out.push_back({"pnp:"+physical,adaptive::Backend::cpu,{},0,false,0,instance.name,0,false,physical,reason});
  }
  adaptive::verify_device_identities(out);
  return out;

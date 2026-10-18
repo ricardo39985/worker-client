@@ -62,15 +62,35 @@ def verify_stream(entry, stream):
 
 
 class NoRedirect(HTTPRedirectHandler):
+    """Reject redirects except the approved digest-tagged GitHub asset hop."""
+    def __init__(self, original=""):
+        self.original = original
+        self.redirected = False
+
     def redirect_request(self, req, fp, code, msg, headers, newurl):
-        raise ValueError("Publication gate requires a direct HTTPS 200 artifact URL")
+        origin = urlsplit(self.original)
+        target = urlsplit(newurl)
+        # GitHub's permanent release URL redirects once to its HTTPS asset CDN.
+        # The signed CDN query is transient transport only, never persisted or
+        # logged. No other origin, host, port, downgrade or further hop is allowed.
+        if (self.redirected or req is None or req.full_url != self.original
+                or origin.scheme != "https" or origin.hostname != "github.com"
+                or not re.fullmatch(r"/[^/]+/[^/]+/releases/download/[a-f0-9]{64}/ffmpeg\.exe", origin.path)
+                or origin.username or origin.password or origin.query or origin.fragment or origin.port not in (None, 443)
+                or code not in (302, 303, 307, 308)
+                or target.scheme != "https" or target.hostname != "release-assets.githubusercontent.com"
+                or target.username or target.password or target.fragment or target.port not in (None, 443)):
+            raise ValueError("Publication gate rejected artifact redirect")
+        self.redirected = True
+        return Request(newurl, headers={"User-Agent": "OrganizerWorker-dependency-gate"})
 
 
 def verify_download(entry, *, open_url=None):
     validate_entry(entry)
-    # No credentials, cookies, redirects, TLS exceptions or response URL logging.
+    # No credentials, cookies, TLS exceptions or response URL logging.
+    # Only a pinned GitHub release may use its single HTTPS CDN redirect.
     if open_url is None:
-        open_url = build_opener(NoRedirect()).open
+        open_url = build_opener(NoRedirect(entry["url"])).open
     try:
         with open_url(Request(entry["url"], headers={"User-Agent": "OrganizerWorker-dependency-gate"}), timeout=60) as stream:
             if getattr(stream, "status", 200) != 200:

@@ -1,0 +1,4 @@
+COMMAND: git diff --check
+tests/ffmpeg_dependency_test.py:182: new blank line at EOF.
+
+exit=2

@@ -20,20 +20,30 @@ SHA-256: f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4
 `config/dependencies.lock.json` now pins the **executable** rather than its old
 ZIP. `format: exe` makes that distinction explicit. The deleted ZIP URL/digest
 remain under `provenance` for audit only; setup never fetches that location.
-The binary identity and size come from the operator's measured brief; the binary
-is not present in this authoring environment and has not been independently
-hashed or executed here. Its stated version also requires native confirmation.
+The executable at `/tmp/ffmpeg.exe` was independently hashed on October 17,
+2026: its size and SHA-256 match the pin above. Its embedded version string is
+`n9.0.2-22-g46d8f462ee-20261001`; it has not been executed on Windows here.
 
 `url` and `redistribution_url` are deliberately `null` until the operator
 publishes. This is a blocked publication, not a working download URL or a release
-candidate ready for fresh-machine conversion. No endpoint, credentials or upload
-is invented by the source change. A healthy configured converter still works;
+candidate ready for fresh-machine conversion. The operator has authorized a
+GitHub release asset on `ricardo39985/worker-client`, but the matching complete
+included-dependency source/notices bundle remains unavailable. Exact FFmpeg
+source and the BtbN recipe revision have been recovered; recipe references alone
+do not establish complete corresponding source/notices. See
+[the current gate ledger](../verification/worker-next/REPORT.md). A healthy configured converter still works;
 `-FfmpegPath` plus its approved hash and explicit `-NoConversion` remain available.
 
-## Operator publication procedure (not performed by this change)
+## Operator publication procedure
 
 1. Select an operator-controlled HTTPS/443 artifact origin that supports public
-   unauthenticated GET, valid TLS, direct HTTP 200 responses and no expiration.
+   unauthenticated GET, valid TLS and no expiration. A direct HTTP 200 origin is
+   accepted. The explicitly approved GitHub alternative is the permanent release
+   asset URL below: the read-only Python gate allows exactly one HTTPS/443
+   redirect from that digest-tag URL to `release-assets.githubusercontent.com`,
+   requiring a final HTTP 200 and verifying the unchanged byte count and hash.
+   It rejects other redirect origins/hosts, downgrades, credentials and extra
+   hops; signed CDN transport queries are neither persisted nor logged.
    Use a dedicated dependency bucket/origin or retained release namespace, not
    the production worker service or a signed temporary URL. Set retention to
    exclude these objects from lifecycle deletion; deny overwriting/deleting the
@@ -60,6 +70,15 @@ is invented by the source change. A healthy configured converter still works;
    https://<owned-artifact-origin>/ffmpeg/f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4/ffmpeg.exe
    ```
 
+   For the authorized GitHub release alternative, create a dedicated release
+   tagged with the complete SHA-256 and upload the unchanged asset `ffmpeg.exe`:
+
+   ```text
+   https://github.com/ricardo39985/worker-client/releases/download/f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4/ffmpeg.exe
+   ```
+
+   Use a source/notices index asset on that same release for `redistribution_url`.
+   This is a proposed publication path, not evidence that an asset exists.
    Never replace the content at an existing hash path. Publish source/notices
    first, then the binary. Nothing here uploads or makes this repository public.
 5. Change only the two null URLs in the reviewed lock to the permanent artifact
@@ -76,7 +95,7 @@ is invented by the source change. A healthy configured converter still works;
    The checker never uploads, edits the lock or executes the binary. It rejects
    expiring/`latest` upstream paths, missing full hash directories, signed query
    URLs, unsafe TLS locations and changed bytes. The online gate requires a
-   direct 200 and refuses redirects; the existing Windows transfer transport
+   final 200 and permits only the GitHub release/CDN exception above; the existing Windows transfer transport
    still permits its bounded HTTPS-only redirects. URL shape cannot prove
    ownership, retention or license completeness: those require operator review.
 6. Run the real Windows checks below before distributing an approved worker
@@ -113,34 +132,17 @@ Forced probe repair revalidates the locked executable; a healthy file will be
 reused, not replaced with another build. Existing external overrides retain their
 current operator approval semantics.
 
-## Separate GPU finding
+## Physical GPU correction
 
-This dependency branch does not change adapter enumeration, device mapping,
-session admission, VRAM budgets, tuning or encoder commands. The reported two RTX
-3070 DXGI entries have distinct LUIDs; their equal PCI vendor/device/subsystem
-values identify a hardware model/configuration, not a unique physical card. A
-virtual-display alias is plausible, but the Meta driver is not proof of causation.
-There is no evidence here to deduplicate them, nor to claim there are two physical
-3070s. The mapping failure is evidence that that adapter is **unproven**; withholding
-its profile is correct.
-
-NVENC `CreateBitstreamBuffer`/`CreateInputBuffer` failures are real unsuccessful
-functional trials for those attempts. Free system RAM and nominal 8 GiB VRAM do
-not show free allocatable encoder/device resources at the time. Driver state,
-other sessions, device mapping, per-process budgets and actual memory pressure
-remain possibilities, not established causes. These errors do not establish a
-permanent card capability limit or prove an enumeration defect caused them.
-`encoders=cpu,nvenc` and synthetic fps mean some profiles passed, not that every
-adapter/codec/concurrency combination did. Keep all failed/unmapped profiles off.
-
-Resolve that independently on a real, explicitly authorized Windows test host:
-correlate DXGI LUIDs with CUDA ordinals/LUIDs, NVIDIA physical UUID/PCI bus IDs and
-Windows PnP device identity; capture driver/runtime/build details and concurrent
-encoder use; then run isolated serial encode/decode trials per mapped card/codec
-with child PID/LUID telemetry and recorded resource limits. Compare controlled
-virtual-display states only with operator approval. Add a separate regression/fix
-once evidence identifies the failure. Do not deduplicate on name or PCI model ID,
-guess an ordinal, suppress the failure, or relax mapping to make NVENC appear on.
+The Windows device-tree evidence identifies two physical PCI instances (RTX 3070
+and RTX 3050) and a `ROOT\DISPLAY\0000` software adapter. This branch now uses
+present Display-class PnP instance identity through Windows APIs; ROOT adapters
+and unproven mappings are withheld. The existing encoder-session budget remains
+binding. See `verification/worker-next/REPORT.md` and `docs/architecture.md`.
+This source policy and portable fixtures do not establish physical Windows
+execution. An NVENC allocation failure remains a failed probe; a session limit,
+external encoder use or other driver/resource state may cause one. The device
+tree alone does not establish the cause of a particular failed allocation.
 
 ## Windows and publication gates
 

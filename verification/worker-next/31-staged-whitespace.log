@@ -1,0 +1,11 @@
+COMMAND: git diff --cached --check
+verification/worker-next/18-sanitizer.log:20: trailing whitespace.
++1:
+verification/worker-next/19-release-details.log:20: trailing whitespace.
++1:
+verification/worker-next/23-final-sanitizer.log:20: trailing whitespace.
++1:
+verification/worker-next/24-final-release-details.log:20: trailing whitespace.
++1:
+
+exit=2

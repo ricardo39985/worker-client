@@ -28,8 +28,9 @@ struct Device {
     std::string name;
     std::uint32_t backend_index{};
     bool backend_identity_verified{};
-    // NVIDIA driver UUID; PCI product IDs and DXGI LUIDs are not physical keys.
+    // Complete Windows PCI device instance ID, including the location suffix.
     std::string physical_id;
+    std::string exclusion_reason;
 };
 struct ProbeEvidence {
     std::string stable_id, driver_version, ffmpeg_sha256;
@@ -155,7 +156,8 @@ public:
     };
     Scheduler(Limits limits, std::vector<Profile> profiles);
     Reservation reserve(const std::vector<Codec>& codecs);
-    Reservation reserve(const std::vector<Codec>& codecs, const Limits& task_limits);
+    Reservation reserve(const std::vector<Codec>& codecs, const Limits& task_limits,
+                        std::vector<std::string>* exclusions=nullptr);
     void set_device_available_vram(const std::string& stable_id,std::uint64_t mb);
     bool demote_profile(const Profile& profile);
     void invalidate_hardware();

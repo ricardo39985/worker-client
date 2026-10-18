@@ -1,0 +1,8 @@
+COMMAND: python3 tests/ffmpeg_dependency_test.py
+.....................
+----------------------------------------------------------------------
+Ran 21 tests in 0.090s
+
+OK
+
+exit=0

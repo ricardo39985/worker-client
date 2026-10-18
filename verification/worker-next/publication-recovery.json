@@ -1,0 +1,51 @@
+{
+  "publication": "blocked_no_assets_uploaded",
+  "reason": "Complete matching included-dependency source, transitive source, patches/build instructions and license/attribution materials have not been established. No existing written source offer was supplied.",
+  "approved_binary": {
+    "file": "/tmp/ffmpeg.exe",
+    "bytes": 165167104,
+    "sha256": "f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4",
+    "embedded_version": "n9.0.2-22-g46d8f462ee-20261001",
+    "executed": false
+  },
+  "recovered_materials": [
+    {
+      "file": "/tmp/worker-next-publication/ffmpeg-source.tar.gz",
+      "bytes": 17330308,
+      "sha256": "56999ad7cdcfbe520e989e38ac763341fab71b367ef8c20434117f8d1b7204a9"
+    },
+    {
+      "file": "/tmp/worker-next-publication/build-scripts.tar.gz",
+      "bytes": 107871,
+      "sha256": "afb0e526ee89ea9871b49b1a60bb5fdf9847f85816fb47b5bbd6528aa0643eda"
+    },
+    {
+      "file": "/tmp/worker-next-publication/COPYING.GPLv3",
+      "bytes": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    {
+      "file": "/tmp/worker-next-publication/LICENSE.md",
+      "bytes": 4346,
+      "sha256": "2e1d16c72fd74e12063776371da757322f8b77589386532f4fd8634bde7de1af"
+    },
+    {
+      "file": "/tmp/worker-next-publication/configuration.txt",
+      "bytes": 1905,
+      "sha256": "9ea80c442a4df6646f134c01115c3c80ec7b35b2c7e6058f78262c97d8507a3d"
+    },
+    {
+      "file": "/tmp/worker-next-publication/source-references.json",
+      "bytes": 25003,
+      "sha256": "d22388452b07dbb5a5ce80d85c8605f1a4b65c13a6b1ca3e63cdd1d3b3db7e79"
+    }
+  ],
+  "upstream_ffmpeg_source": "https://github.com/FFmpeg/FFmpeg/tree/46d8f462eeb87ee1f704d8c44a0ee24fca471ad1",
+  "upstream_build_recipes": "https://github.com/BtbN/FFmpeg-Builds/tree/e88e49f624457c455700b058f0a84ca87d499cc2",
+  "upstream_build_run": "https://github.com/BtbN/FFmpeg-Builds/actions/runs/36860751422",
+  "upstream_release_http_status": 404,
+  "upstream_job_log_http_status": 410,
+  "upstream_run_artifacts_count": 0,
+  "dependency_recipe_references": 125,
+  "github_repo_public": true
+}

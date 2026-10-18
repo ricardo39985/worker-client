@@ -3,6 +3,7 @@
 #include "process.hpp"
 #include "pairing_adapter.hpp"
 #include "hardware.hpp"
+#include "ow/device_identity.hpp"
 #include "worker.hpp"
 #include "ow/rendition_pipeline.hpp"
 #include <algorithm>
@@ -35,12 +36,18 @@ TEST("Windows adapter inventory has repeatable unique identities and real VRAM a
   CHECK(first[i].adapter_index==second[i].adapter_index);
   CHECK(first[i].physical_id==second[i].physical_id);
   if(first[i].backend_identity_verified){
-   if(first[i].family==adaptive::Backend::nvidia_nvenc)CHECK(!first[i].physical_id.empty());
+   CHECK(adaptive::pci_instance_id(first[i].physical_id));
+   CHECK(first[i].exclusion_reason.empty());
    for(std::size_t j=0;j<i;++j)if(first[j].backend_identity_verified){
     if(!first[i].physical_id.empty())CHECK(first[i].physical_id!=first[j].physical_id);
     if(first[i].family==first[j].family)CHECK(first[i].backend_index!=first[j].backend_index);
    }
   }
+  if(first[i].physical_id.rfind("ROOT\\",0)==0){
+   CHECK(!first[i].backend_identity_verified);
+   CHECK(first[i].exclusion_reason.find("software adapter")!=std::string::npos);
+  }
+  if(!first[i].backend_identity_verified)CHECK(!first[i].exclusion_reason.empty());
   for(std::size_t j=0;j<i;++j)CHECK(first[i].stable_id!=first[j].stable_id);
   if(first[i].driver_healthy){CHECK(!first[i].driver_version.empty());CHECK(first[i].dedicated_vram_mb>0);}
  }
@@ -85,7 +92,7 @@ TEST("stopping a contained job terminates both root and descendant"){
 TEST("adaptive capacity stays reserved until a cancelled native process tree drains"){
  Temp t;adaptive::Profile gpu{"synthetic-luid","driver","hash",adaptive::Backend::nvidia_nvenc,adaptive::Codec::h264,1,256,512,128,1,50,0,0,true};
  adaptive::Profile cpu{"cpu","","hash",adaptive::Backend::cpu,adaptive::Codec::h264,1,256,0,128,1,20,0,0,true};
- gpu.physical_id="fixture-uuid";adaptive::Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
+ gpu.physical_id=R"(PCI\VEN_FFFF&DEV_0001\fixture)";adaptive::Scheduler scheduler({2,1024,512,512,4},{gpu,cpu});
  auto held=scheduler.reserve({adaptive::Codec::h264});CHECK(held);CHECK(scheduler.active_jobs()==1);
  CHECK(held.profiles().front().backend==adaptive::Backend::nvidia_nvenc);
  // The GPU job reserves fallback budgets, but does not occupy the CPU encoder.

@@ -1,5 +1,13 @@
 # Candidate status — 0.1.2
 
+Current `fix/worker-next` evidence: see
+[verification/worker-next/REPORT.md](../verification/worker-next/REPORT.md).
+The PCI-instance source correction passes Linux contracts; Windows/MSVC and
+physical two-GPU acceptance remain unrun. The approved FFmpeg file's local hash
+and size match. Publication still requires the missing complete matching
+included-dependency source/notices materials; the lock URLs remain null.
+
+
 Retained FFmpeg distribution: see
 `verification/ffmpeg-dependency/REPORT.md` and `docs/ffmpeg-distribution.md`.
 The expired autobuild is replaced by an exact executable pin and retained-artifact
