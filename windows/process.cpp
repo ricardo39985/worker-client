@@ -1,4 +1,5 @@
 #include "process.hpp"
+#include "capacity.hpp"
 #include <vector>
 #include <algorithm>
 namespace ow::win {
@@ -37,6 +38,7 @@ Child::Child(const std::filesystem::path& exe,const std::vector<std::wstring>& a
  try{require(UpdateProcThreadAttribute(si.lpAttributeList,0,PROC_THREAD_ATTRIBUTE_HANDLE_LIST,handles,sizeof(handles),nullptr,nullptr),"Restrict inherited handles");std::wstring command=quote_windows_argument(exe.wstring());for(const auto& arg:args)command+=L" "+quote_windows_argument(arg);if(command.size()>30000)throw std::runtime_error("Command line exceeds limit");PROCESS_INFORMATION pi{};
  require(CreateProcessW(exe.c_str(),command.data(),nullptr,nullptr,TRUE,CREATE_SUSPENDED|CREATE_NO_WINDOW|EXTENDED_STARTUPINFO_PRESENT,nullptr,workspace.c_str(),&si.StartupInfo,&pi),"Create job process");process_.reset(pi.hProcess);Handle thread(pi.hThread);
  if(!AssignProcessToJobObject(job_.get(),process_.get())){DWORD e=GetLastError();TerminateProcess(process_.get(),1);WaitForSingleObject(process_.get(),INFINITE);fail("Contain child process",e);}
+ background_gpu_process(process_.get());
  if(ResumeThread(thread.get())==static_cast<DWORD>(-1)){stop();fail("Start contained child");}
  launch_us_=timing_wall_us()-launch_started;
  DeleteProcThreadAttributeList(si.lpAttributeList);

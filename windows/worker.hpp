@@ -8,6 +8,8 @@
 #include "ow/probe_retry.hpp"
 #include "ow/capability_report.hpp"
 #include "ow/worker_status.hpp"
+#include "capacity.hpp"
+#include <array>
 #include <thread>
 #include <atomic>
 #include <unordered_map>
@@ -19,6 +21,7 @@ struct Config {
  Resources budget{2048,0,8192,2};
  bool vram_override_set{};
  std::uint64_t reserve_ram_mb{0};std::size_t max_jobs{4};
+ std::function<bool()> capacity_foreground; // local measurement port; never parsed from config/network
 };
 Config load_config(const std::filesystem::path& root);
 struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;std::vector<std::string> fallback_notes;std::vector<ProbeFailure> gpu_failures;bool complete{};};
@@ -26,10 +29,20 @@ using ProbePhase=std::function<void(std::string,unsigned,unsigned)>;
 using ProbeTiming=std::function<void(const std::string&)>;
 // retained may refer only to current successful in-process evidence, never disk profiles.
 Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={},const ProbePhase& phase={},const Probe* retained=nullptr,const ProbeTiming& timing={});
+class OfflineMediaHarness;
 class Worker {
- struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::optional<adaptive::Scheduler::Reservation> profile_reservation;std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;};
+ friend class OfflineMediaHarness;
+ Worker(Config config,bool isolated);
+ struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};bool compute_handoff{};std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;std::array<ProgressCounter,3> rendition_progress;};
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
- Config config_;Store store_;Log log_;Admission admission_;
+ Config config_;Store store_;Log log_;Admission admission_;CapacityControl capacity_;
+ RuntimePressure pressure_; // guarded by mutex_
+ std::map<std::string,std::unique_ptr<CapacityControl>> gpu_capacity_;
+ Tick cached_capacity_until_{}; // device live-budget refresh, not capability proof
+ bool isolated_{};
+ std::filesystem::path offline_source_,offline_output_;
+ std::map<adaptive::Codec,std::string> offline_pins_;
+ unsigned preparation_parallelism_{3};
  ProgressLogPolicy progress_log_;
  std::mutex report_mutex_;WorkerStatus report_{utc_ms(),monotonic_ms()};StatusReadings readings_;bool report_io_failed_{};
  void publish_report(const std::filesystem::path&,const std::string&) noexcept;
@@ -56,7 +69,8 @@ class Worker {
  void state(std::string text);
  json::object heartbeat();
  void apply_preferences();
- adaptive::Scheduler::Reservation reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,Resources& offer,const std::string& attempt);
+ adaptive::Scheduler::Reservation reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,Resources& cost,const std::string& attempt,const std::string& stage,bool cpu_only,std::uint32_t width,std::uint32_t height,std::uint64_t minimum_ram=0);
+ void wait_stage(const std::string& attempt,const std::string& stage,Resources cost,const std::function<bool()>& cancelled);
  void report_encoder_failure(const adaptive::Profile&);
  void safe_log(const std::string&) noexcept;
 public:

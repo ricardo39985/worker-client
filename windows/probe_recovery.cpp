@@ -45,7 +45,7 @@ void Worker::recover_gpus(){
     if(!proven&&!failed)probe.gpu_failures.push_back(old);
    }
    const auto vram=config_.vram_override_set?config_.budget.vram_mb:adaptive::profile_vram_capacity(probe.profiles);
-   auto scheduler=std::make_unique<adaptive::Scheduler>(adaptive::Limits{config_.budget.cpu_threads,config_.budget.ram_mb,vram,config_.budget.scratch_mb,static_cast<std::uint32_t>(config_.max_jobs)},probe.profiles);
+   auto scheduler=std::make_unique<adaptive::Scheduler>(adaptive::Limits{config_.budget.cpu_threads,config_.budget.ram_mb,vram,config_.budget.scratch_mb,static_cast<std::uint32_t>(config_.max_jobs),adaptive::proven_nvenc_sessions(probe.profiles)},probe.profiles);
    atomic_write(config_.root/"adaptive-hardware.json",read_file(isolated.root/"adaptive-hardware.json"));
    hardware_profiles_=std::move(probe.profiles);adaptive_scheduler_=std::move(scheduler);++hardware_generation_;
    capability_report_.probed(verified_video_,verified_image_,verified_media_video_,verified_media_image_,hardware_profiles_);

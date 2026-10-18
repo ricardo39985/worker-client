@@ -1,0 +1,22 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+SOURCE_READBACK_MATCHES=78
+CLEAN_BINARIES={"OrganizerWorker.exe":"63f956136738a0bc6839d8dfa6f0f0a1fa8331182ae0e473033f1465842ecbde","OrganizerWorkerConsole.exe":"f1be1a576629a7b871cf2d7edfa36e832dc155101d1318df7b7332d31de5b9b5","OrganizerWorkerDoctor.exe":"3b9147de9317ec9b0d11fd774fd071ba8a4466469c433bd84640bed4126e2735","ow_flex_benchmark.exe":"9b58bd21df974a6a2e71cffd3a790b27d9f30f532ce07e9892567a4976343be8"}
+OWNED_RUNNING=35548:ow_foreground_probe.exe
+FFMPEG_RUNNING=0
+INSTALLED_MANIFEST={"schema":1,"directory":"C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-1b4042d3bbfa85cc","sha256":"1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f"}
+INSTALLED_EXE_SHA=1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f
+18/10 15:41:10  status
+  state      accepting                since 15:07:53
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     5 ok    2 failed   0 cancelled
+  last job   15:14:07  image renditions          1s
+  cards      RTX 3070 idle         RTX 3050 idle         cpu idle
+  memory     ram free 45.4 GB   scratch free 107 GB
+  encoders   cpu,nvenc
+  uptime     13:13:10
+READBACK_EXIT=0
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>

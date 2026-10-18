@@ -1,0 +1,125 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- Configuring done (12.6s)
+-- Generating done (0.5s)
+-- Build files have been written to: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  boost_json.cpp
+  ow_json.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_json.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  admission.cpp
+  store.cpp
+  protocol.cpp
+  pairing.cpp
+  adaptive_hardware.cpp
+  ow_core.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_core.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  platform.cpp
+  process.cpp
+  http.cpp
+  worker.cpp
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\worker.cpp(775,289): warning C4456: declaration of 'cancelled' hides previous local declaration [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+      C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\worker.cpp(590,7):
+      see declaration of 'cancelled'
+  
+  probe_recovery.cpp
+  pairing_adapter.cpp
+  hardware.cpp
+  physical_adapters.cpp
+  capacity.cpp
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\capacity.hpp(9,1): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+  (compiling source file '../source/windows/capacity.cpp')
+  
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\capacity.hpp(9,10): error C2146: syntax error: missing ';' before identifier 'desktop_priority' [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+  (compiling source file '../source/windows/capacity.cpp')
+  
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\capacity.cpp(50,78): error C2065: 'PDH_MORE_DATA': undeclared identifier [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\capacity.cpp(72,1): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\capacity.cpp(72,1): error C2086: 'int ow::win::Priority': redefinition [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+      C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\capacity.hpp(9,1):
+      see declaration of 'ow::win::Priority'
+  
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\capacity.cpp(72,10): error C2146: syntax error: missing ';' before identifier 'desktop_priority' [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\capacity.cpp(72,46): error C2143: syntax error: missing ';' before '{' [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\capacity.cpp(72,46): error C2447: '{': missing function header (old-style formal list?) [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  adaptive_evidence_probe.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_adaptive_evidence_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_adaptive_evidence_probe.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  main.cpp
+  adaptive_hardware_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 5561 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_adaptive_hardware_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  main.cpp
+  admission_test.cpp
+  store_test.cpp
+  protocol_test.cpp
+  pairing_test.cpp
+  capacity_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 3271 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  main.cpp
+  pipeline_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 3041 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_pipeline_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  main.cpp
+  progress_test.cpp
+  encoder_run_test.cpp
+  status_test.cpp
+  stage_timing_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 5115 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_progress_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_progress_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  main.cpp
+  media_rendition_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2194 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_rendition_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_rendition_contract_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+  media_rendition_probe.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1952 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_rendition_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_rendition_probe.exe
+BUILD_EXIT=1

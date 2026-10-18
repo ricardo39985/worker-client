@@ -1,0 +1,927 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+SOURCE_ARCHIVE_SHA=4a049e796d255ff20df39c176392d1674e52308160edad865573a43aee796252
+EXTRACT_EXIT=0
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- Configuring done (6.8s)
+-- Generating done (1.6s)
+-- Build files have been written to: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  ow_json.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_json.lib
+  ow_core.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_core.lib
+  worker.cpp
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\worker.cpp(838,289): warning C4456: declaration of 'cancelled' hides previous local declaration [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_windows.vcxproj]
+      C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\source\windows\worker.cpp(637,7):
+      see declaration of 'cancelled'
+  
+  ow_windows.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_windows.lib
+  Generating code
+  33 of 10603 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    27 functions were new in current compilation
+    36 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  OrganizerWorker.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\OrganizerWorker.exe
+  Generating code
+  0 of 1621 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  OrganizerWorkerConsole.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\OrganizerWorkerConsole.exe
+  Generating code
+  33 of 10234 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    27 functions were new in current compilation
+    34 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  OrganizerWorkerDoctor.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\OrganizerWorkerDoctor.exe
+  ow_adaptive_evidence_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_adaptive_evidence_probe.exe
+  adaptive_hardware_test.cpp
+  Generating code
+  689 of 5572 functions (12.4%) were compiled, the rest were copied from previous compilation.
+    664 functions were new in current compilation
+    48 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_adaptive_hardware_contract_tests.exe
+  ow_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_contract_tests.exe
+  windows_flex_benchmark.cpp
+  offline_media.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\functional(1055): warning C4789: in function 'void __cdecl ow::win::Worker::recover_gpus(void) __ptr64' buffer 'isolated' of size 208 bytes will be overrun; 8 bytes will be written starting at offset 264 [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\ow_flex_benchmark.vcxproj]
+  All 11195 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_flex_benchmark.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_flex_benchmark.exe
+  Generating code
+  0 of 984 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_foreground_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_foreground_probe.exe
+  Generating code
+  0 of 2962 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_gpu_baseline.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_gpu_baseline.exe
+  Generating code
+  0 of 2879 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_gpu_budget_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_gpu_budget_probe.exe
+  Generating code
+  0 of 3063 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_gpu_measurements.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_gpu_measurements.exe
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_pipeline_contract_tests.exe
+  Generating code
+  33 of 10544 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    27 functions were new in current compilation
+    36 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_pipeline_smoke.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_pipeline_smoke.exe
+  ow_progress_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_progress_contract_tests.exe
+  ow_rendition_contract_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_rendition_contract_tests.exe
+  ow_rendition_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_rendition_probe.exe
+  Generating code
+  0 of 760 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_test_child.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_test_child.exe
+  Generating code
+  33 of 10766 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    27 functions were new in current compilation
+    113 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_windows_tests.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_windows_tests.exe
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/CMakeLists.txt
+BUILD_EXIT=0
+DISCOVERY_EXIT=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: worker_contracts
+
+1: Test command: C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_contract_tests.exe
+1: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+1: Test timeout computed to be: 30
+1: PASS pressure defers reserved BEGIN as well as new offers without cancelling running work
+1: PASS verified capabilities accept independent jobs concurrently
+1: PASS four single-CPU app jobs reserve and begin independently within configured limits
+1: PASS drained input resources hand off to atomic concurrent stage claims
+1: PASS cancellation keeps stage claims until contained children drain
+1: PASS stage retries cannot double charge or silently change a resource promise
+1: PASS stage costs compete atomically across independent jobs without altering offer identity
+1: PASS live stage RAM headroom is not charged twice against already allocated children
+1: PASS freed source and uploaded output scratch can be reclaimed before the remaining job completes
+1: PASS missing capability fails closed
+1: PASS installed but unverified does not mean capable
+1: PASS local disabled vetoes a preferred server offer
+1: PASS reservation consumes capacity before execution
+1: PASS dynamic low memory rejects despite configured budget
+1: PASS duplicate offer is idempotent
+1: PASS changed duplicate payload is rejected
+1: PASS same content job cannot run in two attempts on one host
+1: PASS job guardrail is independent of resource budget
+1: PASS oversized resource numbers cannot overflow accounting
+1: PASS zero CPU or memory declaration is rejected
+1: PASS invalid IDs cannot become filesystem paths
+1: PASS expired reservation cannot be started
+1: PASS start without lease is rejected
+1: PASS replayed begin does not start a second process
+1: PASS pause refuses new work but preserves active execution
+1: PASS pause prevents an unstarted reservation from beginning
+1: PASS only a valid fresh renewal extends the lease
+1: PASS expired running lease cannot be revived by late renewal
+1: PASS expiry returns unused reservations to the budget
+1: PASS expired running job retains resources until child shutdown
+1: PASS cancelling one job preserves the other
+1: PASS duplicate finish cannot release resources twice
+1: PASS simultaneous offers never oversubscribe
+1: PASS two outstanding offers cannot both reserve the same live free memory
+1: PASS disabling a capability prevents a reserved job from starting
+1: PASS a duplicate offer cannot extend a reservation indefinitely
+1: PASS a recovery probe cannot overlap reserved running or cancelling work
+1: PASS concurrent probe and offer admission have exactly one owner
+1: PASS local child RAM topups are atomic preserve offer identity and last through cancellation
+1: PASS competing local RAM increases cannot oversubscribe host capacity
+1: PASS accepted attempt and pending result survive journal reopen
+1: PASS outbox cannot be acknowledged with wrong attempt or sequence
+1: PASS repeated result does not create duplicate outbox entry
+1: PASS attempt collision cannot change persisted payload
+1: PASS restart exposes interrupted work without automatically rerunning it
+1: PASS denied BEGIN capacity is terminally never-started across journal restart
+1: PASS priority settings survive restart
+1: PASS result without accepted job fails instead of making orphan output
+1: PASS pending counter follows durable results and acknowledgements
+1: PASS journal coordinator binding survives reopen and rejects a different server
+1: PASS legacy pending results cannot be adopted without endpoint provenance
+1: PASS legacy interrupted attempt needs the same protected coordinator origin
+1: PASS media transfer requires exact approved HTTPS host
+1: PASS well formed offer translates to validated typed job
+1: PASS wire requests cannot smuggle arbitrary commands as capabilities
+1: PASS negative or floating resource values are rejected
+1: PASS unverified GPU is never requested by the CPU converter
+1: PASS download digest is mandatory and strictly encoded
+1: PASS input and output must fit declared temporary storage
+1: PASS control message size and parser nesting are bounded
+1: PASS null bytes cannot reach Win32 URL or process APIs
+1: PASS Windows argument quoting preserves spaces quotes and trailing slashes
+1: PASS converter receives local files not remote URLs or shell commands
+1: PASS leases use the shorter of local and server remaining time
+1: PASS expired and unsigned-underflow lease cases fail closed
+1: PASS lease duration and monotonic addition cannot overflow
+1: PASS app rendition contract requires every fixed output and budgets all simultaneous files
+1: PASS app jobs refuse arbitrary output roles and mixed media type declarations
+1: PASS endpoint supplied by operator has a stable HTTPS origin
+1: PASS missing unsafe or ambiguous endpoints cannot become network destinations
+1: PASS an absent endpoint fails before enrollment or key disclosure
+1: PASS credential reopen reconnects without a new enrollment
+1: PASS credential canonicalization allows same origin but never a different server
+1: PASS corrupt saved credential never triggers silent reenrollment
+1: PASS successful pairing persists identity before returning and removes pending secret
+1: PASS incompatible coordinator receives no public key or enrollment request
+1: PASS lost initial response reuses durable request id rather than inventing another enrollment
+1: PASS lost approval response resumes same enrollment with its private key proof
+1: PASS pending enrollment is never sent to a different endpoint
+1: PASS failed credential persistence preserves resumable approval and returns no success
+1: PASS pending cleanup failure cannot discard an already durable credential
+1: PASS late approval after cancellation does not publish credentials
+1: PASS denial is explicit and cannot erase an existing pending record
+1: PASS server revocation does not silently start another pairing
+1: PASS rate limited polling waits and remains bounded by pairing expiry
+1: PASS invalid permanent tokens and worker ids never reach credential storage
+1: PASS capacity grows only after a sustained measured window with validated completions
+1: PASS binding CPU or disk pressure backs off without releasing running reservations
+1: PASS foreground use defers new jobs while running work can drain at conservative concurrency
+1: PASS missing stale and malformed telemetry cannot manufacture measured capacity
+1: PASS capacity ceiling remains binding even on an otherwise idle host
+1: 91 contracts, 0 failures
+1/1 Test #1: worker_contracts .................   Passed    0.69 sec
+
+The following tests passed:
+	worker_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.70 sec
+SUITE_EXIT worker_contracts=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 2
+    Start 2: pipeline_contracts
+
+2: Test command: C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_pipeline_contract_tests.exe
+2: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+2: Test timeout computed to be: 30
+2: PASS rendition pipeline returns ordered metadata for every artifact
+2: PASS next encode overlaps previous transfer
+2: PASS empty rendition pipeline starts no stages
+2: PASS transfer backpressure keeps one encoder and one transfer at a time
+2: PASS final transfer must join before result is returned
+2: PASS transfer failure cancels next encode and preserves original cause
+2: PASS encode failure cancels and joins transfer before unwinding
+2: PASS failed final checksum cannot return a successful partial result
+2: PASS independent video renditions and poster prepare together when three slots exist
+2: PASS a slow rendition cannot prevent an already prepared poster from being delivered
+2: PASS parallel encode failure stops and drains sibling preparations before returning
+2: PASS parallel pipelines reject zero or unbounded preparation limits
+2: PASS independent pipelines do not share cancellation or metadata
+2: 13 contracts, 0 failures
+1/1 Test #2: pipeline_contracts ...............   Passed    0.15 sec
+
+The following tests passed:
+	pipeline_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.16 sec
+SUITE_EXIT pipeline_contracts=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 3
+    Start 3: rendition_contracts
+
+3: Test command: C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_rendition_contract_tests.exe
+3: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+3: Test timeout computed to be: 30
+3: PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
+3: PASS app image renders a full-size WebP and bounded poster with independent destinations
+3: PASS non-AAC audio uses the existing app delivery bitrate
+3: PASS common SDR H264 and HEVC use device frames on the selected NVENC device
+3: PASS unproven source formats retain the original software decode and encoding options
+3: PASS decode selection inspects the first input video only and leaves other backends and posters unchanged
+3: PASS output descriptions and metadata cannot qualify an unknown input for CUDA decode
+3: PASS device decode preserves every existing output encoder option
+3: PASS input inspection can produce the identical fixed poster from the same decode
+3: PASS poster reuse is restricted to a single ordinary unrotated SDR video stream
+3: PASS dropped duplicated or retimed frames are rejected regardless of nominal rate
+3: PASS variable frame timing keeps all source timestamps and requires software decode
+3: PASS timing inspection tolerates B frame packet order and equivalent time bases
+3: PASS rounded fractional and absent nominal rates do not veto measured frame timing
+3: PASS encoders accept irregular measured timestamps without an exact nominal rate
+3: PASS one frame videos have a measurable duration without any nominal rate
+3: PASS matching frame instants cannot hide a stretched or shortened final frame
+3: PASS CUDA decode requires complete constant rate evidence
+3: 18 contracts, 0 failures
+1/1 Test #3: rendition_contracts ..............   Passed    0.69 sec
+
+The following tests passed:
+	rendition_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.70 sec
+SUITE_EXIT rendition_contracts=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 4
+    Start 4: adaptive_hardware_contracts
+
+4: Test command: C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_adaptive_hardware_contract_tests.exe
+4: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+4: Test timeout computed to be: 30
+4: PASS drained renditions release their card while the job still owns another codec
+4: PASS completing one codec cannot release a shared card still needed by the other codec
+4: PASS a slower but proven encoder remains available when the faster CPU slot is occupied
+4: PASS simultaneous encode proof permits two sessions on one card and a third cannot evade the limit
+4: PASS successfully probed child RAM budgets are not replaced by a larger geometry prediction
+4: PASS pressure lowers future device concurrency without evicting or unaccounting active encodes
+4: PASS CPU remains the safe profile when no supported GPU is installed
+4: PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+4: PASS single GPU profile requires matching encode decode and validated output
+4: PASS heterogeneous GPUs retain independent identities and schedules
+4: PASS two synthetic NVIDIA GPUs schedule independently through the production scheduler
+4: PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+4: PASS low VRAM and machine resource caps reject unsafe tuning
+4: PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+4: PASS profile invalidates on adapter identity driver or approved FFmpeg change
+4: PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+4: PASS selected hardware rendition binds an explicit adapter and conservative codec mode
+4: PASS Intel QSV and AMD AMF commands bind their probed DirectX adapter
+4: PASS hardware failure removes partial output and validates a clean CPU retry before success
+4: PASS cancelled hardware work does not start a CPU retry or retain partial output
+4: PASS runtime scheduler atomically enforces global and per-device costs until drain
+4: PASS task caps limit each reservation while global capacity admits four small jobs
+4: PASS native drain fixture keeps its GPU reservation while admitting independent CPU work
+4: PASS temporary CPU admission and GPU reservation moves preserve separate backend capacity
+4: PASS exhausted backend capacity stays owned across reservation moves until release
+4: PASS CUDA LUID mapping survives ordinal reorder and rejects duplicate or invalid mappings
+4: PASS GPU memory telemetry is child and LUID scoped and rejects ambiguous physical nodes
+4: PASS missing foreign invalid and zero GPU counters never mean idle headroom
+4: PASS serial and parallel tuning compare equal work repeated stages and child budgets
+4: PASS two independent GPU jobs fit with one CPU encoder slot and can wait for safe CPU retry
+4: PASS GPU fallback slot acquisition ignores a CPU codec already owned by the same task
+4: PASS runtime profile ties resolve by stable device identity and CPU profile is selectable
+4: PASS hardware adapter mapping ambiguity fails closed independent of enumeration order
+4: PASS runtime admission falls back to the measured CPU profile when configured VRAM is too small
+4: PASS live adapter headroom closes GPU admission and restores it after headroom returns
+4: PASS CPU concurrency reflects repeated tuning candidates within every configured cap
+4: PASS multi-codec runtime reservation uses peak per-job CPU memory and scratch costs
+4: PASS runtime scheduler invalidation stops stale hardware while active reservations drain
+4: PASS runtime command generation applies the scheduler-selected measured CPU profile
+4: PASS cancellation before an encode prevents every helper spawn
+4: PASS cancellation during output validation cannot publish a successful artifact
+4: PASS declared VRAM fallback permits proven hardware and retains CPU and drain budgets
+4: PASS VRAM budgets preserve live headroom and fail closed without either source
+4: PASS declared budget never substitutes for encode decode identity or tuning proof
+4: PASS encoder tokens name every backend that survived probing
+4: PASS encoder tokens never claim hardware when only CPU was profiled
+4: PASS a hardware-only profile set cannot imply a CPU profile
+4: PASS runtime hardware failure reports exactly once without changing selected profiles
+4: PASS reporting retains another profiled codec and handles profile removal and binary invalidation
+4: PASS diagnostic CPU evidence is distinct from missing adaptive profiles
+4: PASS converter invalidation retracts CPU as well as hardware evidence once
+4: PASS backup presentation promises a routing hint only
+4: PASS unobserved inventory is unknown while an observed zero stays zero
+4: PASS status evidence separates unrun checks from failed probes and requires current CPU app profiles
+4: PASS sample dimensions describe evidence while encoder geometry governs admission
+4: PASS realistic throughput evidence informs ranking without erasing a proven backend
+4: PASS large hardware encode or validation failure demotes once and retries CPU while capacity stays owned
+4: PASS saved profiles and rejected measurements name their actual tuning resolution
+4: PASS demotion is atomic codec specific and preserves already reserved capacity
+4: PASS ambiguous duplicate adapter identities never produce profiles
+4: PASS one physical card shares its session budget across codecs until drain
+4: PASS complete rendition jobs use both cards concurrently with a single CPU fallback slot
+4: PASS different LUID aliases of a PCI instance are withheld while identical real cards stay independent
+4: PASS scheduler rejects forged alias profiles and missing NVIDIA PCI identities
+4: PASS NVIDIA worker session ceiling is shared by all cards independently of VRAM
+4: PASS unrelated release and reservation moves cannot steal a running CPU fallback slot
+4: PASS profile device totals count encodable cards once across codecs
+4: PASS PCI instance drift invalidates a saved profile even when the DXGI identity stayed the same
+4: PASS simultaneous reservations cannot create a third hardware session or reuse a busy card
+4: PASS opposite codec speed winners do not split each rendition job across both cards
+4: PASS Windows ROOT display instances never become capacity even with successful encoder evidence
+4: PASS missing PCI instance withholds every backend including non NVIDIA devices
+4: PASS two PCI instances and a ROOT alias report two independently schedulable cards
+4: PASS PCI instance aliases are case insensitive and never create two placements
+4: PASS physical card exclusions explain software identity session and VRAM denial
+4: PASS saved ROOT profiles cannot bypass PCI admission in reporting or scheduling
+4: PASS temporary NVENC allocation failure is retried before discarding a capable card
+4: PASS failed GPU probes remain due with bounded cooldown until fresh proof succeeds
+4: PASS probe retry exhaustion stays withheld and cancellation never opens another session
+4: PASS recovery retains current successful samples while failed cards require a new encode
+4: PASS 1080p GPU child budget covers the measured display adapter commit footprint
+4: PASS GPU commit budgets distinguish geometry codec surfaces and measured card overhead
+4: PASS larger GPU memory is reserved atomically and held until the job drains
+4: PASS allocation failures under a child cap retain resolution and budget through recovery status
+4: 84 contracts, 0 failures
+1/1 Test #4: adaptive_hardware_contracts ......   Passed    0.50 sec
+
+The following tests passed:
+	adaptive_hardware_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.50 sec
+SUITE_EXIT adaptive_hardware_contracts=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 5
+    Start 5: progress_contracts
+
+5: Test command: C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_progress_contract_tests.exe
+5: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+5: Test timeout computed to be: 30
+5: PASS idle connection emits no activity and active states stay terse
+5: PASS encoder timeline and byte accounting behavior are preserved
+5: PASS unmeasurable stages say only stage and elapsed once
+5: PASS a repeated stage is a visible retry with one stable suffix
+5: PASS local timestamp format is exact through midnight month and zone changes
+5: PASS job suffixes are lowercase last four and stable for a job life
+5: PASS two live jobs with the same four characters stay distinguishable
+5: PASS a shown suffix resolves to exactly one full attempt id in the durable log
+5: PASS restart needs no counter and never implies continuation
+5: PASS every rendered line fits eighty columns including an impossible message
+5: PASS old durable lines still render plainly without breaking the viewer
+5: PASS exactly five colours carry one consistent meaning
+5: PASS progress rows keep a bounded bar and vanish on terminal events
+5: PASS four concurrent rows and activity stay readable and cancellation clears at any percent
+5: PASS many jobs keep suffix-to-id resolvability and concurrent accounting
+5: PASS the ready line names the encoders the worker actually reported
+5: PASS a probe record without encoder detail claims no backend
+5: PASS a malformed encoder list cannot invent a backend
+5: PASS explicit failed app probes never inherit successful diagnostics
+5: PASS absent capability and priority evidence is explicitly unknown
+5: PASS capability flags require complete field values and boundaries
+5: PASS probe elapsed phases and remaining candidates use an injected clock
+5: PASS probe has one bounded row alongside jobs and clears on result or failure
+5: PASS encoder change and sample scope fit the existing neutral and warning style
+5: PASS an encoder substring is not backend evidence and unknown lists stay empty
+5: PASS probe phase labels cannot hide elapsed time at console width
+5: PASS hardware demotion is one short warning line in the existing console style
+5: PASS geometry and performance fallback reasons remain distinct and readable
+5: PASS encoder placement remains short blue activity with distinct device and CPU retry
+5: PASS the short log distinguishes schedulable card count from raw DXGI inventory
+5: PASS all hardware command plans retain device selection and measured timeline progress
+5: PASS four hardware failures reset timeline and stage generation on CPU retry independently
+5: PASS outcomes increment once per executed attempt and survive pause resume
+5: PASS fixed clock summary has exact finish time duration queue and computed idle
+5: PASS idle table is fixed width deterministic and derives since and uptime
+5: PASS missing readings and last job stay unknown never numeric zero
+5: PASS idle live and durable cadence are independent and no table runs during work
+5: PASS physical cards deduplicate by identity truncate names and wrap fixed cells
+5: PASS outcome and state colours have only nonzero failures red
+5: PASS placement describes actual running encoder and clears on drain
+5: PASS status sidecar rows roundtrip colours and durable blocks stay out of live scrollback
+5: PASS live idle frame is suppressed until the last concurrent job terminates
+5: PASS bounded history survives new jobs and derives duration across wall clock correction
+5: PASS asset stages retries completions and full summaries keep observable words
+5: PASS idle ticks do not reset state since and nonzero failed span roundtrips
+5: PASS redirected durable table keeps the same fixed width plain block
+5: PASS summary carries running placement free resources priority and accepting state
+5: PASS totals keep outcome columns at fixed positions as counts grow
+5: PASS encoder and failure records retain asset names and failure colour
+5: PASS running progress row retains the physical card across asset updates
+5: PASS outcome colour follows the outcome word regardless of reason wording
+5: PASS idle status exposes withheld card codec reason and retry instead of calling it idle
+5: PASS long withheld reasons wrap without losing retry and remain durable status rows
+5: PASS active status exposes the actual selected child memory budget
+5: PASS encoder start completion and stats name the actual GPU for the same file
+5: PASS CPU encoder including a retry reports CPU at start completion and in stats
+5: PASS encoder reporting retains actual child card when display inventory is unavailable
+5: PASS timing separates wall controller CPU child CPU launch and process lifetime
+5: PASS failed timed work retains its exception and reports incomplete work
+5: PASS missing child accounting never becomes a measured zero
+5: PASS timing observer failure cannot fail or replace conversion outcome
+5: PASS concurrent stage sums are explicitly distinct from job wall time
+5: PASS one unavailable CPU measurement makes aggregate CPU unavailable
+5: PASS job CPU includes main thread once plus background CPU and all child trees
+5: 64 contracts, 0 failures
+1/1 Test #5: progress_contracts ...............   Passed    0.27 sec
+
+The following tests passed:
+	progress_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.27 sec
+SUITE_EXIT progress_contracts=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 6
+    Start 6: windows_contracts
+
+6: Test command: C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_windows_tests.exe
+6: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+6: Test timeout computed to be: 60
+6: PASS Windows UTF8 conversion preserves non-ASCII filenames
+6: PASS Windows adapter inventory has repeatable unique identities and real VRAM and driver fields
+6: NOCONVERSION_REASON ; converter not configured: capabilities disabled; display inventory entries=3; configured_global_VRAM_override_MB=not_set [Radeon RX Vega M GL Graphics id=pci:1002:694e:080d1028:c0:luid:00000000:00012cdf dedicated_VRAM_MB=4043; physical_id=PCI\VEN_1002&DEV_694E&SUBSYS_080D1028&REV_C0\4&DFEC518&0&0008; encoder mapping=verified; ] [Intel(R) HD Graphics 630 id=pci:8086:591b:080d1028:04:luid:00000000:00012957 dedicated_VRAM_MB=128; physical_id=PCI\VEN_8086&DEV_591B&SUBSYS_080D1028&REV_04\3&11583659&0&10; encoder mapping=verified; ] [Microsoft Basic Render Driver id=pci:1414:008c:00000000:00:luid:00000000:00012cad dedicated_VRAM_MB=0; physical_id=; encoder mapping=unavailable; unsupported or unmappable display adapter; GPU profile withheld]
+6: PASS NoConversion setup inventories adapters before reporting disabled conversion
+6: PASS global VRAM override is optional for old configs and honored when configured
+6: PASS DPAPI round-trips binary credentials and rejects corruption
+6: PASS pairing public identity persists without storing a plaintext private key
+6: PASS stopping a contained job terminates both root and descendant
+6: PASS native timing retains process-tree CPU and root lifetime after drain
+6: PASS adaptive capacity stays reserved until a cancelled native process tree drains
+6: PASS protected enrollment and credentials remain readable after adapter reopen
+6: PASS runtime readiness identifies this process and is removed on shutdown
+6: PASS durable log rotation keeps concurrent lines whole and free of terminal escapes
+6: PASS pipeline upload failure drains a real contained process tree before unwinding
+6: PASS native Job Object cap rejects old footprint and admits workload budget while remaining bounded
+6: 14 contracts, 0 failures
+1/1 Test #6: windows_contracts ................   Passed    1.11 sec
+
+The following tests passed:
+	windows_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   1.12 sec
+SUITE_EXIT windows_contracts=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 7
+    Start 7: setup_contracts
+
+7: Test command: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe "-NoLogo" "-NoProfile" "-ExecutionPolicy" "Bypass" "-File" "C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/tests/setup_policy_test.ps1"
+7: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+7: Test timeout computed to be: 60
+7: PASS expired pairing is identified without deleting identity and healthy credentials are retained
+7: PASS unreadable or cross-endpoint identity requires explicit full archival
+7: [14:09:58] [STARTED] Enumerate dependency files |  | elapsed 0.0s | 
+7: [14:09:58] [DONE] Enumerate dependency files | 1 files | elapsed 0.1s | 1 files found
+7: [14:09:58] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s | 
+7: [14:09:58] [DONE] Build dependency checksum manifest | 1 / 1 files (100%) | elapsed 0.2s | 
+7: [14:09:58] [STARTED] Enumerate dependency files |  | elapsed 0.0s | 
+7: [14:09:58] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+7: [14:09:58] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s | 
+7: [14:09:58] [DONE] Verify cached dependency | 1 / 1 files (100%) | elapsed 0.0s | Every cached file verified
+7: [14:09:58] [STARTED] Enumerate dependency files |  | elapsed 0.0s | 
+7: [14:09:58] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+7: [14:09:58] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s | 
+7: [14:09:58] [DONE] Verify cached dependency | 1 / 1 files (100%) | elapsed 0.0s | Every cached file verified
+7: [CACHE] Verified extracted dependency reused.
+7: [14:09:58] [STARTED] Enumerate dependency files |  | elapsed 0.0s | 
+7: [14:09:58] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+7: [14:09:58] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s | 
+7: [14:09:58] [FAILED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s | Cache mismatch; fresh extraction required
+7: [14:09:58] [STARTED] Enumerate dependency files |  | elapsed 0.0s | 
+7: [14:09:58] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+7: [14:09:58] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s | 
+7: [14:09:58] [DONE] Build dependency checksum manifest | 1 / 1 files (100%) | elapsed 0.0s | 
+7: [REPAIR] Replacing damaged generated dependency files.
+7: [14:09:58] [STARTED] Clean generated files |  | elapsed 0.0s | 
+7: [14:09:58] [DONE] Clean generated files | 2 files | elapsed 0.0s | 2 generated files removed
+7: PASS verified dependency tree is reused but changed or missing files are repaired
+7: [14:09:58] [STARTED] Clean generated files |  | elapsed 0.0s | 
+7: [14:09:58] [DONE] Clean generated files |  | elapsed 0.0s | 0 generated files removed
+7: PASS failed fresh extraction preserves existing files and unrelated identity
+7: Enter an HTTPS worker origin on port 443, without a path, query, fragment or credentials.
+7: PASS bare DNS input selects verified HTTPS and invalid interactive input can be corrected
+7: PASS repair retries recoverable setup once and preserves user state
+7: PASS persistent failure stops after bounded repair and healthy step never repairs
+7: [14:09:58] [STARTED] SHA-256 download.bin | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+7: [14:09:58] [DONE] SHA-256 download.bin | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+7: [REPAIR] Replacing a damaged download from the reviewed dependency lock.
+7: [14:09:58] [STARTED] SHA-256 download.bin.9ba2d777eb8f45529ffa0cee3ae7bb5c.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+7: [14:09:58] [DONE] SHA-256 download.bin.9ba2d777eb8f45529ffa0cee3ae7bb5c.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+7: [14:09:58] [STARTED] SHA-256 download.bin | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+7: [14:09:58] [DONE] SHA-256 download.bin | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+7: [REPAIR] Replacing a damaged download from the reviewed dependency lock.
+7: [14:09:58] [STARTED] SHA-256 download.bin.304dd8d55f53459abd569c798ded29fd.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+7: [14:09:58] [DONE] SHA-256 download.bin.304dd8d55f53459abd569c798ded29fd.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+7: PASS damaged checksum cache is replaced and unverified replacement is never retained
+7: [14:09:58] [STARTED] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:58] [DONE] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:58] [STARTED] Verify startup registration |  | elapsed 0.0s | 
+7: [14:09:58] [FAILED] Verify startup registration |  | elapsed 0.0s | Windows startup registration could not be verified. Setup is incomplete.
+7: [REPAIR] Re-registering this users normal-privilege startup task.
+7: [14:09:58] [STARTED] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:59] [DONE] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:59] [STARTED] Verify startup registration |  | elapsed 0.0s | 
+7: [14:09:59] [DONE] Verify startup registration |  | elapsed 0.0s | 
+7: [14:09:59] [STARTED] Launch and verify worker |  | elapsed 0.0s | 
+7: [14:09:59] [DONE] Launch and verify worker |  | elapsed 0.0s | 
+7: PASS startup repairs a failed verification before launch and never elevates the worker
+7: PASS Windows account aliases identify the same startup owner by SID
+7: PASS another account SID cannot own this users startup task
+7: PASS missing or unresolvable startup owner fails closed
+7: PASS first setup asks for endpoint and canonicalizes it
+7: PASS existing endpoint is reused without a prompt
+7: PASS blank or unsafe endpoint fails instead of choosing production
+7: PASS changing endpoint with identity requires explicit re-pair
+7: [14:09:59] [STARTED] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:59] [DONE] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:59] [STARTED] Verify startup registration |  | elapsed 0.0s | 
+7: [14:09:59] [DONE] Verify startup registration |  | elapsed 0.0s | 
+7: [14:09:59] [STARTED] Launch and verify worker |  | elapsed 0.0s | 
+7: [14:09:59] [DONE] Launch and verify worker |  | elapsed 0.0s | 
+7: PASS ordinary setup registers verifies and starts without opt-in switches
+7: [14:09:59] [STARTED] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:59] [DONE] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:59] [STARTED] Verify startup registration |  | elapsed 0.0s | 
+7: [14:09:59] [FAILED] Verify startup registration |  | elapsed 0.0s | Windows startup registration could not be verified. Setup is incomplete.
+7: [REPAIR] Re-registering this users normal-privilege startup task.
+7: [14:09:59] [STARTED] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:59] [DONE] Register normal-user startup |  | elapsed 0.0s | 
+7: [14:09:59] [STARTED] Verify startup registration |  | elapsed 0.0s | 
+7: [14:09:59] [FAILED] Verify startup registration |  | elapsed 0.0s | Windows startup registration could not be verified. Setup is incomplete.
+7: PASS failed startup verification cannot report success or launch
+7: PASS explicit maintenance opt-outs suppress only requested side effects
+7: PASS atomic JSON replacement preserves old bytes when publication fails
+7: PASS readiness needs the matching process image and creation time not a stale PID
+7: PASS changing coordinators archives the old journal and keys instead of sending old results
+7: PASS explicit re-pair archives encrypted identity but retains key and job journal
+7: PASS an absent toolchain is reported as missing instead of crashing
+7: PASS a real toolchain instance still supplies the compiler path
+7: 25 setup contracts passed; 0 failed
+1/1 Test #7: setup_contracts ..................   Passed    3.84 sec
+
+The following tests passed:
+	setup_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   3.85 sec
+SUITE_EXIT setup_contracts=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 8
+    Start 8: setup_progress_contracts
+
+8: Test command: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe "-NoLogo" "-NoProfile" "-ExecutionPolicy" "Bypass" "-File" "C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/tests/setup_progress_test.ps1"
+8: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+8: Test timeout computed to be: 90
+8: PASS unknown total never acquires a percentage just because time passes
+8: PASS measured work gives a percentage and successful completion ends the stage
+8: PASS heartbeat reports quiet activity without pretending work advanced
+8: PASS failure stays a failure and does not display completed work
+8: PASS URLs and credential values never reach a progress log
+8: PASS streaming checksum retains the actual SHA256 contract
+8: [14:10:01] [STARTED] Truncated |  | elapsed 0.0s | 
+8: PASS stream transfer counts real bytes and rejects truncated content
+8: [14:10:01] [STARTED] Move extracted dependency into staging | 0 / 1 entries (0%) | elapsed 0.0s | 
+8: [14:10:01] [DONE] Move extracted dependency into staging | 1 / 1 entries (100%) | elapsed 0.0s | Same-volume move; no duplicate tree copy
+8: [14:10:01] [STARTED] Enumerate dependency files |  | elapsed 0.0s | 
+8: [14:10:01] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+8: [14:10:01] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s | 
+8: [14:10:01] [DONE] Build dependency checksum manifest | 1 / 1 files (100%) | elapsed 0.1s | 
+8: [14:10:01] [STARTED] Enumerate dependency files |  | elapsed 0.0s | 
+8: [14:10:01] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+8: [14:10:01] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s | 
+8: [14:10:01] [DONE] Verify cached dependency | 1 / 1 files (100%) | elapsed 0.0s | Every cached file verified
+8: PASS staging move preserves dependency contents and unrelated user state
+8: PASS dependency staging collision fails without overwriting either tree
+8: [14:10:01] [STARTED] Oversized |  | elapsed 0.0s | 
+8: [14:10:01] [STARTED] Declared empty |  | elapsed 0.0s | 
+8: PASS download bounds reject oversized and declared-empty content
+8: [14:10:01] [STARTED] Synthetic ZIP |  | elapsed 0.0s | 
+8: [14:10:03] [PROGRESS] Synthetic ZIP |  | elapsed 2.1s | Process running; percentage unavailable
+8: [14:10:04] [DONE] Synthetic ZIP |  | elapsed 3.2s | 
+8: PASS owned ZIP extractor preserves real nested dependency files
+8: [14:10:04] [STARTED] Synthetic child |  | elapsed 0.0s | 
+8: first:22192
+8: stderr
+8: [14:10:06] [PROGRESS] Synthetic child | 2 output lines | elapsed 2.0s | Process running; percentage unavailable
+8: [14:10:08] [DONE] Synthetic child | 2 output lines | elapsed 3.2s | 
+8: PASS real native stdout and stderr are delivered while the child is still running
+8: [14:10:08] [STARTED] Argument fixture |  | elapsed 0.0s | 
+8: [14:10:08] [DONE] Argument fixture | 4 output lines | elapsed 0.5s | 
+8: PASS native arguments retain spaces quotes empty values and trailing slashes
+8: [14:10:08] [STARTED] Failing child |  | elapsed 0.0s | 
+8: synthetic defect
+8: [14:10:09] [FAILED] Failing child | 1 output lines | elapsed 1.0s | Native stage failed with exit code 7
+8: PASS a nonzero native exit cannot report a successful stage
+8: [14:10:09] [STARTED] Timed out child |  | elapsed 0.0s | 
+8: pid:34720
+8: [14:10:12] [PROGRESS] Timed out child | 1 output lines | elapsed 2.1s | Process running; percentage unavailable
+8: [14:10:13] [FAILED] Timed out child | 1 output lines | elapsed 3.1s | Stage exceeded its 3s timeout.
+8: PASS native timeout stops the owned child and remains a failure
+8: 15 progress contracts passed; 0 failed
+1/1 Test #8: setup_progress_contracts .........   Passed   13.74 sec
+
+The following tests passed:
+	setup_progress_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  13.75 sec
+SUITE_EXIT setup_progress_contracts=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 9
+    Start 9: setup_converter_contracts
+
+9: Test command: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe "-NoLogo" "-NoProfile" "-NonInteractive" "-ExecutionPolicy" "Bypass" "-File" "C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/tests/setup_converter_test.ps1"
+9: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+9: Test timeout computed to be: 60
+9: START a fresh machine downloads pinned bytes after consent and records acceptance
+9: [14:10:15] [STARTED] SHA-256 ffmpeg.exe.7938691efe52434aac5b939e937be3cd.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:15] [DONE] SHA-256 ffmpeg.exe.7938691efe52434aac5b939e937be3cd.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.1s | 
+9: PASS a fresh machine downloads pinned bytes after consent and records acceptance
+9: START corrupt transfers retry the supplied transport and only verified bytes publish
+9: [14:10:15] [STARTED] SHA-256 ffmpeg.exe.d766e45541704c568f31655a11213990.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:15] [DONE] SHA-256 ffmpeg.exe.d766e45541704c568f31655a11213990.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+9: [14:10:17] [STARTED] SHA-256 ffmpeg.exe.a7d6d2695b334876b1aafa2de7174850.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:17] [DONE] SHA-256 ffmpeg.exe.a7d6d2695b334876b1aafa2de7174850.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+9: [14:10:21] [STARTED] SHA-256 ffmpeg.exe.f2fb4bfec60545b380c8489465dfae07.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:21] [DONE] SHA-256 ffmpeg.exe.f2fb4bfec60545b380c8489465dfae07.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: PASS corrupt transfers retry the supplied transport and only verified bytes publish
+9: START a verified retained converter is reused without another transfer or prompt
+9: [14:10:21] [STARTED] SHA-256 ffmpeg.exe.f022023bfb0f45f9903ea7840042eaca.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:21] [DONE] SHA-256 ffmpeg.exe.f022023bfb0f45f9903ea7840042eaca.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: [14:10:21] [STARTED] SHA-256 ffmpeg.exe | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:21] [DONE] SHA-256 ffmpeg.exe | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: [CACHE] Verified archive reused.
+9: PASS a verified retained converter is reused without another transfer or prompt
+9: START a tampered installed converter is replaced with verified bytes
+9: [14:10:21] [STARTED] SHA-256 ffmpeg.exe.9c131adaa3bc4dba8ccbc34254a597ee.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:21] [DONE] SHA-256 ffmpeg.exe.9c131adaa3bc4dba8ccbc34254a597ee.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: [14:10:21] [STARTED] SHA-256 ffmpeg.exe | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:21] [DONE] SHA-256 ffmpeg.exe | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: [REPAIR] Replacing a damaged download from the reviewed dependency lock.
+9: [14:10:21] [STARTED] SHA-256 ffmpeg.exe.96b4b4059c80456998d49a3e762a5ae4.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:21] [DONE] SHA-256 ffmpeg.exe.96b4b4059c80456998d49a3e762a5ae4.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: PASS a tampered installed converter is replaced with verified bytes
+9: START same-size wrong bytes cannot publish converter or license receipt
+9: [14:10:21] [STARTED] SHA-256 ffmpeg.exe.4ac46f25e6ad41cbb940f124336b0898.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:21] [DONE] SHA-256 ffmpeg.exe.4ac46f25e6ad41cbb940f124336b0898.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+9: [14:10:23] [STARTED] SHA-256 ffmpeg.exe.61b6026e90614b49a985722739b8c7d0.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:23] [DONE] SHA-256 ffmpeg.exe.61b6026e90614b49a985722739b8c7d0.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+9: [14:10:27] [STARTED] SHA-256 ffmpeg.exe.eb2cba8aed5547c4944d5d77719bfba7.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:27] [DONE] SHA-256 ffmpeg.exe.eb2cba8aed5547c4944d5d77719bfba7.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: PASS same-size wrong bytes cannot publish converter or license receipt
+9: START truncated download is rejected and temporary bytes removed
+9: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+9: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+9: PASS truncated download is rejected and temporary bytes removed
+9: START unpublished artifact fails clearly before consent or network
+9: PASS unpublished artifact fails clearly before consent or network
+9: START NoConversion bypasses unpublished dependency and clears converter selection
+9: PASS NoConversion bypasses unpublished dependency and clears converter selection
+9: START an already approved installed converter survives a pending publication
+9: [14:10:33] [STARTED] SHA-256 synthetic.exe | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:33] [DONE] SHA-256 synthetic.exe | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: PASS an already approved installed converter survives a pending publication
+9: START a damaged stored converter cannot bypass pending publication
+9: [14:10:33] [STARTED] SHA-256 synthetic.exe | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s | 
+9: [14:10:33] [DONE] SHA-256 synthetic.exe | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s | 
+9: PASS a damaged stored converter cannot bypass pending publication
+9: START noninteractive installation requires explicit license consent
+9: PASS noninteractive installation requires explicit license consent
+9: START declining consent performs no download and creates no receipt
+9: PASS declining consent performs no download and creates no receipt
+9: START a receipt for another digest does not authorize this dependency
+9: PASS a receipt for another digest does not authorize this dependency
+9: START network failure retains unrelated identity and cannot publish success
+9: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+9: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+9: PASS network failure retains unrelated identity and cannot publish success
+9: START unsafe expiring and unpinned endpoints fail before fetching
+9: PASS unsafe expiring and unpinned endpoints fail before fetching
+9: START invalid executable metadata and missing checksum fail closed
+9: PASS invalid executable metadata and missing checksum fail closed
+9: START forced repair cannot switch a supplied converter silently
+9: PASS forced repair cannot switch a supplied converter silently
+9: 17 converter contracts passed; 0 failed
+1/1 Test #9: setup_converter_contracts ........   Passed   26.70 sec
+
+The following tests passed:
+	setup_converter_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =  26.71 sec
+SUITE_EXIT setup_converter_contracts=0
+Internal ctest changing into directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build/DartConfiguration.tcl
+Test project C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 10
+    Start 10: setup_swap_contracts
+
+10: Test command: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe "-NoLogo" "-NoProfile" "-NonInteractive" "-ExecutionPolicy" "Bypass" "-File" "C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/source/tests/setup_swap_test.ps1"
+10: Working Directory: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/candidate/build
+10: Test timeout computed to be: 60
+10: REPRO_NULL_BACKUP=ArgumentException The path is not of a legal form.
+10: VERSION_SWAP_VERIFIED=True
+10: PASS Windows PowerShell null backup reproduces the rollout error; explicit backup publishes
+10: VERSION_SWAP_VERIFIED=True
+10: PASS real sharing violation stops the supplied holder then retries the atomic swap
+10: ROLLBACK_OLD_VERSION_VERIFIED=True
+10: PASS persistent lock fails within its bound and keeps the exact old manifest runnable
+10: ROLLBACK_OLD_VERSION_VERIFIED=True
+10: PASS failed candidate launch restores the old manifest and launches the old version
+10: ROLLBACK_OLD_VERSION_VERIFIED=True
+10: PASS abrupt installer termination after publish retains recovery and restores a runnable old version
+10: ROLLBACK_OLD_VERSION_VERIFIED=True
+10: PASS locked recovery file during commit keeps recovery and restores the old runnable version
+10: PASS incomplete candidate is rejected before stopping or changing the current version
+10: 7 swap contracts passed; 0 failed
+1/1 Test #10: setup_swap_contracts .............   Passed    7.90 sec
+
+The following tests passed:
+	setup_swap_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   7.91 sec
+SUITE_EXIT setup_swap_contracts=0
+WINDOWS_GATE_EXIT=0
+BASELINE_PORTS_SHA=330086a74315414407feae251da5a1c4f7fe4941d95f75fc3fc132705c28cc6c
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- Configuring done (6.3s)
+-- Generating done (0.9s)
+-- Build files have been written to: C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/baseline/build
+BASELINE_CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/baseline/source/CMakeLists.txt
+  ow_json.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\Release\ow_json.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/baseline/source/CMakeLists.txt
+  ow_core.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\Release\ow_core.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/baseline/source/CMakeLists.txt
+  worker.cpp
+C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\source\windows\worker.cpp(770,207): warning C4456: declaration of 'cancelled' hides previous local declaration [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\ow_windows.vcxproj]
+      C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\source\windows\worker.cpp(575,7):
+      see declaration of 'cancelled'
+  
+  ow_windows.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\Release\ow_windows.lib
+  Building Custom Rule C:/Users/reald/AppData/Local/Temp/ow-worker-flex-20261018-r2/baseline/source/CMakeLists.txt
+  windows_flex_benchmark.cpp
+  offline_media.cpp
+  capacity.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\functional(1055): warning C4789: in function 'void __cdecl ow::win::Worker::recover_gpus(void) __ptr64' buffer 'isolated' of size 208 bytes will be overrun; 8 bytes will be written starting at offset 264 [C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\ow_flex_benchmark.vcxproj]
+  All 10589 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_flex_benchmark.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\Release\ow_flex_benchmark.exe
+BASELINE_BENCHMARK_BUILD_EXIT=0
+OBSERVER_EXE_SHA=53b117587a9ab2bdbb26bbe5055ba9ad16491ff7bddf50fda9ef7e075496f166
+OBSERVER_PID=32976 SESSION=1 RUNLEVEL=Limited TRIGGERS=none
+FOREGROUND_OBSERVATION={"observed_utc_ms":1792347096101,"session":1,"pid":32976,"input_age_ms":14004250,"foreground_active":false,"message_response_known":false,"message_response_ms":0}
+OBSERVER_START_EXIT=0
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj><Obj S="progress" RefId="1"><TNRef RefId="0" /><MS><I64 N="SourceId">3</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj><Obj S="progress" RefId="2"><TNRef RefId="0" /><MS><I64 N="SourceId">4</I64><PR N="Record"><AV>Get-ScheduledTask -TaskName $name -ErrorAction SilentlyContinue){throw 'Refusing an existing observer task'}</AV><AI>662932846</AI><Nil /><PI>-1</PI><PC>100</PC><T>Completed</T><SR>0</SR><SD>1/1 completed</SD></PR></MS></Obj><Obj S="progress" RefId="3"><TNRef RefId="0" /><MS><I64 N="SourceId">5</I64><PR N="Record"><AV>New-ScheduledTaskAction -Execute $exe -Argument ('"'+$root+'"') -WorkingDirectory $root</AV><AI>163603786</AI><Nil /><PI>-1</PI><PC>100</PC><T>Completed</T><SR>0</SR><SD>1/1 completed</SD></PR></MS></Obj><Obj S="progress" RefId="4"><TNRef RefId="0" /><MS><I64 N="SourceId">6</I64><PR N="Record"><AV>New-ScheduledTaskPrincipal -UserId $sid -LogonType Interactive -RunLevel Limited</AV><AI>1064165439</AI><Nil /><PI>-1</PI><PC>100</PC><T>Completed</T><SR>0</SR><SD>1/1 completed</SD></PR></MS></Obj><Obj S="progress" RefId="5"><TNRef RefId="0" /><MS><I64 N="SourceId">7</I64><PR N="Record"><AV>New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Hours 2) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries</AV><AI>1346922659</AI><Nil /><PI>-1</PI><PC>100</PC><T>Completed</T><SR>0</SR><SD>1/1 completed</SD></PR></MS></Obj><Obj S="progress" RefId="6"><TNRef RefId="0" /><MS><I64 N="SourceId">8</I64><PR N="Record"><AV>Register-ScheduledTask -TaskName $name -Action $action -Principal $principal -Settings $settings | Out-Null</AV><AI>1178279051</AI><Nil /><PI>-1</PI><PC>100</PC><T>Completed</T><SR>0</SR><SD>1/1 completed</SD></PR></MS></Obj><Obj S="progress" RefId="7"><TNRef RefId="0" /><MS><I64 N="SourceId">9</I64><PR N="Record"><AV>Start-ScheduledTask -TaskName $name</AV><AI>1516373835</AI><Nil /><PI>-1</PI><PC>100</PC><T>Completed</T><SR>0</SR><SD>1/1 completed</SD></PR></MS></Obj><Obj S="progress" RefId="8"><TNRef RefId="0" /><MS><I64 N="SourceId">3</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>

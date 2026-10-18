@@ -233,3 +233,45 @@ Older clients lack the new probed capability and receive no app-profile offer;
 the server uses local fallback instead. No inference adapter or protocol-level
 GPU requirement is added. Worker-local adaptive media profiles do not change
 this wire contract.
+
+### Worker-flex stage reservations candidate (not deployed)
+
+After input inspection children drain, job-wide CPU/RAM escrow can hand off to
+atomic stage claims. Scratch and the original offer/fingerprint remain intact.
+Renditions use distinct child directories/logs and may prepare concurrently;
+codec/device leases end only after their encoder trees drain. Full validation,
+CPU retry and transfer have separate claims. Cancelling never releases a live
+child's capacity. A ready artifact may upload before a slower rendition finishes;
+only the complete fixed result role map can claim success. Early scratch-envelope
+retirement follows writer drain and deletion, not an attempted cancellation.
+
+A ~90% utilization feedback target does not authorize exceeding machine budgets
+or a physical backend's successfully tested session count. Pressure and recent
+foreground use defer new offers and reserved BEGINs, not duplicate running BEGINs
+or valid renewals. Running work drains at conservative capacity. Missing/stale
+telemetry cannot qualify increased concurrency. CPU/committed-memory child-job
+limits are enforced; physical RAM, GPU/VRAM, disk and desktop effects are sampled,
+not universal hard OS quotas. One active encoder can still reach 100% GPU usage.
+
+### Worker-flex timing validation candidate (not deployed)
+
+A nominal/VUI frame rate, including FFmpeg's rounded human-readable `tbr`, is
+not an execution prerequisite or a presentation-timing acceptance criterion.
+App encoders retain the demuxer time base and pass timestamps through without
+resampling. Before upload, compare source/output sample counts, every sorted
+rational PTS relative to the first PTS, and total demuxed video sample duration.
+Time bases may differ only if those rational measurements are equivalent.
+Missing/malformed/duplicate timestamp evidence still fails validation; bounded
+inspection, hash verification and the existing decode/geometry guards remain.
+Single-frame videos can supply measurable timing without a nominal frame rate.
+This does not promise audio-timestamp or arbitrary codec/container equivalence.
+
+After a rendition's encoder/retry/validation process trees have drained, its
+adaptive compute reservation may be released independently. A shared card stays
+reserved while another pending codec still owns it. Source/output scratch and
+transfer/admission budgets remain until their own lifetime ends. Failure or
+cancellation never authorizes release before process-tree drain.
+
+The deployed coordinator still independently checks `r_frame_rate`. It must be
+reconciled with the measured-timeline contract before claiming general end-to-end
+VFR acceptance. No coordinator or protocol deployment accompanies this candidate.

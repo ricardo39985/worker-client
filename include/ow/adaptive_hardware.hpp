@@ -61,6 +61,7 @@ struct TuningEvidence {
 struct Limits {
     std::uint64_t cpu_threads{}, ram_mb{}, vram_mb{}, scratch_mb{};
     std::uint32_t max_jobs{};
+    std::uint32_t nvenc_sessions{worker_nvenc_sessions};
 };
 struct GpuMemoryRecord { std::uint32_t process_id{},node{};std::uint64_t bytes{};std::string stable_id;bool valid{true}; };
 struct GpuMemoryTotals { std::uint64_t child_bytes{},adapter_bytes{}; };
@@ -89,7 +90,11 @@ struct Profile {
     std::uint32_t measured_width{},measured_height{};
     std::string physical_id,device_name;
     std::uint64_t child_memory_overhead_mb{64};
+    std::uint32_t proven_sessions{1};
 };
+inline std::uint32_t proven_nvenc_sessions(const std::vector<Profile>& profiles){
+ std::uint32_t count=worker_nvenc_sessions;for(const auto& p:profiles)if(p.backend==Backend::nvidia_nvenc)count=std::max(count,p.proven_sessions);return count;
+}
 struct TuningComparison { double serial_fps{},parallel_fps{};bool comparable{}; };
 TuningComparison compare_tuning_runs(const std::vector<std::uint64_t>& serial_stage_ms,
                                      const std::vector<std::uint64_t>& parallel_stage_ms,
@@ -160,21 +165,29 @@ public:
         const std::vector<Profile>& profiles() const { return profiles_; }
         explicit operator bool() const { return active_; }
         void release() noexcept;
+        // Caller must first drain every child tree for this codec (including
+        // validation/retries). Other codecs keep their full reservations.
+        void finish_codec(Codec codec);
         bool hardware_enabled(const Profile& profile) const;
         std::uint64_t memory_for_dimensions(std::uint32_t width,std::uint32_t height) const;
         bool resize_memory(std::uint32_t width,std::uint32_t height,const Limits& task_limits);
+        bool grow_memory(std::uint64_t mb,const Limits& task_limits);
         bool acquire_cpu_fallback(const std::function<bool()>& cancelled,
                                   std::uint32_t max_wait_ms=30000);
     };
     Scheduler(Limits limits, std::vector<Profile> profiles);
     Reservation reserve(const std::vector<Codec>& codecs);
     Reservation reserve(const std::vector<Codec>& codecs, const Limits& task_limits,
-                        std::vector<std::string>* exclusions=nullptr);
+                        std::vector<std::string>* exclusions=nullptr,bool cpu_only=false,
+                        std::uint32_t width=0,std::uint32_t height=0,const std::string& pinned_primary={});
     void set_device_available_vram(const std::string& stable_id,std::uint64_t mb);
+    void set_device_concurrency_limit(const std::string& stable_id,std::uint32_t limit);
+    std::uint32_t device_concurrency(const std::string& stable_id) const;
     bool demote_profile(const Profile& profile);
     void invalidate_hardware();
     void invalidate_all();
     std::uint64_t active_jobs() const;
+    std::vector<std::string> capacity_lines() const;
 private:
     static void release(const std::shared_ptr<State>&, const std::vector<Profile>&,
                         const std::vector<std::string>& cpu_fallback_keys) noexcept;

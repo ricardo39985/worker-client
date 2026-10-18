@@ -91,7 +91,13 @@ int wmain(int argc,wchar_t** argv){
   SetConsoleTitleW(L"Organizer Worker - Live Console (close safely to tray)");ConsoleOutput output;
   Handle controller(parent?OpenProcess(SYNCHRONIZE,FALSE,parent):nullptr);if(parent&&!controller)fail("Locate tray controller");
   std::uint64_t position=0,last_file=0;std::array<char,16384> buffer{};std::string pending;LiveConsoleView view;std::string last_frame;std::vector<ConsoleLine> status_lines;
-  auto redraw=[&]{if(!status_lines.empty()&&view.jobs_running()==0)output.dashboard(status_lines);else output.dashboard(view);};
+  std::string last_capacity;std::vector<ConsoleLine> capacity_lines;
+  auto redraw=[&]{
+   std::vector<ConsoleLine> lines;
+   if(!status_lines.empty()&&view.jobs_running()==0)lines=status_lines;
+   else for(const auto& row:view.rows())lines.push_back({view.render_row(row,false),row.color});
+   lines.insert(lines.end(),capacity_lines.begin(),capacity_lines.end());output.dashboard(lines);
+  };
   if(output.interactive())output.event({"H: last 10 job outcomes (this worker process)",ConsoleColor::white});
   while(!controller||WaitForSingleObject(controller.get(),0)==WAIT_TIMEOUT){
    Handle file(CreateFileW((root/"worker.log").c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr));
@@ -102,6 +108,7 @@ int wmain(int argc,wchar_t** argv){
        if(feed.durable_status&&!output.dashboard_enabled())output.event(*feed.durable_status);if(feed.event)output.event(*feed.event);if(feed.activity&&!output.dashboard_enabled())output.event(*feed.activity);if(feed.redraw&&output.dashboard_enabled())redraw();start=end+1;}if(start)pending.erase(0,start);
      }std::cout.flush();}}
    if(output.dashboard_enabled()){
+    try{auto frame=read_report(root/"worker-capacity.txt");if(frame!=last_capacity){last_capacity=std::move(frame);capacity_lines=parse_status_frame(last_capacity);redraw();}}catch(...){if(!capacity_lines.empty()){last_capacity.clear();capacity_lines.clear();redraw();}}
     try{auto frame=read_report(root/"worker-status.txt");if(frame!=last_frame){last_frame=std::move(frame);status_lines=parse_status_frame(last_frame);redraw();}}catch(...){if(!status_lines.empty()){last_frame.clear();status_lines.clear();redraw();}}
    }
    if(output.interactive()&&_kbhit()){

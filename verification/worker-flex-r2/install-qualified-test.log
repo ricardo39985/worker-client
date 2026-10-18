@@ -1,0 +1,25 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+WORKER_STOPPED_IDLE=True
+START_TASK_EXIT=0
+VERIFIED_SHA256=f7eb2fe92e405ca65f4234f9857519cbac4281101d868803460f429aa2229d0f PROCESS_PID=23456 SESSION=1
+VERSION_SWAP_VERIFIED=True
+INSTALLED_VERSION=0.1.2-f7eb2fe92e405ca6
+INSTALLED_SHA256=f7eb2fe92e405ca65f4234f9857519cbac4281101d868803460f429aa2229d0f
+INSTALLED_REVISION=1111111111111111111111111111111111111111
+PROTECTED_IDENTITY_AND_NONLIMIT_SETTINGS_UNCHANGED=True
+QUALIFIED_LIMITS={"cpu_threads":4,"ram_mb":512,"scratch_mb":2000,"max_jobs":4}
+PASS success
+WORKER_STOPPED_IDLE=True
+WORKER_STOPPED_IDLE=True
+START_TASK_EXIT=0
+VERIFIED_SHA256=46c13a0de478c19f738125f63ffb7e1bad69961de7d3d3c24f3d449dbea39ce3 PROCESS_PID=23456 SESSION=1
+ROLLBACK_OLD_VERSION_VERIFIED=True
+EXPECTED_FAILURE=injected candidate launch failure; previous version restored and verified
+PASS launch-failure
+EXPECTED_FAILURE=Explicitly verified measured-capacity profile required
+PASS tampered-profile
+QUALIFIED_INSTALL_CONTRACT_EXIT=0
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>

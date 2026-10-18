@@ -1,0 +1,151 @@
+{
+  "source_sha256": "43806f9d921afe0def16befac5e6a95374f9571f2ae480c6950e9e0f3f85ef27",
+  "source_bytes": 24609052,
+  "source_stream": {
+    "codec_name": "hevc",
+    "width": 1920,
+    "height": 1080,
+    "r_frame_rate": "359/12",
+    "avg_frame_rate": "597500/19963",
+    "time_base": "1/30000",
+    "duration": "23.955600",
+    "disposition": {
+      "default": 1,
+      "dub": 0,
+      "original": 0,
+      "comment": 0,
+      "lyrics": 0,
+      "karaoke": 0,
+      "forced": 0,
+      "hearing_impaired": 0,
+      "visual_impaired": 0,
+      "clean_effects": 0,
+      "attached_pic": 0,
+      "timed_thumbnails": 0,
+      "non_diegetic": 0,
+      "captions": 0,
+      "descriptions": 0,
+      "metadata": 0,
+      "dependent": 0,
+      "still_image": 0,
+      "multilayer": 0
+    },
+    "tags": {
+      "creation_time": "2026-10-13T19:25:50.000000Z",
+      "language": "eng",
+      "handler_name": "Snap Video",
+      "vendor_id": "[0][0][0][0]"
+    },
+    "side_data_list": [
+      {
+        "rotation": -90
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "file": "feed.mp4",
+      "sha256": "db52873df1904d01001a7fdca8e1e30cd977fc835836241f2163760ffa878e77",
+      "bytes": 14002864,
+      "stream": {
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "359/12",
+        "avg_frame_rate": "597500/19963",
+        "time_base": "1/30000",
+        "duration": "23.955600",
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "eng",
+          "handler_name": "Snap Video",
+          "vendor_id": "[0][0][0][0]",
+          "encoder": "Lavc63.1.102 h264_nvenc"
+        },
+        "side_data_list": [
+          {
+            "rotation": -90
+          }
+        ]
+      },
+      "decoded_frames": 717,
+      "exact_relative_pts": true,
+      "exact_total_sample_duration": true,
+      "source_sample_seconds": "59889/2500",
+      "ssim": 0.990175,
+      "decode_ssim_exit": 0
+    },
+    {
+      "file": "optimized.mp4",
+      "sha256": "c7fd67d5ce4f3d22ac5edcc8b6373f62b3d272ea64f86ad58074851843bd85be",
+      "bytes": 11145797,
+      "stream": {
+        "codec_name": "hevc",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "359/12",
+        "avg_frame_rate": "597500/19963",
+        "time_base": "1/30000",
+        "duration": "23.955600",
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "eng",
+          "handler_name": "Snap Video",
+          "vendor_id": "[0][0][0][0]",
+          "encoder": "Lavc63.1.102 hevc_nvenc"
+        },
+        "side_data_list": [
+          {
+            "rotation": -90
+          }
+        ]
+      },
+      "decoded_frames": 717,
+      "exact_relative_pts": true,
+      "exact_total_sample_duration": true,
+      "source_sample_seconds": "59889/2500",
+      "ssim": 0.990496,
+      "decode_ssim_exit": 0
+    }
+  ]
+}

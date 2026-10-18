@@ -1,5 +1,11 @@
 # Organizer Windows worker — 0.1.2 source candidate
 
+Worker-flex stage-concurrency checkpoint: [implementation, enforced/sampled limits and gates](verification/worker-flex-r2/REPORT.md).
+Linux Release and both-PC MSVC/native suites pass. Throughput, foreground impact,
+exact-asset replay and rollout acceptance remain separate open gates. The operator
+has authorized the related Windows experiments; installed workers are unchanged.
+The [first-pass investigation](verification/worker-flex/REPORT.md) is historical.
+
 Current frame-timing correction: [measurement, gates and rollout ledger](verification/fps/REPORT.md).
 
 Current installer swap and both-PC rollout: [Windows rollback proof and installed readbacks](verification/installer-swap/REPORT.md).

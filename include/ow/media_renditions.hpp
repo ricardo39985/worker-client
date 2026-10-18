@@ -54,17 +54,15 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
                                                const std::vector<adaptive::Profile>& profiles, const std::string& source_info={},const VideoTiming* timing=nullptr) {
 
  auto plan=rendition_plan(video,copy_audio,workspace);
- if(timing){
-  const auto rate=timing->rate();
-  if(!rate)throw std::runtime_error("Exact source video frame rate unavailable");
-  // libx265 otherwise signals the average filter rate for irregular sources,
-  // even with exact PTS. Set its VUI rate without resampling the frame stream.
-  auto& args=plan[1].arguments;auto params=std::find(args.begin(),args.end(),L"-x265-params");
-  if(params!=args.end())*(params+1)+=L":fps="+std::to_wstring(rate->first)+L"/"+std::to_wstring(rate->second);
- }
  for(auto& rendition:plan){
   if(rendition.role!="feed"&&rendition.role!="feed_optimized")continue;
   const auto codec=rendition.role=="feed_optimized"?adaptive::Codec::hevc:adaptive::Codec::h264;
+  if(timing&&!timing->pts.empty()&&timing->duration_ticks>0&&timing->numerator>0&&timing->denominator>0){
+   // Preserve the measured sample sum at the mux tail without changing either
+   // PTS or DTS. setts's combined default TS must NOT be allowed to rewrite PTS.
+   const auto duration=L"setts=pts=PTS:dts=DTS:duration='if(eq(N,"+std::to_wstring(timing->pts.size()-1)+L"),round(("+std::to_wstring(timing->duration_ticks)+L"*"+std::to_wstring(timing->numerator)+L"/"+std::to_wstring(timing->denominator)+L")/TB)-(DTS-STARTDTS),DURATION)'";
+   rendition.arguments.insert(rendition.arguments.end()-1,{L"-bsf:v",duration});
+  }
   const adaptive::Profile* cpu_profile=nullptr;
   for(const auto& p:profiles)if(p.codec==codec&&p.backend==adaptive::Backend::cpu&&p.cpu_threads&&
     (!cpu_profile||p.measured_frames_per_second>cpu_profile->measured_frames_per_second))cpu_profile=&p;
@@ -73,6 +71,10 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
    if(i->codec==codec&&i->backend!=adaptive::Backend::cpu&&
       (selected==profiles.end()||i->measured_frames_per_second>selected->measured_frames_per_second))selected=i;
   if(selected==profiles.end()){
+   if(codec==adaptive::Codec::hevc&&timing)if(auto hint=timing->codec_rate_hint()){
+    auto flag=std::find(rendition.arguments.begin(),rendition.arguments.end(),L"-x265-params");
+    if(flag!=rendition.arguments.end()&&flag+1!=rendition.arguments.end())*(flag+1)+=L":fps="+std::to_wstring(hint->first)+L"/"+std::to_wstring(hint->second);
+   }
    if(cpu_profile){const auto threads=std::to_wstring(cpu_profile->cpu_threads);auto& args=rendition.arguments;
     for(auto flag:{L"-threads",L"-filter_threads"}){auto i=std::find(args.begin(),args.end(),flag);if(i!=args.end()&&i+1!=args.end())*(i+1)=threads;}}
    continue;

@@ -1,0 +1,15 @@
+{
+  "native_rejected_exit": -1073741819,
+  "exception": "0xC0000005",
+  "old_crash_stack_obtained": false,
+  "observed_on": "Danny",
+  "old_offline_media_object_utc_ms": 1792346935905,
+  "capacity_header_utc_ms": 1792348228990,
+  "msvc_read_tlog_project_headers": 0,
+  "worker_hpp_present": false,
+  "capacity_hpp_present": false,
+  "interpretation": "Strongly supports stale incremental object layout/ABI; not a symbolized old-crash diagnosis.",
+  "fresh_relwithdebinfo_two_real_jobs_exit": 0,
+  "clean_optimized_release_native_and_sustained_execution_exit": 0,
+  "build_policy": "Fresh directory or clean-first after every staging source/header update; actual execution gate required."
+}

@@ -109,11 +109,11 @@ TEST("poster reuse is restricted to a single ordinary unrotated SDR video stream
  CHECK(!ow::inspection_poster_reusable("Input #0, mov:\n Stream #0:0: Video: hevc (Main 10), yuv420p10le, 1920x1080\n"));
 }
 
-TEST("output with changed rate or dropped duplicated retimed frames is rejected") {
+TEST("dropped duplicated or retimed frames are rejected regardless of nominal rate") {
  const auto source=ow::video_timing("#tb 0: 1/30000\n0, 0, 0, 1001, 9, x\n0, 1001, 1001, 1001, 9, x\n0, 2002, 2002, 1001, 9, x\n");
  CHECK(source && source->constant_rate());
  CHECK(ow::same_video_timing(*source,*source));
- auto wrong_nominal=*source;wrong_nominal.reported_rate="25";CHECK(!ow::same_video_timing(*source,wrong_nominal));
+ auto different_nominal=*source;different_nominal.reported_rate="25";CHECK(ow::same_video_timing(*source,different_nominal));
  for(const auto bad:{"#tb 0: 1/30\n0, 0, 0, 1, 9, x\n0, 1, 1, 1, 9, x\n0, 2, 2, 1, 9, x\n",
   "#tb 0: 1/30000\n0, 0, 0, 1001, 9, x\n0, 2002, 2002, 1001, 9, x\n"}){
   auto output=ow::video_timing(bad);CHECK(output);CHECK(!ow::same_video_timing(*source,*output));
@@ -135,7 +135,45 @@ TEST("timing inspection tolerates B frame packet order and equivalent time bases
  auto a=ow::video_timing("#tb 0: 1/30\n0, -1, 0, 1, 1, x\n0, 0, 2, 1, 1, x\n0, 1, 1, 1, 1, x\n");
  auto b=ow::video_timing("#tb 0: 1/90000\n0, 0, 0, 3000, 1, x\n0, 3000, 3000, 3000, 1, x\n0, 6000, 6000, 3000, 1, x\n");
  CHECK(a&&b&&ow::same_video_timing(*a,*b));
- auto unknown=*a;unknown.pts={0,1,3};unknown.reported_rate="29.97";CHECK(!unknown.rate());
+ auto retimed=*a;retimed.pts={0,1,3};retimed.reported_rate="29.97";CHECK(!ow::same_video_timing(*a,retimed));
+}
+TEST("rounded fractional and absent nominal rates do not veto measured frame timing") {
+ // Reproduce the refused upload's 30k time base, mostly 1000-tick frames,
+ // occasional 1152-tick gaps, and rounded 29.92 tbr, without personal media.
+ auto source=ow::video_timing("Input #0, mov:\n Stream #0:1: Video: hevc (Main), yuv420p, 1920x1080, 29.92 tbr, 30k tbn\nOutput #0, framehash:\n#tb 0: 1/30000\n0, 0, 0, 1000, 9, x\n0, 1000, 1000, 1152, 9, x\n0, 2152, 2152, 1000, 9, x\n");
+ CHECK(source && !source->constant_rate());
+ for(const auto reported:{"29.92","30",""}){
+  auto output=*source;output.reported_rate=reported;
+  CHECK(ow::same_video_timing(*source,output));
+ }
+}
+TEST("encoders accept irregular measured timestamps without an exact nominal rate") {
+ auto source=ow::video_timing("#tb 0: 1/30000\n0, 0, 0, 1000, 9, x\n0, 1000, 1000, 1152, 9, x\n0, 2152, 2152, 1000, 9, x\n");
+ CHECK(source);
+ for(const auto reported:{"29.92",""}){
+  source->reported_rate=reported;
+  for(const auto backend:{ow::adaptive::Backend::cpu,ow::adaptive::Backend::nvidia_nvenc,ow::adaptive::Backend::intel_qsv,ow::adaptive::Backend::amd_amf}){
+   std::vector<ow::adaptive::Profile> profiles;
+   for(const auto codec:{ow::adaptive::Codec::h264,ow::adaptive::Codec::hevc}){ow::adaptive::Profile p;p.backend=backend;p.codec=codec;profiles.push_back(p);}
+   auto plan=ow::rendition_plan(true,false,"workspace",profiles,"",&*source);
+   CHECK(plan.size()==3);
+   CHECK(plan[0].hardware==(backend!=ow::adaptive::Backend::cpu));
+   CHECK(plan[1].hardware==(backend!=ow::adaptive::Backend::cpu));
+  }
+ }
+}
+TEST("one frame videos have a measurable duration without any nominal rate") {
+ auto source=ow::video_timing("#tb 0: 1/30000\n0, 0, 0, 1001, 9, x\n");
+ auto output=ow::video_timing("#tb 0: 1/90000\n0, 0, 0, 3003, 9, x\n");
+ CHECK(source && output && ow::same_video_timing(*source,*output));
+ CHECK(ow::rendition_plan(true,false,"workspace",{},"",&*source).size()==3);
+}
+TEST("matching frame instants cannot hide a stretched or shortened final frame") {
+ auto source=ow::video_timing("#tb 0: 1/30\n0, 0, 0, 1, 9, x\n0, 1, 1, 1, 9, x\n");
+ for(const auto duration:{"2","3"}){
+  auto output=ow::video_timing(std::string("#tb 0: 1/30\n0, 0, 0, 1, 9, x\n0, 1, 1, ")+duration+", 9, x\n");
+  CHECK(source && output && !ow::same_video_timing(*source,*output));
+ }
 }
 TEST("CUDA decode requires complete constant rate evidence") {
  ow::adaptive::Profile gpu;gpu.backend=ow::adaptive::Backend::nvidia_nvenc;

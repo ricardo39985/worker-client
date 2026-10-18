@@ -1,0 +1,19 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+FRESH_SESSION_STAGING_ABSENT=True TEMP_TASK_ABSENT=True OWNED_PROCESSES=0
+INSTALLED_PROCESS=19528 SESSION=1
+INSTALLED_EXE_SHA=1b4042d3bbfa85cca58eeb4b585ca2bb0a39affa3c84600b09301ed0c6901c0f
+UNCHANGED_INSTALLED_LIMITS={"ram_mb":2667,"reserve_ram_mb":0,"scratch_mb":8192,"cpu_threads":4,"max_jobs":4}
+18/10 15:46:56  status
+  state      accepting                since 15:07:52
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     0 ok    0 failed   0 cancelled
+  last job   unknown
+  cards      Radeon RX V~ idle     HD Graphics~ idle     cpu idle
+  memory     ram free 1.4 GB   scratch free 459 GB
+  encoders   cpu,qsv,amf
+  uptime     13:15:47
+2026-10-18 06:34:52.636Z STATE CONNECTED
+FINAL_READBACK_EXIT=0
