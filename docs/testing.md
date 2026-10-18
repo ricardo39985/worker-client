@@ -9,10 +9,15 @@ verification only; MSVC, native console rendering and actual Windows jobs remain
 unrun. No Windows machine or production environment was contacted or changed.
 
 
-Current `fix/worker-next` evidence: see
-[verification/worker-next/REPORT.md](../verification/worker-next/REPORT.md).
-The PCI-instance source correction passes Linux contracts; Windows/MSVC and
-physical two-GPU acceptance remain unrun. The approved FFmpeg binary and recovered
+Current `fix/worker-next` gate evidence: see
+[verification/windows-gates/REPORT.md](../verification/windows-gates/REPORT.md).
+The isolated Windows MSVC build and all nine native suites passed (277 contracts,
+each CTest exit 0); Linux passed six suites (231 contracts, exit 0). The inventory
+contract now verifies the exact display-inventory reporting and persisted PCI/ROOT
+entries; the offline converter suite completes within its unchanged 60-second
+limit after fixing recursive transport lookup. Physical two-GPU acceptance
+remains unrun. Earlier source evidence is in
+[verification/worker-next/REPORT.md](../verification/worker-next/REPORT.md). The approved FFmpeg binary and recovered
 exact source/build materials are now published with both lock URLs set; see
 [the publication report](../verification/ffmpeg-publication/REPORT.md) for fresh
 anonymous download verification and the NOTICE's third-party source-scope limit.

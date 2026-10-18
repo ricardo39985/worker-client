@@ -1,0 +1,18 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+CALLBACK_DEPTH=3 TRANSPORT_IS_SELF=True
+
+Command                       Location
+-------                       --------
+<ScriptBlock>                 setup-converter.ps1: line 70
+<ScriptBlock>                 setup-converter.ps1: line 74
+<ScriptBlock>                 setup-converter.ps1: line 74
+Get-WorkerVerifiedFile        setup-policy.ps1: line 91
+Install-WorkerLockedConverter setup-converter.ps1: line 65
+<ScriptBlock>                 converter-diagnostic.ps1: line 28
+Case                          converter-diagnostic.ps1: line 16
+
+
+FAIL a fresh machine downloads pinned bytes after consent and records acceptance : Diagnostic stopped recursive transport callback
+CALLBACK_DIAGNOSTIC_EXIT=0

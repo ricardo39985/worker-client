@@ -1,0 +1,219 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in C:/Users/reald/worker-gates-20261017/source/.git/
+From C:\Users\reald\worker-gates-baseline.bundle
+ * branch            HEAD       -> FETCH_HEAD
+Switched to a new branch 'fix/worker-next'
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- Configuring done (12.0s)
+-- Generating done (0.4s)
+-- Build files have been written to: C:/Users/reald/worker-gates-20261017/build
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  boost_json.cpp
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  main.cpp
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  main.cpp
+  pipeline_test.cpp
+  progress_test.cpp
+  encoder_run_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2390 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_pipeline_contract_tests.exe
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  main.cpp
+  ow_json.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_json.lib
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  media_rendition_probe.cpp
+  media_rendition_test.cpp
+  status_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 476 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_rendition_probe.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_rendition_probe.exe
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  admission.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 751 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_rendition_contract_tests.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_rendition_contract_tests.exe
+  store.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  protocol.cpp
+  All 3911 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_progress_contract_tests.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_progress_contract_tests.exe
+  pairing.cpp
+  adaptive_hardware.cpp
+  ow_core.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_core.lib
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  main.cpp
+  adaptive_evidence_probe.cpp
+  main.cpp
+  adaptive_hardware_test.cpp
+  admission_test.cpp
+  store_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_adaptive_evidence_probe.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_adaptive_evidence_probe.exe
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  platform.cpp
+  protocol_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  process.cpp
+  pairing_test.cpp
+  All 5114 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_adaptive_hardware_contract_tests.exe
+  http.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2800 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_contract_tests.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_contract_tests.exe
+  worker.cpp
+C:\Users\reald\worker-gates-20261017\source\windows\worker.cpp(653,207): warning C4456: declaration of 'cancelled' hides previous local declaration [C:\Users\reald\worker-gates-20261017\build\ow_windows.vcxproj]
+      C:\Users\reald\worker-gates-20261017\source\windows\worker.cpp(517,7):
+      see declaration of 'cancelled'
+
+  pairing_adapter.cpp
+  hardware.cpp
+  physical_adapters.cpp
+  ow_windows.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_windows.lib
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  console.cpp
+  windows_pipeline_smoke.cpp
+  windows_child.cpp
+  doctor.cpp
+  tray.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 751 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_test_child.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_test_child.exe
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1565 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OrganizerWorkerConsole.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\OrganizerWorkerConsole.exe
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 8461 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_pipeline_smoke.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_pipeline_smoke.exe
+  All 8158 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OrganizerWorkerDoctor.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\OrganizerWorkerDoctor.exe
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 8481 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  OrganizerWorker.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\OrganizerWorker.exe
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+  main.cpp
+  windows_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 8610 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_windows_tests.vcxproj -> C:\Users\reald\worker-gates-20261017\build\Release\ow_windows_tests.exe
+  Building Custom Rule C:/Users/reald/worker-gates-20261017/source/CMakeLists.txt
+BUILD_EXIT=0
+Internal ctest changing into directory: C:/Users/reald/worker-gates-20261017/build
+UpdateCTestConfiguration  from :C:/Users/reald/worker-gates-20261017/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/worker-gates-20261017/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/reald/worker-gates-20261017/build/DartConfiguration.tcl
+Parse Config file:C:/Users/reald/worker-gates-20261017/build/DartConfiguration.tcl
+Test project C:/Users/reald/worker-gates-20261017/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 6
+    Start 6: windows_contracts
+
+6: Test command: C:\Users\reald\worker-gates-20261017\build\Release\ow_windows_tests.exe
+6: Working Directory: C:/Users/reald/worker-gates-20261017/build
+6: Test timeout computed to be: 60
+6: PASS Windows UTF8 conversion preserves non-ASCII filenames
+6: PASS Windows adapter inventory has repeatable unique identities and real VRAM and driver fields
+6: NOCONVERSION_REASON ; converter not configured: capabilities disabled; display inventory entries=3; configured_global_VRAM_override_MB=not_set [Radeon RX Vega M GL Graphics id=pci:1002:694e:080d1028:c0:luid:00000000:00012cdf dedicated_VRAM_MB=4043; physical_id=PCI\VEN_1002&DEV_694E&SUBSYS_080D1028&REV_C0\4&DFEC518&0&0008; encoder mapping=verified; ] [Intel(R) HD Graphics 630 id=pci:8086:591b:080d1028:04:luid:00000000:00012957 dedicated_VRAM_MB=128; physical_id=PCI\VEN_8086&DEV_591B&SUBSYS_080D1028&REV_04\3&11583659&0&10; encoder mapping=verified; ] [Microsoft Basic Render Driver id=pci:1414:008c:00000000:00:luid:00000000:00012cad dedicated_VRAM_MB=0; physical_id=; encoder mapping=unavailable; unsupported or unmappable display adapter; GPU profile withheld]
+6: FAIL NoConversion setup inventories adapters before reporting disabled conversion: check failed at C:\Users\reald\worker-gates-20261017\source\tests\windows_test.cpp:58: result.reason.find("DXGI inventory entries=")!=std::string::npos
+6: PASS global VRAM override is optional for old configs and honored when configured
+6: PASS DPAPI round-trips binary credentials and rejects corruption
+6: PASS pairing public identity persists without storing a plaintext private key
+6: PASS stopping a contained job terminates both root and descendant
+6: PASS adaptive capacity stays reserved until a cancelled native process tree drains
+6: PASS protected enrollment and credentials remain readable after adapter reopen
+6: PASS runtime readiness identifies this process and is removed on shutdown
+6: PASS durable log rotation keeps concurrent lines whole and free of terminal escapes
+6: PASS pipeline upload failure drains a real contained process tree before unwinding
+6: 12 contracts, 1 failures
+1/2 Test #6: windows_contracts ................***Failed    0.78 sec
+test 9
+    Start 9: setup_converter_contracts
+
+9: Test command: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe "-NoLogo" "-NoProfile" "-ExecutionPolicy" "Bypass" "-File" "C:/Users/reald/worker-gates-20261017/source/tests/setup_converter_test.ps1"
+9: Working Directory: C:/Users/reald/worker-gates-20261017/build
+9: Test timeout computed to be: 60
+9: START a fresh machine downloads pinned bytes after consent and records acceptance
+2/2 Test #9: setup_converter_contracts ........***Timeout  60.02 sec
+
+0% tests passed, 2 tests failed out of 2
+
+Total Test time (real) =  60.82 sec
+
+The following tests FAILED:
+	  6 - windows_contracts (Failed)
+	  9 - setup_converter_contracts (Timeout)
+Errors while running CTest
+DIAGNOSTIC_CTEST_EXIT=8
