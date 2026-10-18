@@ -5,6 +5,7 @@
 #include "ow/progress.hpp"
 #include "ow/adaptive_hardware.hpp"
 #include "ow/probe_status.hpp"
+#include "ow/probe_retry.hpp"
 #include "ow/capability_report.hpp"
 #include "ow/worker_status.hpp"
 #include <thread>
@@ -20,10 +21,11 @@ struct Config {
  std::uint64_t reserve_ram_mb{0};std::size_t max_jobs{4};
 };
 Config load_config(const std::filesystem::path& root);
-struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;std::vector<std::string> fallback_notes;};
+struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;std::vector<std::string> fallback_notes;std::vector<ProbeFailure> gpu_failures;bool complete{};};
 using ProbePhase=std::function<void(std::string,unsigned,unsigned)>;
 using ProbeTiming=std::function<void(const std::string&)>;
-Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={},const ProbePhase& phase={},const ProbeTiming& timing={});
+// retained may refer only to current successful in-process evidence, never disk profiles.
+Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={},const ProbePhase& phase={},const Probe* retained=nullptr,const ProbeTiming& timing={});
 class Worker {
  struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::optional<adaptive::Scheduler::Reservation> profile_reservation;std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;};
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
@@ -33,9 +35,11 @@ class Worker {
  void publish_report(const std::filesystem::path&,const std::string&) noexcept;
  void report_status() noexcept;
  void report_state(std::string name,std::string reason);
- std::jthread network_,watchdog_,hash_watchdog_;
+ std::jthread network_,watchdog_,hash_watchdog_,recovery_;
  mutable std::mutex mutex_;std::unordered_map<std::string,std::unique_ptr<Running>> running_;
  std::atomic_bool paused_{},exit_requested_{},stop_{},report_connected_{};
+ std::uint64_t hardware_generation_{};
+ ProbeRecovery gpu_recovery_;
  ProbeStatus probe_status_;CapabilityReport capability_report_;
  std::string last_activity_;bool connected_once_{};
  std::atomic<Priority> priority_{Priority::normal};
@@ -45,13 +49,14 @@ class Worker {
  std::vector<adaptive::Profile> hardware_profiles_;
  std::unique_ptr<adaptive::Scheduler> adaptive_scheduler_;
  std::atomic<Preference> video_{Preference::allowed},image_{Preference::allowed};
+ void recover_gpus();
  void network();void watchdog();void execute(std::shared_ptr<TaskData>);
  void message(WebSocket&,const json::object&);
  std::string paired_token();
  void state(std::string text);
  json::object heartbeat();
  void apply_preferences();
- adaptive::Scheduler::Reservation reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,const Resources& offer);
+ adaptive::Scheduler::Reservation reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,Resources& offer,const std::string& attempt);
  void report_encoder_failure(const adaptive::Profile&);
  void safe_log(const std::string&) noexcept;
 public:

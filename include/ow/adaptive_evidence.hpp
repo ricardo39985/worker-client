@@ -24,7 +24,7 @@ inline bool tuning_output_valid(const std::string& log,const std::string& codec)
 inline boost::json::object profile_record(const Profile& p){
  return {{"device_id",p.stable_id},{"driver_version",p.driver_version},{"ffmpeg_sha256",p.ffmpeg_sha256},
   {"backend",static_cast<int>(p.backend)},{"codec",static_cast<int>(p.codec)},
-  {"cpu_threads",p.cpu_threads},{"ram_mb",p.ram_mb},{"vram_mb",p.vram_mb},{"scratch_mb",p.scratch_mb},
+  {"cpu_threads",p.cpu_threads},{"ram_mb",p.ram_mb},{"child_memory_overhead_mb",p.child_memory_overhead_mb},{"vram_mb",p.vram_mb},{"scratch_mb",p.scratch_mb},
   {"physical_id",p.physical_id},{"device_name",p.device_name},
   {"device_encode_sessions",p.backend==Backend::cpu?0:device_encode_sessions},{"worker_nvenc_sessions",worker_nvenc_sessions},
   {"max_concurrency",p.max_concurrency},{"measured_fps",p.measured_frames_per_second},
@@ -36,7 +36,7 @@ inline boost::json::object profile_record(const Profile& p){
 inline boost::json::object tuning_record(const TuningEvidence& t){
  return {{"device_id",t.stable_id},{"backend",static_cast<int>(t.backend)},{"codec",static_cast<int>(t.codec)},
   {"measured_fps",t.frames_per_second},{"measured_width",t.measured_width},{"measured_height",t.measured_height},
-  {"cpu_threads",t.cpu_threads},{"ram_mb",t.ram_mb},{"vram_mb",t.vram_mb},{"scratch_mb",t.scratch_mb},
+  {"cpu_threads",t.cpu_threads},{"ram_mb",t.ram_mb},{"child_memory_overhead_mb",t.child_memory_overhead_mb},{"vram_mb",t.vram_mb},{"scratch_mb",t.scratch_mb},
   {"tested_concurrency",t.tested_concurrency}};
 }
 }

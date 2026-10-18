@@ -226,3 +226,31 @@ portable contracts, not measured two-card Windows execution. Driver/session use
 by other programs and GPU allocation remain external constraints; CPU retry is
 required when opening a hardware session fails. See
 [the multi-GPU gate ledger](../verification/multigpu/REPORT.md).
+
+## Recovery after hardware probe failures
+
+A failed startup sample or runtime codec demotion withholds that profile until
+another successful, bounded encode/decode/tuning epoch. Immediate hardware probes
+have three attempts with 1s/2s backoff; later retries back off from 30 seconds to
+five minutes without a permanent verdict. Allocation failures cannot by themselves
+distinguish session pressure from driver or buffer-allocation problems. The status
+table names the card/codec, classification and retry/idle deferral; full evidence
+stays in diagnostic logs.
+
+Recovery is an independent thread. An atomic admission gate requires all reserved,
+running and cancelling work to drain and defers new offers while samples run.
+It never clears operator pause. Current successful in-process profiles can retain
+their sample evidence; failed profiles require new proof. Driver, mapping, physical
+identity and approved converter hash are checked again before adoption. Diagnostics
+are staged separately and the scheduler is replaced only with no active adaptive
+reservations. The network, watchdog, leases and process-tree containment remain
+independent. See `verification/second-card/REPORT.md` for gates and platform limits.
+
+## GPU child commit budgets
+
+GPU startup and runtime child RAM budgets are workload specific. The policy,
+local RAM top-up accounting, allocation-failure classification and evidence
+limits are specified in [GPU memory budgets](gpu-memory-budget.md). This commit
+budget is separate from VRAM. Runtime allocation failures under it retry CPU
+without demoting the proven card; other hardware validation failures retain the
+existing demotion rule.

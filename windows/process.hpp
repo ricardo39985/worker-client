@@ -20,6 +20,7 @@ public:
  std::optional<DWORD> exit_code();
  DWORD process_id() const;
  std::optional<ChildTiming> timing() const noexcept;
+ std::uint64_t peak_commit_mb() const;
  void stop();void priority(Priority);
 };
 // Declared after Child and inside its stage: account even on cancellation or

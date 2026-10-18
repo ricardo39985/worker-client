@@ -132,3 +132,48 @@ TEST("a duplicate offer cannot extend a reservation indefinitely"){
  o.reserve_until=5000;CHECK(a.offer(o,900,budget).accepted);
  CHECK(a.begin("a","token",6000,1000)==Start::declined);
 }
+
+TEST("a recovery probe cannot overlap reserved running or cancelling work"){
+ Admission a(budget,8);ready(a);CHECK(a.begin_probe());
+ CHECK(!a.offer(task(),0,budget).accepted);a.pause(false);
+ CHECK(!a.offer(task(),0,budget).accepted);CHECK(!a.begin_probe());a.end_probe();
+ CHECK(a.offer(task(),0,budget).accepted);CHECK(!a.begin_probe());
+ CHECK(a.begin("a","token",3000,1)==Start::started);CHECK(!a.begin_probe());
+ CHECK(a.cancel("a"));CHECK(!a.begin_probe());CHECK(a.used().ram_mb==1000);
+ CHECK(a.finish("a"));CHECK(a.begin_probe());a.pause(true);a.end_probe();
+ CHECK(!a.offer(task("b"),0,budget).accepted);
+}
+TEST("concurrent probe and offer admission have exactly one owner"){
+ for(int n=0;n<100;++n){Admission a(budget,8);ready(a);bool probe=false,offer=false;
+  std::jthread x([&]{probe=a.begin_probe();});std::jthread y([&]{offer=a.offer(task(),0,budget).accepted;});
+  x.join();y.join();CHECK(probe!=offer);
+ }
+}
+
+TEST("local child RAM topups are atomic preserve offer identity and last through cancellation"){
+ const Resources cap{2048,0,1000,4};Admission a(cap,4);ready(a);
+ auto first=task("gpu",{512,0,100,1}),second=task("other",{512,0,100,1});
+ CHECK(a.offer(first,0,cap).accepted);CHECK(a.offer(second,0,cap).accepted);
+ CHECK(!a.reserve_ram("gpu",768,cap,1));
+ CHECK(a.begin("gpu","token",5000,1)==Start::started);
+ CHECK(!a.reserve_ram("gpu",1792,cap,2));CHECK(a.used().ram_mb==1024);
+ CHECK(!a.reserve_ram("gpu",768,Resources{1024,0,1000,4},2));
+ CHECK(a.reserve_ram("gpu",768,cap,2));CHECK(a.used().ram_mb==1280);
+ CHECK(a.offer(first,2,cap).accepted);CHECK(a.used().ram_mb==1280);
+ CHECK(a.reserve_ram("gpu",768,cap,2));CHECK(a.used().ram_mb==1280);
+ CHECK(a.cancel("gpu"));CHECK(a.used().ram_mb==1280);
+ CHECK(!a.reserve_ram("gpu",1024,cap,3));
+ CHECK(a.finish("gpu"));CHECK(a.used().ram_mb==512);CHECK(a.finish("other"));CHECK(a.used().ram_mb==0);
+}
+TEST("competing local RAM increases cannot oversubscribe host capacity"){
+ const Resources cap{1536,0,1000,4};Admission a(cap,4);ready(a);
+ CHECK(a.offer(task("a",{512,0,100,1}),0,cap).accepted);
+ CHECK(a.offer(task("b",{512,0,100,1}),0,cap).accepted);
+ CHECK(a.begin("a","token",5000,1)==Start::started);CHECK(a.begin("b","token",5000,1)==Start::started);
+ std::atomic_uint accepted{};
+ std::thread x([&]{if(a.reserve_ram("a",1024,cap,2))++accepted;});
+ std::thread y([&]{if(a.reserve_ram("b",1024,cap,2))++accepted;});x.join();y.join();
+ CHECK(accepted==1);CHECK(a.used().ram_mb==1536);
+ a.expire(6000);CHECK(a.used().ram_mb==1536);
+ CHECK(!a.reserve_ram("a",1100,cap,6001));CHECK(a.finish("a"));CHECK(a.finish("b"));CHECK(a.used().ram_mb==0);
+}

@@ -1,0 +1,15 @@
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+[ 18%] Built target ow_json
+[ 36%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 36%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp: In constructor ‘ow::adaptive::Scheduler::Scheduler(ow::adaptive::Limits, std::vector<ow::adaptive::Profile>)’:
+/home/rick/Downloads/worker-client-gpu-on-logs/src/adaptive_hardware.cpp:212:44: warning: missing initializer for member ‘ow::adaptive::Device::exclusion_reason’ [-Wmissing-field-initializers]
+  212 |   if(found==devices.end())devices.push_back({p.stable_id,p.backend,p.driver_version,0,true,p.adapter_index,p.device_name,p.backend_index,p.backend_identity_verified,p.physical_id});
+      |                           ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 45%] Linking CXX static library libow_core.a
+[ 72%] Built target ow_core
+[ 81%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 90%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[100%] Built target ow_adaptive_hardware_contract_tests

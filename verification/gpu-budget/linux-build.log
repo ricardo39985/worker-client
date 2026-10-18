@@ -1,0 +1,9 @@
+[ 12%] Built target ow_json
+[ 15%] Built target ow_pipeline_contract_tests
+[ 31%] Built target ow_rendition_contract_tests
+[ 31%] Built target ow_rendition_probe
+[ 46%] Built target ow_progress_contract_tests
+[ 65%] Built target ow_core
+[ 75%] Built target ow_adaptive_hardware_contract_tests
+[ 93%] Built target ow_contract_tests
+[100%] Built target ow_adaptive_evidence_probe

@@ -130,3 +130,31 @@ TEST("outcome colour follows the outcome word regardless of reason wording"){
  CHECK(ow::parse_status_frame(plain(s.history()))[0].color==ow::ConsoleColor::orange);
  ow::ConsoleFormatter f;CHECK(f.render("JOB attempt-abcd CPU fallback: nvenc/hevc unsupported size").color==ow::ConsoleColor::orange);CHECK(f.render("JOB attempt-abcd selected nvenc/hevc 1920x1080").color==ow::ConsoleColor::blue);
 }
+
+TEST("idle status exposes withheld card codec reason and retry instead of calling it idle"){
+ ow::WorkerStatus s(wall,0);auto r=readings();
+ r.gpu_recovery={"RTX 3070 h264 withheld: memory/session unavailable; retry in 30s"};
+ auto lines=s.table(wall,0,r);auto text=plain(lines);
+ CHECK(text.find("RTX 3070 h264 withheld: memory/session unavailable")!=std::string::npos);
+ CHECK(text.find("retry in 30s")!=std::string::npos);
+ for(const auto& line:lines)CHECK(line.text.size()<=80);
+}
+
+TEST("long withheld reasons wrap without losing retry and remain durable status rows"){
+ ow::WorkerStatus s(wall,0);auto r=readings();r.gpu_recovery={std::string(90,'x')+" h264 withheld: probe failed; retry when idle"};
+ ow::LiveConsoleView view;std::string all;
+ for(const auto& row:s.table(wall,0,r)){
+  CHECK(row.text.size()<=80);auto f=view.consume("2026-10-17 15:10:02.000Z "+row.text);
+  CHECK(f.durable_status.has_value());CHECK(!f.event);if(row.text.size()>=13)all+=row.text.substr(13);
+ }
+ CHECK(all.find("retry when idle")!=std::string::npos);
+}
+
+TEST("active status exposes the actual selected child memory budget"){
+ ow::WorkerStatus status(0,0);status.start("attempt-1234","video",0,0);
+ status.placement("attempt-1234","3070",768);ow::StatusReadings readings;
+ readings.cards=std::vector<ow::StatusCard>{{"3070","RTX 3070"}};
+ CHECK(status.machine(readings).find("child budget 768 MiB")!=std::string::npos);
+ status.placement("attempt-1234","3070",1792);
+ CHECK(status.summary(1000,1000,readings).find("child budget 1792 MiB")!=std::string::npos);
+}

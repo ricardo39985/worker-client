@@ -15,6 +15,14 @@
 namespace ow::adaptive {
 enum class Backend { cpu, nvidia_nvenc, intel_qsv, amd_amf };
 enum class Codec { h264, hevc };
+enum class InputMemory { host, device };
+// Process/job commit, distinct from dedicated VRAM. Unknown cards retain the
+// measured display-adapter allowance; successful samples may raise it.
+std::uint64_t gpu_child_memory_mb(std::uint32_t width,std::uint32_t height,Codec,
+                                InputMemory input=InputMemory::host,std::uint64_t card_overhead_mb=64);
+std::uint64_t gpu_card_overhead_mb(std::uint32_t width,std::uint32_t height,Codec,
+                                 InputMemory,std::uint64_t peak_commit_mb);
+
 // Only one simultaneous hardware encode per card has been proven. Consumer
 // NVENC sessions can also be limited across the entire system by the driver.
 inline constexpr std::uint32_t device_encode_sessions=1,worker_nvenc_sessions=2;
@@ -48,6 +56,7 @@ struct TuningEvidence {
     std::uint32_t tested_concurrency{1};
     // Measurement resolution, never an encoder capability ceiling.
     std::uint32_t measured_width{},measured_height{};
+    std::uint64_t child_memory_overhead_mb{64};
 };
 struct Limits {
     std::uint64_t cpu_threads{}, ram_mb{}, vram_mb{}, scratch_mb{};
@@ -79,6 +88,7 @@ struct Profile {
     std::uint32_t max_width{},max_height{};
     std::uint32_t measured_width{},measured_height{};
     std::string physical_id,device_name;
+    std::uint64_t child_memory_overhead_mb{64};
 };
 struct TuningComparison { double serial_fps{},parallel_fps{};bool comparable{}; };
 TuningComparison compare_tuning_runs(const std::vector<std::uint64_t>& serial_stage_ms,
@@ -151,6 +161,8 @@ public:
         explicit operator bool() const { return active_; }
         void release() noexcept;
         bool hardware_enabled(const Profile& profile) const;
+        std::uint64_t memory_for_dimensions(std::uint32_t width,std::uint32_t height) const;
+        bool resize_memory(std::uint32_t width,std::uint32_t height,const Limits& task_limits);
         bool acquire_cpu_fallback(const std::function<bool()>& cancelled,
                                   std::uint32_t max_wait_ms=30000);
     };

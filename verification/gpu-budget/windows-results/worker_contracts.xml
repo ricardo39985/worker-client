@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-MSBuild"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="DESKTOP-3FR54CB"
+	time="0"
+	timestamp="2026-10-17T23:35:10"
+	>
+	<testcase name="worker_contracts" classname="worker_contracts" time="0.310692" status="run">
+		<properties/>
+		<system-out>PASS verified capabilities accept independent jobs concurrently
+PASS four single-CPU app jobs reserve and begin independently within configured limits
+PASS missing capability fails closed
+PASS installed but unverified does not mean capable
+PASS local disabled vetoes a preferred server offer
+PASS reservation consumes capacity before execution
+PASS dynamic low memory rejects despite configured budget
+PASS duplicate offer is idempotent
+PASS changed duplicate payload is rejected
+PASS same content job cannot run in two attempts on one host
+PASS job guardrail is independent of resource budget
+PASS oversized resource numbers cannot overflow accounting
+PASS zero CPU or memory declaration is rejected
+PASS invalid IDs cannot become filesystem paths
+PASS expired reservation cannot be started
+PASS start without lease is rejected
+PASS replayed begin does not start a second process
+PASS pause refuses new work but preserves active execution
+PASS pause prevents an unstarted reservation from beginning
+PASS only a valid fresh ...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

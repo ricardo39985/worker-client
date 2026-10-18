@@ -7,6 +7,24 @@ MSVC and all ten native suites passed. The test workspace is deleted; this sourc
 was not installed and does not establish production-job acceptance.
 
 
+Current GPU child commit budget fix: see [the gate ledger](verification/gpu-budget/REPORT.md).
+Linux Release and ASan/UBSan each passed 246 contracts across six suites;
+MSVC Release on the authorized Windows host passed 293 contracts across nine
+suites, all final gate exits 0. The cap is retained and workload sized. The
+supplied physical 3070 A/B proves 768 MiB at 1080p; fresh hardware replay was
+deferred because separate FFmpeg measurements were running. Larger-resolution
+and concurrent physical qualification remain open. No worker was installed or
+restarted, and no production action was performed.
+
+
+Current NVENC retry verification: see [the landing gate ledger](verification/nvenc-landing/REPORT.md).
+Review corrected a missing Windows include. Linux Release and ASan/UBSan each
+passed 239 contracts across six suites; isolated MSVC Release passed all nine
+native suites (285 contracts), with every final gate exit 0. Physical two-card
+recovery remains unrun. No worker installation, production restart or deployment
+was performed. Earlier read-only investigation and separate hardware-proof
+authorization boundaries remain in [the investigation](verification/second-card/REPORT.md).
+
 Current worker-console reporting evidence: see
 [the log-content gate ledger](verification/log-content/REPORT.md) and
 [the reporting contract](docs/worker-console.md).

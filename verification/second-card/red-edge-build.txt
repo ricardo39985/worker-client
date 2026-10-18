@@ -1,0 +1,8 @@
+[ 18%] Built target ow_json
+[ 72%] Built target ow_core
+[ 81%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 90%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[100%] Built target ow_adaptive_hardware_contract_tests
+[ 20%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o
+[ 40%] Linking CXX executable ow_progress_contract_tests
+[100%] Built target ow_progress_contract_tests
