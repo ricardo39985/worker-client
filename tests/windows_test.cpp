@@ -3,6 +3,7 @@
 #include "process.hpp"
 #include "pairing_adapter.hpp"
 #include "hardware.hpp"
+#include "physical_adapters.hpp"
 #include "ow/device_identity.hpp"
 #include "worker.hpp"
 #include "ow/rendition_pipeline.hpp"
@@ -54,11 +55,37 @@ TEST("Windows adapter inventory has repeatable unique identities and real VRAM a
 }
 TEST("NoConversion setup inventories adapters before reporting disabled conversion"){
  Temp t;Config config;config.root=t.path;config.budget={256,777,256,1};auto result=probe_ffmpeg(config);
- CHECK(!result.video&&!result.media_video);CHECK(result.reason.find("converter not configured")!=std::string::npos);
- CHECK(result.reason.find("DXGI inventory entries=")!=std::string::npos);
+ std::cout<<"NOCONVERSION_REASON "<<result.reason<<std::endl;
+ CHECK(!result.video&&!result.media_video&&!result.image&&!result.media_image);CHECK(result.profiles.empty());
+ CHECK(result.reason.find("converter not configured")!=std::string::npos);
+ const auto inventory=enumerate_video_devices();
+ CHECK(result.reason.find("display inventory entries="+std::to_string(inventory.size())+";")!=std::string::npos);
  CHECK(result.reason.find("configured_global_VRAM_override_MB=not_set")!=std::string::npos);
  auto saved=parse(read_file(t.path/"adaptive-hardware.json")).as_object();
  CHECK(saved.at("profiles").as_array().empty());CHECK(saved.at("devices").is_array());
+ const auto& devices=saved.at("devices").as_array();CHECK(devices.size()==inventory.size());
+ for(const auto& d:inventory){
+  const auto found=std::find_if(devices.begin(),devices.end(),[&](const auto& value){return text(value.as_object(),"device_id")==d.stable_id;});
+  CHECK(found!=devices.end());const auto& device=found->as_object();
+  CHECK(text(device,"physical_id")==d.physical_id);CHECK(text(device,"name")==d.name);
+  CHECK(text(device,"driver_version")==d.driver_version);
+  CHECK(number(device,"dedicated_vram_mb",UINT64_MAX)==d.dedicated_vram_mb);
+  CHECK(device.at("backend_identity_verified").as_bool()==d.backend_identity_verified);
+  CHECK(text(device,"exclusion_reason")==d.exclusion_reason);
+  CHECK(result.reason.find(" ["+d.name+" id="+d.stable_id+" dedicated_VRAM_MB="+std::to_string(d.dedicated_vram_mb)+
+   "; physical_id="+d.physical_id+"; encoder mapping="+(d.backend_identity_verified?"verified":"unavailable")+"; "+d.exclusion_reason+"]")!=std::string::npos);
+ }
+ // Independently require every present PCI or ROOT display instance to survive
+ // into the persisted/reported inventory, including PnP-only software displays.
+ for(const auto& instance:present_display_instances()){
+  const auto id=adaptive::canonical_instance_id(instance.id);
+  const auto found=std::find_if(devices.begin(),devices.end(),[&](const auto& value){return text(value.as_object(),"physical_id")==id;});
+  CHECK(found!=devices.end());
+  if(id.rfind("ROOT\\",0)==0){
+   CHECK(!found->as_object().at("backend_identity_verified").as_bool());
+   CHECK(text(found->as_object(),"exclusion_reason")=="software adapter (ROOT instance); excluded from capacity and scheduling");
+  }
+ }
  CHECK(number(saved.at("limits").as_object(),"vram_mb_override",UINT64_MAX)==777);
 }
 TEST("global VRAM override is optional for old configs and honored when configured"){

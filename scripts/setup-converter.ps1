@@ -60,12 +60,16 @@ function Install-WorkerLockedConverter {
     $directory=Join-Path (Join-Path $Root 'dependencies') ('ffmpeg-'+$Dependency.sha256)
     New-Item -ItemType Directory -Force -Path $directory | Out-Null
     $exe=Join-Path $directory 'ffmpeg.exe'
+    # Get-WorkerVerifiedFile also has a $Download parameter. PowerShell resolves
+    # callback variables dynamically, so retain the caller's transport under a
+    # distinct name instead of recursively invoking that helper's wrapper.
+    $converterTransport=$Download
     for($attempt=1;$attempt -le 3;$attempt++){
         try {
             Get-WorkerVerifiedFile -Destination $exe -Sha256 $Dependency.sha256 -Download {
                 param($partial)
-                if(-not $Download){throw 'FFmpeg download transport is unavailable.'}
-                & $Download $Dependency.url $partial | Out-Null
+                if(-not $converterTransport){throw 'FFmpeg download transport is unavailable.'}
+                & $converterTransport $Dependency.url $partial | Out-Null
                 if(-not (Test-Path -LiteralPath $partial -PathType Leaf) -or (Get-Item -LiteralPath $partial).Length -ne $Dependency.bytes){
                     throw 'FFmpeg download byte count does not match the lock.'
                 }

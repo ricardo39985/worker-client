@@ -4,6 +4,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot '../scripts/setup-policy.ps1')
 . (Join-Path $PSScriptRoot '../scripts/setup-converter.ps1')
+# Any accidental interactive fallback must fail immediately in this offline suite.
+function Read-Host {throw 'Unexpected input request in offline converter contracts'}
 $script:passed=0;$script:failed=0
 function Assert($Value,[string]$Message='Assertion failed'){if(-not $Value){throw $Message}}
 function Rejects([scriptblock]$Body,[string]$Reason=''){
@@ -13,6 +15,7 @@ function Rejects([scriptblock]$Body,[string]$Reason=''){
 }
 function Case([string]$Name,[scriptblock]$Body){
     $caseRoot=Join-Path $root ([guid]::NewGuid().ToString('N'));New-Item -ItemType Directory $caseRoot | Out-Null
+    Write-Host "START $Name"
     try{& $Body;Write-Host "PASS $Name";$script:passed++}catch{Write-Host "FAIL $Name : $($_.Exception.Message)";$script:failed++}
 }
 $root=Join-Path ([IO.Path]::GetTempPath()) ('ow-converter-'+[guid]::NewGuid().ToString('N'))
@@ -29,6 +32,23 @@ try {
     Assert ($result.sha256 -eq $sha -and (Get-WorkerFileSha256 $result.path -Quiet) -eq $sha)
     Assert ($state.consent -eq 1 -and $state.downloads -eq 1)
     Assert (Test-Path (Join-Path $caseRoot ('ffmpeg-license-'+$sha+'.json')))
+ }
+ Case 'corrupt transfers retry the supplied transport and only verified bytes publish' {
+    $entry=Entry;$state=@{downloads=0}
+    $result=Install-WorkerLockedConverter -Dependency $entry -Root $caseRoot -AcceptLicense -Download {
+        param($url,$partial)
+        Assert ($url -ceq $entry.url) 'Retry changed the reviewed URL'
+        Assert ($partial.StartsWith($caseRoot) -and $partial.EndsWith('.part')) 'Transport did not receive a private partial path'
+        $state.downloads++
+        Assert ($state.downloads -le 3) 'Unbounded transport retries'
+        if($state.downloads -lt 3){[IO.File]::WriteAllText($partial,('x' * [int]$entry.bytes))}
+        else{Copy-Item $payload $partial}
+    }
+    Assert ($state.downloads -eq 3)
+    Assert ((Get-WorkerFileSha256 $result.path -Quiet) -ceq $sha)
+    Assert (@(Get-ChildItem $caseRoot -Filter '*.part' -Recurse).Count -eq 0)
+    $receipt=Get-Content (Join-Path $caseRoot ('ffmpeg-license-'+$sha+'.json')) -Raw | ConvertFrom-Json
+    Assert ($receipt.artifact_sha256 -ceq $sha)
  }
  Case 'a verified retained converter is reused without another transfer or prompt' {
     $first=Install-WorkerLockedConverter -Dependency (Entry) -Root $caseRoot -AcceptLicense -Download {param($url,$partial)Copy-Item $payload $partial}
@@ -83,7 +103,10 @@ try {
  }
  Case 'network failure retains unrelated identity and cannot publish success' {
     $identity=Join-Path $caseRoot 'credential.dpapi';[IO.File]::WriteAllText($identity,'retained')
-    Rejects {Install-WorkerLockedConverter -Dependency (Entry) -Root $caseRoot -AcceptLicense -Download {throw 'HTTP 404'}} 'HTTP 404'
+    $state=@{downloads=0}
+    Rejects {Install-WorkerLockedConverter -Dependency (Entry) -Root $caseRoot -AcceptLicense -Download {$state.downloads++;throw 'HTTP 404'}} 'HTTP 404'
+    Assert ($state.downloads -eq 3) 'Transport exhaustion must stop after three attempts'
+    Assert (@(Get-ChildItem $caseRoot -Filter '*.part' -Recurse).Count -eq 0)
     Assert ([IO.File]::ReadAllText($identity) -eq 'retained')
     Assert (-not (Test-Path (Join-Path $caseRoot ('ffmpeg-license-'+$sha+'.json'))))
  }
