@@ -256,6 +256,33 @@ Scheduler::Reservation& Scheduler::Reservation::operator=(Reservation&& other) n
 }
 Scheduler::Reservation::~Reservation(){release();}
 void Scheduler::Reservation::release() noexcept{if(active_){Scheduler::release(state_,profiles_,cpu_fallback_keys_);active_=false;}}
+void Scheduler::Reservation::finish_codec(Codec codec){
+ if(!active_||!state_)return;
+ auto remaining=profiles_;
+ remaining.erase(std::remove_if(remaining.begin(),remaining.end(),[&](const auto& p){return p.codec==codec;}),remaining.end());
+ if(remaining.size()==profiles_.size())return;
+ if(remaining.empty()){release();profiles_.clear();cpu_fallback_keys_.clear();return;}
+ const auto before=aggregate_cost(profiles_),after=aggregate_cost(remaining);
+ std::lock_guard lock(state_->mutex);
+ for(const auto& p:profiles_)if(p.codec==codec){
+  const auto key=profile_key(p);
+  const auto fallback=std::find(cpu_fallback_keys_.begin(),cpu_fallback_keys_.end(),key);
+  if(fallback!=cpu_fallback_keys_.end()){
+   state_->fallback_busy[key]=false;cpu_fallback_keys_.erase(fallback);
+  }
+  const bool has_gpu=std::any_of(profiles_.begin(),profiles_.end(),[&](const auto& q){return q.codec==codec&&q.backend!=Backend::cpu;});
+  if(p.backend!=Backend::cpu||!has_gpu)--state_->primary_jobs[key];
+ }
+ for(const auto& [id,mb]:before.devices){
+  const auto retained=after.devices.find(id);
+  state_->device_vram[id]-=mb-(retained==after.devices.end()?0:retained->second);
+  if(retained==after.devices.end())--state_->device_jobs[id];
+ }
+ state_->cpu-=before.cpu-after.cpu;state_->ram-=before.ram-after.ram;
+ state_->scratch-=before.scratch-after.scratch;state_->vram-=before.vram-after.vram;
+ state_->nvenc_jobs-=before.nvenc_devices.size()-after.nvenc_devices.size();
+ profiles_=std::move(remaining);
+}
 bool Scheduler::Reservation::hardware_enabled(const Profile& profile) const{
  if(!active_||!state_||profile.backend==Backend::cpu)return false;
  std::lock_guard lock(state_->mutex);

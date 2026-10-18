@@ -1,0 +1,4 @@
+2026-10-18T13:31:33.496973671Z Processing item 3d7b244c-3179-4fd8-b21a-49172d8b08c6 (video, optimize_media) route=local reason=
+2026-10-18T13:32:07.814773737Z Media job d9ea38b6-829f-4142-9b6d-98b035996934 prepared; awaiting background placement
+2026-10-18T13:32:11.392937942Z Processing item 3d7b244c-3179-4fd8-b21a-49172d8b08c6 (video, optimize_media) route=local reason=worker_failed
+2026-10-18T13:35:17.071008176Z Media quality: asset=0daab746-61c7-4f94-bd6a-7b7f259c1f38 rendition=feed.mp4 mean_ssim=0.9812280376569041 frames=717 expected_frames=717 valid=true

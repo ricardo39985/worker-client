@@ -1,0 +1,19 @@
+PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
+PASS app image renders a full-size WebP and bounded poster with independent destinations
+PASS non-AAC audio uses the existing app delivery bitrate
+PASS common SDR H264 and HEVC use device frames on the selected NVENC device
+PASS unproven source formats retain the original software decode and encoding options
+PASS decode selection inspects the first input video only and leaves other backends and posters unchanged
+PASS output descriptions and metadata cannot qualify an unknown input for CUDA decode
+PASS device decode preserves every existing output encoder option
+PASS input inspection can produce the identical fixed poster from the same decode
+PASS poster reuse is restricted to a single ordinary unrotated SDR video stream
+PASS dropped duplicated or retimed frames are rejected regardless of nominal rate
+PASS variable frame timing keeps all source timestamps and requires software decode
+PASS timing inspection tolerates B frame packet order and equivalent time bases
+PASS rounded fractional and absent nominal rates do not veto measured frame timing
+PASS encoders accept irregular measured timestamps without an exact nominal rate
+PASS one frame videos have a measurable duration without any nominal rate
+PASS matching frame instants cannot hide a stretched or shortened final frame
+PASS CUDA decode requires complete constant rate evidence
+18 contracts, 0 failures

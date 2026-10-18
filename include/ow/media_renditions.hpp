@@ -54,14 +54,6 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
                                                const std::vector<adaptive::Profile>& profiles, const std::string& source_info={},const VideoTiming* timing=nullptr) {
 
  auto plan=rendition_plan(video,copy_audio,workspace);
- if(timing){
-  const auto rate=timing->rate();
-  if(!rate)throw std::runtime_error("Exact source video frame rate unavailable");
-  // libx265 otherwise signals the average filter rate for irregular sources,
-  // even with exact PTS. Set its VUI rate without resampling the frame stream.
-  auto& args=plan[1].arguments;auto params=std::find(args.begin(),args.end(),L"-x265-params");
-  if(params!=args.end())*(params+1)+=L":fps="+std::to_wstring(rate->first)+L"/"+std::to_wstring(rate->second);
- }
  for(auto& rendition:plan){
   if(rendition.role!="feed"&&rendition.role!="feed_optimized")continue;
   const auto codec=rendition.role=="feed_optimized"?adaptive::Codec::hevc:adaptive::Codec::h264;

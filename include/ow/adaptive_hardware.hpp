@@ -160,6 +160,9 @@ public:
         const std::vector<Profile>& profiles() const { return profiles_; }
         explicit operator bool() const { return active_; }
         void release() noexcept;
+        // Caller must first drain every child tree for this codec (including
+        // validation/retries). Other codecs keep their full reservations.
+        void finish_codec(Codec codec);
         bool hardware_enabled(const Profile& profile) const;
         std::uint64_t memory_for_dimensions(std::uint32_t width,std::uint32_t height) const;
         bool resize_memory(std::uint32_t width,std::uint32_t height,const Limits& task_limits);

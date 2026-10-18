@@ -16,22 +16,8 @@ struct VideoTiming {
  std::int64_t numerator{},denominator{};
  std::vector<std::int64_t> pts;
  std::string reported_rate;
- std::optional<std::pair<std::int64_t,std::int64_t>> rate() const {
-  if(constant_rate()){
-   auto ticks=pts[1]-pts[0];auto g=std::gcd(ticks,denominator);ticks/=g;auto n=denominator/g;
-   if(ticks>std::numeric_limits<std::int64_t>::max()/numerator)return std::nullopt;
-   auto d=ticks*numerator;g=std::gcd(n,d);return std::pair{n/g,d/g};
-  }
-  // Human-formatted fractional tbr is rounded. Do not guess an exact rate for
-  // irregular sources from that decimal. Integral rates (including 90k) are
-  // representable exactly; the output must still pass the timing guard.
-  if(reported_rate.empty())return std::nullopt;
-  std::string number=reported_rate;std::int64_t multiplier=1;
-  if(number.back()=='k'){multiplier=1000;number.pop_back();}
-  else if(number.back()=='M'){multiplier=1000000;number.pop_back();}
-  if(number.empty()||number.find_first_not_of("0123456789")!=std::string::npos)return std::nullopt;
-  try{auto n=std::stoll(number);if(n<=0||n>1000000000/multiplier)return std::nullopt;return std::pair{n*multiplier,std::int64_t{1}};}catch(...){return std::nullopt;}
- }
+ // Total demuxed sample duration, independent of B-frame packet order.
+ std::int64_t duration_ticks{};
  bool constant_rate() const {
   if(pts.size()<2)return false;
   const auto step=pts[1]-pts[0];
@@ -54,11 +40,12 @@ inline std::optional<VideoTiming> video_timing(const std::string& text){
    std::int64_t stream{},dts{},pts{},duration{};
    if(!header||!(row>>stream>>dts>>pts>>duration)||pts < -bound||pts>bound||duration<=0||duration>bound||out.pts.size()>=300000)return std::nullopt;
    out.pts.push_back(pts);
+   out.duration_ticks+=duration;
   }
  }
- if(!header||out.pts.size()<2)return std::nullopt;
- // Supplement exact PTS comparison with the demuxer's nominal rate. In
- // particular NVENC can retain VFR PTS but signal a different VUI/tbr rate.
+ if(!header||out.pts.empty())return std::nullopt;
+ // Retain the demuxer's nominal rate for diagnostics only. A human-rounded
+ // header is not evidence of the actual frame cadence.
  const auto input=text.find("Input #0,");
  if(input!=std::string::npos){
   const auto end=text.find("Output #",input);const auto header_text=text.substr(input,end==std::string::npos?end:end-input);
@@ -72,13 +59,14 @@ inline std::optional<VideoTiming> video_timing(const std::string& text){
  return out;
 }
 inline bool same_video_timing(const VideoTiming& source,const VideoTiming& output){
- if(source.reported_rate!=output.reported_rate)return false;
+ // Nominal/VUI rates describe codec metadata, not the presentation timeline.
+ // In particular a rounded tbr must neither veto an encode nor validate one.
  if(source.pts.size()!=output.pts.size()||source.pts.empty()||source.numerator<=0||source.denominator<=0||output.numerator<=0||output.denominator<=0)return false;
  // Compare reduced rational timestamps without floating point or MSVC-specific
  // wide integer arithmetic. Origin shifts by the muxer do not retime frames.
  auto fraction=[](std::int64_t ticks,std::int64_t n,std::int64_t d)->std::optional<std::pair<std::int64_t,std::int64_t>>{
   auto g=std::gcd(ticks,d);ticks/=g;d/=g;g=std::gcd(n,d);n/=g;d/=g;
-  if(ticks>std::numeric_limits<std::int64_t>::max()/n)return std::nullopt;
+  if(ticks<0||ticks>std::numeric_limits<std::int64_t>::max()/n)return std::nullopt;
   return std::pair{ticks*n,d};
  };
  for(std::size_t i=0;i<source.pts.size();++i){
@@ -86,7 +74,10 @@ inline bool same_video_timing(const VideoTiming& source,const VideoTiming& outpu
   auto b=fraction(output.pts[i]-output.pts.front(),output.numerator,output.denominator);
   if(!a||!b||*a!=*b)return false;
  }
- return true;
+ if(source.duration_ticks<=0||output.duration_ticks<=0)return false;
+ const auto a=fraction(source.duration_ticks,source.numerator,source.denominator);
+ const auto b=fraction(output.duration_ticks,output.numerator,output.denominator);
+ return a&&b&&*a==*b;
 }
 inline std::vector<std::wstring> video_timing_arguments(const std::filesystem::path& file){
  return {L"-nostdin",L"-hide_banner",L"-v",L"info",L"-protocol_whitelist",L"file",L"-i",file.wstring(),L"-map",L"0:v:0",L"-an",L"-c:v",L"copy",L"-f",L"framehash",L"-hash",L"adler32",L"-"};

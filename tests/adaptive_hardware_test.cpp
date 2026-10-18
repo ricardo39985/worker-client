@@ -33,6 +33,42 @@ const Profile* find(const std::vector<Profile>& profiles,const std::string& id,C
  return i==profiles.end()?nullptr:&*i;
 }
 }
+TEST("drained renditions release their card while the job still owns another codec"){
+ auto c=cpu(),a=gpu("stage-a",Backend::nvidia_nvenc),b=gpu("stage-b",Backend::nvidia_nvenc);
+ b.backend_index=1;
+ auto profiles=run({c,a,b},{probe(c,Codec::h264),probe(c,Codec::hevc),probe(a,Codec::h264),probe(b,Codec::hevc)},
+  {tune(c,Codec::h264,20),tune(c,Codec::hevc,12),tune(a,Codec::h264,70,512),tune(b,Codec::hevc,60,512)});
+ for(auto& p:profiles){p.cpu_threads=1;p.ram_mb=p.stable_id==a.stable_id?1024:512;p.scratch_mb=128;}
+ Scheduler scheduler(Limits{4,1536,1024,512,4},profiles);
+ auto job=scheduler.reserve({Codec::h264,Codec::hevc});CHECK(job);
+ // Both cards stay occupied until their owning child trees have drained.
+ auto blocked=scheduler.reserve({Codec::h264});CHECK(blocked);
+ CHECK(blocked.profiles().front().backend==Backend::cpu);blocked.release();
+ job.finish_codec(Codec::h264); // The controller calls only after encode/validation drain.
+ CHECK(job && job.profiles().size()==2);
+ auto next=scheduler.reserve({Codec::h264});CHECK(next);
+ CHECK(next.profiles().front().stable_id==a.stable_id);
+ CHECK(job.profiles().front().stable_id==b.stable_id);
+ job.finish_codec(Codec::h264); // Duplicate completion must not release next's capacity.
+ next.release();
+ job.finish_codec(Codec::hevc);CHECK(!job);
+ CHECK(scheduler.active_jobs()==0);
+ auto both=scheduler.reserve({Codec::h264,Codec::hevc});CHECK(both);
+}
+TEST("completing one codec cannot release a shared card still needed by the other codec"){
+ auto c=cpu(),g=gpu("shared-stage",Backend::nvidia_nvenc);
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(c,Codec::hevc),probe(g,Codec::h264),probe(g,Codec::hevc)},
+  {tune(c,Codec::h264,20),tune(c,Codec::hevc,12),tune(g,Codec::h264,70,512),tune(g,Codec::hevc,60,512)});
+ for(auto& p:profiles){p.cpu_threads=1;p.ram_mb=512;p.scratch_mb=128;}
+ Scheduler scheduler(Limits{4,2048,512,512,4},profiles);
+ auto job=scheduler.reserve({Codec::h264,Codec::hevc});CHECK(job);
+ job.finish_codec(Codec::h264);
+ auto next=scheduler.reserve({Codec::h264});CHECK(next);
+ CHECK(next.profiles().front().backend==Backend::cpu);
+ next.release();job.finish_codec(Codec::hevc);
+ auto hardware=scheduler.reserve({Codec::h264});CHECK(hardware);
+ CHECK(hardware.profiles().front().backend==Backend::nvidia_nvenc);
+}
 TEST("CPU remains the safe profile when no supported GPU is installed"){
  auto c=cpu();auto profiles=run({c},{probe(c,Codec::h264),probe(c,Codec::hevc)},
   {tune(c,Codec::h264,20),tune(c,Codec::hevc,12)});

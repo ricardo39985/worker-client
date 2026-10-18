@@ -1,0 +1,37 @@
+[  9%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[ 18%] Linking CXX static library libow_json.a
+[ 18%] Built target ow_json
+[ 36%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 36%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 45%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 54%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 63%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+/home/rick/Downloads/worker-client-flex/src/adaptive_hardware.cpp: In constructor ‘ow::adaptive::Scheduler::Scheduler(ow::adaptive::Limits, std::vector<ow::adaptive::Profile>)’:
+/home/rick/Downloads/worker-client-flex/src/adaptive_hardware.cpp:233:44: warning: missing initializer for member ‘ow::adaptive::Device::exclusion_reason’ [-Wmissing-field-initializers]
+  233 |   if(found==devices.end())devices.push_back({p.stable_id,p.backend,p.driver_version,0,true,p.adapter_index,p.device_name,p.backend_index,p.backend_identity_verified,p.physical_id});
+      |                           ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 72%] Linking CXX static library libow_core.a
+[ 72%] Built target ow_core
+[ 90%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/main.cpp.o
+[ 90%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+/home/rick/Downloads/worker-client-flex/tests/adaptive_hardware_test.cpp: In function ‘void test_36()’:
+/home/rick/Downloads/worker-client-flex/tests/adaptive_hardware_test.cpp:47:6: error: ‘class ow::adaptive::Scheduler::Reservation’ has no member named ‘finish_codec’
+   47 |  job.finish_codec(Codec::h264); // The controller calls only after encode/validation drain.
+      |      ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/adaptive_hardware_test.cpp:52:6: error: ‘class ow::adaptive::Scheduler::Reservation’ has no member named ‘finish_codec’
+   52 |  job.finish_codec(Codec::h264); // Duplicate completion must not release next's capacity.
+      |      ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/adaptive_hardware_test.cpp:54:6: error: ‘class ow::adaptive::Scheduler::Reservation’ has no member named ‘finish_codec’
+   54 |  job.finish_codec(Codec::hevc);CHECK(!job);
+      |      ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/adaptive_hardware_test.cpp: In function ‘void test_58()’:
+/home/rick/Downloads/worker-client-flex/tests/adaptive_hardware_test.cpp:65:6: error: ‘class ow::adaptive::Scheduler::Reservation’ has no member named ‘finish_codec’
+   65 |  job.finish_codec(Codec::h264);
+      |      ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-flex/tests/adaptive_hardware_test.cpp:68:21: error: ‘class ow::adaptive::Scheduler::Reservation’ has no member named ‘finish_codec’
+   68 |  next.release();job.finish_codec(Codec::hevc);
+      |                     ^~~~~~~~~~~~
+gmake[3]: *** [CMakeFiles/ow_adaptive_hardware_contract_tests.dir/build.make:93: CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:1229: CMakeFiles/ow_adaptive_hardware_contract_tests.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:1236: CMakeFiles/ow_adaptive_hardware_contract_tests.dir/rule] Error 2
+gmake: *** [Makefile:576: ow_adaptive_hardware_contract_tests] Error 2

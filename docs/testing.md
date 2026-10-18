@@ -1,5 +1,9 @@
 # Test policy and evidence
 
+Worker-flex investigation and partial candidate: [findings and current gates](../verification/worker-flex/REPORT.md).
+Linux/sanitizer checks pass; native gates and sustainable-capacity/throughput
+measurements require operator permission. This is not release or deployment evidence.
+
 Current frame-timing correction: [measurement, gates and rollout ledger](../verification/fps/REPORT.md).
 
 Current installer swap and both-PC rollout: [Windows rollback proof and installed readbacks](../verification/installer-swap/REPORT.md).

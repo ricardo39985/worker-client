@@ -641,7 +641,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     StageTimer timing("output_timing",filename,timing_sink,timing_wall_us,thread_cpu_us,true);
     run_child_probe(config_.ffmpeg,video_timing_arguments(workspace/filename),workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},s.offer.resources,nullptr,UINT64_MAX,30000,0,0,&timing);
     auto output_timing=video_timing(read_file(workspace/"process.log",5*1024*1024));
-    if(!output_timing||!same_video_timing(*source_timing,*output_timing)){source_timing_mismatch=true;retry_reason="Output video frame rate or timestamps differ from source";throw std::runtime_error(retry_reason);}
+    if(!output_timing||!same_video_timing(*source_timing,*output_timing)){source_timing_mismatch=true;retry_reason="Output video presentation timeline differs from source";throw std::runtime_error(retry_reason);}
    };
    if(hardware){
     const auto output=workspace/filename;
@@ -688,9 +688,9 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     StageTimer timing("input_timing","source.bin",timing_sink,timing_wall_us,thread_cpu_us,true);
     run_child_probe(config_.ffmpeg,video_timing_arguments(workspace/"source.bin"),workspace,cancelled,s.offer.resources,nullptr,UINT64_MAX,30000,0,0,&timing);
     source_timing=video_timing(read_file(workspace/"process.log",5*1024*1024));
-    if(!source_timing||source_timing->reported_rate.empty()||!source_timing->rate())throw std::runtime_error("Source video timing cannot be verified; refusing unvalidated output");
-    // VFR uses software decode. Guarded NVENC may retain the encoder speed;
-    // its output must still pass nominal-rate and exact-PTS validation.
+    if(!source_timing)throw std::runtime_error("Source video timestamp evidence is missing or invalid; refusing unvalidated output");
+    // VFR uses software decode with the demuxer time base. Guarded encoding
+    // must match actual frame timestamps, not a nominal/VUI rate prediction.
     if(!source_timing->constant_rate()){
      safe_log("JOB "+id+" variable frame timing: decode=software; guarded encoding preserves source time base");
     }
@@ -746,6 +746,12 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     auto cpu=std::find_if(cpu_plan.begin(),cpu_plan.end(),[&](const auto& value){return value.role==rendition.role;});
     if(cpu==cpu_plan.end())throw std::runtime_error("CPU fallback rendition missing");
     convert(rendition.arguments,cpu->arguments,rendition.filename,rendition.timeout_seconds,rendition.hardware,stop);
+    if(video&&data->profile_reservation&&(rendition.role=="feed"||rendition.role=="feed_optimized")){
+     // convert returns only after encoder, retry and validation trees drain.
+     // Upload/result ACK no longer keep an unused encoder session or VRAM.
+     data->profile_reservation->finish_codec(rendition.role=="feed_optimized"?adaptive::Codec::hevc:adaptive::Codec::h264);
+     safe_log("JOB "+id+" CAPACITY | drained "+rendition.role+"; released unused adaptive compute; source/output scratch and transfer budget retained");
+    }
    },[&](const Rendition& rendition,std::stop_token stop){
     const auto target=std::find_if(s.artifacts.begin(),s.artifacts.end(),[&](const auto& t){return t.role==rendition.role;});
     if(target==s.artifacts.end())throw std::runtime_error("Rendition target missing");

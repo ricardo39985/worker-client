@@ -1,0 +1,36 @@
+388-              if(stream["pix_fmt"]!="yuv420p")throw std::runtime_error("Remote video pixel format mismatch");
+389-              for(const auto& source:info["streams"])if(source["codec_type"]=="video"){
+390-                auto rate=[](const std::string& value){auto slash=value.find('/');double denominator=slash==std::string::npos?1:std::stod(value.substr(slash+1));return denominator?std::stod(value.substr(0,slash))/denominator:0;};
+391:                if(std::abs(rate(source["r_frame_rate"].asString())-rate(stream["r_frame_rate"].asString()))>0.000001)throw std::runtime_error("Remote video frame rate mismatch");break;
+392-              }
+393-            }
+394-            if(!executeBounded({"ffmpeg","-nostdin","-v","error","-xerror","-protocol_whitelist","file","-threads","1","-i",path.string(),"-map","0:v:0","-map","0:a:0?","-threads","1","-f","null","-"},"",40))throw std::runtime_error("Remote media full decode failed");
+--
+725-      // Only fixed validation messages are safe to persist/log. Never expose
+726-      // arbitrary storage responses, signed URLs or database exception text.
+727-      std::string failure="Remote validation error";
+728:      for(const auto* safe:{"Remote source integrity differs","Remote image orientation probe failed","Invalid remote rendition set","Invalid remote rendition identity","Remote rendition copy failed","Remote rendition integrity failed","Media storage transfer failed","Remote media probe failed","Unexpected remote media stream","Remote output profile mismatch","Remote video pixel format mismatch","Remote video frame rate mismatch","Remote media full decode failed"})
+729-        if(std::string_view(e.what())==safe){failure=safe;break;}
+730-      db.query("UPDATE native_worker_attempts SET state='rejected' WHERE id=$1::uuid AND state='validating'",{payload["native_result"]["attempt_id"].asString()});
+731-      db.query("UPDATE native_worker_jobs SET route_state='local' WHERE job_id=$1::uuid",{job});
+424:        auto validVideo=[&](const std::filesystem::path &path) {
+425-          auto rejected=[&](const char* reason) {
+426-            lastVideoRejection=reason;
+427-            J facts;facts["code"]=std::string("media_")+reason;audit(facts);
+428-            workerLog(fmt::format("Media rendition rejected: asset={} rendition={} reason={}\n",
+429-              assetId,path.filename().string(),reason),true);
+430-            return false;
+431-          };
+432-          auto metadata=path.string()+".validation.json";
+433-          if (!executeBounded({"ffprobe","-v","error","-select_streams","v:0","-show_entries","stream=width,height:format=duration","-of","json",path.string()},metadata)) return rejected("probe_failed");
+434-          std::ifstream f(metadata); std::string json((std::istreambuf_iterator<char>(f)),{}); auto result=probeDocument(json);
+435-          const auto outWidth=result["streams"][0].get("width",0).asInt(),outHeight=result["streams"][0].get("height",0).asInt();
+436-          const bool screen=path==playback;
+437-          if(screen) {
+438-            const auto factor=std::min(1.0,1280.0/std::max(width,height));
+439-            if(outWidth<=0||outHeight<=0||outWidth>1280||outHeight>1280||outWidth%2||outHeight%2||
+440-                std::abs(outWidth-width*factor)>2||std::abs(outHeight-height*factor)>2)return rejected("dimensions_changed");
+441-          } else if(outWidth!=width||outHeight!=height) return rejected("dimensions_changed");
+442-          const auto outputDuration=std::stod(result["format"].get("duration","0").asString());
+443-          const auto sourceDuration=std::stod(duration);
+444-          if (!std::isfinite(outputDuration) || !std::isfinite(sourceDuration) ||
