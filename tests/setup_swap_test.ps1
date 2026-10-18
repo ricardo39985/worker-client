@@ -95,6 +95,18 @@ try {
    Assert ([IO.File]::ReadAllText((Join-Path $f.root 'current.json')) -ceq $f.bytes);Runnable $f
   } finally {if(-not $p.HasExited){$p.Kill();$p.WaitForExit()};$p.Dispose()}
  }
+ Case 'locked recovery file during commit keeps recovery and restores the old runnable version' {
+  $f=Fixture;$state=@{handle=$null};$caught=$false
+  try {
+   try {Invoke-WorkerVersionSwap -Root $f.root -Manifest $f.new -StopWorker {} -StartWorker {} -VerifyWorker {
+    if($null -eq $state.handle){$state.handle=[IO.File]::Open((Join-Path $f.root 'current.rollback.json'),[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read)}
+   }} catch {$caught=$true}
+   Assert $caught 'Locked commit recovery must fail explicitly'
+   Assert (Test-Path (Join-Path $f.root 'current.rollback.json')) 'Recovery copy was lost'
+   Runnable $f
+  } finally {if($state.handle){$state.handle.Dispose()}}
+  Restore-WorkerVersion -Root $f.root -StopWorker {} -StartWorker {} -VerifyWorker {Runnable $f}
+ }
  Case 'incomplete candidate is rejected before stopping or changing the current version' {
   $f=Fixture;Remove-Item (Join-Path $f.new.directory 'OrganizerWorker.exe');$caught=$false
   try {Invoke-WorkerVersionSwap -Root $f.root -Manifest $f.new -StopWorker {throw 'must not stop'} -StartWorker {} -VerifyWorker {}}

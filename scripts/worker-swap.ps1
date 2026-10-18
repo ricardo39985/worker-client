@@ -87,18 +87,23 @@ function Invoke-WorkerVersionSwap {
             Invoke-WorkerManifestReplace $temp $current $replaceBackup -RetryMilliseconds $RetryMilliseconds -OnSharingViolation $OnSharingViolation
             & $StartWorker
             & $VerifyWorker
+            # Removing the durable recovery marker commits the transaction.
+            # A failure here must roll back as well, rather than report failure
+            # while leaving the candidate selected.
+            [IO.File]::Delete($backup)
         } catch {
             $failure=$_.Exception.Message
             try {Restore-WorkerVersionCore -Root $Root -StopWorker $StopWorker -StartWorker $StartWorker -VerifyWorker $VerifyWorker -RetryMilliseconds $RetryMilliseconds}
             catch {throw ($failure+'; rollback pending at '+$backup+': '+$_.Exception.Message)}
             throw ($failure+'; previous version restored and verified')
         }
-        [IO.File]::Delete($backup)
         Write-Output 'VERSION_SWAP_VERIFIED=True'
     } finally {
-        if([IO.File]::Exists($temp)){[IO.File]::Delete($temp)}
-        if([IO.File]::Exists($temp+'.rollback')){[IO.File]::Delete($temp+'.rollback')}
-        if([IO.File]::Exists($replaceBackup)){[IO.File]::Delete($replaceBackup)}
-        $guard.Dispose()
+        try {
+            foreach($path in @($temp,($temp+'.rollback'),$replaceBackup)) {
+                try {if([IO.File]::Exists($path)){[IO.File]::Delete($path)}}
+                catch {Write-Warning ('Retained inactive swap temporary file: '+$path+'; '+$_.Exception.Message)}
+            }
+        } finally {$guard.Dispose()}
     }
 }
