@@ -55,7 +55,7 @@ class Worker {
  void state(std::string text);
  json::object heartbeat();
  void apply_preferences();
- adaptive::Scheduler::Reservation reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,const Resources& offer);
+ adaptive::Scheduler::Reservation reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,Resources& offer,const std::string& attempt);
  void report_encoder_failure(const adaptive::Profile&);
  void safe_log(const std::string&) noexcept;
 public:

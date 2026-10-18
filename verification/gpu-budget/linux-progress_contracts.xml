@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="rick-Inspiron-16-5625"
+	time="0"
+	timestamp="2026-10-17T23:35:03"
+	>
+	<testcase name="progress_contracts" classname="progress_contracts" time="0.0132916" status="run">
+		<properties/>
+		<system-out>PASS outcomes increment once per executed attempt and survive pause resume
+PASS fixed clock summary has exact finish time duration queue and computed idle
+PASS idle table is fixed width deterministic and derives since and uptime
+PASS missing readings and last job stay unknown never numeric zero
+PASS idle live and durable cadence are independent and no table runs during work
+PASS physical cards deduplicate by identity truncate names and wrap fixed cells
+PASS outcome and state colours have only nonzero failures red
+PASS placement describes actual running encoder and clears on drain
+PASS status sidecar rows roundtrip colours and durable blocks stay out of live scrollback
+PASS live idle frame is suppressed until the last concurrent job terminates
+PASS bounded history survives new jobs and derives duration across wall clock correction
+PASS asset stages retries completions and full summaries keep observable words
+PASS idle ticks do not reset state since and nonzero failed span roundtrips
+PASS redirected durable tab...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

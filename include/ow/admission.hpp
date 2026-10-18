@@ -26,6 +26,7 @@ struct Active {
     std::string lease_token;
     Tick deadline{};
     std::uint64_t renewal_sequence{};
+    std::uint64_t extra_ram_mb{};
 };
 struct Decision { bool accepted{}; std::string reason; };
 struct Expired { std::string attempt_id; bool stop_process{}; };
@@ -43,6 +44,8 @@ public:
                std::uint64_t sequence, Tick deadline, Tick now);
     bool cancel(const std::string& attempt);
     bool finish(const std::string& attempt);
+    // Grow only a live running task; never alter its original offer identity.
+    bool reserve_ram(const std::string& attempt,std::uint64_t total_mb,Resources available,Tick now);
     std::vector<Expired> expire(Tick now);
     std::vector<Active> active() const;
     Resources used() const;

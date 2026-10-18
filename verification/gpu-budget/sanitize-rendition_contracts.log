@@ -1,0 +1,27 @@
+UpdateCTestConfiguration  from :/tmp/ow-gpu-budget-build-sanitize/DartConfiguration.tcl
+Parse Config file:/tmp/ow-gpu-budget-build-sanitize/DartConfiguration.tcl
+Test project /tmp/ow-gpu-budget-build-sanitize
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 4
+    Start 4: rendition_contracts
+
+4: Test command: /tmp/ow-gpu-budget-build-sanitize/ow_rendition_contract_tests
+4: Working Directory: /tmp/ow-gpu-budget-build-sanitize
+4: Test timeout computed to be: 30
+4: PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
+4: PASS app image renders a full-size WebP and bounded poster with independent destinations
+4: PASS non-AAC audio uses the existing app delivery bitrate
+4: 3 contracts, 0 failures
+1/1 Test #4: rendition_contracts ..............   Passed    0.01 sec
+
+The following tests passed:
+	rendition_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.02 sec

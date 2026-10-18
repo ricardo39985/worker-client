@@ -14,6 +14,7 @@ public:
  ~Child();Child(const Child&)=delete;Child& operator=(const Child&)=delete;
  std::optional<DWORD> exit_code();
  DWORD process_id() const;
+ std::uint64_t peak_commit_mb() const;
  void stop();void priority(Priority);
 };
 }

@@ -1,0 +1,78 @@
+UpdateCTestConfiguration  from :/tmp/ow-gpu-budget-build-sanitize/DartConfiguration.tcl
+Parse Config file:/tmp/ow-gpu-budget-build-sanitize/DartConfiguration.tcl
+Test project /tmp/ow-gpu-budget-build-sanitize
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 6
+    Start 6: progress_contracts
+
+6: Test command: /tmp/ow-gpu-budget-build-sanitize/ow_progress_contract_tests
+6: Working Directory: /tmp/ow-gpu-budget-build-sanitize
+6: Test timeout computed to be: 30
+6: PASS idle connection emits no activity and active states stay terse
+6: PASS encoder timeline and byte accounting behavior are preserved
+6: PASS unmeasurable stages say only stage and elapsed once
+6: PASS a repeated stage is a visible retry with one stable suffix
+6: PASS local timestamp format is exact through midnight month and zone changes
+6: PASS job suffixes are lowercase last four and stable for a job life
+6: PASS two live jobs with the same four characters stay distinguishable
+6: PASS a shown suffix resolves to exactly one full attempt id in the durable log
+6: PASS restart needs no counter and never implies continuation
+6: PASS every rendered line fits eighty columns including an impossible message
+6: PASS old durable lines still render plainly without breaking the viewer
+6: PASS exactly five colours carry one consistent meaning
+6: PASS progress rows keep a bounded bar and vanish on terminal events
+6: PASS four concurrent rows and activity stay readable and cancellation clears at any percent
+6: PASS many jobs keep suffix-to-id resolvability and concurrent accounting
+6: PASS the ready line names the encoders the worker actually reported
+6: PASS a probe record without encoder detail claims no backend
+6: PASS a malformed encoder list cannot invent a backend
+6: PASS explicit failed app probes never inherit successful diagnostics
+6: PASS absent capability and priority evidence is explicitly unknown
+6: PASS capability flags require complete field values and boundaries
+6: PASS probe elapsed phases and remaining candidates use an injected clock
+6: PASS probe has one bounded row alongside jobs and clears on result or failure
+6: PASS encoder change and sample scope fit the existing neutral and warning style
+6: PASS an encoder substring is not backend evidence and unknown lists stay empty
+6: PASS probe phase labels cannot hide elapsed time at console width
+6: PASS hardware demotion is one short warning line in the existing console style
+6: PASS geometry and performance fallback reasons remain distinct and readable
+6: PASS encoder placement remains short blue activity with distinct device and CPU retry
+6: PASS the short log distinguishes schedulable card count from raw DXGI inventory
+6: PASS all hardware command plans retain device selection and measured timeline progress
+6: PASS four hardware failures reset timeline and stage generation on CPU retry independently
+6: PASS outcomes increment once per executed attempt and survive pause resume
+6: PASS fixed clock summary has exact finish time duration queue and computed idle
+6: PASS idle table is fixed width deterministic and derives since and uptime
+6: PASS missing readings and last job stay unknown never numeric zero
+6: PASS idle live and durable cadence are independent and no table runs during work
+6: PASS physical cards deduplicate by identity truncate names and wrap fixed cells
+6: PASS outcome and state colours have only nonzero failures red
+6: PASS placement describes actual running encoder and clears on drain
+6: PASS status sidecar rows roundtrip colours and durable blocks stay out of live scrollback
+6: PASS live idle frame is suppressed until the last concurrent job terminates
+6: PASS bounded history survives new jobs and derives duration across wall clock correction
+6: PASS asset stages retries completions and full summaries keep observable words
+6: PASS idle ticks do not reset state since and nonzero failed span roundtrips
+6: PASS redirected durable table keeps the same fixed width plain block
+6: PASS summary carries running placement free resources priority and accepting state
+6: PASS totals keep outcome columns at fixed positions as counts grow
+6: PASS encoder and failure records retain asset names and failure colour
+6: PASS running progress row retains the physical card across asset updates
+6: PASS outcome colour follows the outcome word regardless of reason wording
+6: PASS idle status exposes withheld card codec reason and retry instead of calling it idle
+6: PASS long withheld reasons wrap without losing retry and remain durable status rows
+6: PASS active status exposes the actual selected child memory budget
+6: 54 contracts, 0 failures
+1/1 Test #6: progress_contracts ...............   Passed    0.47 sec
+
+The following tests passed:
+	progress_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.47 sec

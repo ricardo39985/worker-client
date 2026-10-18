@@ -1,0 +1,18 @@
+[  9%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[ 18%] Linking CXX static library libow_json.a
+[ 18%] Built target ow_json
+[ 36%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 36%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 45%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 54%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 63%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+/home/rick/Downloads/worker-client-budget/src/adaptive_hardware.cpp: In constructor ‘ow::adaptive::Scheduler::Scheduler(ow::adaptive::Limits, std::vector<ow::adaptive::Profile>)’:
+/home/rick/Downloads/worker-client-budget/src/adaptive_hardware.cpp:212:44: warning: missing initializer for member ‘ow::adaptive::Device::exclusion_reason’ [-Wmissing-field-initializers]
+  212 |   if(found==devices.end())devices.push_back({p.stable_id,p.backend,p.driver_version,0,true,p.adapter_index,p.device_name,p.backend_index,p.backend_identity_verified,p.physical_id});
+      |                           ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 72%] Linking CXX static library libow_core.a
+[ 72%] Built target ow_core
+[ 90%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/main.cpp.o
+[ 90%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[100%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[100%] Built target ow_adaptive_hardware_contract_tests

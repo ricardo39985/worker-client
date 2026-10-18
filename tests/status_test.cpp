@@ -149,3 +149,12 @@ TEST("long withheld reasons wrap without losing retry and remain durable status 
  }
  CHECK(all.find("retry when idle")!=std::string::npos);
 }
+
+TEST("active status exposes the actual selected child memory budget"){
+ ow::WorkerStatus status(0,0);status.start("attempt-1234","video",0,0);
+ status.placement("attempt-1234","3070",768);ow::StatusReadings readings;
+ readings.cards=std::vector<ow::StatusCard>{{"3070","RTX 3070"}};
+ CHECK(status.machine(readings).find("child budget 768 MiB")!=std::string::npos);
+ status.placement("attempt-1234","3070",1792);
+ CHECK(status.summary(1000,1000,readings).find("child budget 1792 MiB")!=std::string::npos);
+}

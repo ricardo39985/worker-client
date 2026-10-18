@@ -46,7 +46,7 @@ inline std::string status_frame(const std::vector<ConsoleLine>& lines){std::stri
 // Caller serializes mutation and frame publication. All elapsed values use the
 // supplied monotonic clock; wall clock is used solely for local timestamps.
 class WorkerStatus {
- struct Active {std::string subject,device;std::int64_t wall,mono;};
+ struct Active {std::string subject,device;std::int64_t wall,mono;std::uint64_t child_budget_mb{};};
  struct Last {std::string id,subject,reason;JobOutcome outcome;std::int64_t wall,duration;};
  std::int64_t started_wall_,started_,since_wall_,idle_since_,next_live_{},next_durable_{};
  std::string state_{"paused"},reason_{"starting"},priority_{"unknown"};
@@ -64,7 +64,7 @@ public:
  bool accepting() const{return state_=="accepting";}
  std::string state_line() const{return state_+(reason_.empty()?"":": "+reason_)+" (since "+status_detail::time(since_wall_)+")";}
  void start(const std::string& id,std::string subject,std::int64_t wall,std::int64_t mono){active_.try_emplace(id,Active{std::move(subject),{},wall,mono});dirty_=true;}
- void placement(const std::string& id,std::string device){if(auto it=active_.find(id);it!=active_.end())it->second.device=std::move(device);}
+ void placement(const std::string& id,std::string device,std::uint64_t budget_mb=0){if(auto it=active_.find(id);it!=active_.end()){it->second.device=std::move(device);it->second.child_budget_mb=budget_mb;dirty_=true;}}
  bool finish(const std::string& id,JobOutcome outcome,std::string reason,std::int64_t wall,std::int64_t mono){
   auto it=active_.find(id);if(it==active_.end())return false;
   if(outcome==JobOutcome::succeeded)++ok_;else if(outcome==JobOutcome::failed)++failed_;else ++cancelled_;
@@ -79,7 +79,7 @@ public:
  }
  std::string machine(const StatusReadings& r) const{
   std::string text="running "+std::to_string(active_.size());auto cards=status_detail::cards(r);
-  for(const auto& [id,a]:active_){std::string name=a.device.empty()?"unknown":a.device=="cpu"?"cpu":"unknown";for(const auto& c:cards)if(c.id==a.device)name=c.name;text+=" | job "+id+"="+status_detail::safe(name);}
+  for(const auto& [id,a]:active_){std::string name=a.device.empty()?"unknown":a.device=="cpu"?"cpu":"unknown";for(const auto& c:cards)if(c.id==a.device)name=c.name;text+=" | job "+id+"="+status_detail::safe(name);if(a.child_budget_mb)text+=" child budget "+std::to_string(a.child_budget_mb)+" MiB";}
   return text+" | ram free "+status_detail::gb(r.ram_bytes,true)+" | scratch free "+status_detail::gb(r.scratch_bytes,false);
  }
  std::vector<ConsoleLine> table(std::int64_t wall,std::int64_t mono,const StatusReadings& r) const{

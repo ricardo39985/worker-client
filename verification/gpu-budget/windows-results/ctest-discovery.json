@@ -1,0 +1,305 @@
+﻿{
+  "backtraceGraph" :
+  {
+    "commands" :
+    [
+      "add_test"
+    ],
+    "files" :
+    [
+      "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/source/CMakeLists.txt"
+    ],
+    "nodes" :
+    [
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 60,
+        "parent" : 0
+      },
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 65,
+        "parent" : 2
+      },
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 69,
+        "parent" : 4
+      },
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 79,
+        "parent" : 6
+      },
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 84,
+        "parent" : 8
+      },
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 111,
+        "parent" : 10
+      },
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 112,
+        "parent" : 12
+      },
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 114,
+        "parent" : 14
+      },
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 116,
+        "parent" : 16
+      }
+    ]
+  },
+  "kind" : "ctestInfo",
+  "tests" :
+  [
+    {
+      "backtrace" : 1,
+      "command" :
+      [
+        "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build/Release/ow_contract_tests.exe"
+      ],
+      "config" : "Release",
+      "name" : "worker_contracts",
+      "properties" :
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build"
+        }
+      ]
+    },
+    {
+      "backtrace" : 3,
+      "command" :
+      [
+        "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build/Release/ow_pipeline_contract_tests.exe"
+      ],
+      "config" : "Release",
+      "name" : "pipeline_contracts",
+      "properties" :
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build"
+        }
+      ]
+    },
+    {
+      "backtrace" : 5,
+      "command" :
+      [
+        "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build/Release/ow_rendition_contract_tests.exe"
+      ],
+      "config" : "Release",
+      "name" : "rendition_contracts",
+      "properties" :
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build"
+        }
+      ]
+    },
+    {
+      "backtrace" : 7,
+      "command" :
+      [
+        "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build/Release/ow_adaptive_hardware_contract_tests.exe"
+      ],
+      "config" : "Release",
+      "name" : "adaptive_hardware_contracts",
+      "properties" :
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build"
+        }
+      ]
+    },
+    {
+      "backtrace" : 9,
+      "command" :
+      [
+        "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build/Release/ow_progress_contract_tests.exe"
+      ],
+      "config" : "Release",
+      "name" : "progress_contracts",
+      "properties" :
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build"
+        }
+      ]
+    },
+    {
+      "backtrace" : 11,
+      "command" :
+      [
+        "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build/Release/ow_windows_tests.exe"
+      ],
+      "config" : "Release",
+      "name" : "windows_contracts",
+      "properties" :
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 60.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build"
+        }
+      ]
+    },
+    {
+      "backtrace" : 13,
+      "command" :
+      [
+        "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/source/tests/setup_policy_test.ps1"
+      ],
+      "config" : "Release",
+      "name" : "setup_contracts",
+      "properties" :
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 60.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build"
+        }
+      ]
+    },
+    {
+      "backtrace" : 15,
+      "command" :
+      [
+        "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/source/tests/setup_progress_test.ps1"
+      ],
+      "config" : "Release",
+      "name" : "setup_progress_contracts",
+      "properties" :
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 90.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build"
+        }
+      ]
+    },
+    {
+      "backtrace" : 17,
+      "command" :
+      [
+        "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+        "-NoLogo",
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/source/tests/setup_converter_test.ps1"
+      ],
+      "config" : "Release",
+      "name" : "setup_converter_contracts",
+      "properties" :
+      [
+        {
+          "name" : "TIMEOUT",
+          "value" : 60.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/reald/AppData/Local/Temp/ow-gpu-budget-2a209bc/build"
+        }
+      ]
+    }
+  ],
+  "version" :
+  {
+    "major" : 1,
+    "minor" : 0
+  }
+}

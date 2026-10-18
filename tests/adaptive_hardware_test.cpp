@@ -854,3 +854,66 @@ TEST("recovery retains current successful samples while failed cards require a n
  CHECK(!find(selected,a.stable_id,Codec::h264));CHECK(find(selected,"cpu",Codec::h264));
  CHECK(ow::retain_current_profiles({c,a,b},good,"changed-binary").probes.empty());
 }
+
+TEST("1080p GPU child budget covers the measured display adapter commit footprint"){
+ auto c=cpu(),g=gpu("display-3070",Backend::nvidia_nvenc);
+ auto ct=tune(c,Codec::h264,20);ct.ram_mb=512;
+ auto gt=tune(g,Codec::h264,100,512);gt.ram_mb=512;
+ gt.measured_width=1920;gt.measured_height=1080;
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt});
+ auto hardware=find(profiles,g.stable_id,Codec::h264);CHECK(hardware);
+ // The observed 562.32 MiB child cannot finish under the previous 512 MiB cap.
+ CHECK(hardware->ram_mb>=768);
+ Scheduler scheduler(limits(),profiles);auto job=scheduler.reserve({Codec::h264});CHECK(job);
+ CHECK(job.profiles().front().ram_mb>=768);
+ CHECK(job.profiles().front().ram_mb*1024*1024>589635584ULL);
+}
+
+TEST("GPU commit budgets distinguish geometry codec surfaces and measured card overhead"){
+ CHECK(gpu_child_memory_mb(460,390,Codec::h264)==512);
+ CHECK(gpu_child_memory_mb(1280,720,Codec::h264)==640);
+ CHECK(gpu_child_memory_mb(1536,864,Codec::h264)==640);
+ CHECK(gpu_child_memory_mb(1568,882,Codec::h264)==640);
+ CHECK(gpu_child_memory_mb(1920,1080,Codec::h264)==768);
+ CHECK(gpu_child_memory_mb(1920,1080,Codec::hevc)==768);
+ CHECK(gpu_child_memory_mb(1920,1080,Codec::hevc,InputMemory::device)==768);
+ CHECK(gpu_child_memory_mb(3840,2160,Codec::h264)==1792);
+ CHECK(gpu_child_memory_mb(3840,2160,Codec::hevc)==1664);
+ CHECK(gpu_child_memory_mb(3840,2160,Codec::h264,InputMemory::device)==1536);
+ CHECK(gpu_child_memory_mb(3840,2160,Codec::hevc,InputMemory::device)==1536);
+ CHECK(gpu_child_memory_mb(3840,2160,Codec::h264,InputMemory::host,256)>1792);
+ CHECK(gpu_card_overhead_mb(1920,1080,Codec::h264,InputMemory::host,563)==64);
+ CHECK(gpu_card_overhead_mb(1920,1080,Codec::h264,InputMemory::host,800)>64);
+ THROWS(gpu_child_memory_mb(0,1080,Codec::h264));
+ THROWS(gpu_child_memory_mb(UINT32_MAX,UINT32_MAX,Codec::h264));
+ THROWS(gpu_child_memory_mb(1920,1080,Codec::h264,InputMemory::host,UINT64_MAX));
+}
+TEST("larger GPU memory is reserved atomically and held until the job drains"){
+ auto c=cpu(),g=gpu("display-3070",Backend::nvidia_nvenc);
+ auto ct=tune(c,Codec::h264,20);ct.ram_mb=512;
+ auto gt=tune(g,Codec::h264,100,512);gt.ram_mb=768;gt.measured_width=1920;gt.measured_height=1080;
+ auto profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},{ct,gt});
+ auto caps=limits();caps.ram_mb=2048;Scheduler scheduler(caps,profiles);
+ auto job=scheduler.reserve({Codec::h264});CHECK(job);
+ CHECK(job.memory_for_dimensions(3840,2160)==1792);
+ auto task=caps;task.ram_mb=768;CHECK(!job.resize_memory(3840,2160,task));
+ CHECK(job.profiles().front().ram_mb==768);
+ CHECK(job.resize_memory(3840,2160,caps));CHECK(job.profiles().front().ram_mb==1792);
+ CHECK(!scheduler.reserve({Codec::h264}));
+ CHECK(scheduler.demote_profile(job.profiles().front()));CHECK(scheduler.active_jobs()==1);
+ CHECK(!scheduler.reserve({Codec::h264}));job.release();CHECK(scheduler.active_jobs()==0);
+ CHECK(scheduler.reserve({Codec::h264}));
+}
+TEST("allocation failures under a child cap retain resolution and budget through recovery status"){
+ for(const auto& detail:{"CreateInputBuffer failed: out of memory (10)","CreateBitstreamBuffer failed: out of memory (10); exit 0xc0000374", "CUDA_ERROR_OUT_OF_MEMORY", "Cannot allocate memory"}){
+  auto reason=ow::child_memory_failure(detail,1920,1080,512);CHECK(reason);
+  CHECK(reason->find("insufficient child memory budget")!=std::string::npos);
+  CHECK(reason->find("1920x1080")!=std::string::npos);CHECK(reason->find("512 MiB")!=std::string::npos);
+  ow::ProbeRecovery recovery;recovery.failed({{"RTX 3070","hevc",*reason,"device"}},0);
+  CHECK(recovery.status(1).front().find(*reason)!=std::string::npos);
+ }
+ CHECK(!ow::child_memory_failure("heap corruption 0xc0000374",1920,1080,512));
+ CHECK(!ow::child_memory_failure("No free encode sessions",1920,1080,512));
+ CHECK(!ow::child_memory_failure("out of memory",1920,1080,0));
+ CHECK(!ow::child_memory_failure("Invalid data",1920,1080,768));
+}
