@@ -164,7 +164,7 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const 
   adaptive::Limits limits{cpu_limit,ram_limit,c.vram_override_set?c.budget.vram_mb:total_vram/2,scratch_limit,static_cast<std::uint32_t>(std::min<std::size_t>(c.max_jobs,64))};
   auto decode_valid=[&](const std::filesystem::path& output,const std::string& codec,const std::filesystem::path& log_root,Resources child_limits){
    if(!std::filesystem::is_regular_file(output)||!std::filesystem::file_size(output))return false;
-   run_child_probe(c.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-xerror",L"-threads",L"1",L"-i",output.wstring(),L"-f",L"null",L"-"},log_root,cancelled,child_limits);
+   run_child_probe(c.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-xerror",L"-threads",L"1",L"-i",output.wstring(),L"-f",L"null",L"-"},log_root,cancelled,child_limits,nullptr,UINT64_MAX,30000,adaptive::tuning_width,adaptive::tuning_height);
    const auto log=read_file(log_root/"process.log");
    return adaptive::tuning_output_valid(log,codec);
   };
@@ -619,7 +619,10 @@ void Worker::execute(std::shared_ptr<TaskData> data){
       },
      [&](const std::filesystem::path& path){
       if(cancelled()||pipeline_stop.stop_requested())return false;
-      try{run_child_probe(config_.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-xerror",L"-threads",L"1",L"-i",path.wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},s.offer.resources);}catch(const std::exception& e){retry_reason=e.what();throw;}
+      auto validation_limits=s.offer.resources;
+      if(data->profile_reservation)for(const auto& profile:data->profile_reservation->profiles())
+       validation_limits.ram_mb=std::max(validation_limits.ram_mb,profile.ram_mb);
+      try{run_child_probe(config_.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-xerror",L"-threads",L"1",L"-i",path.wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},validation_limits,nullptr,UINT64_MAX,30000,input_dimensions?input_dimensions->first:0,input_dimensions?input_dimensions->second:0);}catch(const std::exception& e){retry_reason=e.what();throw;}
       const bool valid=input_dimensions&&adaptive::video_geometry_valid(read_file(workspace/"process.log"),filename=="optimized.mp4"?"hevc":"h264",input_dimensions->first,input_dimensions->second);
       if(!valid)retry_reason="GPU output geometry or codec validation failed";
       return valid;
