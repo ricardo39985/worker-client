@@ -1,12 +1,12 @@
 # Test policy and evidence
 
-Current second-card recovery candidate: see [the evidence and authorization handoff](../verification/second-card/REPORT.md).
-The source fixes permanent suppression after failed hardware probes, with bounded
-retries and idle recovery requiring encode/decode/tuning proof. Linux passed
-239 contracts across six suites and ASan/UBSan; MSVC/native and physical two-card
-recovery remain unrun. Danny's PC was inspected read-only, with no installation
-or device/application changes. The report identifies a diagnostic monitoring
-reader needing authorized cleanup and the isolated encode proof requiring approval.
+Current NVENC retry verification: see [the landing gate ledger](../verification/nvenc-landing/REPORT.md).
+Review corrected a missing Windows include. Linux Release and ASan/UBSan each
+passed 239 contracts across six suites; isolated MSVC Release passed all nine
+native suites (285 contracts), with every final gate exit 0. Physical two-card
+recovery remains unrun. No worker installation, production restart or deployment
+was performed. Earlier read-only investigation and separate hardware-proof
+authorization boundaries remain in [the investigation](../verification/second-card/REPORT.md).
 
 Current worker-console reporting evidence: see
 [the log-content gate ledger](../verification/log-content/REPORT.md) and
