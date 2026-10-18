@@ -1,0 +1,28 @@
+UpdateCTestConfiguration  from :/home/rick/Downloads/worker-client-installer/build-tests/DartConfiguration.tcl
+Parse Config file:/home/rick/Downloads/worker-client-installer/build-tests/DartConfiguration.tcl
+Test project /home/rick/Downloads/worker-client-installer/build-tests
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: ffmpeg_dependency_contracts
+
+1: Test command: /home/rick/miniforge3/bin/python3 "/home/rick/Downloads/worker-client-installer/tests/ffmpeg_dependency_test.py"
+1: Working Directory: /home/rick/Downloads/worker-client-installer/build-tests
+1: Test timeout computed to be: 30
+1: .......................
+1: ----------------------------------------------------------------------
+1: Ran 23 tests in 0.091s
+1: 
+1: OK
+1/1 Test #1: ffmpeg_dependency_contracts ......   Passed    0.16 sec
+
+The following tests passed:
+	ffmpeg_dependency_contracts
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.16 sec

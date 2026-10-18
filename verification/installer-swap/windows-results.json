@@ -1,0 +1,24 @@
+{
+  "EXTRACT_EXIT": 0,
+  "POWERSHELL_PARSE_EXIT": 0,
+  "CONFIGURE_EXIT": 0,
+  "BUILD_EXIT": 0,
+  "DISCOVERY_EXIT": 0,
+  "WINDOWS_GATE_EXIT": 0,
+  "SSH_EXIT": 0,
+  "suites": {
+    "worker_contracts": 0,
+    "pipeline_contracts": 0,
+    "rendition_contracts": 0,
+    "adaptive_hardware_contracts": 0,
+    "progress_contracts": 0,
+    "windows_contracts": 0,
+    "setup_contracts": 0,
+    "setup_progress_contracts": 0,
+    "setup_converter_contracts": 0,
+    "setup_swap_contracts": 0
+  },
+  "contracts": 318,
+  "source_revision": "e4a892d",
+  "host": "reald@192.168.1.10"
+}

@@ -51,4 +51,33 @@ temporary staging root, with no production account or job contact.
 
 ## Full gates and rollout
 
-Pending. No new installation, merge or push is established by this document yet.
+Source commits: `549a580` and `e4a892d`. Final recovery-marker deletion
+regression: `08-recovery-commit-red.log` fails with the candidate still selected
+(exit 1); `09-recovery-commit-green.log` passes seven cases (exit 0) after moving
+that commit operation inside the rollback boundary. No behavioral test was
+weakened. Inactive temporary-file cleanup cannot hide the primary error or turn
+a committed update into a reported installation failure.
+
+Linux Release and ASan/UBSan: six suites, 263 cases each; configure, build,
+discovery and every suite exit 0 (`linux-results.json`). ASan/UBSan applies global
+compile/link instrumentation with leak detection and halt-on-error. The final
+additional code/test changes are Windows-only PowerShell, outside the portable
+build; no portable code or contract changed after that run.
+
+MSVC 19.44 Release: configure 0, build 0, discovery 0, all ten discovered native
+suites 0, SSH runner 0 (`10-windows-final.log`, `windows-results.json`). 318 cases:
+79 core, 9 pipeline, 10 rendition, 78 adaptive, 64 progress, 14 Windows,
+25 setup, 15 setup-progress, 17 converter, 7 swap. The initial complete native
+run also passed; final rerun includes the added recovery-marker test. Existing
+compiler shadow warnings remain; no test was skipped or weakened.
+
+`11-final-source-proof.log` reads all 90 application/test/script/lock paths back
+from Windows, with zero hash mismatches against the final source (only declared
+PowerShell/cmd line endings normalized). The archive and small final update
+hashes are recorded in the native logs. Reviewed installed Boost 1.89.0 and the
+existing MSVC toolchain were reused; no dependency/host software was changed.
+
+Merge/push and per-machine installation readbacks remain pending below.
+Desktop console-buffer access through SSH was tried read-only and denied by
+Windows (`AttachConsole error 5`). Fresh rendered status-sidecar checks remain
+available; desktop visual appearance must not be inferred from them.

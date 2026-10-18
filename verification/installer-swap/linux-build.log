@@ -1,0 +1,46 @@
+[  6%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/main.cpp.o
+[  6%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[  9%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/pipeline_test.cpp.o
+[ 12%] Linking CXX executable ow_pipeline_contract_tests
+[ 12%] Built target ow_pipeline_contract_tests
+[ 15%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/main.cpp.o
+[ 18%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 21%] Linking CXX executable ow_rendition_contract_tests
+[ 24%] Linking CXX static library libow_json.a
+[ 24%] Built target ow_json
+[ 27%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 30%] Linking CXX executable ow_rendition_probe
+[ 30%] Built target ow_rendition_probe
+[ 33%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/main.cpp.o
+[ 36%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 36%] Built target ow_rendition_contract_tests
+[ 39%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 42%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 45%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 48%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 51%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 54%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o
+[ 57%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+/home/rick/Downloads/worker-client-installer/src/adaptive_hardware.cpp: In constructor ‘ow::adaptive::Scheduler::Scheduler(ow::adaptive::Limits, std::vector<ow::adaptive::Profile>)’:
+/home/rick/Downloads/worker-client-installer/src/adaptive_hardware.cpp:233:44: warning: missing initializer for member ‘ow::adaptive::Device::exclusion_reason’ [-Wmissing-field-initializers]
+  233 |   if(found==devices.end())devices.push_back({p.stable_id,p.backend,p.driver_version,0,true,p.adapter_index,p.device_name,p.backend_index,p.backend_identity_verified,p.physical_id});
+      |                           ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 60%] Linking CXX static library libow_core.a
+[ 60%] Built target ow_core
+[ 63%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/stage_timing_test.cpp.o
+[ 66%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[ 69%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[ 72%] Linking CXX executable ow_progress_contract_tests
+[ 75%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[ 78%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[ 81%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/pairing_test.cpp.o
+[ 84%] Linking CXX executable ow_contract_tests
+[ 84%] Built target ow_contract_tests
+[ 87%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/main.cpp.o
+[ 90%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 90%] Built target ow_progress_contract_tests
+[ 93%] Building CXX object CMakeFiles/ow_adaptive_evidence_probe.dir/tests/adaptive_evidence_probe.cpp.o
+[ 96%] Linking CXX executable ow_adaptive_evidence_probe
+[100%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[100%] Built target ow_adaptive_evidence_probe
+[100%] Built target ow_adaptive_hardware_contract_tests
