@@ -1,0 +1,26 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+USER=danny ROOT=C:\Users\Danny\AppData\Local\OrganizerWorker
+VERSION=0.1.2-9999b494f87d6cfb SHA256=9999B494F87D6CFB7C78C051AA54A34A42E35094D7E5E04A5F0A53D7ED65A558
+{"Id":18932,"Path":"C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-9999b494f87d6cfb\\OrganizerWorker.exe","SessionId":1}
+18/10 01:41:27  status
+  state      accepting                since 00:50:26
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     1 ok    0 failed   0 cancelled
+  last job   00:52:22  video renditions          38s
+  cards      RTX 3070 idle         RTX 3050 idle         cpu idle
+  memory     ram free 46.2 GB   scratch free 112 GB
+  encoders   cpu,nvenc
+  uptime     00:53:06
+2026-10-18 05:37:56.909Z 18/10 01:37:56 stats: 1 ok 0 failed 0 cancelled | last job 00:52 (38s, video) | queue unknown | idle 00:45:34 | running 0 | ram free 46.2 GB | scratch free 112 GB | priority maximum | accepting: connected (since 00:50:26)
+2026-10-18 05:38:26.946Z 18/10 01:38:26 stats: 1 ok 0 failed 0 cancelled | last job 00:52 (38s, video) | queue unknown | idle 00:46:04 | running 0 | ram free 46.1 GB | scratch free 112 GB | priority maximum | accepting: connected (since 00:50:26)
+2026-10-18 05:38:56.980Z 18/10 01:38:56 stats: 1 ok 0 failed 0 cancelled | last job 00:52 (38s, video) | queue unknown | idle 00:46:34 | running 0 | ram free 46.2 GB | scratch free 112 GB | priority maximum | accepting: connected (since 00:50:26)
+2026-10-18 05:39:27.019Z 18/10 01:39:27 stats: 1 ok 0 failed 0 cancelled | last job 00:52 (38s, video) | queue unknown | idle 00:47:04 | running 0 | ram free 46.2 GB | scratch free 112 GB | priority maximum | accepting: connected (since 00:50:26)
+2026-10-18 05:39:57.061Z 18/10 01:39:57 stats: 1 ok 0 failed 0 cancelled | last job 00:52 (38s, video) | queue unknown | idle 00:47:34 | running 0 | ram free 46.2 GB | scratch free 112 GB | priority maximum | accepting: connected (since 00:50:26)
+2026-10-18 05:40:27.107Z 18/10 01:40:27 stats: 1 ok 0 failed 0 cancelled | last job 00:52 (38s, video) | queue unknown | idle 00:48:04 | running 0 | ram free 46.2 GB | scratch free 112 GB | priority maximum | accepting: connected (since 00:50:26)
+2026-10-18 05:40:57.148Z 18/10 01:40:57 stats: 1 ok 0 failed 0 cancelled | last job 00:52 (38s, video) | queue unknown | idle 00:48:34 | running 0 | ram free 46.2 GB | scratch free 112 GB | priority maximum | accepting: connected (since 00:50:26)
+2026-10-18 05:41:27.177Z 18/10 01:41:27 stats: 1 ok 0 failed 0 cancelled | last job 00:52 (38s, video) | queue unknown | idle 00:49:04 | running 0 | ram free 46.2 GB | scratch free 112 GB | priority maximum | accepting: connected (since 00:50:26)
+STAGING_EXISTS=False
+SSH_EXIT=0

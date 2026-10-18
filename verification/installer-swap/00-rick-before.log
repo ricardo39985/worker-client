@@ -1,0 +1,26 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+USER=reald ROOT=C:\Users\reald\AppData\Local\OrganizerWorker
+VERSION=0.1.2-9999b494f87d6cfb SHA256=9999B494F87D6CFB7C78C051AA54A34A42E35094D7E5E04A5F0A53D7ED65A558
+{"Id":30028,"Path":"C:\\Users\\reald\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-9999b494f87d6cfb\\OrganizerWorker.exe","SessionId":1}
+18/10 01:41:13  status
+  state      accepting                since 01:24:41
+  priority   maximum
+  jobs       running 0   queue unknown
+  totals     1 ok    0 failed   0 cancelled
+  last job   00:50:40  video renditions          15s
+  cards      Radeon RX V~ idle     HD Graphics~ idle     cpu idle
+  memory     ram free 1.9 GB   scratch free 460 GB
+  encoders   cpu,qsv,amf
+  uptime     01:36:47
+2026-10-18 05:40:40.732Z   totals     1 ok    0 failed   0 cancelled
+2026-10-18 05:40:40.732Z   last job   00:50:40  video renditions          15s
+2026-10-18 05:40:40.732Z   cards      Radeon RX V~ idle     HD Graphics~ idle     cpu idle
+2026-10-18 05:40:40.732Z   memory     ram free 1.9 GB   scratch free 460 GB
+2026-10-18 05:40:40.732Z   encoders   cpu,qsv,amf
+2026-10-18 05:40:40.732Z   uptime     01:36:14
+2026-10-18 05:40:43.329Z 18/10 01:40:43 stats: 1 ok 0 failed 0 cancelled | last job 00:50 (15s, video) | queue unknown | idle 00:50:03 | running 0 | ram free 1.9 GB | scratch free 460 GB | priority maximum | accepting: connected (since 01:24:41)
+2026-10-18 05:41:13.334Z 18/10 01:41:13 stats: 1 ok 0 failed 0 cancelled | last job 00:50 (15s, video) | queue unknown | idle 00:50:33 | running 0 | ram free 1.9 GB | scratch free 460 GB | priority maximum | accepting: connected (since 01:24:41)
+STAGING_EXISTS=False
+SSH_EXIT=0

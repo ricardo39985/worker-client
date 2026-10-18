@@ -32,6 +32,40 @@ pending enrollment, retains key/journal, and binds any legacy work using the old
 protected origin first. Configuration is retained with full-scope backups. Do not
 share those private backups or restore them into a different server scope.
 
+## Version-only replacement of an existing paired worker
+
+`scripts/update-worker.ps1 -Package <verified-directory> -PackageManifestSha256 <sha256>`
+updates binaries without changing configuration, pairing or startup registration.
+The operator must authorize stopping an idle worker and provide a Windows-gated
+package. `package.json` records the full source revision and SHA256 of all three
+worker executables; its hash is supplied separately from the transferred package.
+No downloads, dependency changes or first-time setup occur in this path.
+
+The updater stages and verifies a complete immutable version directory before
+stopping the idle controller. It flushes the previous manifest to a recovery
+file, then uses same-directory `File.Replace` with an explicit backup path.
+Sharing/lock violations retry for at most ten seconds; other errors fail
+immediately with the exact call, paths and HRESULT. Unknown processes such as
+antivirus are never terminated. An operator-supplied holder callback is available
+at the filesystem boundary; the normal updater stops only its installed worker.
+The running executable is never overwritten.
+
+The recovery copy remains until the selected process, readiness marker and fresh
+connected/accepting status are verified through the existing limited interactive
+startup task. A caught publication or launch failure restores the exact old
+manifest and verifies the old version again. Power loss or forced installer
+termination retains `current.rollback.json`; another update refuses to overwrite
+it. Rerun `scripts/update-worker.ps1 -RecoverOnly` to restore and verify the old
+version before attempting any further installation. If filesystem permissions or
+a persistent holder prevent rollback, the recovery copy is retained and the
+failure is explicit. Do not delete the live manifest or recovery copy to force
+an update through. Old version directories remain available for rollback.
+
+The registered Windows-only `setup_swap_contracts` exercises the PowerShell 5.1
+null-backup regression, a real sharing violation, bounded exhaustion, failed
+launch, and a killed installer after publication, including execution of the
+restored fixture binary. Linux tests do not establish these Windows guarantees.
+
 ## Required native acceptance (not executed here)
 
 Build the source with the locked Windows toolchain; run worker_contracts,
