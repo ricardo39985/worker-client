@@ -1,0 +1,93 @@
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+[  9%] Built target ow_pipeline_contract_tests
+[ 15%] Built target ow_json
+[ 31%] Built target ow_rendition_probe
+[ 31%] Built target ow_rendition_contract_tests
+[ 34%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 53%] Built target ow_core
+[ 56%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o
+[ 75%] Built target ow_contract_tests
+[ 78%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 81%] Linking CXX executable ow_progress_contract_tests
+[ 84%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 90%] Built target ow_progress_contract_tests
+[ 96%] Built target ow_adaptive_evidence_probe
+[100%] Built target ow_adaptive_hardware_contract_tests
+Test project /home/rick/Downloads/worker-client-gpu-on-logs/build-tests
+    Start 1: ffmpeg_dependency_contracts
+1/6 Test #1: ffmpeg_dependency_contracts ......   Passed    0.15 sec
+    Start 2: worker_contracts
+2/6 Test #2: worker_contracts .................   Passed    0.01 sec
+    Start 3: pipeline_contracts
+3/6 Test #3: pipeline_contracts ...............   Passed    0.00 sec
+    Start 4: rendition_contracts
+4/6 Test #4: rendition_contracts ..............   Passed    0.00 sec
+    Start 5: adaptive_hardware_contracts
+5/6 Test #5: adaptive_hardware_contracts ......   Passed    0.02 sec
+    Start 6: progress_contracts
+6/6 Test #6: progress_contracts ...............***Failed    0.01 sec
+PASS outcomes increment once per executed attempt and survive pause resume
+PASS fixed clock summary has exact finish time duration queue and computed idle
+PASS idle table is fixed width deterministic and derives since and uptime
+PASS missing readings and last job stay unknown never numeric zero
+PASS idle live and durable cadence are independent and no table runs during work
+PASS physical cards deduplicate by identity truncate names and wrap fixed cells
+PASS outcome and state colours have only nonzero failures red
+PASS placement describes actual running encoder and clears on drain
+PASS status sidecar rows roundtrip colours and durable blocks stay out of live scrollback
+PASS live idle frame is suppressed until the last concurrent job terminates
+PASS bounded history survives new jobs and derives duration across wall clock correction
+PASS asset stages retries completions and full summaries keep observable words
+PASS idle ticks do not reset state since and nonzero failed span roundtrips
+PASS redirected durable table keeps the same fixed width plain block
+PASS summary carries running placement free resources priority and accepting state
+PASS totals keep outcome columns at fixed positions as counts grow
+PASS encoder and failure records retain asset names and failure colour
+PASS running progress row retains the physical card across asset updates
+PASS outcome colour follows the outcome word regardless of reason wording
+PASS idle status exposes withheld card codec reason and retry instead of calling it idle
+FAIL long withheld reasons wrap without losing retry and remain durable status rows: check failed at /home/rick/Downloads/worker-client-gpu-on-logs/tests/status_test.cpp:150: all.find("retry when idle")!=std::string::npos
+PASS all hardware command plans retain device selection and measured timeline progress
+PASS four hardware failures reset timeline and stage generation on CPU retry independently
+PASS idle connection emits no activity and active states stay terse
+PASS encoder timeline and byte accounting behavior are preserved
+PASS unmeasurable stages say only stage and elapsed once
+PASS a repeated stage is a visible retry with one stable suffix
+PASS local timestamp format is exact through midnight month and zone changes
+PASS job suffixes are lowercase last four and stable for a job life
+PASS two live jobs with the same four characters stay distinguishable
+PASS a shown suffix resolves to exactly one full attempt id in the durable log
+PASS restart needs no counter and never implies continuation
+PASS every rendered line fits eighty columns including an impossible message
+PASS old durable lines still render plainly without breaking the viewer
+PASS exactly five colours carry one consistent meaning
+PASS progress rows keep a bounded bar and vanish on terminal events
+PASS four concurrent rows and activity stay readable and cancellation clears at any percent
+PASS many jobs keep suffix-to-id resolvability and concurrent accounting
+PASS the ready line names the encoders the worker actually reported
+PASS a probe record without encoder detail claims no backend
+PASS a malformed encoder list cannot invent a backend
+PASS explicit failed app probes never inherit successful diagnostics
+PASS absent capability and priority evidence is explicitly unknown
+PASS capability flags require complete field values and boundaries
+PASS probe elapsed phases and remaining candidates use an injected clock
+PASS probe has one bounded row alongside jobs and clears on result or failure
+PASS encoder change and sample scope fit the existing neutral and warning style
+PASS an encoder substring is not backend evidence and unknown lists stay empty
+PASS probe phase labels cannot hide elapsed time at console width
+PASS hardware demotion is one short warning line in the existing console style
+PASS geometry and performance fallback reasons remain distinct and readable
+PASS encoder placement remains short blue activity with distinct device and CPU retry
+PASS the short log distinguishes schedulable card count from raw DXGI inventory
+53 contracts, 1 failures
+
+
+83% tests passed, 1 tests failed out of 6
+
+Total Test time (real) =   0.21 sec
+
+The following tests FAILED:
+	  6 - progress_contracts (Failed)
+Errors while running CTest

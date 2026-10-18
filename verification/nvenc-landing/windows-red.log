@@ -1,0 +1,186 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+Cloning into 'C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source'...
+CLONE_EXIT=0
+HEAD is now at 656ae4a Retry withheld GPU probes and recover proven cards without restarting
+CHECKOUT_EXIT=0
+REVISION_EXIT=0
+STATUS_EXIT=0
+SOURCE_COMMIT=656ae4ad23650be5cfa345bbc552f4b5ff7d4309
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- Configuring done (12.3s)
+-- Generating done (0.4s)
+-- Build files have been written to: C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/build
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  boost_json.cpp
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  main.cpp
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  main.cpp
+  pipeline_test.cpp
+  progress_test.cpp
+  encoder_run_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2390 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\Release\ow_pipeline_contract_tests.exe
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  main.cpp
+  ow_json.vcxproj -> C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\Release\ow_json.lib
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  media_rendition_probe.cpp
+  media_rendition_test.cpp
+  status_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  All 476 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  admission.cpp
+  ow_rendition_probe.vcxproj -> C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\Release\ow_rendition_probe.exe
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 751 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_rendition_contract_tests.vcxproj -> C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\Release\ow_rendition_contract_tests.exe
+  store.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  protocol.cpp
+  All 3923 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_progress_contract_tests.vcxproj -> C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\Release\ow_progress_contract_tests.exe
+  pairing.cpp
+  adaptive_hardware.cpp
+  ow_core.vcxproj -> C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\Release\ow_core.lib
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  Building Custom Rule C:/Users/reald/worker-nvenc-gates-656ae4a-20261018/source/CMakeLists.txt
+  main.cpp
+  main.cpp
+  adaptive_evidence_probe.cpp
+  admission_test.cpp
+  adaptive_hardware_test.cpp
+  store_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_adaptive_evidence_probe.vcxproj -> C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\Release\ow_adaptive_evidence_probe.exe
+  platform.cpp
+  protocol_test.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  process.cpp
+  pairing_test.cpp
+  All 5276 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\Release\ow_adaptive_hardware_contract_tests.exe
+  http.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2853 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_contract_tests.vcxproj -> C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\Release\ow_contract_tests.exe
+  worker.cpp
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\worker.cpp(677,207): warning C4456: declaration of 'cancelled' hides previous local declaration [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+      C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\worker.cpp(541,7):
+      see declaration of 'cancelled'
+
+  probe_recovery.cpp
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(46,79): error C2039: 'profile_vram_capacity': is not a member of 'ow::adaptive' [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+      C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\include\ow\adaptive_evidence.hpp(5,11):
+      see declaration of 'ow::adaptive'
+
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(46,79): error C3861: 'profile_vram_capacity': identifier not found [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(46,15): error C2737: 'vram': const object must be initialized [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(47,123): error C3536: 'vram': cannot be used before it is initialized [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(47,123): error C2397: conversion from '<error type>' to 'uint64_t' requires a narrowing conversion [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(53,72): error C2039: 'schedulable_device_count': is not a member of 'ow::adaptive' [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+      C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\include\ow\adaptive_evidence.hpp(5,11):
+      see declaration of 'ow::adaptive'
+
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(53,72): error C3861: 'schedulable_device_count': identifier not found [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(53,52): error C2668: 'std::to_string': ambiguous call to overloaded function [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(498,38):
+      could be 'std::string std::to_string(long double)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(494,38):
+      or       'std::string std::to_string(float)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(487,38):
+      or       'std::string std::to_string(double)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(483,38):
+      or       'std::string std::to_string(unsigned __int64)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(479,38):
+      or       'std::string std::to_string(__int64)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(475,38):
+      or       'std::string std::to_string(unsigned long)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(471,38):
+      or       'std::string std::to_string(long)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(467,38):
+      or       'std::string std::to_string(unsigned int)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(463,38):
+      or       'std::string std::to_string(int)'
+      C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(53,52):
+      while trying to match the argument list '(<error type>)'
+
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(53,46): error C2088: built-in operator '+' cannot be applied to an operand of type '_T' [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(53,46): error C2088:         with [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(53,46): error C2088:         [ [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(53,46): error C2088:             _T=std::string [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(53,46): error C2088:         ] [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(54,118): error C2039: 'schedulable_device_count': is not a member of 'ow::adaptive' [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+      C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\include\ow\adaptive_evidence.hpp(5,11):
+      see declaration of 'ow::adaptive'
+
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(54,118): error C3861: 'schedulable_device_count': identifier not found [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(54,98): error C2668: 'std::to_string': ambiguous call to overloaded function [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(498,38):
+      could be 'std::string std::to_string(long double)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(494,38):
+      or       'std::string std::to_string(float)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(487,38):
+      or       'std::string std::to_string(double)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(483,38):
+      or       'std::string std::to_string(unsigned __int64)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(479,38):
+      or       'std::string std::to_string(__int64)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(475,38):
+      or       'std::string std::to_string(unsigned long)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(471,38):
+      or       'std::string std::to_string(long)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(467,38):
+      or       'std::string std::to_string(unsigned int)'
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\string(463,38):
+      or       'std::string std::to_string(int)'
+      C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(54,98):
+      while trying to match the argument list '(<error type>)'
+
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(54,92): error C2088: built-in operator '+' cannot be applied to an operand of type '_T' [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(54,92): error C2088:         with [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(54,92): error C2088:         [ [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(54,92): error C2088:             _T=std::string [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\source\windows\probe_recovery.cpp(54,92): error C2088:         ] [C:\Users\reald\worker-nvenc-gates-656ae4a-20261018\build\ow_windows.vcxproj]
+  pairing_adapter.cpp
+  hardware.cpp
+  physical_adapters.cpp
+BUILD_EXIT=1

@@ -1,0 +1,2 @@
+2/2 real 1920x1080 tuning outputs passed codec, geometry, 72 frames, AAC and decode validation
+SMOKE_EXIT=0

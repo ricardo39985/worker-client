@@ -1,5 +1,13 @@
 # Test policy and evidence
 
+Current NVENC retry verification: see [the landing gate ledger](../verification/nvenc-landing/REPORT.md).
+Review corrected a missing Windows include. Linux Release and ASan/UBSan each
+passed 239 contracts across six suites; isolated MSVC Release passed all nine
+native suites (285 contracts), with every final gate exit 0. Physical two-card
+recovery remains unrun. No worker installation, production restart or deployment
+was performed. Earlier read-only investigation and separate hardware-proof
+authorization boundaries remain in [the investigation](../verification/second-card/REPORT.md).
+
 Current worker-console reporting evidence: see
 [the log-content gate ledger](../verification/log-content/REPORT.md) and
 [the reporting contract](worker-console.md).

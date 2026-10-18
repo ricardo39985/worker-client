@@ -132,3 +132,20 @@ TEST("a duplicate offer cannot extend a reservation indefinitely"){
  o.reserve_until=5000;CHECK(a.offer(o,900,budget).accepted);
  CHECK(a.begin("a","token",6000,1000)==Start::declined);
 }
+
+TEST("a recovery probe cannot overlap reserved running or cancelling work"){
+ Admission a(budget,8);ready(a);CHECK(a.begin_probe());
+ CHECK(!a.offer(task(),0,budget).accepted);a.pause(false);
+ CHECK(!a.offer(task(),0,budget).accepted);CHECK(!a.begin_probe());a.end_probe();
+ CHECK(a.offer(task(),0,budget).accepted);CHECK(!a.begin_probe());
+ CHECK(a.begin("a","token",3000,1)==Start::started);CHECK(!a.begin_probe());
+ CHECK(a.cancel("a"));CHECK(!a.begin_probe());CHECK(a.used().ram_mb==1000);
+ CHECK(a.finish("a"));CHECK(a.begin_probe());a.pause(true);a.end_probe();
+ CHECK(!a.offer(task("b"),0,budget).accepted);
+}
+TEST("concurrent probe and offer admission have exactly one owner"){
+ for(int n=0;n<100;++n){Admission a(budget,8);ready(a);bool probe=false,offer=false;
+  std::jthread x([&]{probe=a.begin_probe();});std::jthread y([&]{offer=a.offer(task(),0,budget).accepted;});
+  x.join();y.join();CHECK(probe!=offer);
+ }
+}

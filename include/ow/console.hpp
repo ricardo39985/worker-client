@@ -411,7 +411,7 @@ public:
   if(body.size()>=22&&body.substr(14)=="  status"){status_block_=true;return status_feed();}
   if(status_block_){
    const auto key=console_detail::first_token(body);
-   if(key=="state"||key=="priority"||key=="jobs"||key=="totals"||key=="last"||key=="cards"||key=="memory"||key=="encoders"||key=="uptime"||line.find("             ")!=std::string::npos)return status_feed();
+   if(key=="state"||key=="priority"||key=="jobs"||key=="totals"||key=="last"||key=="cards"||key=="memory"||key=="encoders"||key=="gpu"||key=="uptime"||line.find("             ")!=std::string::npos)return status_feed();
    status_block_=false;
   }
   if(body.starts_with("WORKER STARTED")){running_jobs_.clear();rows_.clear();formatter_=ConsoleFormatter{};}

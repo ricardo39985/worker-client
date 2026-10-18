@@ -1,4 +1,5 @@
 #include "test.hpp"
+#include "ow/probe_retry.hpp"
 #include "ow/capability_report.hpp"
 #include "ow/operator_status.hpp"
 #include "ow/adaptive_hardware.hpp"
@@ -790,4 +791,66 @@ TEST("saved ROOT profiles cannot bypass PCI admission in reporting or scheduling
  CHECK(schedulable_device_count(profiles)==0);CHECK(profile_vram_capacity(profiles)==0);
  Scheduler scheduler(limits(),profiles);auto reservation=scheduler.reserve({Codec::h264});
  CHECK(reservation);CHECK(reservation.profiles().front().backend==Backend::cpu);
+}
+
+TEST("temporary NVENC allocation failure is retried before discarding a capable card"){
+ unsigned calls=0;std::vector<unsigned> waits;
+ auto c=cpu(),g=gpu("retry:3070",Backend::nvidia_nvenc,8192);
+ std::vector<Profile> profiles;
+ ow::retry_probe([&]{
+  if(++calls==1)throw std::runtime_error("CreateInputBuffer failed: out of memory (10)");
+  profiles=run({c,g},{probe(c,Codec::h264),probe(g,Codec::h264)},
+   {tune(c,Codec::h264,20),tune(g,Codec::h264,70,512)});
+ },[]{return false;},[&](unsigned ms){waits.push_back(ms);});
+ CHECK(calls==2);CHECK(waits==std::vector<unsigned>{1000});
+ CHECK(find(profiles,g.stable_id,Codec::h264));
+ Scheduler scheduler(limits(),profiles);auto job=scheduler.reserve({Codec::h264});
+ CHECK(job&&job.profiles().front().stable_id==g.stable_id);
+}
+
+TEST("failed GPU probes remain due with bounded cooldown until fresh proof succeeds"){
+ ow::ProbeRecovery retry;
+ retry.failed({{"RTX 3070","h264","CreateInputBuffer failed: out of memory (10)"}},100);
+ CHECK(!retry.due(30099));CHECK(retry.due(30100));
+ auto status=retry.status(30100);CHECK(status.size()==1);
+ CHECK(status.front().find("RTX 3070")!=std::string::npos);CHECK(status.front().find("retry")!=std::string::npos);
+ CHECK(status.front().find("memory/session")!=std::string::npos);
+ retry.failed({{"RTX 3070","h264","out of memory"}},30100);
+ CHECK(!retry.due(90099));CHECK(retry.due(90100));
+ std::int64_t now=90100;
+ for(unsigned i=0;i<40;++i){retry.failed({{"RTX 3070","h264","out of memory"}},now);CHECK(retry.due(now+300000));now+=300000;}
+ retry.failed({},now);CHECK(!retry.due(now+999999));CHECK(retry.status(now).empty());
+ retry.failed({{"RTX 3070","hevc","driver refused initialization"}},now);
+ CHECK(retry.due(now+30000));CHECK(retry.status(now)[0].find("probe failed")!=std::string::npos);
+}
+
+TEST("probe retry exhaustion stays withheld and cancellation never opens another session"){
+ unsigned calls=0;std::vector<unsigned> waits;
+ THROWS(ow::retry_probe([&]{++calls;throw std::runtime_error("out of memory");},[]{return false;},[&](unsigned ms){waits.push_back(ms);}));
+ CHECK(calls==3);CHECK(waits==std::vector<unsigned>{1000,2000});
+ bool cancel=true;calls=0;
+ THROWS(ow::retry_probe([&]{++calls;},[&]{return cancel;},[](unsigned){}));CHECK(calls==0);
+ cancel=false;
+ THROWS(ow::retry_probe([&]{++calls;throw std::runtime_error("out of memory");},[&]{return cancel;},[&](unsigned){cancel=true;}));CHECK(calls==1);
+ CHECK(ow::probe_failure_reason("No free encode sessions available")=="memory/session unavailable");
+ CHECK(ow::probe_failure_reason("unsupported session configuration")=="probe failed");
+}
+
+TEST("recovery retains current successful samples while failed cards require a new encode"){
+ auto c=cpu(),a=gpu("retained:3050",Backend::nvidia_nvenc,8192),b=gpu("failed:3070",Backend::nvidia_nvenc,8192);
+ b.backend_index=1;
+ auto good=run({c,a,b},{probe(c,Codec::h264),probe(a,Codec::h264)},
+  {tune(c,Codec::h264,20),tune(a,Codec::h264,50,512)});
+ auto saved=ow::retain_current_profiles({c,a,b},good,hash);
+ auto still_withheld=choose_profiles({c,a,b},saved.probes,saved.tuning,limits(),hash);
+ CHECK(find(still_withheld,"cpu",Codec::h264));CHECK(find(still_withheld,a.stable_id,Codec::h264));
+ CHECK(!find(still_withheld,b.stable_id,Codec::h264));
+ saved.probes.push_back(probe(b,Codec::h264));saved.tuning.push_back(tune(b,Codec::h264,70,512));
+ auto recovered=choose_profiles({c,a,b},saved.probes,saved.tuning,limits(),hash);
+ CHECK(find(recovered,b.stable_id,Codec::h264));
+ a.driver_version="changed";
+ auto stale=ow::retain_current_profiles({c,a,b},good,hash);
+ auto selected=choose_profiles({c,a,b},stale.probes,stale.tuning,limits(),hash);
+ CHECK(!find(selected,a.stable_id,Codec::h264));CHECK(find(selected,"cpu",Codec::h264));
+ CHECK(ow::retain_current_profiles({c,a,b},good,"changed-binary").probes.empty());
 }

@@ -34,6 +34,9 @@ public:
     Admission(Resources budget, std::size_t max_jobs);
     void capability(std::string name, bool verified, Preference preference);
     void pause(bool value);
+    // Atomically excludes offers while all job reservations are drained.
+    bool begin_probe();
+    void end_probe();
     Decision offer(const Offer&, Tick now, Resources available);
     Start begin(const std::string& attempt, std::string token, Tick deadline, Tick now);
     bool renew(const std::string& attempt, const std::string& token,
@@ -48,7 +51,7 @@ private:
     mutable std::mutex mutex_;
     Resources budget_, used_{};
     std::size_t max_jobs_;
-    bool paused_{};
+    bool paused_{},probing_{};
     std::unordered_map<std::string, Capability> capabilities_;
     std::unordered_map<std::string, Active> active_;
     void release(const Resources&);
