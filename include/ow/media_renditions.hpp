@@ -70,7 +70,7 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
     (!cpu_profile||p.measured_frames_per_second>cpu_profile->measured_frames_per_second))cpu_profile=&p;
   auto selected=profiles.end();
   for(auto i=profiles.begin();i!=profiles.end();++i)
-   if(i->codec==codec&&i->backend!=adaptive::Backend::cpu&&(!timing||timing->constant_rate())&&
+   if(i->codec==codec&&i->backend!=adaptive::Backend::cpu&&
       (selected==profiles.end()||i->measured_frames_per_second>selected->measured_frames_per_second))selected=i;
   if(selected==profiles.end()){
    if(cpu_profile){const auto threads=std::to_wstring(cpu_profile->cpu_threads);auto& args=rendition.arguments;

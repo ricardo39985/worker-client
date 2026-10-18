@@ -589,6 +589,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   auto convert=[&](const std::vector<std::wstring>& arguments,const std::vector<std::wstring>& cpu_arguments,
                    const std::string& filename,unsigned seconds,bool hardware,std::stop_token pipeline_stop=std::stop_token{}){
    if(cancelled()||pipeline_stop.stop_requested())throw std::runtime_error("Job cancelled before conversion");
+   bool source_timing_mismatch=false;
    auto label="convert "+filename;std::string retry_reason="GPU output missing or failed validation";
    auto run_encoder=[&](const std::vector<std::wstring>& selected,bool use_hardware){
     std::optional<adaptive::Device> gpu_device;std::uint64_t gpu_reserved{},child_ram=s.offer.resources.ram_mb;
@@ -640,13 +641,13 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     StageTimer timing("output_timing",filename,timing_sink,timing_wall_us,thread_cpu_us,true);
     run_child_probe(config_.ffmpeg,video_timing_arguments(workspace/filename),workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},s.offer.resources,nullptr,UINT64_MAX,30000,0,0,&timing);
     auto output_timing=video_timing(read_file(workspace/"process.log",5*1024*1024));
-    if(!output_timing||!same_video_timing(*source_timing,*output_timing))throw std::runtime_error("Output video frame rate or timestamps differ from source");
+    if(!output_timing||!same_video_timing(*source_timing,*output_timing)){source_timing_mismatch=true;retry_reason="Output video frame rate or timestamps differ from source";throw std::runtime_error(retry_reason);}
    };
    if(hardware){
     const auto output=workspace/filename;
     adaptive::run_with_cpu_fallback(output,true,[&]{return cancelled()||pipeline_stop.stop_requested();},
       [&](bool use_hardware){
-       if(!use_hardware&&data->profile_reservation&&!insufficient_child_budget(retry_reason)){
+       if(!use_hardware&&data->profile_reservation&&!source_timing_mismatch&&!insufficient_child_budget(retry_reason)){
         const auto codec=filename=="optimized.mp4"?adaptive::Codec::hevc:adaptive::Codec::h264;
         for(const auto& profile:data->profile_reservation->profiles())if(profile.backend!=adaptive::Backend::cpu&&profile.codec==codec)report_encoder_failure(profile);
        }
@@ -688,11 +689,10 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     run_child_probe(config_.ffmpeg,video_timing_arguments(workspace/"source.bin"),workspace,cancelled,s.offer.resources,nullptr,UINT64_MAX,30000,0,0,&timing);
     source_timing=video_timing(read_file(workspace/"process.log",5*1024*1024));
     if(!source_timing||source_timing->reported_rate.empty()||!source_timing->rate())throw std::runtime_error("Source video timing cannot be verified; refusing unvalidated output");
-    // NVENC's VUI rate may disagree with the packet-derived rate on VFR even
-    // with exact PTS. Preserve both through the existing software encoders.
+    // VFR uses software decode. Guarded NVENC may retain the encoder speed;
+    // its output must still pass nominal-rate and exact-PTS validation.
     if(!source_timing->constant_rate()){
-     applicable_profiles.erase(std::remove_if(applicable_profiles.begin(),applicable_profiles.end(),[](const auto& p){return p.backend!=adaptive::Backend::cpu;}),applicable_profiles.end());
-     safe_log("JOB "+id+" variable frame timing: decode=software encode=software; preserve source time base");
+     safe_log("JOB "+id+" variable frame timing: decode=software; guarded encoding preserves source time base");
     }
    }
    if(video){

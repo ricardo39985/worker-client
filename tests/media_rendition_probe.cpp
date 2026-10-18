@@ -4,6 +4,12 @@
 #include <iterator>
 int main(int argc,char** argv) {
  if(argc!=4)return 2;
+ if(std::string(argv[1])=="validate"){
+  auto read=[](const char* path){std::ifstream f(path);return std::string((std::istreambuf_iterator<char>(f)),{});};
+  auto source=ow::video_timing(read(argv[2])),output=ow::video_timing(read(argv[3]));
+  if(!source||!output)return 2;
+  return ow::same_video_timing(*source,*output)?0:1;
+ }
  std::ifstream input(std::filesystem::path(argv[3])/"timing.log");
  std::string log((std::istreambuf_iterator<char>(input)),{});auto timing=ow::video_timing(log);
  std::vector<ow::adaptive::Profile> profiles;const std::string mode=argv[1];

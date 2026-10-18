@@ -127,7 +127,7 @@ TEST("variable frame timing keeps all source timestamps and requires software de
  CHECK(ow::same_video_timing(*vfr,*vfr));
  ow::adaptive::Profile gpu;gpu.backend=ow::adaptive::Backend::nvidia_nvenc;
  auto plan=ow::rendition_plan(true,false,"workspace",std::vector<ow::adaptive::Profile>{gpu},"Input #0, mov:\n Stream #0:0: Video: h264 (High), yuv420p, 1920x1080\n",&*vfr);
- CHECK(!plan[0].hardware);
+ CHECK(plan[0].hardware);
  CHECK(std::find(plan[0].arguments.begin(),plan[0].arguments.end(),L"-hwaccel")==plan[0].arguments.end());
 }
 
