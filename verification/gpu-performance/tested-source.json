@@ -1,0 +1,13 @@
+{
+  "archive_sha256": "96b8e3a88c3133dcc07faa4116275b1fcb09e43d17bd466f73651dbb209f6b76",
+  "files": {
+    "CMakeLists.txt": "8baea9e453cc37e0ddbedf43a2d13b028f6e4a0e737b8a5c30010dd2ce1d3b3a",
+    "include/ow/media_renditions.hpp": "0d1ce97caa9bf871da18879306b23218d8a652af475ce2acad9d8f585ba7f34a",
+    "include/ow/device_decode.hpp": "bcd492df1e4d8b91c8b88fa458b9d451bd7278e5245372a94dcc83a5893d6a0b",
+    "tests/media_rendition_test.cpp": "8b64c52f78da69693905dc00f6e2062602569854fc29e9bc4f62ab2ef6759ff4",
+    "tests/setup_converter_test.ps1": "4335737815cc22d4c485c073fb09b49a83f33649c32d0f4ff025b1bf17d33666",
+    "tests/windows_gpu_measurements.cpp": "f73f3eb2e14714035a0a3759e5f11707b0d1326df07802f1ada1599e4dafadbb",
+    "windows/process.cpp": "eb5fa1661bf6a9519597811ccb3bf5ee8841ff490e0601b79b72020415f0ab0e",
+    "windows/worker.cpp": "443a117d693107b2575aaf7db29ef7afd48325bd79e7b744ba10b07cfbe15086"
+  }
+}

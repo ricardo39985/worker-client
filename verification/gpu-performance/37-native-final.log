@@ -1,0 +1,158 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+SOURCE_ARCHIVE_SHA256=386AC12D92030FDED41D4D081FC5CA867153057796E6CA16619B0ADB5523A603
+
+AppData\Local\OrganizerWorker\dependencies\boost_1_89_0\boost\version.hpp:30:#define BOOST_LIB_VERSION "1_89"
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- Configuring done (2.0s)
+-- Generating done (0.5s)
+-- Build files have been written to: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ZERO_CHECK.vcxproj]
+  1>Checking Build System
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_json.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  ow_json.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_json.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_core.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  protocol.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_pipeline_contract_tests.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_progress_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_pipeline_contract_tests.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  media_rendition_test.cpp
+  encoder_run_test.cpp
+  ow_core.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_core.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_probe.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  media_rendition_probe.cpp
+  ow_rendition_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_rendition_contract_tests.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_windows.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_adaptive_evidence_probe.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_adaptive_hardware_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  main.cpp
+  admission_test.cpp
+  main.cpp
+  store_test.cpp
+  ow_rendition_probe.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_rendition_probe.exe
+  adaptive_evidence_probe.cpp
+  adaptive_hardware_test.cpp
+  protocol_test.cpp
+  ow_adaptive_evidence_probe.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_adaptive_evidence_probe.exe
+  platform.cpp
+  pairing_test.cpp
+  Generating Code...
+  process.cpp
+  Generating Code...
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_adaptive_hardware_contract_tests.exe
+  ow_progress_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_progress_contract_tests.exe
+  ow_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_contract_tests.exe
+  http.cpp
+  worker.cpp
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\windows\worker.cpp(692,207): warning C4456: declaration of 'cancelled' hides previous local declaration [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_windows.vcxproj]
+      C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\windows\worker.cpp(537,7):
+      see declaration of 'cancelled'
+
+  pairing_adapter.cpp
+  hardware.cpp
+  physical_adapters.cpp
+  Generating Code...
+  ow_windows.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_windows.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\OrganizerWorkerDoctor.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\OrganizerWorker.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_gpu_baseline.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_pipeline_smoke.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\OrganizerWorkerConsole.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  console.cpp
+  windows_pipeline_smoke.cpp
+  tray.cpp
+  OrganizerWorker.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\OrganizerWorker.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_gpu_measurements.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  windows_gpu_measurements.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_test_child.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  windows_child.cpp
+  OrganizerWorkerConsole.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\OrganizerWorkerConsole.exe
+  ow_pipeline_smoke.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_pipeline_smoke.exe
+  windows_gpu_baseline.cpp
+  ow_test_child.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_test_child.exe
+  doctor.cpp
+  ow_gpu_measurements.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_gpu_measurements.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_windows_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  main.cpp
+  windows_test.cpp
+  ow_gpu_baseline.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_gpu_baseline.exe
+  OrganizerWorkerDoctor.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\OrganizerWorkerDoctor.exe
+  Generating Code...
+  ow_windows_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_windows_tests.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ALL_BUILD.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+BUILD_EXIT=0
+EXPERIMENT mode=quality gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+TIMING stage=parity artifact=source wall_us=9423187 controller_cpu_us=15625 child_cpu_us=12093750 launch_us=4693 root_lifetime_us=9305254 completed=true
+TIMING stage=parity artifact=feed.mp4 wall_us=9311169 controller_cpu_us=0 child_cpu_us=14000000 launch_us=4789 root_lifetime_us=9225564 completed=true
+PARITY size=1080p variant=baseline repeat=0 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=feed.mp4 wall_us=1521424 controller_cpu_us=15625 child_cpu_us=10921875 launch_us=4827 root_lifetime_us=1457493 completed=true
+QUALITY size=1080p variant=baseline repeat=0 file=feed.mp4 frame=  316 fps=0.0 q=-0.0 q=-0.0 size=N/A time=00:00:10.53 bitrate=N/A speed=20.5x elapsed=0:00:00.51
+frame=  661 fps=636 q=-0.0 q=-0.0 size=N/A time=00:00:22.03 bitrate=N/A speed=21.2x elapsed=0:00:01.03
+[Parsed_psnr_3 @ 000001cbaf555840] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=1080p variant=baseline repeat=0 file=feed.mp4 [Parsed_ssim_2 @ 000001cbaf554540] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+TIMING stage=parity artifact=optimized.mp4 wall_us=8487411 controller_cpu_us=0 child_cpu_us=14500000 launch_us=4166 root_lifetime_us=8384310 completed=true
+PARITY size=1080p variant=baseline repeat=0 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=optimized.mp4 wall_us=1939642 controller_cpu_us=0 child_cpu_us=12703125 launch_us=4846 root_lifetime_us=1864787 completed=true
+QUALITY size=1080p variant=baseline repeat=0 file=optimized.mp4 frame=  231 fps=0.0 q=-0.0 q=-0.0 size=N/A time=00:00:07.70 bitrate=N/A speed=14.8x elapsed=0:00:00.52
+frame=  494 fps=480 q=-0.0 q=-0.0 size=N/A time=00:00:16.46 bitrate=N/A speed=  16x elapsed=0:00:01.03
+frame=  759 fps=489 q=-0.0 q=-0.0 size=N/A time=00:00:25.30 bitrate=N/A speed=16.3x elapsed=0:00:01.55
+[Parsed_psnr_3 @ 000001cd730ded80] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=1080p variant=baseline repeat=0 file=optimized.mp4 [Parsed_ssim_2 @ 000001cd71d1af00] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+TIMING stage=parity artifact=feed.mp4 wall_us=8685674 controller_cpu_us=0 child_cpu_us=13375000 launch_us=4161 root_lifetime_us=8573165 completed=true
+PARITY size=1080p variant=device repeat=0 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=feed.mp4 wall_us=1507436 controller_cpu_us=0 child_cpu_us=11328125 launch_us=4935 root_lifetime_us=1464398 completed=true
+QUALITY size=1080p variant=device repeat=0 file=feed.mp4 frame=  310 fps=0.0 q=-0.0 q=-0.0 size=N/A time=00:00:10.33 bitrate=N/A speed=20.2x elapsed=0:00:00.51
+frame=  664 fps=639 q=-0.0 q=-0.0 size=N/A time=00:00:22.13 bitrate=N/A speed=21.3x elapsed=0:00:01.03
+[Parsed_psnr_3 @ 0000017c78cf2f00] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=1080p variant=device repeat=0 file=feed.mp4 [Parsed_ssim_2 @ 0000017c7969ed00] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+TIMING stage=parity artifact=optimized.mp4 wall_us=8452621 controller_cpu_us=0 child_cpu_us=14765625 launch_us=4097 root_lifetime_us=8425209 completed=true
+PARITY size=1080p variant=device repeat=0 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=optimized.mp4 wall_us=1940490 controller_cpu_us=0 child_cpu_us=12984375 launch_us=5650 root_lifetime_us=1864148 completed=true
+QUALITY size=1080p variant=device repeat=0 file=optimized.mp4 frame=  229 fps=0.0 q=-0.0 q=-0.0 size=N/A time=00:00:07.63 bitrate=N/A speed=14.6x elapsed=0:00:00.52
+frame=  491 fps=477 q=-0.0 q=-0.0 size=N/A time=00:00:16.36 bitrate=N/A speed=15.9x elapsed=0:00:01.02
+frame=  758 fps=487 q=-0.0 q=-0.0 size=N/A time=00:00:25.26 bitrate=N/A speed=16.2x elapsed=0:00:01.55
+[Parsed_psnr_3 @ 0000027fe23e9d00] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=1080p variant=device repeat=0 file=optimized.mp4 [Parsed_ssim_2 @ 0000027fe23ea600] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+TIMING stage=parity artifact=feed.mp4 wall_us=8288099 controller_cpu_us=0 child_cpu_us=13406250 launch_us=4160 root_lifetime_us=8244459 completed=true
+PARITY size=1080p variant=shared repeat=0 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=feed.mp4 wall_us=1507255 controller_cpu_us=0 child_cpu_us=10765625 launch_us=4759 root_lifetime_us=1447928 completed=true
+QUALITY size=1080p variant=shared repeat=0 file=feed.mp4 frame=  305 fps=0.0 q=-0.0 q=-0.0 size=N/A time=00:00:10.16 bitrate=N/A speed=20.2x elapsed=0:00:00.50
+frame=  666 fps=649 q=-0.0 q=-0.0 size=N/A time=00:00:22.20 bitrate=N/A speed=21.6x elapsed=0:00:01.02
+[Parsed_psnr_3 @ 000001ff869c4a80] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=1080p variant=shared repeat=0 file=feed.mp4 [Parsed_ssim_2 @ 000001ff869c4980] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+MODE_EXIT=quality/-1

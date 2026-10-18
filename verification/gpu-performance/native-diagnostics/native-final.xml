@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-MSBuild"
+	tests="10"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Dannys-Old-But-Gold-Pc"
+	time="39"
+	timestamp="2026-10-18T00:18:11"
+	>
+	<testcase name="ffmpeg_dependency_contracts" classname="ffmpeg_dependency_contracts" time="0.353602" status="run">
+		<properties/>
+		<system-out>.......................
+----------------------------------------------------------------------
+Ran 23 tests in 0.210s
+
+OK
+</system-out>
+	</testcase>
+	<testcase name="worker_contracts" classname="worker_contracts" time="0.104782" status="run">
+		<properties/>
+		<system-out>PASS verified capabilities accept independent jobs concurrently
+PASS four single-CPU app jobs reserve and begin independently within configured limits
+PASS missing capability fails closed
+PASS installed but unverified does not mean capable
+PASS local disabled vetoes a preferred server offer
+PASS reservation consumes capacity before execution
+PASS dynamic low memory rejects despite configured budget
+PASS duplicate offer is idempotent
+PASS changed duplicate payload is rejected
+PASS same content job cannot run in two attempts on one host
+PASS job guardrail is independent of resource budget
+PASS oversized resource numbers cannot overflow accounting
+PASS zero CPU or memory declaration is rejected
+PASS invalid IDs cannot become filesystem paths
+PASS expired reservation cannot be started
+PASS start without lease is rejected
+PASS replayed begin does not start a second process
+PASS pause refuses new work but preserves active execution
+PASS pause prevents an unstarted reservation from beginning
+PASS only a valid fresh ...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="pipeline_contracts" classname="pipeline_contracts" time="0.0137231" status="run">
+		<properties/>
+		<system-out>PASS rendition pipeline returns ordered metadata for every artifact
+PASS next encode overlaps previous transfer
+PASS empty rendition pipeline starts no stages
+PASS transfer backpressure keeps one encoder and one transfer at a time
+PASS final transfer must join before result is returned
+PASS transfer failure cancels next encode and preserves original cause
+PASS encode failure cancels and joins transfer before unwinding
+PASS failed final checksum cannot return a successful partial result
+PASS independent pipelines do not share cancellation or metadata
+9 contracts, 0 failures
+</system-out>
+	</testcase>
+	<testcase name="rendition_contracts" classname="rendition_contracts" time="0.412978" status="run">
+		<properties/>
+		<system-out>PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
+PASS app image renders a full-size WebP and bounded poster with independent destinations
+PASS non-AAC audio uses the existing app delivery bitrate
+PASS common SDR H264 and HEVC use device frames on the selected NVENC device
+PASS unproven source formats retain the original software decode and encoding options
+PASS decode selection inspects the first input video only and leaves other backends and posters unchanged
+PASS output descriptions and metadata cannot qualify an unknown input for CUDA decode
+PASS device decode preserves every existing output encoder option
+PASS input inspection can produce the identical fixed poster from the same decode
+PASS poster reuse is restricted to a single ordinary unrotated SDR video stream
+10 contracts, 0 failures
+</system-out>
+	</testcase>
+	<testcase name="adaptive_hardware_contracts" classname="adaptive_hardware_contracts" time="0.0575933" status="run">
+		<properties/>
+		<system-out>PASS CPU remains the safe profile when no supported GPU is installed
+PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+PASS single GPU profile requires matching encode decode and validated output
+PASS heterogeneous GPUs retain independent identities and schedules
+PASS two synthetic NVIDIA GPUs schedule independently through the production scheduler
+PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+PASS low VRAM and machine resource caps reject unsafe tuning
+PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+PASS profile invalidates on adapter identity driver or approved FFmpeg change
+PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+PASS selected hardware rendition binds an explicit adapter and conservative codec mode
+PASS Intel QSV and AMD AMF commands bind their probed DirectX adapter
+PASS hardware failure removes partial output and validates a clean CPU retry before success
+PASS cancelled ha...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="progress_contracts" classname="progress_contracts" time="0.0440394" status="run">
+		<properties/>
+		<system-out>PASS idle connection emits no activity and active states stay terse
+PASS encoder timeline and byte accounting behavior are preserved
+PASS unmeasurable stages say only stage and elapsed once
+PASS a repeated stage is a visible retry with one stable suffix
+PASS local timestamp format is exact through midnight month and zone changes
+PASS job suffixes are lowercase last four and stable for a job life
+PASS two live jobs with the same four characters stay distinguishable
+PASS a shown suffix resolves to exactly one full attempt id in the durable log
+PASS restart needs no counter and never implies continuation
+PASS every rendered line fits eighty columns including an impossible message
+PASS old durable lines still render plainly without breaking the viewer
+PASS exactly five colours carry one consistent meaning
+PASS progress rows keep a bounded bar and vanish on terminal events
+PASS four concurrent rows and activity stay readable and cancellation clears at any percent
+PASS many jobs keep suffix-to-id resolvability and ...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="windows_contracts" classname="windows_contracts" time="0.383879" status="run">
+		<properties/>
+		<system-out>PASS Windows UTF8 conversion preserves non-ASCII filenames
+PASS Windows adapter inventory has repeatable unique identities and real VRAM and driver fields
+NOCONVERSION_REASON ; converter not configured: capabilities disabled; display inventory entries=4; configured_global_VRAM_override_MB=not_set [NVIDIA GeForce RTX 3070 id=pci:10de:2488:153a10de:a1:luid:00000000:0001e79a dedicated_VRAM_MB=8017; physical_id=ROOT\DISPLAY\0000; encoder mapping=unavailable; software adapter (ROOT instance); excluded from capacity and scheduling] [NVIDIA GeForce RTX 3050 id=pci:10de:2507:c9781462:a1:luid:00000000:00016411 dedicated_VRAM_MB=8041; physical_id=PCI\VEN_10DE&amp;DEV_2507&amp;SUBSYS_C9781462&amp;REV_A1\4&amp;EB98076&amp;0&amp;00E8; encoder mapping=verified; ] [NVIDIA GeForce RTX 3070 id=pci:10de:2488:153a10de:a1:luid:00000000:0001418e dedicated_VRAM_MB=8017; physical_id=PCI\VEN_10DE&amp;DEV_2488&amp;SUBSYS_153A10DE&amp;REV_A1\4&amp;22651C9C&amp;0&amp;0008; encoder mapping=verified; ] [Microsoft Basic Render Driver id=pci:1414:008c:00000000:00:luid:00000000:000163c2 ...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="setup_contracts" classname="setup_contracts" time="1.94172" status="run">
+		<properties/>
+		<system-out>PASS expired pairing is identified without deleting identity and healthy credentials are retained
+PASS unreadable or cross-endpoint identity requires explicit full archival
+[00:18:14] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+[00:18:14] [DONE] Enumerate dependency files | 1 files | elapsed 0.1s | 1 files found
+[00:18:14] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s |
+[00:18:14] [DONE] Build dependency checksum manifest | 1 / 1 files (100%) | elapsed 0.1s |
+[00:18:14] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+[00:18:14] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+[00:18:14] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s |
+[00:18:14] [DONE] Verify cached dependency | 1 / 1 files (100%) | elapsed 0.0s | Every cached file verified
+[00:18:14] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+[00:18:14] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+[00:18:14]...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="setup_progress_contracts" classname="setup_progress_contracts" time="10.3145" status="run">
+		<properties/>
+		<system-out>PASS unknown total never acquires a percentage just because time passes
+PASS measured work gives a percentage and successful completion ends the stage
+PASS heartbeat reports quiet activity without pretending work advanced
+PASS failure stays a failure and does not display completed work
+PASS URLs and credential values never reach a progress log
+PASS streaming checksum retains the actual SHA256 contract
+[00:18:15] [STARTED] Truncated |  | elapsed 0.0s |
+PASS stream transfer counts real bytes and rejects truncated content
+[00:18:15] [STARTED] Move extracted dependency into staging | 0 / 1 entries (0%) | elapsed 0.0s |
+[00:18:15] [DONE] Move extracted dependency into staging | 1 / 1 entries (100%) | elapsed 0.0s | Same-volume move; no duplicate tree copy
+[00:18:15] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+[00:18:15] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+[00:18:15] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s |
+[00:18:16] [D...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="setup_converter_contracts" classname="setup_converter_contracts" time="25.5163" status="run">
+		<properties/>
+		<system-out>START a fresh machine downloads pinned bytes after consent and records acceptance
+[00:18:26] [STARTED] SHA-256 ffmpeg.exe.356f25da14b448778f8e8cfc7ee9b996.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+[00:18:26] [DONE] SHA-256 ffmpeg.exe.356f25da14b448778f8e8cfc7ee9b996.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.1s |
+PASS a fresh machine downloads pinned bytes after consent and records acceptance
+START corrupt transfers retry the supplied transport and only verified bytes publish
+[00:18:26] [STARTED] SHA-256 ffmpeg.exe.368648523ed74f68b30e1f0baf9b9660.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+[00:18:26] [DONE] SHA-256 ffmpeg.exe.368648523ed74f68b30e1f0baf9b9660.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s |
+[REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+[00:18:28] [STARTED] SHA-256 ffmpeg.exe.94cce707fe4f4ed08d648462aa52ac45.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+[00:18:28] [DONE] SHA-256 ffmpeg.exe.94cce707fe4f4ed08d648462aa52ac45.part | 0.0 MiB / 0.0 MiB...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

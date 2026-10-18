@@ -1,3 +1,5 @@
+> Historical timing-only gate. The operator subsequently authorized a single removable PC directory and generated-clip encodes. Current implementation, measured results, native gates and verified cleanup are in [MEASURED.md](MEASURED.md); the approval-pending sections below no longer describe current authorization.
+
 # Measured GPU optimization: stage 1 authoring gate
 
 Branch: `perf/measured-device-decode`, based on local `main` at `46ab545`.

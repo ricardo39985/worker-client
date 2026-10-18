@@ -1,0 +1,43 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\1080p\source-parity-hevc-hevc\reference.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2mp41
+    encoder         : Lavf63.1.102
+  Duration: 00:00:02.40, start: 0.000000, bitrate: 9423 kb/s
+  Stream #0:0[0x1](und): Video: hevc (Main) (hvc1 / 0x31637668), yuv420p(tv, progressive), 1920x1080 [SAR 1:1 DAR 16:9], 9416 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      encoder         : Lavc63.1.102 hevc_nvenc
+Input #1, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\1080p\source-parity-hevc-hevc\optimized.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2mp41
+    encoder         : Lavf63.1.102
+  Duration: 00:00:02.40, start: 0.000000, bitrate: 9423 kb/s
+  Stream #1:0[0x1](und): Video: hevc (Main) (hvc1 / 0x31637668), yuv420p(tv, progressive), 1920x1080 [SAR 1:1 DAR 16:9], 9416 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      encoder         : Lavc63.1.102 hevc_nvenc
+Stream mapping:
+  Stream #0:0 (hevc) -> split:default
+  Stream #1:0 (hevc) -> split:default
+  ssim:default -> Stream #0:0 (wrapped_avframe)
+  psnr:default -> Stream #0:1 (wrapped_avframe)
+Output #0, null, to 'pipe:':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2mp41
+    encoder         : Lavf63.1.102
+  Stream #0:0: Video: wrapped_avframe, yuv420p(tv, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 200 kb/s, 30 fps, 30 tbn (default)
+    Metadata:
+      encoder         : Lavc63.1.102 wrapped_avframe
+  Stream #0:1: Video: wrapped_avframe, yuv420p(tv, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 200 kb/s, 30 fps, 30 tbn
+    Metadata:
+      encoder         : Lavc63.1.102 wrapped_avframe
+[Parsed_psnr_3 @ 000002b7c2015f40] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+[Parsed_ssim_2 @ 000002b7c2015c40] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+[out#0/null @ 000002b7c20d1b40] video:60KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=   72 fps=0.0 q=-0.0 Lq=-0.0 size=N/A time=00:00:02.40 bitrate=N/A speed=11.7x elapsed=0:00:00.20

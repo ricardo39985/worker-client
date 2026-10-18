@@ -1,5 +1,12 @@
 # Organizer Windows worker — 0.1.2 source candidate
 
+Measured decode continuation: [per-stage performance, quality and gates](verification/gpu-performance/MEASURED.md).
+The isolated RTX 3050 candidate preserves output bytes while reducing CPU time;
+Normal-priority offline job speedups are 1.123× at 1080p and 1.047× at 4K.
+MSVC and all ten native suites passed. The test workspace is deleted; this source
+was not installed and does not establish production-job acceptance.
+
+
 Current worker-console reporting evidence: see
 [the log-content gate ledger](verification/log-content/REPORT.md) and
 [the reporting contract](docs/worker-console.md).

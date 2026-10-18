@@ -1,10 +1,18 @@
 # Candidate status — 0.1.2
 
-The measured-optimization work is at its first, timing-only authoring gate. See
-[the GPU performance ledger](../verification/gpu-performance/REPORT.md): portable
-checks passed, Windows/native and real-source RTX 3050 measurements are pending
-explicit PC authorization. Hardware decode and shared decode are not implemented
-yet; the RTX 3070 failure investigation remains independent.
+Current measured-decode candidate: see [the full performance ledger](../verification/gpu-performance/MEASURED.md).
+CUDA/NVDEC device frames feed the unchanged NVENC encoders for conservative SDR
+8-bit 4:2:0 profiles, with the existing software fallback and full validation.
+Inspection and poster generation share a frame; the two full video renditions
+still decode separately. Generated RTX 3050 offline jobs measured 1.123× / 1.047×
+Normal-priority speedups at 1080p / 4K; Low measured 1.282× / 1.250×.
+MSVC compilation and all 10 native suites (315 cases), six portable suites (245
+cases), and sanitizer gates passed. The sole PC workspace was deleted and checked
+absent from a fresh connection. These are offline source/compute gates, not
+installed worker, resource-budget integration, coordinator or deployment acceptance.
+The separate RTX 3070 memory-cap correction remains untouched.
+
+Historical module-specific snapshots follow; they do not supersede that ledger.
 
 Current worker-console reporting evidence: see
 [the log-content gate ledger](../verification/log-content/REPORT.md) and

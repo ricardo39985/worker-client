@@ -1,0 +1,1046 @@
+Splitting the commandline.
+Reading option '-nostdin' ... matched as option 'stdin' (enable or disable interaction on standard input) with argument 0.
+Reading option '-hide_banner' ... matched as option 'hide_banner' (do not show program banner) with argument '1'.
+Reading option '-loglevel' ... matched as option 'loglevel' (set logging level) with argument 'debug'.
+Reading option '-y' ... matched as option 'y' (overwrite output files) with argument '1'.
+Reading option '-protocol_whitelist' ... matched as AVOption 'protocol_whitelist' with argument 'file'.
+Reading option '-format_whitelist' ... matched as AVOption 'format_whitelist' with argument 'mov,matroska,webm,jpeg_pipe,png_pipe,webp_pipe'.
+Reading option '-threads' ... matched as AVOption 'threads' with argument '1'.
+Reading option '-filter_threads' ... matched as option 'filter_threads' (number of non-complex filter threads) with argument '1'.
+Reading option '-noautorotate' ... matched as option 'autorotate' (automatically insert correct rotate filters) with argument 0.
+Reading option '-hwaccel' ... matched as option 'hwaccel' (use HW accelerated decoding) with argument 'cuda'.
+Reading option '-hwaccel_device' ... matched as option 'hwaccel_device' (select a device for HW acceleration) with argument '1'.
+Reading option '-hwaccel_output_format' ... matched as option 'hwaccel_output_format' (select output format used with HW accelerated decoding) with argument 'cuda'.
+Reading option '-i' ... matched as input url with argument 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\source.bin'.
+Reading option '-map' ... matched as option 'map' (set input stream mapping) with argument '0:v:0'.
+Reading option '-map' ... matched as option 'map' (set input stream mapping) with argument '0:a:0?'.
+Reading option '-c:v' ... matched as option 'c' (select encoder/decoder ('copy' to copy stream without reencoding)) with argument 'h264_nvenc'.
+Reading option '-gpu' ... matched as AVOption 'gpu' with argument '1'.
+Reading option '-preset' ... matched as AVOption 'preset' with argument 'p4'.
+Reading option '-rc' ... matched as AVOption 'rc' with argument 'vbr'.
+Reading option '-cq' ... matched as AVOption 'cq' with argument '24'.
+Reading option '-b:v' ... matched as option 'b' (video bitrate (please use -b:v)) with argument '0'.
+Reading option '-rc-lookahead' ... matched as AVOption 'rc-lookahead' with argument '0'.
+Reading option '-pix_fmt' ... matched as option 'pix_fmt' (set pixel format) with argument 'cuda'.
+Reading option '-threads' ... matched as AVOption 'threads' with argument '1'.
+Reading option '-c:a' ... matched as option 'c' (select encoder/decoder ('copy' to copy stream without reencoding)) with argument 'aac'.
+Reading option '-b:a' ... matched as option 'b' (video bitrate (please use -b:v)) with argument '160k'.
+Reading option '-fps_mode' ... matched as option 'fps_mode' (set framerate mode for matching video streams) with argument 'passthrough'.
+Reading option '-movflags' ... matched as AVOption 'movflags' with argument '+faststart'.
+Reading option '-frames:v' ... matched as option 'frames' (set the number of frames to output) with argument '72'.
+Reading option 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\feed.mp4' ... matched as output url.
+Finished splitting the commandline.
+Parsing a group of options: global .
+Applying option nostdin (enable or disable interaction on standard input) with argument 0.
+Applying option hide_banner (do not show program banner) with argument 1.
+Applying option loglevel (set logging level) with argument debug.
+Applying option y (overwrite output files) with argument 1.
+Applying option filter_threads (number of non-complex filter threads) with argument 1.
+Successfully parsed a group of options.
+Parsing a group of options: input url C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\source.bin.
+Applying option noautorotate (automatically insert correct rotate filters) with argument 0.
+Applying option hwaccel (use HW accelerated decoding) with argument cuda.
+Applying option hwaccel_device (select a device for HW acceleration) with argument 1.
+Applying option hwaccel_output_format (select output format used with HW accelerated decoding) with argument cuda.
+Successfully parsed a group of options.
+Opening an input file: C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\source.bin.
+[in#0 @ 000002a78f3f1ec0] Opening 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\source.bin' for reading
+[in#0 @ 000002a78f3f1ec0] Format mov,mp4,m4a,3gp,3g2,mj2 probed with size=2048 and score=100
+[in#0 @ 000002a78f3f1ec0] ISO: File Type Major Brand: isom
+[in#0 @ 000002a78f3f1ec0] Unknown dref type 0x206c7275 size 12
+[in#0 @ 000002a78f3f1ec0] Processing st: 0, edit list 0 - media time: 0, duration: 460800
+[in#0 @ 000002a78f3f1ec0] Unknown dref type 0x206c7275 size 12
+[in#0 @ 000002a78f3f1ec0] Processing st: 1, edit list 0 - media time: 1024, duration: 1440000
+[in#0 @ 000002a78f3f1ec0] drop a frame at curr_cts: 0 @ 0
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1ec0] Before avformat_find_stream_info() pos: 292157662 bytes read:60026 seeks:1 nb_streams:2
+[h264 @ 000002a78f46c180] nal_unit_type: 7(SPS), nal_ref_idc: 3
+[h264 @ 000002a78f46c180] Decoding VUI
+[h264 @ 000002a78f46c180] nal_unit_type: 8(PPS), nal_ref_idc: 3
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 64, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 64, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_pfa_3xM_inv_float_c - type: mdct_float, len: 96, factors[2]: [3, any], flags: [unaligned, out_of_place, inv_only]
+        fft16_ns_float_fma3 - type: fft_float, len: 16, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 120, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 60, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft4_fwd_asm_float_sse2 - type: fft_float, len: 4, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 128, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 64, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 480, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 240, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft16_asm_float_fma3 - type: fft_float, len: 16, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 512, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 256, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_pfa_3xM_inv_float_c - type: mdct_float, len: 768, factors[2]: [3, any], flags: [unaligned, out_of_place, inv_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 128, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 960, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 480, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_fwd_float_c - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [unaligned, out_of_place, fwd_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1ec0] demuxer injecting skip 1024 / discard 0
+[aac @ 000002a78f487f40] skip 1024 / discard 0 samples due to side data
+[h264 @ 000002a78f46c180] nal_unit_type: 7(SPS), nal_ref_idc: 3
+[h264 @ 000002a78f46c180] Decoding VUI
+[h264 @ 000002a78f46c180] nal_unit_type: 8(PPS), nal_ref_idc: 3
+[h264 @ 000002a78f46c180] nal_unit_type: 6(SEI), nal_ref_idc: 0
+[h264 @ 000002a78f46c180] nal_unit_type: 5(IDR), nal_ref_idc: 3
+[h264 @ 000002a78f46c180] Format yuv420p chosen by get_format().
+[h264 @ 000002a78f46c180] Reinit context to 3840x2160, pix_fmt: yuv420p
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1ec0] All info found
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1ec0] After avformat_find_stream_info() pos: 425506 bytes read:485484 seeks:2 frames:2
+[vist#0:0/h264 @ 000002a78f46ef80] Selecting decoder 'h264' because of requested hwaccel method cuda
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\source.bin':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf63.1.102
+  Duration: 00:00:30.00, start: 0.000000, bitrate: 77908 kb/s
+  Stream #0:0[0x1](und), 1, 1/15360: Video: h264 (Constrained Baseline), 1 reference frame (avc1 / 0x31637661), yuv420p(progressive, left), 3840x2160 [SAR 1:1 DAR 16:9], 0/1, 77832 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      encoder         : Lavc63.1.102 libx264
+  Stream #0:1[0x2](und), 1, 1/48000: Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, mono, fltp, delay 1024, 69 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+Successfully opened the file.
+Parsing a group of options: output url C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\feed.mp4.
+Applying option map (set input stream mapping) with argument 0:v:0.
+Applying option map (set input stream mapping) with argument 0:a:0?.
+Applying option c:v (select encoder/decoder ('copy' to copy stream without reencoding)) with argument h264_nvenc.
+Applying option b:v (video bitrate (please use -b:v)) with argument 0.
+Applying option pix_fmt (set pixel format) with argument cuda.
+Applying option c:a (select encoder/decoder ('copy' to copy stream without reencoding)) with argument aac.
+Applying option b:a (video bitrate (please use -b:v)) with argument 160k.
+Applying option fps_mode (set framerate mode for matching video streams) with argument passthrough.
+Applying option frames:v (set the number of frames to output) with argument 72.
+Successfully parsed a group of options.
+Opening an output file: C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\feed.mp4.
+[out#0/mp4 @ 000002a78f415740] Adding streams from explicit maps...
+[vost#0:0/h264_nvenc @ 000002a78f4de300] Created video stream from input stream 0:0
+[CUDA @ 000002a78f4120c0] Loaded lib: nvcuda.dll
+[CUDA @ 000002a78f4120c0] Loaded sym: cuInit
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDriverGetVersion
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceGetCount
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceGet
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceGetAttribute
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceGetName
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceComputeCapability
+[CUDA @ 000002a78f4120c0] Loaded sym: cuCtxCreate_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuCtxSynchronize
+[CUDA @ 000002a78f4120c0] Loaded sym: cuCtxGetStreamPriorityRange
+[CUDA @ 000002a78f4120c0] Loaded sym: cuCtxGetCurrent
+[CUDA @ 000002a78f4120c0] Loaded sym: cuCtxSetLimit
+[CUDA @ 000002a78f4120c0] Loaded sym: cuCtxPushCurrent_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuCtxPopCurrent_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuCtxDestroy_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemAlloc_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemAllocPitch_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemAllocManaged
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemsetD8Async
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemsetD16Async
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemsetD32Async
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemsetD2D8Async
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemsetD2D16Async
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemsetD2D32Async
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemFree_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemHostAlloc
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemFreeHost
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemAllocAsync
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemFreeAsync
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpy
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpyAsync
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpy2D_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpy2DAsync_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpyHtoD_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpyHtoDAsync_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpyDtoH_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpyDtoHAsync_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpyDtoD_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMemcpyDtoDAsync_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGetErrorName
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGetErrorString
+[CUDA @ 000002a78f4120c0] Loaded sym: cuCtxGetDevice
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDevicePrimaryCtxRetain
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDevicePrimaryCtxRelease
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDevicePrimaryCtxSetFlags
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDevicePrimaryCtxGetState
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDevicePrimaryCtxReset
+[CUDA @ 000002a78f4120c0] Loaded sym: cuStreamCreate
+[CUDA @ 000002a78f4120c0] Loaded sym: cuStreamCreateWithPriority
+[CUDA @ 000002a78f4120c0] Loaded sym: cuStreamQuery
+[CUDA @ 000002a78f4120c0] Loaded sym: cuStreamSynchronize
+[CUDA @ 000002a78f4120c0] Loaded sym: cuStreamDestroy_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuStreamAddCallback
+[CUDA @ 000002a78f4120c0] Loaded sym: cuStreamWaitEvent
+[CUDA @ 000002a78f4120c0] Loaded sym: cuEventCreate
+[CUDA @ 000002a78f4120c0] Loaded sym: cuEventDestroy_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuEventSynchronize
+[CUDA @ 000002a78f4120c0] Loaded sym: cuEventQuery
+[CUDA @ 000002a78f4120c0] Loaded sym: cuEventRecord
+[CUDA @ 000002a78f4120c0] Loaded sym: cuLaunchKernel
+[CUDA @ 000002a78f4120c0] Loaded sym: cuLaunchHostFunc
+[CUDA @ 000002a78f4120c0] Loaded sym: cuLinkCreate
+[CUDA @ 000002a78f4120c0] Loaded sym: cuLinkAddData
+[CUDA @ 000002a78f4120c0] Loaded sym: cuLinkComplete
+[CUDA @ 000002a78f4120c0] Loaded sym: cuLinkDestroy
+[CUDA @ 000002a78f4120c0] Loaded sym: cuModuleLoadData
+[CUDA @ 000002a78f4120c0] Loaded sym: cuModuleUnload
+[CUDA @ 000002a78f4120c0] Loaded sym: cuModuleGetFunction
+[CUDA @ 000002a78f4120c0] Loaded sym: cuModuleGetGlobal
+[CUDA @ 000002a78f4120c0] Loaded sym: cuTexObjectCreate
+[CUDA @ 000002a78f4120c0] Loaded sym: cuTexObjectDestroy
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGLGetDevices_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGraphicsGLRegisterImage
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGraphicsUnregisterResource
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGraphicsMapResources
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGraphicsUnmapResources
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGraphicsSubResourceGetMappedArray
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGraphicsResourceGetMappedPointer_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceGetUuid
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceGetUuid_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceGetLuid
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceGetByPCIBusId
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDeviceGetPCIBusId
+[CUDA @ 000002a78f4120c0] Loaded sym: cuImportExternalMemory
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDestroyExternalMemory
+[CUDA @ 000002a78f4120c0] Loaded sym: cuExternalMemoryGetMappedBuffer
+[CUDA @ 000002a78f4120c0] Loaded sym: cuExternalMemoryGetMappedMipmappedArray
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMipmappedArrayGetLevel
+[CUDA @ 000002a78f4120c0] Loaded sym: cuMipmappedArrayDestroy
+[CUDA @ 000002a78f4120c0] Loaded sym: cuImportExternalSemaphore
+[CUDA @ 000002a78f4120c0] Loaded sym: cuDestroyExternalSemaphore
+[CUDA @ 000002a78f4120c0] Loaded sym: cuSignalExternalSemaphoresAsync
+[CUDA @ 000002a78f4120c0] Loaded sym: cuWaitExternalSemaphoresAsync
+[CUDA @ 000002a78f4120c0] Loaded sym: cuArrayCreate_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuArray3DCreate_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuArrayDestroy
+[CUDA @ 000002a78f4120c0] Loaded sym: cuArray3DGetDescriptor_v2
+[CUDA @ 000002a78f4120c0] Loaded sym: cuArrayGetPlane
+[CUDA @ 000002a78f4120c0] Cannot load optional cuEGLStreamProducerConnect
+[CUDA @ 000002a78f4120c0] Cannot load optional cuEGLStreamProducerDisconnect
+[CUDA @ 000002a78f4120c0] Cannot load optional cuEGLStreamConsumerDisconnect
+[CUDA @ 000002a78f4120c0] Cannot load optional cuEGLStreamProducerPresentFrame
+[CUDA @ 000002a78f4120c0] Cannot load optional cuEGLStreamProducerReturnFrame
+[CUDA @ 000002a78f4120c0] Loaded sym: cuD3D11GetDevice
+[CUDA @ 000002a78f4120c0] Loaded sym: cuD3D11GetDevices
+[CUDA @ 000002a78f4120c0] Loaded sym: cuGraphicsD3D11RegisterResource
+[h264 @ 000002a78f4c4d00] nal_unit_type: 7(SPS), nal_ref_idc: 3
+[h264 @ 000002a78f4c4d00] Decoding VUI
+[h264 @ 000002a78f4c4d00] nal_unit_type: 8(PPS), nal_ref_idc: 3
+[aost#0:1/aac @ 000002a79f2ad8c0] Created audio stream from input stream 0:1
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 64, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 64, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_pfa_3xM_inv_float_c - type: mdct_float, len: 96, factors[2]: [3, any], flags: [unaligned, out_of_place, inv_only]
+        fft16_ns_float_fma3 - type: fft_float, len: 16, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 120, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 60, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft4_fwd_asm_float_sse2 - type: fft_float, len: 4, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 128, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 64, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 480, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 240, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft16_asm_float_fma3 - type: fft_float, len: 16, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 512, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 256, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_pfa_3xM_inv_float_c - type: mdct_float, len: 768, factors[2]: [3, any], flags: [unaligned, out_of_place, inv_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 128, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 960, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 480, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_fwd_float_c - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [unaligned, out_of_place, fwd_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+[file @ 000002a78f46a300] Setting default whitelist 'file,crypto,data'
+Successfully opened the file.
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> h264 (h264_nvenc))
+  Stream #0:1 -> #0:1 (aac (native) -> aac (native))
+[vost#0:0/h264_nvenc @ 000002a78f4de300] Starting thread...
+[aost#0:1/aac @ 000002a79f2ad8c0] Starting thread...
+[vf#0:0 @ 000002a78f4de900] Starting thread...
+[af#0:1 @ 000002a79f0c91c0] Starting thread...
+[vist#0:0/h264 @ 000002a78f46ef80] [dec:h264 @ 000002a790237e40] Starting thread...
+[aist#0:1/aac @ 000002a78f489e40] [dec:aac @ 000002a790645a40] Starting thread...
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1b00] Starting thread...
+[aac @ 000002a79ef3a240] skip 1024 / discard 0 samples due to side data
+[h264 @ 000002a78f4c4d00] nal_unit_type: 6(SEI), nal_ref_idc: 0
+[graph_-1_in_0:1 @ 000002a7906c4a80] Setting 'time_base' to value '1/48000'
+[graph_-1_in_0:1 @ 000002a7906c4a80] Setting 'sample_rate' to value '48000'
+[graph_-1_in_0:1 @ 000002a7906c4a80] Setting 'sample_fmt' to value 'fltp'
+[graph_-1_in_0:1 @ 000002a7906c4a80] Setting 'channel_layout' to value 'mono'
+[graph_-1_in_0:1 @ 000002a7906c4a80] tb:1/48000 samplefmt:fltp samplerate:48000 chlayout:mono
+[format_out_#0:1 @ 000002a7906c4b80] Setting 'sample_fmts' to value 'fltp'
+[format_out_#0:1 @ 000002a7906c4b80] Setting 'sample_rates' to value '96000|88200|64000|48000|44100|32000|24000|22050|16000|12000|11025|8000|7350'
+Filter 'Parsed_anull_0' formats:
+  in[0] 'default':
+    Channel layouts:
+    Sample rates:
+    Sample formats: u8 s16 s32 flt dbl u8p s16p s32p fltp dblp s64 s64p
+  out[0] 'default':
+    Channel layouts:
+    Sample rates:
+    Sample formats: u8 s16 s32 flt dbl u8p s16p s32p fltp dblp s64 s64p
+Filter 'graph_-1_in_0:1' formats:
+  out[0] 'default':
+    Channel layouts: mono
+    Sample rates: 48000
+    Sample formats: fltp
+Filter 'out_#0:1' formats:
+  in[0] 'default':
+    Channel layouts:
+    Sample rates:
+    Sample formats: u8 s16 s32 flt dbl u8p s16p s32p fltp dblp s64 s64p
+[h264 @ 000002a78f4c4d00] nal_unit_type: 5(IDR), nal_ref_idc: 3
+Filter 'format_out_#0:1' formats:
+  in[0] 'default':
+    Channel layouts:
+    Sample rates: 96000 88200 64000 48000 44100 32000 24000 22050 16000 12000 11025 8000 7350
+    Sample formats: fltp
+  out[0] 'default':
+[h264 @ 000002a78f4c4d00] Format cuda chosen by get_format().
+[h264 @ 000002a78f4c4d00] Format cuda requires hwaccel h264_nvdec initialisation.
+[AVHWFramesContext @ 000002a79f1c40c0] CUDA texture alignment: 512
+[AVHWFramesContext @ 000002a79f1c5a40] CUDA texture alignment: 512
+    Channel layouts:
+    Sample rates: 96000 88200 64000 48000 44100 32000 24000 22050 16000 12000 11025 8000 7350
+    Sample formats: fltp
+[AVFilterGraph @ 000002a799479680] query_formats: 4 queried, 6 merged, 3 already done, 0 delayed
+Transform tree:
+    mdct_fwd_float_c - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [unaligned, out_of_place, fwd_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_fwd_float_c - type: mdct_float, len: 128, factors[2]: [2, any], flags: [unaligned, out_of_place, fwd_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 64, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.0213333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.0426667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.064
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.0853333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.106667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.128
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.149333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.170667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.192
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.213333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.234667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.256
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.277333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.298667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.32
+[h264 @ 000002a78f4c4d00] Loaded lib: nvcuvid.dll
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidGetDecoderCaps
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidCreateDecoder
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidDestroyDecoder
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidRegisterDecodeSurfaces
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidDecodePictureAsync
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidDecodePicture
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidGetDecodeStatus
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidReconfigureDecoder
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidMapVideoFrame64
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidUnmapVideoFrame64
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidCtxLockCreate
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidCtxLockDestroy
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidCtxLock
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidCtxUnlock
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidCreateVideoSource
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidCreateVideoSourceW
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidDestroyVideoSource
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidSetVideoSourceState
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidGetVideoSourceState
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidGetSourceVideoFormat
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidGetSourceAudioFormat
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidCreateVideoParser
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidParseVideoData
+[h264 @ 000002a78f4c4d00] Loaded sym: cuvidDestroyVideoParser
+[h264 @ 000002a78f4c4d00] NVDEC capabilities:
+[h264 @ 000002a78f4c4d00] format supported: yes, max_mb_count: 65536
+[h264 @ 000002a78f4c4d00] min_width: 48, max_width: 4096
+[h264 @ 000002a78f4c4d00] min_height: 16, max_height: 4096
+[h264 @ 000002a78f4c4d00] Reinit context to 3840x2160, pix_fmt: cuda
+[graph -1 input from stream 0:0 @ 000002a7906c4c80] w:3840 h:2160 pixfmt:cuda tb:1/15360 fr:30/1 sar:1/1 csp:unknown range:unknown alpha:unspecified
+[format @ 000002a7906c5480] Setting 'pix_fmts' to value 'cuda'
+[format @ 000002a7906c5480] Setting 'color_ranges' to value 'tv|pc'
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.341333
+Filter 'Parsed_null_0' formats:
+  in[0] 'default':
+    Pixel formats: yuv420p yuyv422 rgb24 bgr24 yuv422p yuv444p yuv410p yuv411p gray monow monob pal8 yuvj420p yuvj422p yuvj444p uyvy422 uyyvyy411 bgr8 bgr4 bgr4_byte rgb8 rgb4 rgb4_byte nv12 nv21 argb rgba abgr bgra gray16be gray16le yuv440p yuvj440p yuva420p rgb48be rgb48le rgb565be rgb565le rgb555be rgb555le bgr565be bgr565le bgr555be bgr555le vaapi yuv420p16le yuv420p16be yuv422p16le yuv422p16be yuv444p16le yuv444p16be dxva2_vld rgb444le rgb444be bgr444le bgr444be ya8 bgr48be bgr48le yuv420p9be yuv420p9le yuv420p10be yuv420p10le yuv422p10be yuv422p10le yuv444p9be yuv444p9le yuv444p10be yuv444p10le yuv422p9be yuv422p9le gbrp gbrp9be gbrp9le gbrp10be gbrp10le gbrp16be gbrp16le yuva422p yuva444p yuva420p9be yuva420p9le yuva422p9be yuva422p9le yuva444p9be yuva444p9le yuva420p10be yuva420p10le yuva422p10be yuva422p10le yuva444p10be yuva444p10le yuva420p16be yuva420p16le yuva422p16be yuva422p16le yuva444p16be yuva444p16le vdpau xyz12le xyz12be nv16 nv20le nv20be rgba64be rgba64le bgra64be bgra64le yvyu422 ya16be ya16le gbrap gbrap16be gbrap16le qsv mmal d3d11va_vld cuda 0rgb rgb0 0bgr bgr0 yuv420p12be yuv420p12le yuv420p14be yuv420p14le yuv422p12be yuv422p12le yuv422p14be yuv422p14le yuv444p12be yuv444p12le yuv444p14be yuv444p14le gbrp12be gbrp12le gbrp14be gbrp14le yuvj411p bayer_bggr8 bayer_rggb8 bayer_gbrg8 bayer_grbg8 bayer_bggr16le bayer_bggr16be bayer_rggb16le bayer_rggb16be bayer_gbrg16le bayer_gbrg16be bayer_grbg16le bayer_grbg16be yuv440p10le yuv440p10be yuv440p12le yuv440p12be ayuv64le ayuv64be videotoolbox_vld p010le p010be gbrap12be gbrap12le gbrap10be gbrap10le mediacodec gray12be gray12le gray10be gray10le p016le p016be d3d11 gray9be gray9le gbrpf32be gbrpf32le gbrapf32be gbrapf32le drm_prime opencl gray14be gray14le grayf32be grayf32le yuva422p12be yuva422p12le yuva444p12be yuva444p12le nv24 nv42 vulkan y210be y210le x2rgb10le x2rgb10be x2bgr10le x2bgr10be p210be p210le p410be p410le p216be p216le p416be p416le vuya rgbaf16be rgbaf16le vuyx p012le p012be y212be y212le xv30be xv30le xv36be xv36le rgbf32be rgbf32le rgbaf32be rgbaf32le p212be p212le p412be p412le gbrap14be gbrap14le d3d12 ayuv uyva vyu444 v30xbe v30xle rgbf16be rgbf16le rgba128be rgba128le rgb96be rgb96le y216be y216le xv48be xv48le gbrpf16be gbrpf16le gbrapf16be gbrapf16le grayf16be grayf16le amf gray32be gray32le yaf32be yaf32le yaf16be yaf16le gbrap32be gbrap32le yuv444p10msbbe yuv444p10msble yuv444p12msbbe yuv444p12msble gbrp10msbbe gbrp10msble gbrp12msbbe gbrp12msble ohcodec
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: unknown tv pc
+    Alpha modes: unspecified premultiplied straight
+  out[0] 'default':
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+    Pixel formats: yuv420p yuyv422 rgb24 bgr24 yuv422p yuv444p yuv410p yuv411p gray monow monob pal8 yuvj420p yuvj422p yuvj444p uyvy422 uyyvyy411 bgr8 bgr4 bgr4_byte rgb8 rgb4 rgb4_byte nv12 nv21 argb rgba abgr bgra gray16be gray16le yuv440p yuvj440p yuva420p rgb48be rgb48le rgb565be rgb565le rgb555be rgb555le bgr565be bgr565le bgr555be bgr555le vaapi yuv420p16le yuv420p16be yuv422p16le yuv422p16be yuv444p16le yuv444p16be dxva2_vld rgb444le rgb444be bgr444le bgr444be ya8 bgr48be bgr48le yuv420p9be yuv420p9le yuv420p10be yuv420p10le yuv422p10be yuv422p10le yuv444p9be yuv444p9le yuv444p10be yuv444p10le yuv422p9be yuv422p9le gbrp gbrp9be gbrp9le gbrp10be gbrp10le gbrp16be gbrp16le yuva422p yuva444p yuva420p9be yuva420p9le yuva422p9be yuva422p9le yuva444p9be yuva444p9le yuva420p10be yuva420p10le yuva422p10be yuva422p10le yuva444p10be yuva444p10le yuva420p16be yuva420p16le yuva422p16be yuva422p16le yuva444p16be yuva444p16le vdpau xyz12le xyz12be nv16 nv20le nv20be rgba64be rgba64le bgra64be bgra64le yvyu422 ya16be ya16le gbrap gbrap16be gbrap16le qsv mmal d3d11va_vld cuda 0rgb rgb0 0bgr bgr0 yuv420p12be yuv420p12le yuv420p14be yuv420p14le yuv422p12be yuv422p12le yuv422p14be yuv422p14le yuv444p12be yuv444p12le yuv444p14be yuv444p14le gbrp12be gbrp12le gbrp14be gbrp14le yuvj411p bayer_bggr8 bayer_rggb8 bayer_gbrg8 bayer_grbg8 bayer_bggr16le bayer_bggr16be bayer_rggb16le bayer_rggb16be bayer_gbrg16le bayer_gbrg16be bayer_grbg16le bayer_grbg16be yuv440p10le yuv440p10be yuv440p12le yuv440p12be ayuv64le ayuv64be videotoolbox_vld p010le p010be gbrap12be gbrap12le gbrap10be gbrap10le mediacodec gray12be gray12le gray10be gray10le p016le p016be d3d11 gray9be gray9le gbrpf32be gbrpf32le gbrapf32be gbrapf32le drm_prime opencl gray14be gray14le grayf32be grayf32le yuva422p12be yuva422p12le yuva444p12be yuva444p12le nv24 nv42 vulkan y210be y210le x2rgb10le x2rgb10be x2bgr10le x2bgr10be p210be p210le p410be p410le p216be p216le p416be p416le vuya rgbaf16be rgbaf16le vuyx p012le p012be y212be y212le xv30be xv30le xv36be xv36le rgbf32be rgbf32le rgbaf32be rgbaf32le p212be p212le p412be p412le gbrap14be gbrap14le d3d12 ayuv uyva vyu444 v30xbe v30xle rgbf16be rgbf16le rgba128be rgba128le rgb96be rgb96le y216be y216le xv48be xv48le gbrpf16be gbrpf16le gbrapf16be gbrapf16le grayf16be grayf16le amf gray32be gray32le yaf32be yaf32le yaf16be yaf16le gbrap32be gbrap32le yuv444p10msbbe yuv444p10msble yuv444p12msbbe yuv444p12msble gbrp10msbbe gbrp10msble gbrp12msbbe gbrp12msble ohcodec
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: unknown tv pc
+    Alpha modes: unspecified premultiplied straight
+Filter 'graph -1 input from stream 0:0' formats:
+  out[0] 'default':
+    Pixel formats: cuda
+    Color spaces: unknown
+    Color ranges: unknown tv
+    Alpha modes: unspecified premultiplied straight
+Filter 'out_#0:0' formats:
+  in[0] 'default':
+    Pixel formats: yuv420p yuyv422 rgb24 bgr24 yuv422p yuv444p yuv410p yuv411p gray monow monob pal8 yuvj420p yuvj422p yuvj444p uyvy422 uyyvyy411 bgr8 bgr4 bgr4_byte rgb8 rgb4 rgb4_byte nv12 nv21 argb rgba abgr bgra gray16be gray16le yuv440p yuvj440p yuva420p rgb48be rgb48le rgb565be rgb565le rgb555be rgb555le bgr565be bgr565le bgr555be bgr555le vaapi yuv420p16le yuv420p16be yuv422p16le yuv422p16be yuv444p16le yuv444p16be dxva2_vld rgb444le rgb444be bgr444le bgr444be ya8 bgr48be bgr48le yuv420p9be yuv420p9le yuv420p10be yuv420p10le yuv422p10be yuv422p10le yuv444p9be yuv444p9le yuv444p10be yuv444p10le yuv422p9be yuv422p9le gbrp gbrp9be gbrp9le gbrp10be gbrp10le gbrp16be gbrp16le yuva422p yuva444p yuva420p9be yuva420p9le yuva422p9be yuva422p9le yuva444p9be yuva444p9le yuva420p10be yuva420p10le yuva422p10be yuva422p10le yuva444p10be yuva444p10le yuva420p16be yuva420p16le yuva422p16be yuva422p16le yuva444p16be yuva444p16le vdpau xyz12le xyz12be nv16 nv20le nv20be rgba64be rgba64le bgra64be bgra64le yvyu422 ya16be ya16le gbrap gbrap16be gbrap16le qsv mmal d3d11va_vld cuda 0rgb rgb0 0bgr bgr0 yuv420p12be yuv420p12le yuv420p14be yuv420p14le yuv422p12be yuv422p12le yuv422p14be yuv422p14le yuv444p12be yuv444p12le yuv444p14be yuv444p14le gbrp12be gbrp12le gbrp14be gbrp14le yuvj411p bayer_bggr8 bayer_rggb8 bayer_gbrg8 bayer_grbg8 bayer_bggr16le bayer_bggr16be bayer_rggb16le bayer_rggb16be bayer_gbrg16le bayer_gbrg16be bayer_grbg16le bayer_grbg16be yuv440p10le yuv440p10be yuv440p12le yuv440p12be ayuv64le ayuv64be videotoolbox_vld p010le p010be gbrap12be gbrap12le gbrap10be gbrap10le mediacodec gray12be gray12le gray10be gray10le p016le p016be d3d11 gray9be gray9le gbrpf32be gbrpf32le gbrapf32be gbrapf32le drm_prime opencl gray14be gray14le grayf32be grayf32le yuva422p12be yuva422p12le yuva444p12be yuva444p12le nv24 nv42 vulkan y210be y210le x2rgb10le x2rgb10be x2bgr10le x2bgr10be p210be p210le p410be p410le p216be p216le p416be p416le vuya rgbaf16be rgbaf16le vuyx p012le p012be y212be y212le xv30be xv30le xv36be xv36le rgbf32be rgbf32le rgbaf32be rgbaf32le p212be p212le p412be p412le gbrap14be gbrap14le d3d12 ayuv uyva vyu444 v30xbe v30xle rgbf16be rgbf16le rgba128be rgba128le rgb96be rgb96le y216be y216le xv48be xv48le gbrpf16be gbrpf16le gbrapf16be gbrapf16le grayf16be grayf16le amf gray32be gray32le yaf32be yaf32le yaf16be yaf16le gbrap32be gbrap32le yuv444p10msbbe yuv444p10msble yuv444p12msbbe yuv444p12msble gbrp10msbbe gbrp10msble gbrp12msbbe gbrp12msble ohcodec
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: unknown tv pc
+    Alpha modes: unspecified premultiplied straight
+Filter 'format' formats:
+  in[0] 'default':
+    Pixel formats: cuda
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: tv pc
+    Alpha modes: unspecified premultiplied straight
+  out[0] 'default':
+    Pixel formats: cuda
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: tv pc
+    Alpha modes: unspecified premultiplied straight
+[AVFilterGraph @ 000002a7994787c0] query_formats: 4 queried, 12 merged, 0 already done, 0 delayed
+[graph -1 input from stream 0:0 @ 000002a7906c4c80] video frame properties congruent with link at pts_time: 0
+[vost#0:0/h264_nvenc @ 000002a78f4de300] [enc:h264_nvenc @ 000002a78f46f500] Using input frames context (format cuda) with h264_nvenc encoder.
+[h264_nvenc @ 000002a78f4de540] Loaded lib: nvcuda.dll
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuInit
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDriverGetVersion
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceGetCount
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceGet
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceGetAttribute
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceGetName
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceComputeCapability
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuCtxCreate_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuCtxSynchronize
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuCtxGetStreamPriorityRange
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuCtxGetCurrent
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuCtxSetLimit
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuCtxPushCurrent_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuCtxPopCurrent_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuCtxDestroy_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemAlloc_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemAllocPitch_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemAllocManaged
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemsetD8Async
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemsetD16Async
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemsetD32Async
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemsetD2D8Async
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemsetD2D16Async
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemsetD2D32Async
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemFree_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemHostAlloc
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemFreeHost
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemAllocAsync
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemFreeAsync
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpy
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpyAsync
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpy2D_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpy2DAsync_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpyHtoD_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpyHtoDAsync_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpyDtoH_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpyDtoHAsync_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpyDtoD_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMemcpyDtoDAsync_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGetErrorName
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGetErrorString
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuCtxGetDevice
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDevicePrimaryCtxRetain
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDevicePrimaryCtxRelease
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDevicePrimaryCtxSetFlags
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDevicePrimaryCtxGetState
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDevicePrimaryCtxReset
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuStreamCreate
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuStreamCreateWithPriority
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuStreamQuery
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuStreamSynchronize
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuStreamDestroy_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuStreamAddCallback
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuStreamWaitEvent
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuEventCreate
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuEventDestroy_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuEventSynchronize
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuEventQuery
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuEventRecord
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuLaunchKernel
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuLaunchHostFunc
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuLinkCreate
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuLinkAddData
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuLinkComplete
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuLinkDestroy
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuModuleLoadData
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuModuleUnload
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuModuleGetFunction
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuModuleGetGlobal
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuTexObjectCreate
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuTexObjectDestroy
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGLGetDevices_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGraphicsGLRegisterImage
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGraphicsUnregisterResource
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGraphicsMapResources
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGraphicsUnmapResources
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGraphicsSubResourceGetMappedArray
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGraphicsResourceGetMappedPointer_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceGetUuid
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceGetUuid_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceGetLuid
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceGetByPCIBusId
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDeviceGetPCIBusId
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuImportExternalMemory
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDestroyExternalMemory
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuExternalMemoryGetMappedBuffer
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuExternalMemoryGetMappedMipmappedArray
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMipmappedArrayGetLevel
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuMipmappedArrayDestroy
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuImportExternalSemaphore
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuDestroyExternalSemaphore
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuSignalExternalSemaphoresAsync
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuWaitExternalSemaphoresAsync
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuArrayCreate_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuArray3DCreate_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuArrayDestroy
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuArray3DGetDescriptor_v2
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuArrayGetPlane
+[h264_nvenc @ 000002a78f4de540] Cannot load optional cuEGLStreamProducerConnect
+[h264_nvenc @ 000002a78f4de540] Cannot load optional cuEGLStreamProducerDisconnect
+[h264_nvenc @ 000002a78f4de540] Cannot load optional cuEGLStreamConsumerDisconnect
+[h264_nvenc @ 000002a78f4de540] Cannot load optional cuEGLStreamProducerPresentFrame
+[h264_nvenc @ 000002a78f4de540] Cannot load optional cuEGLStreamProducerReturnFrame
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuD3D11GetDevice
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuD3D11GetDevices
+[h264_nvenc @ 000002a78f4de540] Loaded sym: cuGraphicsD3D11RegisterResource
+[h264_nvenc @ 000002a78f4de540] Loaded lib: nvEncodeAPI64.dll
+[h264_nvenc @ 000002a78f4de540] Loaded sym: NvEncodeAPICreateInstance
+[h264_nvenc @ 000002a78f4de540] Loaded sym: NvEncodeAPIGetMaxSupportedVersion
+[h264_nvenc @ 000002a78f4de540] Loaded Nvenc version 13.1
+[h264_nvenc @ 000002a78f4de540] Nvenc initialized successfully
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.362667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.384
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264_nvenc @ 000002a78f4de540] CQ(6144) mode enabled.
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.405333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+Output #0, mp4, to 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\feed.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf63.1.102
+  Stream #0:0(und), 0, 1/15360: Video: h264 (High), 1 reference frame (avc1 / 0x31637661), nv12(tv, progressive, left), 3840x2160 [SAR 1:1 DAR 16:9], 0/1, q=2-31, 30 fps, 15360 tbn (default)
+    Metadata:
+      encoder         : Lavc63.1.102 h264_nvenc
+      handler_name    : VideoHandler
+    Side data:
+      CPB properties: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+  Stream #0:1(und), 0, 1/48000: Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, mono, fltp, delay 1024, 160 kb/s (default)
+    Metadata:
+      encoder         : Lavc63.1.102 aac
+      handler_name    : SoundHandler
+[out#0/mp4 @ 000002a78f415740] Starting thread...
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.0333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.0333333 queue head 0 ts 0.0333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.0213333 queue head 0 ts 0.0333333
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.0666667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.0666667 queue head 0 ts 0.0666667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.0426667 queue head 0 ts 0.0666667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.064 queue head 0 ts 0.0666667
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.1
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.1 queue head 0 ts 0.1
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.0853333 queue head 0 ts 0.1
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.133333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.133333 queue head 0 ts 0.133333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.106667 queue head 0 ts 0.133333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.128 queue head 0 ts 0.133333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.426667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.448
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.166667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.166667 queue head 0 ts 0.166667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.149333 queue head 0 ts 0.166667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.469333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.2
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.2 queue head 0 ts 0.2
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.170667 queue head 0 ts 0.2
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.192 queue head 0 ts 0.2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.490667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.512
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.233333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.233333 queue head 0 ts 0.233333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.213333 queue head 0 ts 0.233333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.533333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.266667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.266667 queue head 0 ts 0.266667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.234667 queue head 0 ts 0.266667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.256 queue head 0 ts 0.266667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.554667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.576
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.3
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.3 queue head 0 ts 0.3
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.277333 queue head 0 ts 0.3
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.298667 queue head 0 ts 0.3
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.597333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.618667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.333333 queue head 0 ts 0.333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.32 queue head 0 ts 0.333333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.64
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.366667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.366667 queue head 0 ts 0.366667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.341333 queue head 0 ts 0.366667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.362667 queue head 0 ts 0.366667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.661333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.682667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.4
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.4 queue head 0 ts 0.4
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.384 queue head 0 ts 0.4
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.704
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.433333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.433333 queue head 0 ts 0.433333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.405333 queue head 0 ts 0.433333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.426667 queue head 0 ts 0.433333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.725333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.746667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.466667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.466667 queue head 0 ts 0.466667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.448 queue head 0 ts 0.466667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.768
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.5
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.5 queue head 0 ts 0.5
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.469333 queue head 0 ts 0.5
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.490667 queue head 0 ts 0.5
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.789333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.810667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.533333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.533333 queue head 0 ts 0.533333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.512 queue head 0 ts 0.533333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.533333 queue head 0 ts 0.533333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.832
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.853333
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.566667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.566667 queue head 0 ts 0.566667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.554667 queue head 0 ts 0.566667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.874667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.6
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.6 queue head 0 ts 0.6
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.576 queue head 0 ts 0.6
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.597333 queue head 0 ts 0.6
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.896
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.917333
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.633333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.633333 queue head 0 ts 0.633333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.618667 queue head 0 ts 0.633333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.938667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.666667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.666667 queue head 0 ts 0.666667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.64 queue head 0 ts 0.666667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.661333 queue head 0 ts 0.666667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.96
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 0.981333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.7
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.7 queue head 0 ts 0.7
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.682667 queue head 0 ts 0.7
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.002667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.733333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.733333 queue head 0 ts 0.733333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.704 queue head 0 ts 0.733333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.725333 queue head 0 ts 0.733333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.024
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.045333
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.766667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.766667 queue head 0 ts 0.766667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.746667 queue head 0 ts 0.766667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.066667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.8
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.8 queue head 0 ts 0.8
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.768 queue head 0 ts 0.8
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.789333 queue head 0 ts 0.8
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.088
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.109333
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.833333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.833333 queue head 0 ts 0.833333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.810667 queue head 0 ts 0.833333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.832 queue head 0 ts 0.833333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.130667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.152
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.866667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.866667 queue head 0 ts 0.866667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.853333 queue head 0 ts 0.866667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.173333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.9
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.9 queue head 0 ts 0.9
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.874667 queue head 0 ts 0.9
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.896 queue head 0 ts 0.9
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.194667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.216
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.933333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.933333 queue head 0 ts 0.933333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.917333 queue head 0 ts 0.933333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.237333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 0.966667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 0.966667 queue head 0 ts 0.966667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.938667 queue head 0 ts 0.966667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.96 queue head 0 ts 0.966667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.258667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.28
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1 queue head 0 ts 1
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 0.981333 queue head 0 ts 1
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.301333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.033333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.033333 queue head 0 ts 1.033333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.002667 queue head 0 ts 1.033333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.024 queue head 0 ts 1.033333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.322667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.344
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.066667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.066667 queue head 0 ts 1.066667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.045333 queue head 0 ts 1.066667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.066667 queue head 0 ts 1.066667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.365333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.386667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.1
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.1 queue head 0 ts 1.1
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.088 queue head 0 ts 1.1
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.408
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.133333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.133333 queue head 0 ts 1.133333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.109333 queue head 0 ts 1.133333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.130667 queue head 0 ts 1.133333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.429333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.450667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.166667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.166667 queue head 0 ts 1.166667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.152 queue head 0 ts 1.166667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.472
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.2
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.2 queue head 0 ts 1.2
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.173333 queue head 0 ts 1.2
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.194667 queue head 0 ts 1.2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.493333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.514667
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.233333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.233333 queue head 0 ts 1.233333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.216 queue head 0 ts 1.233333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.536
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.266667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.266667 queue head 0 ts 1.266667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.237333 queue head 0 ts 1.266667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.258667 queue head 0 ts 1.266667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.557333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.578667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.3
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.3 queue head 0 ts 1.3
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.28 queue head 0 ts 1.3
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.6
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.333333 queue head 0 ts 1.333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.301333 queue head 0 ts 1.333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.322667 queue head 0 ts 1.333333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.621333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.642667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.366667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.366667 queue head 0 ts 1.366667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.344 queue head 0 ts 1.366667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.365333 queue head 0 ts 1.366667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.664
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.685333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.4
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.4 queue head 0 ts 1.4
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.386667 queue head 0 ts 1.4
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.706667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.433333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.433333 queue head 0 ts 1.433333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.408 queue head 0 ts 1.433333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.429333 queue head 0 ts 1.433333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.728
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.749333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.466667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.466667 queue head 0 ts 1.466667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.450667 queue head 0 ts 1.466667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.770667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.5
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.5 queue head 0 ts 1.5
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.472 queue head 0 ts 1.5
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.493333 queue head 0 ts 1.5
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.792
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.813333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.533333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.533333 queue head 0 ts 1.533333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.514667 queue head 0 ts 1.533333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.834667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.566667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.566667 queue head 0 ts 1.566667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.536 queue head 0 ts 1.566667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.557333 queue head 0 ts 1.566667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.856
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.877333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+frame=   33 fps=0.0 q=25.0 size=    5632KiB time=00:00:01.51 bitrate=30460.6kbits/s speed=2.92x elapsed=0:00:00.51
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.6
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.6 queue head 0 ts 1.6
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.578667 queue head 0 ts 1.6
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.6 queue head 0 ts 1.6
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.898667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.92
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.633333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.633333 queue head 0 ts 1.633333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.621333 queue head 0 ts 1.633333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.941333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.666667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.666667 queue head 0 ts 1.666667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.642667 queue head 0 ts 1.666667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.664 queue head 0 ts 1.666667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.962667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 1.984
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.7
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.7 queue head 0 ts 1.7
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.685333 queue head 0 ts 1.7
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.005333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.733333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.733333 queue head 0 ts 1.733333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.706667 queue head 0 ts 1.733333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.728 queue head 0 ts 1.733333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.026667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.048
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.766667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.766667 queue head 0 ts 1.766667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.749333 queue head 0 ts 1.766667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.069333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.8
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.8 queue head 0 ts 1.8
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.770667 queue head 0 ts 1.8
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.792 queue head 0 ts 1.8
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.090667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.112
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.833333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.833333 queue head 0 ts 1.833333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.813333 queue head 0 ts 1.833333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.133333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.866667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.866667 queue head 0 ts 1.866667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.834667 queue head 0 ts 1.866667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.856 queue head 0 ts 1.866667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.154667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.176
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.9
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.9 queue head 0 ts 1.9
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.877333 queue head 0 ts 1.9
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.898667 queue head 0 ts 1.9
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.197333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.218667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.933333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.933333 queue head 0 ts 1.933333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.92 queue head 0 ts 1.933333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.24
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 1.966667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 1.966667 queue head 0 ts 1.966667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.941333 queue head 0 ts 1.966667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.962667 queue head 0 ts 1.966667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.261333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.282667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2 queue head 0 ts 2
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 1.984 queue head 0 ts 2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.304
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.033333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.033333 queue head 0 ts 2.033333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.005333 queue head 0 ts 2.033333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.026667 queue head 0 ts 2.033333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.325333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.346667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.066667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.066667 queue head 0 ts 2.066667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.048 queue head 0 ts 2.066667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.368
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.1
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.1 queue head 0 ts 2.1
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.069333 queue head 0 ts 2.1
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.090667 queue head 0 ts 2.1
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.389333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.410667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.133333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.133333 queue head 0 ts 2.133333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.112 queue head 0 ts 2.133333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.133333 queue head 0 ts 2.133333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.432
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.453333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.166667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.166667 queue head 0 ts 2.166667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.154667 queue head 0 ts 2.166667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.474667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.2
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.2 queue head 0 ts 2.2
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.176 queue head 0 ts 2.2
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.197333 queue head 0 ts 2.2
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.496
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.517333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.233333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.233333 queue head 0 ts 2.233333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.218667 queue head 0 ts 2.233333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.538667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.266667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.266667 queue head 0 ts 2.266667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.24 queue head 0 ts 2.266667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.261333 queue head 0 ts 2.266667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.56
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.581333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.3
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.3 queue head 0 ts 2.3
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.282667 queue head 0 ts 2.3
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.602667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.333333 queue head 0 ts 2.333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.304 queue head 0 ts 2.333333
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.325333 queue head 0 ts 2.333333
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.624
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.645333
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.366667
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.366667 queue head 0 ts 2.366667
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.346667 queue head 0 ts 2.366667
+[out#0/mp4 @ 000002a78f415740] sq: send 1 ts 2.666667
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: send 0 ts 2.4
+[out#0/mp4 @ 000002a78f415740] sq: 0 frames_max 72 reached
+[out#0/mp4 @ 000002a78f415740] sq: finish 0; head ts 2.4
+[out#0/mp4 @ 000002a78f415740] sq: finish secondary 1; head ts 2.666667
+[out#0/mp4 @ 000002a78f415740] sq: finish queue
+[out#0/mp4 @ 000002a78f415740] sq: receive 0 ts 2.4 queue head 0 ts 2.4
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.368 queue head 0 ts 2.4
+[out#0/mp4 @ 000002a78f415740] sq: receive 1 ts 2.389333 queue head 0 ts 2.4
+[out#0/mp4 @ 000002a78f415740] sq: 0 EOF
+[out#0/mp4 @ 000002a78f415740] sq: finish queue
+[out#0/mp4 @ 000002a78f415740] sq: 1 EOF
+[out#0/mp4 @ 000002a78f415740] sq: finish queue
+[af#0:1 @ 000002a79f0c91c0] All consumers returned EOF
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[out#0/mp4 @ 000002a78f415740] sq: 1 EOF
+[out#0/mp4 @ 000002a78f415740] sq: finish queue
+[af#0:1 @ 000002a79f0c91c0] Terminating thread with return code 0 (success)
+[vost#0:0/h264_nvenc @ 000002a78f4de300] [enc:h264_nvenc @ 000002a78f46f500] Encoder thread received EOF
+[aost#0:1/aac @ 000002a79f2ad8c0] [enc:aac @ 000002a79f1c3e80] Encoder thread received EOF
+[aost#0:1/aac @ 000002a79f2ad8c0] Terminating thread with return code 0 (success)
+[vf#0:0 @ 000002a78f4de900] All consumers returned EOF
+[out#0/mp4 @ 000002a78f415740] sq: 0 EOF
+[out#0/mp4 @ 000002a78f415740] sq: finish queue
+[vf#0:0 @ 000002a78f4de900] Terminating thread with return code 0 (success)
+[aist#0:1/aac @ 000002a78f489e40] [dec:aac @ 000002a790645a40] Decoder returned EOF, finishing
+[aist#0:1/aac @ 000002a78f489e40] [dec:aac @ 000002a790645a40] Terminating thread with return code 0 (success)
+[h264 @ 000002a78f4c4d00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[vist#0:0/h264 @ 000002a78f46ef80] [dec:h264 @ 000002a790237e40] Decoder returned EOF, finishing
+[vost#0:0/h264_nvenc @ 000002a78f4de300] Terminating thread with return code 0 (success)
+[out#0/mp4 @ 000002a78f415740] All streams finished
+[out#0/mp4 @ 000002a78f415740] Terminating thread with return code 0 (success)
+[vist#0:0/h264 @ 000002a78f46ef80] [dec:h264 @ 000002a790237e40] Terminating thread with return code 0 (success)
+[vist#0:0/h264 @ 000002a78f46ef80] All consumers of this stream are done
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1b00] Terminating thread with return code 0 (success)
+[mp4 @ 000002a78f487f40] Starting second pass: moving the moov atom to the beginning of the file
+[mp4 @ 000002a78f487f40] Opening 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\feed.mp4' for reading
+[file @ 000002a78f46a400] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 000002a7b0068800] Statistics: 12011747 bytes read, 0 seeks
+[AVIOContext @ 000002a7902596c0] Statistics: 24027468 bytes written, 4 seeks, 95 writeouts
+[out#0/mp4 @ 000002a78f415740] Output file #0 (C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\feed.mp4):
+[out#0/mp4 @ 000002a78f415740]   Output stream #0:0 (video): 72 frames encoded; 72 packets muxed (11975078 bytes);
+[out#0/mp4 @ 000002a78f415740]   Output stream #0:1 (audio): 112 frames encoded (114688 samples); 113 packets muxed (36621 bytes);
+[out#0/mp4 @ 000002a78f415740]   Total: 185 packets (12011699 bytes) muxed
+[out#0/mp4 @ 000002a78f415740] video:11694KiB audio:36KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.033717%
+frame=   72 fps=0.0 q=25.0 Lsize=   11734KiB time=00:00:02.38 bitrate=40231.3kbits/s speed=2.91x elapsed=0:00:00.82
+[h264_nvenc @ 000002a78f4de540] Nvenc unloaded
+[aac @ 000002a79ef3b840] Qavg: 58769.488
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1b00] Input file #0 (C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-h264-h264\source.bin):
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1b00]   Input stream #0:0 (video): 83 packets read (27060268 bytes); 74 frames decoded; 0 decode errors;
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1b00]   Input stream #0:1 (audio): 131 packets read (24346 bytes); 128 frames decoded; 0 decode errors (131072 samples);
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000002a78f3f1b00]   Total: 214 packets (27084614 bytes) demuxed
+[AVIOContext @ 000002a78f473b00] Statistics: 27177220 bytes read, 2 seeks
+
+Exiting with exit code 0

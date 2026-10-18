@@ -1,0 +1,1356 @@
+Splitting the commandline.
+Reading option '-nostdin' ... matched as option 'stdin' (enable or disable interaction on standard input) with argument 0.
+Reading option '-hide_banner' ... matched as option 'hide_banner' (do not show program banner) with argument '1'.
+Reading option '-loglevel' ... matched as option 'loglevel' (set logging level) with argument 'debug'.
+Reading option '-y' ... matched as option 'y' (overwrite output files) with argument '1'.
+Reading option '-protocol_whitelist' ... matched as AVOption 'protocol_whitelist' with argument 'file'.
+Reading option '-format_whitelist' ... matched as AVOption 'format_whitelist' with argument 'mov,matroska,webm,jpeg_pipe,png_pipe,webp_pipe'.
+Reading option '-threads' ... matched as AVOption 'threads' with argument '1'.
+Reading option '-filter_threads' ... matched as option 'filter_threads' (number of non-complex filter threads) with argument '1'.
+Reading option '-noautorotate' ... matched as option 'autorotate' (automatically insert correct rotate filters) with argument 0.
+Reading option '-hwaccel' ... matched as option 'hwaccel' (use HW accelerated decoding) with argument 'cuda'.
+Reading option '-hwaccel_device' ... matched as option 'hwaccel_device' (select a device for HW acceleration) with argument '1'.
+Reading option '-hwaccel_output_format' ... matched as option 'hwaccel_output_format' (select output format used with HW accelerated decoding) with argument 'cuda'.
+Reading option '-i' ... matched as input url with argument 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\source.bin'.
+Reading option '-map' ... matched as option 'map' (set input stream mapping) with argument '0:v:0'.
+Reading option '-map' ... matched as option 'map' (set input stream mapping) with argument '0:a:0?'.
+Reading option '-c:v' ... matched as option 'c' (select encoder/decoder ('copy' to copy stream without reencoding)) with argument 'hevc_nvenc'.
+Reading option '-gpu' ... matched as AVOption 'gpu' with argument '1'.
+Reading option '-preset' ... matched as AVOption 'preset' with argument 'p4'.
+Reading option '-rc' ... matched as AVOption 'rc' with argument 'vbr'.
+Reading option '-cq' ... matched as AVOption 'cq' with argument '24'.
+Reading option '-b:v' ... matched as option 'b' (video bitrate (please use -b:v)) with argument '0'.
+Reading option '-rc-lookahead' ... matched as AVOption 'rc-lookahead' with argument '0'.
+Reading option '-pix_fmt' ... matched as option 'pix_fmt' (set pixel format) with argument 'cuda'.
+Reading option '-threads' ... matched as AVOption 'threads' with argument '1'.
+Reading option '-tag:v' ... matched as option 'tag' (force codec tag/fourcc) with argument 'hvc1'.
+Reading option '-c:a' ... matched as option 'c' (select encoder/decoder ('copy' to copy stream without reencoding)) with argument 'aac'.
+Reading option '-b:a' ... matched as option 'b' (video bitrate (please use -b:v)) with argument '160k'.
+Reading option '-fps_mode' ... matched as option 'fps_mode' (set framerate mode for matching video streams) with argument 'passthrough'.
+Reading option '-movflags' ... matched as AVOption 'movflags' with argument '+faststart'.
+Reading option '-frames:v' ... matched as option 'frames' (set the number of frames to output) with argument '72'.
+Reading option 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\optimized.mp4' ... matched as output url.
+Finished splitting the commandline.
+Parsing a group of options: global .
+Applying option nostdin (enable or disable interaction on standard input) with argument 0.
+Applying option hide_banner (do not show program banner) with argument 1.
+Applying option loglevel (set logging level) with argument debug.
+Applying option y (overwrite output files) with argument 1.
+Applying option filter_threads (number of non-complex filter threads) with argument 1.
+Successfully parsed a group of options.
+Parsing a group of options: input url C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\source.bin.
+Applying option noautorotate (automatically insert correct rotate filters) with argument 0.
+Applying option hwaccel (use HW accelerated decoding) with argument cuda.
+Applying option hwaccel_device (select a device for HW acceleration) with argument 1.
+Applying option hwaccel_output_format (select output format used with HW accelerated decoding) with argument cuda.
+Successfully parsed a group of options.
+Opening an input file: C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\source.bin.
+[in#0 @ 000001b3c4904240] Opening 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\source.bin' for reading
+[in#0 @ 000001b3c4904240] Format mov,mp4,m4a,3gp,3g2,mj2 probed with size=2048 and score=100
+[in#0 @ 000001b3c4904240] ISO: File Type Major Brand: isom
+[in#0 @ 000001b3c4904240] Unknown dref type 0x206c7275 size 12
+[in#0 @ 000001b3c4904240] Processing st: 0, edit list 0 - media time: 1536, duration: 460800
+[in#0 @ 000001b3c4904240] Offset DTS by 1536 to make first pts zero.
+[in#0 @ 000001b3c4904240] Unknown dref type 0x206c7275 size 12
+[in#0 @ 000001b3c4904240] Processing st: 1, edit list 0 - media time: 1024, duration: 1440000
+[in#0 @ 000001b3c4904240] drop a frame at curr_cts: 0 @ 0
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4904240] Before avformat_find_stream_info() pos: 34561 bytes read:65536 seeks:0 nb_streams:2
+[hevc @ 000001b3c497a3c0] nal_unit_type: 32(VPS), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c497a3c0] Decoding VPS
+[hevc @ 000001b3c497a3c0] Main profile bitstream
+[hevc @ 000001b3c497a3c0] nal_unit_type: 33(SPS), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c497a3c0] Decoding SPS
+[hevc @ 000001b3c497a3c0] Main profile bitstream
+[hevc @ 000001b3c497a3c0] Decoding VUI
+[hevc @ 000001b3c497a3c0] nal_unit_type: 34(PPS), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c497a3c0] Decoding PPS
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 64, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 64, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_pfa_3xM_inv_float_c - type: mdct_float, len: 96, factors[2]: [3, any], flags: [unaligned, out_of_place, inv_only]
+        fft16_ns_float_fma3 - type: fft_float, len: 16, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 120, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 60, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft4_fwd_asm_float_sse2 - type: fft_float, len: 4, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 128, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 64, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 480, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 240, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft16_asm_float_fma3 - type: fft_float, len: 16, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 512, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 256, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_pfa_3xM_inv_float_c - type: mdct_float, len: 768, factors[2]: [3, any], flags: [unaligned, out_of_place, inv_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 128, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 960, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 480, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_fwd_float_c - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [unaligned, out_of_place, fwd_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4904240] demuxer injecting skip 1024 / discard 0
+[aac @ 000001b3c4995640] skip 1024 / discard 0 samples due to side data
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4904240] All info found
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4904240] After avformat_find_stream_info() pos: 678581 bytes read:710880 seeks:0 frames:4
+[vist#0:0/hevc @ 000001b3c4998800] Selecting decoder 'hevc' because of requested hwaccel method cuda
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\source.bin':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2mp41
+    encoder         : Lavf63.1.102
+  Duration: 00:00:30.00, start: 0.000000, bitrate: 20331 kb/s
+  Stream #0:0[0x1](und), 3, 1/15360: Video: hevc (Main), 1 reference frame (hvc1 / 0x31637668), yuv420p(tv, progressive, left), 3840x2160 [SAR 1:1 DAR 16:9], 0/1, 20234 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      encoder         : Lavc63.1.102 hevc_nvenc
+  Stream #0:1[0x2](und), 1, 1/48000: Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, mono, fltp, delay 1024, 87 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+Successfully opened the file.
+Parsing a group of options: output url C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\optimized.mp4.
+Applying option map (set input stream mapping) with argument 0:v:0.
+Applying option map (set input stream mapping) with argument 0:a:0?.
+Applying option c:v (select encoder/decoder ('copy' to copy stream without reencoding)) with argument hevc_nvenc.
+Applying option b:v (video bitrate (please use -b:v)) with argument 0.
+Applying option pix_fmt (set pixel format) with argument cuda.
+Applying option tag:v (force codec tag/fourcc) with argument hvc1.
+Applying option c:a (select encoder/decoder ('copy' to copy stream without reencoding)) with argument aac.
+Applying option b:a (video bitrate (please use -b:v)) with argument 160k.
+Applying option fps_mode (set framerate mode for matching video streams) with argument passthrough.
+Applying option frames:v (set the number of frames to output) with argument 72.
+Successfully parsed a group of options.
+Opening an output file: C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\optimized.mp4.
+[out#0/mp4 @ 000001b3c49234c0] Adding streams from explicit maps...
+[vost#0:0/hevc_nvenc @ 000001b3c49946c0] Created video stream from input stream 0:0
+[CUDA @ 000001b3c4920b00] Loaded lib: nvcuda.dll
+[CUDA @ 000001b3c4920b00] Loaded sym: cuInit
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDriverGetVersion
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceGetCount
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceGet
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceGetAttribute
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceGetName
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceComputeCapability
+[CUDA @ 000001b3c4920b00] Loaded sym: cuCtxCreate_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuCtxSynchronize
+[CUDA @ 000001b3c4920b00] Loaded sym: cuCtxGetStreamPriorityRange
+[CUDA @ 000001b3c4920b00] Loaded sym: cuCtxGetCurrent
+[CUDA @ 000001b3c4920b00] Loaded sym: cuCtxSetLimit
+[CUDA @ 000001b3c4920b00] Loaded sym: cuCtxPushCurrent_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuCtxPopCurrent_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuCtxDestroy_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemAlloc_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemAllocPitch_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemAllocManaged
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemsetD8Async
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemsetD16Async
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemsetD32Async
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemsetD2D8Async
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemsetD2D16Async
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemsetD2D32Async
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemFree_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemHostAlloc
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemFreeHost
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemAllocAsync
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemFreeAsync
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpy
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpyAsync
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpy2D_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpy2DAsync_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpyHtoD_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpyHtoDAsync_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpyDtoH_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpyDtoHAsync_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpyDtoD_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMemcpyDtoDAsync_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGetErrorName
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGetErrorString
+[CUDA @ 000001b3c4920b00] Loaded sym: cuCtxGetDevice
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDevicePrimaryCtxRetain
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDevicePrimaryCtxRelease
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDevicePrimaryCtxSetFlags
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDevicePrimaryCtxGetState
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDevicePrimaryCtxReset
+[CUDA @ 000001b3c4920b00] Loaded sym: cuStreamCreate
+[CUDA @ 000001b3c4920b00] Loaded sym: cuStreamCreateWithPriority
+[CUDA @ 000001b3c4920b00] Loaded sym: cuStreamQuery
+[CUDA @ 000001b3c4920b00] Loaded sym: cuStreamSynchronize
+[CUDA @ 000001b3c4920b00] Loaded sym: cuStreamDestroy_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuStreamAddCallback
+[CUDA @ 000001b3c4920b00] Loaded sym: cuStreamWaitEvent
+[CUDA @ 000001b3c4920b00] Loaded sym: cuEventCreate
+[CUDA @ 000001b3c4920b00] Loaded sym: cuEventDestroy_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuEventSynchronize
+[CUDA @ 000001b3c4920b00] Loaded sym: cuEventQuery
+[CUDA @ 000001b3c4920b00] Loaded sym: cuEventRecord
+[CUDA @ 000001b3c4920b00] Loaded sym: cuLaunchKernel
+[CUDA @ 000001b3c4920b00] Loaded sym: cuLaunchHostFunc
+[CUDA @ 000001b3c4920b00] Loaded sym: cuLinkCreate
+[CUDA @ 000001b3c4920b00] Loaded sym: cuLinkAddData
+[CUDA @ 000001b3c4920b00] Loaded sym: cuLinkComplete
+[CUDA @ 000001b3c4920b00] Loaded sym: cuLinkDestroy
+[CUDA @ 000001b3c4920b00] Loaded sym: cuModuleLoadData
+[CUDA @ 000001b3c4920b00] Loaded sym: cuModuleUnload
+[CUDA @ 000001b3c4920b00] Loaded sym: cuModuleGetFunction
+[CUDA @ 000001b3c4920b00] Loaded sym: cuModuleGetGlobal
+[CUDA @ 000001b3c4920b00] Loaded sym: cuTexObjectCreate
+[CUDA @ 000001b3c4920b00] Loaded sym: cuTexObjectDestroy
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGLGetDevices_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGraphicsGLRegisterImage
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGraphicsUnregisterResource
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGraphicsMapResources
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGraphicsUnmapResources
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGraphicsSubResourceGetMappedArray
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGraphicsResourceGetMappedPointer_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceGetUuid
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceGetUuid_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceGetLuid
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceGetByPCIBusId
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDeviceGetPCIBusId
+[CUDA @ 000001b3c4920b00] Loaded sym: cuImportExternalMemory
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDestroyExternalMemory
+[CUDA @ 000001b3c4920b00] Loaded sym: cuExternalMemoryGetMappedBuffer
+[CUDA @ 000001b3c4920b00] Loaded sym: cuExternalMemoryGetMappedMipmappedArray
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMipmappedArrayGetLevel
+[CUDA @ 000001b3c4920b00] Loaded sym: cuMipmappedArrayDestroy
+[CUDA @ 000001b3c4920b00] Loaded sym: cuImportExternalSemaphore
+[CUDA @ 000001b3c4920b00] Loaded sym: cuDestroyExternalSemaphore
+[CUDA @ 000001b3c4920b00] Loaded sym: cuSignalExternalSemaphoresAsync
+[CUDA @ 000001b3c4920b00] Loaded sym: cuWaitExternalSemaphoresAsync
+[CUDA @ 000001b3c4920b00] Loaded sym: cuArrayCreate_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuArray3DCreate_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuArrayDestroy
+[CUDA @ 000001b3c4920b00] Loaded sym: cuArray3DGetDescriptor_v2
+[CUDA @ 000001b3c4920b00] Loaded sym: cuArrayGetPlane
+[CUDA @ 000001b3c4920b00] Cannot load optional cuEGLStreamProducerConnect
+[CUDA @ 000001b3c4920b00] Cannot load optional cuEGLStreamProducerDisconnect
+[CUDA @ 000001b3c4920b00] Cannot load optional cuEGLStreamConsumerDisconnect
+[CUDA @ 000001b3c4920b00] Cannot load optional cuEGLStreamProducerPresentFrame
+[CUDA @ 000001b3c4920b00] Cannot load optional cuEGLStreamProducerReturnFrame
+[CUDA @ 000001b3c4920b00] Loaded sym: cuD3D11GetDevice
+[CUDA @ 000001b3c4920b00] Loaded sym: cuD3D11GetDevices
+[CUDA @ 000001b3c4920b00] Loaded sym: cuGraphicsD3D11RegisterResource
+[hevc @ 000001b3c55ddc00] nal_unit_type: 32(VPS), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding VPS
+[hevc @ 000001b3c55ddc00] Main profile bitstream
+[hevc @ 000001b3c55ddc00] nal_unit_type: 33(SPS), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SPS
+[hevc @ 000001b3c55ddc00] Main profile bitstream
+[hevc @ 000001b3c55ddc00] Decoding VUI
+[hevc @ 000001b3c55ddc00] nal_unit_type: 34(PPS), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding PPS
+[aost#0:1/aac @ 000001b3d6e9ad00] Created audio stream from input stream 0:1
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 64, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 64, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_pfa_3xM_inv_float_c - type: mdct_float, len: 96, factors[2]: [3, any], flags: [unaligned, out_of_place, inv_only]
+        fft16_ns_float_fma3 - type: fft_float, len: 16, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 120, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 60, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft4_fwd_asm_float_sse2 - type: fft_float, len: 4, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 128, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 64, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 480, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 240, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft16_asm_float_fma3 - type: fft_float, len: 16, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 512, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 256, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_pfa_3xM_inv_float_c - type: mdct_float, len: 768, factors[2]: [3, any], flags: [unaligned, out_of_place, inv_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 128, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 960, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_pfa_15xM_asm_float_avx2 - type: fft_float, len: 480, factors[2]: [15, 2], flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+            fft32_asm_float_fma3 - type: fft_float, len: 32, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_inv_float_avx2 - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [aligned, out_of_place, inv_only]
+        fft_sr_asm_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf, asm_call]
+Transform tree:
+    mdct_fwd_float_c - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [unaligned, out_of_place, fwd_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+[file @ 000001b3c5e721c0] Setting default whitelist 'file,crypto,data'
+Successfully opened the file.
+Stream mapping:
+  Stream #0:0 -> #0:0 (hevc (native) -> hevc (hevc_nvenc))
+  Stream #0:1 -> #0:1 (aac (native) -> aac (native))
+[vost#0:0/hevc_nvenc @ 000001b3c49946c0] Starting thread...
+[aost#0:1/aac @ 000001b3d6e9ad00] Starting thread...
+[vf#0:0 @ 000001b3c4994d00] Starting thread...
+[af#0:1 @ 000001b3d6e0bcc0] Starting thread...
+[vist#0:0/hevc @ 000001b3c4998800] [dec:hevc @ 000001b3c55dda80] Starting thread...
+[aist#0:1/aac @ 000001b3c4981c00] [dec:aac @ 000001b3c5d11c80] Starting thread...
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4903fc0] Starting thread...
+[aac @ 000001b3cef5ff80] skip 1024 / discard 0 samples due to side data
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] nal_unit_type: 19(IDR_W_RADL), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[graph_-1_in_0:1 @ 000001b3c5d0ae00] Setting 'time_base' to value '1/48000'
+[graph_-1_in_0:1 @ 000001b3c5d0ae00] Setting 'sample_rate' to value '48000'
+[graph_-1_in_0:1 @ 000001b3c5d0ae00] Setting 'sample_fmt' to value 'fltp'
+[graph_-1_in_0:1 @ 000001b3c5d0ae00] Setting 'channel_layout' to value 'mono'
+[graph_-1_in_0:1 @ 000001b3c5d0ae00] tb:1/48000 samplefmt:fltp samplerate:48000 chlayout:mono
+[format_out_#0:1 @ 000001b3c5d0b700] Setting 'sample_fmts' to value 'fltp'
+[format_out_#0:1 @ 000001b3c5d0b700] Setting 'sample_rates' to value '96000|88200|64000|48000|44100|32000|24000|22050|16000|12000|11025|8000|7350'
+Filter 'Parsed_anull_0' formats:
+  in[0] 'default':
+    Channel layouts:
+    Sample rates:
+    Sample formats: u8 s16 s32 flt dbl u8p s16p s32p fltp dblp s64 s64p
+  out[0] 'default':
+    Channel layouts:
+    Sample rates:
+    Sample formats: u8 s16 s32 flt dbl u8p s16p s32p fltp dblp s64 s64p
+Filter 'graph_-1_in_0:1' formats:
+  out[0] 'default':
+    Channel layouts: mono
+    Sample rates: 48000
+    Sample formats: fltp
+Filter 'out_#0:1' formats:
+  in[0] 'default':
+    Channel layouts:
+    Sample rates:
+    Sample formats: u8 s16 s32 flt dbl u8p s16p s32p fltp dblp s64 s64p
+Filter 'format_out_#0:1' formats:
+  in[0] 'default':
+    Channel layouts:
+    Sample rates: 96000 88200 64000 48000 44100 32000 24000 22050 16000 12000 11025 8000 7350
+    Sample formats: fltp
+  out[0] 'default':
+    Channel layouts:
+    Sample rates: 96000 88200 64000 48000 44100 32000 24000 22050 16000 12000 11025 8000 7350
+    Sample formats: fltp
+[AVFilterGraph @ 000001b3d6e54a00] query_formats: 4 queried, 6 merged, 3 already done, 0 delayed
+Transform tree:
+    mdct_fwd_float_c - type: mdct_float, len: 1024, factors[2]: [2, any], flags: [unaligned, out_of_place, fwd_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 512, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+Transform tree:
+    mdct_fwd_float_c - type: mdct_float, len: 128, factors[2]: [2, any], flags: [unaligned, out_of_place, fwd_only]
+        fft_sr_ns_float_avx2 - type: fft_float, len: 64, factor: 2, flags: [aligned, inplace, out_of_place, preshuf]
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.0213333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.0426667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.064
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.0853333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.106667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.128
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.149333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.170667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.192
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.213333
+[hevc @ 000001b3c55ddc00] Format cuda chosen by get_format().
+[hevc @ 000001b3c55ddc00] Format cuda requires hwaccel hevc_nvdec initialisation.
+[AVHWFramesContext @ 000001b3d737bd40] CUDA texture alignment: 512
+[AVHWFramesContext @ 000001b3d737af00] CUDA texture alignment: 512
+[hevc @ 000001b3c55ddc00] Loaded lib: nvcuvid.dll
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidGetDecoderCaps
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidCreateDecoder
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidDestroyDecoder
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidRegisterDecodeSurfaces
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidDecodePictureAsync
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidDecodePicture
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidGetDecodeStatus
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidReconfigureDecoder
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidMapVideoFrame64
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidUnmapVideoFrame64
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidCtxLockCreate
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidCtxLockDestroy
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidCtxLock
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidCtxUnlock
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidCreateVideoSource
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidCreateVideoSourceW
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidDestroyVideoSource
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidSetVideoSourceState
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidGetVideoSourceState
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidGetSourceVideoFormat
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidGetSourceAudioFormat
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidCreateVideoParser
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidParseVideoData
+[hevc @ 000001b3c55ddc00] Loaded sym: cuvidDestroyVideoParser
+[hevc @ 000001b3c55ddc00] NVDEC capabilities:
+[hevc @ 000001b3c55ddc00] format supported: yes, max_mb_count: 262144
+[hevc @ 000001b3c55ddc00] min_width: 144, max_width: 8192
+[hevc @ 000001b3c55ddc00] min_height: 144, max_height: 8192
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/0.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.234667
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/4.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.256
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.277333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/0.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/2.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[graph -1 input from stream 0:0 @ 000001b3c5d0c800] w:3840 h:2160 pixfmt:cuda tb:1/15360 fr:30/1 sar:1/1 csp:unknown range:tv alpha:unspecified
+[format @ 000001b3c5d0b600] Setting 'pix_fmts' to value 'cuda'
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.298667
+[format @ 000001b3c5d0b600] Setting 'color_ranges' to value 'tv|pc'
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.32
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+Filter 'Parsed_null_0' formats:
+  in[0] 'default':
+    Pixel formats: yuv420p yuyv422 rgb24 bgr24 yuv422p yuv444p yuv410p yuv411p gray monow monob pal8 yuvj420p yuvj422p yuvj444p uyvy422 uyyvyy411 bgr8 bgr4 bgr4_byte rgb8 rgb4 rgb4_byte nv12 nv21 argb rgba abgr bgra gray16be gray16le yuv440p yuvj440p yuva420p rgb48be rgb48le rgb565be rgb565le rgb555be rgb555le bgr565be bgr565le bgr555be bgr555le vaapi yuv420p16le yuv420p16be yuv422p16le yuv422p16be yuv444p16le yuv444p16be dxva2_vld rgb444le rgb444be bgr444le bgr444be ya8 bgr48be bgr48le yuv420p9be yuv420p9le yuv420p10be yuv420p10le yuv422p10be yuv422p10le yuv444p9be yuv444p9le yuv444p10be yuv444p10le yuv422p9be yuv422p9le gbrp gbrp9be gbrp9le gbrp10be gbrp10le gbrp16be gbrp16le yuva422p yuva444p yuva420p9be yuva420p9le yuva422p9be yuva422p9le yuva444p9be yuva444p9le yuva420p10be yuva420p10le yuva422p10be yuva422p10le yuva444p10be yuva444p10le yuva420p16be yuva420p16le yuva422p16be yuva422p16le yuva444p16be yuva444p16le vdpau xyz12le xyz12be nv16 nv20le nv20be rgba64be rgba64le bgra64be bgra64le yvyu422 ya16be ya16le gbrap gbrap16be gbrap16le qsv mmal d3d11va_vld cuda 0rgb rgb0 0bgr bgr0 yuv420p12be yuv420p12le yuv420p14be yuv420p14le yuv422p12be yuv422p12le yuv422p14be yuv422p14le yuv444p12be yuv444p12le yuv444p14be yuv444p14le gbrp12be gbrp12le gbrp14be gbrp14le yuvj411p bayer_bggr8 bayer_rggb8 bayer_gbrg8 bayer_grbg8 bayer_bggr16le bayer_bggr16be bayer_rggb16le bayer_rggb16be bayer_gbrg16le bayer_gbrg16be bayer_grbg16le bayer_grbg16be yuv440p10le yuv440p10be yuv440p12le yuv440p12be ayuv64le ayuv64be videotoolbox_vld p010le p010be gbrap12be gbrap12le gbrap10be gbrap10le mediacodec gray12be gray12le gray10be gray10le p016le p016be d3d11 gray9be gray9le gbrpf32be gbrpf32le gbrapf32be gbrapf32le drm_prime opencl gray14be gray14le grayf32be grayf32le yuva422p12be yuva422p12le yuva444p12be yuva444p12le nv24 nv42 vulkan y210be y210le x2rgb10le x2rgb10be x2bgr10le x2bgr10be p210be p210le p410be p410le p216be p216le p416be p416le vuya rgbaf16be rgbaf16le vuyx p012le p012be y212be y212le xv30be xv30le xv36be xv36le rgbf32be rgbf32le rgbaf32be rgbaf32le p212be p212le p412be p412le gbrap14be gbrap14le d3d12 ayuv uyva vyu444 v30xbe v30xle rgbf16be rgbf16le rgba128be rgba128le rgb96be rgb96le y216be y216le xv48be xv48le gbrpf16be gbrpf16le gbrapf16be gbrapf16le grayf16be grayf16le amf gray32be gray32le yaf32be yaf32le yaf16be yaf16le gbrap32be gbrap32le yuv444p10msbbe yuv444p10msble yuv444p12msbbe yuv444p12msble gbrp10msbbe gbrp10msble gbrp12msbbe gbrp12msble ohcodec
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: unknown tv pc
+    Alpha modes: unspecified premultiplied straight
+  out[0] 'default':
+    Pixel formats: yuv420p yuyv422 rgb24 bgr24 yuv422p yuv444p yuv410p yuv411p gray monow monob pal8 yuvj420p yuvj422p yuvj444p uyvy422 uyyvyy411 bgr8 bgr4 bgr4_byte rgb8 rgb4 rgb4_byte nv12 nv21 argb rgba abgr bgra gray16be gray16le yuv440p yuvj440p yuva420p rgb48be rgb48le rgb565be rgb565le rgb555be rgb555le bgr565be bgr565le bgr555be bgr555le vaapi yuv420p16le yuv420p16be yuv422p16le yuv422p16be yuv444p16le yuv444p16be dxva2_vld rgb444le rgb444be bgr444le bgr444be ya8 bgr48be bgr48le yuv420p9be yuv420p9le yuv420p10be yuv420p10le yuv422p10be yuv422p10le yuv444p9be yuv444p9le yuv444p10be yuv444p10le yuv422p9be yuv422p9le gbrp gbrp9be gbrp9le gbrp10be gbrp10le gbrp16be gbrp16le yuva422p yuva444p yuva420p9be yuva420p9le yuva422p9be yuva422p9le yuva444p9be yuva444p9le yuva420p10be yuva420p10le yuva422p10be yuva422p10le yuva444p10be yuva444p10le yuva420p16be yuva420p16le yuva422p16be yuva422p16le yuva444p16be yuva444p16le vdpau xyz12le xyz12be nv16 nv20le nv20be rgba64be rgba64le bgra64be bgra64le yvyu422 ya16be ya16le gbrap gbrap16be gbrap16le qsv mmal d3d11va_vld cuda 0rgb rgb0 0bgr bgr0 yuv420p12be yuv420p12le yuv420p14be yuv420p14le yuv422p12be yuv422p12le yuv422p14be yuv422p14le yuv444p12be yuv444p12le yuv444p14be yuv444p14le gbrp12be gbrp12le gbrp14be gbrp14le yuvj411p bayer_bggr8 bayer_rggb8 bayer_gbrg8 bayer_grbg8 bayer_bggr16le bayer_bggr16be bayer_rggb16le bayer_rggb16be bayer_gbrg16le bayer_gbrg16be bayer_grbg16le bayer_grbg16be yuv440p10le yuv440p10be yuv440p12le yuv440p12be ayuv64le ayuv64be videotoolbox_vld p010le p010be gbrap12be gbrap12le gbrap10be gbrap10le mediacodec gray12be gray12le gray10be gray10le p016le p016be d3d11 gray9be gray9le gbrpf32be gbrpf32le gbrapf32be gbrapf32le drm_prime opencl gray14be gray14le grayf32be grayf32le yuva422p12be yuva422p12le yuva444p12be yuva444p12le nv24 nv42 vulkan y210be y210le x2rgb10le x2rgb10be x2bgr10le x2bgr10be p210be p210le p410be p410le p216be p216le p416be p416le vuya rgbaf16be rgbaf16le vuyx p012le p012be y212be y212le xv30be xv30le xv36be xv36le rgbf32be rgbf32le rgbaf32be rgbaf32le p212be p212le p412be p412le gbrap14be gbrap14le d3d12 ayuv uyva vyu444 v30xbe v30xle rgbf16be rgbf16le rgba128be rgba128le rgb96be rgb96le y216be y216le xv48be xv48le gbrpf16be gbrpf16le gbrapf16be gbrapf16le grayf16be grayf16le amf gray32be gray32le yaf32be yaf32le yaf16be yaf16le gbrap32be gbrap32le yuv444p10msbbe yuv444p10msble yuv444p12msbbe yuv444p12msble gbrp10msbbe gbrp10msble gbrp12msbbe gbrp12msble ohcodec
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: unknown tv pc
+    Alpha modes: unspecified premultiplied straight
+Filter 'graph -1 input from stream 0:0' formats:
+  out[0] 'default':
+    Pixel formats: cuda
+    Color spaces: unknown
+    Color ranges: tv
+    Alpha modes: unspecified premultiplied straight
+Filter 'out_#0:0' formats:
+  in[0] 'default':
+    Pixel formats: yuv420p yuyv422 rgb24 bgr24 yuv422p yuv444p yuv410p yuv411p gray monow monob pal8 yuvj420p yuvj422p yuvj444p uyvy422 uyyvyy411 bgr8 bgr4 bgr4_byte rgb8 rgb4 rgb4_byte nv12 nv21 argb rgba abgr bgra gray16be gray16le yuv440p yuvj440p yuva420p rgb48be rgb48le rgb565be rgb565le rgb555be rgb555le bgr565be bgr565le bgr555be bgr555le vaapi yuv420p16le yuv420p16be yuv422p16le yuv422p16be yuv444p16le yuv444p16be dxva2_vld rgb444le rgb444be bgr444le bgr444be ya8 bgr48be bgr48le yuv420p9be yuv420p9le yuv420p10be yuv420p10le yuv422p10be yuv422p10le yuv444p9be yuv444p9le yuv444p10be yuv444p10le yuv422p9be yuv422p9le gbrp gbrp9be gbrp9le gbrp10be gbrp10le gbrp16be gbrp16le yuva422p yuva444p yuva420p9be yuva420p9le yuva422p9be yuva422p9le yuva444p9be yuva444p9le yuva420p10be yuva420p10le yuva422p10be yuva422p10le yuva444p10be yuva444p10le yuva420p16be yuva420p16le yuva422p16be yuva422p16le yuva444p16be yuva444p16le vdpau xyz12le xyz12be nv16 nv20le nv20be rgba64be rgba64le bgra64be bgra64le yvyu422 ya16be ya16le gbrap gbrap16be gbrap16le qsv mmal d3d11va_vld cuda 0rgb rgb0 0bgr bgr0 yuv420p12be yuv420p12le yuv420p14be yuv420p14le yuv422p12be yuv422p12le yuv422p14be yuv422p14le yuv444p12be yuv444p12le yuv444p14be yuv444p14le gbrp12be gbrp12le gbrp14be gbrp14le yuvj411p bayer_bggr8 bayer_rggb8 bayer_gbrg8 bayer_grbg8 bayer_bggr16le bayer_bggr16be bayer_rggb16le bayer_rggb16be bayer_gbrg16le bayer_gbrg16be bayer_grbg16le bayer_grbg16be yuv440p10le yuv440p10be yuv440p12le yuv440p12be ayuv64le ayuv64be videotoolbox_vld p010le p010be gbrap12be gbrap12le gbrap10be gbrap10le mediacodec gray12be gray12le gray10be gray10le p016le p016be d3d11 gray9be gray9le gbrpf32be gbrpf32le gbrapf32be gbrapf32le drm_prime opencl gray14be gray14le grayf32be grayf32le yuva422p12be yuva422p12le yuva444p12be yuva444p12le nv24 nv42 vulkan y210be y210le x2rgb10le x2rgb10be x2bgr10le x2bgr10be p210be p210le p410be p410le p216be p216le p416be p416le vuya rgbaf16be rgbaf16le vuyx p012le p012be y212be y212le xv30be xv30le xv36be xv36le rgbf32be rgbf32le rgbaf32be rgbaf32le p212be p212le p412be p412le gbrap14be gbrap14le d3d12 ayuv uyva vyu444 v30xbe v30xle rgbf16be rgbf16le rgba128be rgba128le rgb96be rgb96le y216be y216le xv48be xv48le gbrpf16be gbrpf16le gbrapf16be gbrapf16le grayf16be grayf16le amf gray32be gray32le yaf32be yaf32le yaf16be yaf16le gbrap32be gbrap32le yuv444p10msbbe yuv444p10msble yuv444p12msbbe yuv444p12msble gbrp10msbbe gbrp10msble gbrp12msbbe gbrp12msble ohcodec
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: unknown tv pc
+    Alpha modes: unspecified premultiplied straight
+Filter 'format' formats:
+  in[0] 'default':
+    Pixel formats: cuda
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: tv pc
+    Alpha modes: unspecified premultiplied straight
+  out[0] 'default':
+    Pixel formats: cuda
+    Color spaces: unknown gbr bt709 fcc bt470bg smpte170m smpte240m ycgco bt2020nc bt2020c smpte2085 chroma-derived-nc chroma-derived-c ictcp ipt-c2 ycgco-re ycgco-ro
+    Color ranges: tv pc
+    Alpha modes: unspecified premultiplied straight
+[AVFilterGraph @ 000001b3d79fdf40] query_formats: 4 queried, 12 merged, 0 already done, 0 delayed
+[graph -1 input from stream 0:0 @ 000001b3c5d0c800] video frame properties congruent with link at pts_time: 0
+[vost#0:0/hevc_nvenc @ 000001b3c49946c0] [enc:hevc_nvenc @ 000001b3c49e7300] Using input frames context (format cuda) with hevc_nvenc encoder.
+[hevc_nvenc @ 000001b3c4994940] Loaded lib: nvcuda.dll
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuInit
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDriverGetVersion
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceGetCount
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceGet
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceGetAttribute
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceGetName
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceComputeCapability
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuCtxCreate_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuCtxSynchronize
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuCtxGetStreamPriorityRange
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuCtxGetCurrent
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuCtxSetLimit
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuCtxPushCurrent_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuCtxPopCurrent_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuCtxDestroy_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemAlloc_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemAllocPitch_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemAllocManaged
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemsetD8Async
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemsetD16Async
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemsetD32Async
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemsetD2D8Async
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemsetD2D16Async
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemsetD2D32Async
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemFree_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemHostAlloc
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemFreeHost
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemAllocAsync
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemFreeAsync
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpy
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpyAsync
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpy2D_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpy2DAsync_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpyHtoD_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpyHtoDAsync_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpyDtoH_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpyDtoHAsync_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpyDtoD_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMemcpyDtoDAsync_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGetErrorName
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGetErrorString
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuCtxGetDevice
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDevicePrimaryCtxRetain
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDevicePrimaryCtxRelease
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDevicePrimaryCtxSetFlags
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDevicePrimaryCtxGetState
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDevicePrimaryCtxReset
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuStreamCreate
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuStreamCreateWithPriority
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuStreamQuery
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuStreamSynchronize
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuStreamDestroy_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuStreamAddCallback
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuStreamWaitEvent
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuEventCreate
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuEventDestroy_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuEventSynchronize
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuEventQuery
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuEventRecord
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuLaunchKernel
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuLaunchHostFunc
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuLinkCreate
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuLinkAddData
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuLinkComplete
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuLinkDestroy
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuModuleLoadData
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuModuleUnload
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuModuleGetFunction
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuModuleGetGlobal
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuTexObjectCreate
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuTexObjectDestroy
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGLGetDevices_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGraphicsGLRegisterImage
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGraphicsUnregisterResource
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGraphicsMapResources
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGraphicsUnmapResources
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGraphicsSubResourceGetMappedArray
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGraphicsResourceGetMappedPointer_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceGetUuid
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceGetUuid_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceGetLuid
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceGetByPCIBusId
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDeviceGetPCIBusId
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuImportExternalMemory
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDestroyExternalMemory
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuExternalMemoryGetMappedBuffer
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuExternalMemoryGetMappedMipmappedArray
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMipmappedArrayGetLevel
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuMipmappedArrayDestroy
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuImportExternalSemaphore
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuDestroyExternalSemaphore
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuSignalExternalSemaphoresAsync
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuWaitExternalSemaphoresAsync
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuArrayCreate_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuArray3DCreate_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuArrayDestroy
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuArray3DGetDescriptor_v2
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuArrayGetPlane
+[hevc_nvenc @ 000001b3c4994940] Cannot load optional cuEGLStreamProducerConnect
+[hevc_nvenc @ 000001b3c4994940] Cannot load optional cuEGLStreamProducerDisconnect
+[hevc_nvenc @ 000001b3c4994940] Cannot load optional cuEGLStreamConsumerDisconnect
+[hevc_nvenc @ 000001b3c4994940] Cannot load optional cuEGLStreamProducerPresentFrame
+[hevc_nvenc @ 000001b3c4994940] Cannot load optional cuEGLStreamProducerReturnFrame
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuD3D11GetDevice
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuD3D11GetDevices
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: cuGraphicsD3D11RegisterResource
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/1.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/1.
+[hevc_nvenc @ 000001b3c4994940] Loaded lib: nvEncodeAPI64.dll
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: NvEncodeAPICreateInstance
+[hevc_nvenc @ 000001b3c4994940] Loaded sym: NvEncodeAPIGetMaxSupportedVersion
+[hevc_nvenc @ 000001b3c4994940] Loaded Nvenc version 13.1
+[hevc_nvenc @ 000001b3c4994940] Nvenc initialized successfully
+[hevc_nvenc @ 000001b3c4994940] CQ(6144) mode enabled.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.341333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/2.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/3.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.362667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.384
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/3.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/8.
+Output #0, mp4, to 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\optimized.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2mp41
+    encoder         : Lavf63.1.102
+  Stream #0:0(und), 0, 1/15360: Video: hevc (Main), 1 reference frame (hvc1 / 0x31637668), nv12(tv, progressive, left), 3840x2160 [SAR 1:1 DAR 16:9], 0/1, q=2-31, 30 fps, 15360 tbn (default)
+    Metadata:
+      encoder         : Lavc63.1.102 hevc_nvenc
+      handler_name    : VideoHandler
+    Side data:
+      CPB properties: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+  Stream #0:1(und), 0, 1/48000: Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, mono, fltp, delay 1024, 160 kb/s (default)
+    Metadata:
+      encoder         : Lavc63.1.102 aac
+      handler_name    : SoundHandler
+[out#0/mp4 @ 000001b3c49234c0] Starting thread...
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.0333333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.0333333 queue head 0 ts 0.0333333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.0213333 queue head 0 ts 0.0333333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.0666667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.0666667 queue head 0 ts 0.0666667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.0426667 queue head 0 ts 0.0666667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.064 queue head 0 ts 0.0666667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.1
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.1 queue head 0 ts 0.1
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.0853333 queue head 0 ts 0.1
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.133333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.133333 queue head 0 ts 0.133333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/4.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/6.
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.106667 queue head 0 ts 0.133333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.128 queue head 0 ts 0.133333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.405333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.166667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.166667 queue head 0 ts 0.166667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.149333 queue head 0 ts 0.166667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.426667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.448
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/5.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/5.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.2
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.2 queue head 0 ts 0.2
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.170667 queue head 0 ts 0.2
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.192 queue head 0 ts 0.2
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.469333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/6.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/7.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.233333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.233333 queue head 0 ts 0.233333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.213333 queue head 0 ts 0.233333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.490667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.512
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/7.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/12.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.266667 queue head 0 ts 0.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.234667 queue head 0 ts 0.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.256 queue head 0 ts 0.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.533333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/8.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/10.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.3
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.3 queue head 0 ts 0.3
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.277333 queue head 0 ts 0.3
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.298667 queue head 0 ts 0.3
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/9.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/9.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.554667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.576
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.333333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.333333 queue head 0 ts 0.333333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.32 queue head 0 ts 0.333333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.597333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.618667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/10.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/11.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.366667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.366667 queue head 0 ts 0.366667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.341333 queue head 0 ts 0.366667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.362667 queue head 0 ts 0.366667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.64
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/11.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/16.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.4
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.4 queue head 0 ts 0.4
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.384 queue head 0 ts 0.4
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.661333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.682667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/12.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/14.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.433333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.433333 queue head 0 ts 0.433333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.405333 queue head 0 ts 0.433333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.426667 queue head 0 ts 0.433333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.704
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/13.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/13.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.466667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.466667 queue head 0 ts 0.466667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.448 queue head 0 ts 0.466667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.725333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.746667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/14.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/15.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.5
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.5 queue head 0 ts 0.5
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.469333 queue head 0 ts 0.5
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.490667 queue head 0 ts 0.5
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.768
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/15.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/20.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.533333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.533333 queue head 0 ts 0.533333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.512 queue head 0 ts 0.533333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.533333 queue head 0 ts 0.533333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.789333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.810667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/16.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/18.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.566667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.566667 queue head 0 ts 0.566667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.554667 queue head 0 ts 0.566667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.832
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.853333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/17.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/17.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.6
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.6 queue head 0 ts 0.6
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.576 queue head 0 ts 0.6
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.597333 queue head 0 ts 0.6
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.874667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/18.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/19.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.633333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.633333 queue head 0 ts 0.633333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.618667 queue head 0 ts 0.633333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.896
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/19.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.917333
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/24.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.666667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.666667 queue head 0 ts 0.666667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.64 queue head 0 ts 0.666667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.661333 queue head 0 ts 0.666667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.938667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/20.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/22.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.7
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.7 queue head 0 ts 0.7
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.682667 queue head 0 ts 0.7
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.96
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 0.981333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/21.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/21.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.733333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.733333 queue head 0 ts 0.733333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/22.
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.704 queue head 0 ts 0.733333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.725333 queue head 0 ts 0.733333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.002667
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/23.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.766667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.766667 queue head 0 ts 0.766667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.746667 queue head 0 ts 0.766667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.024
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.045333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/23.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/28.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.8
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.8 queue head 0 ts 0.8
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.768 queue head 0 ts 0.8
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.789333 queue head 0 ts 0.8
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.066667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/24.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/26.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.833333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.833333 queue head 0 ts 0.833333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.810667 queue head 0 ts 0.833333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.832 queue head 0 ts 0.833333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/25.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/25.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.088
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.109333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.866667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.866667 queue head 0 ts 0.866667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.853333 queue head 0 ts 0.866667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/26.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.130667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.152
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/27.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.9
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.9 queue head 0 ts 0.9
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.874667 queue head 0 ts 0.9
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.896 queue head 0 ts 0.9
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.173333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/27.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/32.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.933333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.933333 queue head 0 ts 0.933333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.917333 queue head 0 ts 0.933333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.194667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/28.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.216
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/30.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 0.966667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 0.966667 queue head 0 ts 0.966667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.938667 queue head 0 ts 0.966667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.96 queue head 0 ts 0.966667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.237333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/29.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/29.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1 queue head 0 ts 1
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 0.981333 queue head 0 ts 1
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.258667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/30.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.28
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/31.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.033333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.033333 queue head 0 ts 1.033333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.002667 queue head 0 ts 1.033333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.024 queue head 0 ts 1.033333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.301333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/31.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/36.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.066667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.066667 queue head 0 ts 1.066667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.045333 queue head 0 ts 1.066667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.066667 queue head 0 ts 1.066667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.322667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/32.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.344
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/34.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.1
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.1 queue head 0 ts 1.1
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.088 queue head 0 ts 1.1
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.365333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.386667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/33.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/33.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.133333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.133333 queue head 0 ts 1.133333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.109333 queue head 0 ts 1.133333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.130667 queue head 0 ts 1.133333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.408
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/34.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/35.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.166667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.166667 queue head 0 ts 1.166667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.152 queue head 0 ts 1.166667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.429333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.450667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/35.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/40.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.2
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.2 queue head 0 ts 1.2
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.173333 queue head 0 ts 1.2
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.194667 queue head 0 ts 1.2
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.472
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/36.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/38.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.233333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.233333 queue head 0 ts 1.233333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.216 queue head 0 ts 1.233333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.493333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.514667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/37.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/37.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.266667 queue head 0 ts 1.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.237333 queue head 0 ts 1.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.258667 queue head 0 ts 1.266667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.536
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/38.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/39.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.3
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.3 queue head 0 ts 1.3
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.28 queue head 0 ts 1.3
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/39.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.557333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.578667
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/44.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.333333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.333333 queue head 0 ts 1.333333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.301333 queue head 0 ts 1.333333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.322667 queue head 0 ts 1.333333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.6
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/40.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/42.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.366667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.366667 queue head 0 ts 1.366667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.344 queue head 0 ts 1.366667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.365333 queue head 0 ts 1.366667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.621333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/41.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.642667
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/41.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.4
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.4 queue head 0 ts 1.4
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.386667 queue head 0 ts 1.4
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.664
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.685333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/42.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/43.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.433333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.433333 queue head 0 ts 1.433333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.408 queue head 0 ts 1.433333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.429333 queue head 0 ts 1.433333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.706667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/43.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/48.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.466667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.466667 queue head 0 ts 1.466667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.450667 queue head 0 ts 1.466667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.728
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.749333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/44.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/46.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.5
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.5 queue head 0 ts 1.5
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.472 queue head 0 ts 1.5
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.493333 queue head 0 ts 1.5
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/45.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.770667
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/45.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.533333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.533333 queue head 0 ts 1.533333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.514667 queue head 0 ts 1.533333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.792
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/46.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.813333
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/47.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.566667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.566667 queue head 0 ts 1.566667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.536 queue head 0 ts 1.566667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.557333 queue head 0 ts 1.566667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.834667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/47.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/52.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.6
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.6 queue head 0 ts 1.6
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.578667 queue head 0 ts 1.6
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.6 queue head 0 ts 1.6
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.856
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.877333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/48.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/50.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.633333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.633333 queue head 0 ts 1.633333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.621333 queue head 0 ts 1.633333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.898667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.92
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/49.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/49.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.666667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.666667 queue head 0 ts 1.666667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.642667 queue head 0 ts 1.666667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.664 queue head 0 ts 1.666667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.941333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/50.
+frame=   36 fps=0.0 q=29.0 size=    3840KiB time=00:00:01.62 bitrate=19402.3kbits/s speed=3.15x elapsed=0:00:00.51
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/51.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.7
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.7 queue head 0 ts 1.7
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.685333 queue head 0 ts 1.7
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.962667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 1.984
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/51.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/56.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.733333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.733333 queue head 0 ts 1.733333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.706667 queue head 0 ts 1.733333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.728 queue head 0 ts 1.733333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.005333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/52.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/54.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.766667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.766667 queue head 0 ts 1.766667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.749333 queue head 0 ts 1.766667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.026667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.048
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/53.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/53.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.8
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.8 queue head 0 ts 1.8
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.770667 queue head 0 ts 1.8
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.792 queue head 0 ts 1.8
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.069333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/54.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/55.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.833333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.833333 queue head 0 ts 1.833333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.813333 queue head 0 ts 1.833333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.090667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.112
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/55.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/60.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.866667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.866667 queue head 0 ts 1.866667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.834667 queue head 0 ts 1.866667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.856 queue head 0 ts 1.866667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.133333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/56.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/58.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.9
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.9 queue head 0 ts 1.9
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.877333 queue head 0 ts 1.9
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.898667 queue head 0 ts 1.9
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/57.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/57.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.154667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.176
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.933333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.933333 queue head 0 ts 1.933333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.92 queue head 0 ts 1.933333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.197333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.218667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/58.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/59.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 1.966667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 1.966667 queue head 0 ts 1.966667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.941333 queue head 0 ts 1.966667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.962667 queue head 0 ts 1.966667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.24
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/59.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/64.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2 queue head 0 ts 2
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 1.984 queue head 0 ts 2
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.261333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.282667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/60.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/62.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.033333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.033333 queue head 0 ts 2.033333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.005333 queue head 0 ts 2.033333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.026667 queue head 0 ts 2.033333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.304
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/61.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/61.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.066667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.066667 queue head 0 ts 2.066667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.048 queue head 0 ts 2.066667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.325333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.346667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/62.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/63.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.1
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.1 queue head 0 ts 2.1
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.069333 queue head 0 ts 2.1
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.090667 queue head 0 ts 2.1
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.368
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/63.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/68.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.133333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.133333 queue head 0 ts 2.133333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.112 queue head 0 ts 2.133333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.133333 queue head 0 ts 2.133333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.389333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.410667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/64.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/66.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.166667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.166667 queue head 0 ts 2.166667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.154667 queue head 0 ts 2.166667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.432
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.453333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/65.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/65.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.2
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.2 queue head 0 ts 2.2
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.176 queue head 0 ts 2.2
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.197333 queue head 0 ts 2.2
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.474667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/66.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/67.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.233333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.233333 queue head 0 ts 2.233333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.218667 queue head 0 ts 2.233333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.496
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.517333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/67.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/72.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.266667 queue head 0 ts 2.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.24 queue head 0 ts 2.266667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.261333 queue head 0 ts 2.266667
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.538667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/68.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/70.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.3
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.3 queue head 0 ts 2.3
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.282667 queue head 0 ts 2.3
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.56
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/69.
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.581333
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/69.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.333333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.333333 queue head 0 ts 2.333333
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.304 queue head 0 ts 2.333333
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.325333 queue head 0 ts 2.333333
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.602667
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/70.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/71.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.366667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.366667 queue head 0 ts 2.366667
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.346667 queue head 0 ts 2.366667
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.624
+[out#0/mp4 @ 000001b3c49234c0] sq: send 1 ts 2.645333
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/71.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/76.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[out#0/mp4 @ 000001b3c49234c0] sq: send 0 ts 2.4
+[out#0/mp4 @ 000001b3c49234c0] sq: 0 frames_max 72 reached
+[out#0/mp4 @ 000001b3c49234c0] sq: finish 0; head ts 2.4
+[out#0/mp4 @ 000001b3c49234c0] sq: finish secondary 1; head ts 2.645333
+[out#0/mp4 @ 000001b3c49234c0] sq: finish queue
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 0 ts 2.4 queue head 0 ts 2.4
+[hevc @ 000001b3c55ddc00] nal_unit_type: 1(TRAIL_R), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.368 queue head 0 ts 2.4
+[out#0/mp4 @ 000001b3c49234c0] sq: receive 1 ts 2.389333 queue head 0 ts 2.4
+[out#0/mp4 @ 000001b3c49234c0] sq: 0 EOF
+[out#0/mp4 @ 000001b3c49234c0] sq: finish queue
+[out#0/mp4 @ 000001b3c49234c0] sq: 1 EOF
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/72.
+[out#0/mp4 @ 000001b3c49234c0] sq: finish queue
+[vost#0:0/hevc_nvenc @ 000001b3c49946c0] [enc:hevc_nvenc @ 000001b3c49e7300] Encoder thread received EOF
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/74.
+[hevc @ 000001b3c55ddc00] nal_unit_type: 39(SEI_PREFIX), nuh_layer_id: 0, temporal_id: 0
+[vf#0:0 @ 000001b3c4994d00] All consumers returned EOF
+[hevc @ 000001b3c55ddc00] nal_unit_type: 0(TRAIL_N), nuh_layer_id: 0, temporal_id: 0
+[hevc @ 000001b3c55ddc00] Decoding SEI
+[af#0:1 @ 000001b3d6e0bcc0] All consumers returned EOF
+[out#0/mp4 @ 000001b3c49234c0] sq: 0 EOF
+[out#0/mp4 @ 000001b3c49234c0] sq: finish queue
+[vf#0:0 @ 000001b3c4994d00] Terminating thread with return code 0 (success)
+[out#0/mp4 @ 000001b3c49234c0] sq: 1 EOF
+[out#0/mp4 @ 000001b3c49234c0] sq: finish queue
+[af#0:1 @ 000001b3d6e0bcc0] Terminating thread with return code 0 (success)
+[hevc @ 000001b3c55ddc00] Output frame with POC 0/73.
+[hevc @ 000001b3c55ddc00] Decoded frame with POC 0/73.
+[aost#0:1/aac @ 000001b3d6e9ad00] [enc:aac @ 000001b3c49e6b80] Encoder thread received EOF
+[aost#0:1/aac @ 000001b3d6e9ad00] Terminating thread with return code 0 (success)
+[vist#0:0/hevc @ 000001b3c4998800] [dec:hevc @ 000001b3c55dda80] Decoder returned EOF, finishing
+[vost#0:0/hevc_nvenc @ 000001b3c49946c0] Terminating thread with return code 0 (success)
+[out#0/mp4 @ 000001b3c49234c0] All streams finished
+[out#0/mp4 @ 000001b3c49234c0] Terminating thread with return code 0 (success)
+[vist#0:0/hevc @ 000001b3c4998800] [dec:hevc @ 000001b3c55dda80] Terminating thread with return code 0 (success)
+[vist#0:0/hevc @ 000001b3c4998800] All consumers of this stream are done
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4903fc0] Terminating thread with return code 0 (success)
+[aist#0:1/aac @ 000001b3c4981c00] [dec:aac @ 000001b3c5d11c80] Decoder thread received EOF packet
+[aist#0:1/aac @ 000001b3c4981c00] [dec:aac @ 000001b3c5d11c80] Decoder returned EOF, finishing
+[aist#0:1/aac @ 000001b3c4981c00] [dec:aac @ 000001b3c5d11c80] Terminating thread with return code 0 (success)
+[mp4 @ 000001b3c4995640] Starting second pass: moving the moov atom to the beginning of the file
+[mp4 @ 000001b3c4995640] Opening 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\optimized.mp4' for reading
+[file @ 000001b3c5e718c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 000001b3d72415c0] Statistics: 6921846 bytes read, 0 seeks
+[AVIOContext @ 000001b3c57e8b00] Statistics: 13847749 bytes written, 4 seeks, 57 writeouts
+[out#0/mp4 @ 000001b3c49234c0] Output file #0 (C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\optimized.mp4):
+[out#0/mp4 @ 000001b3c49234c0]   Output stream #0:0 (video): 72 frames encoded; 72 packets muxed (6885417 bytes);
+[out#0/mp4 @ 000001b3c49234c0]   Output stream #0:1 (audio): 112 frames encoded (114688 samples); 113 packets muxed (36385 bytes);
+[out#0/mp4 @ 000001b3c49234c0]   Total: 185 packets (6921802 bytes) muxed
+[out#0/mp4 @ 000001b3c49234c0] video:6724KiB audio:36KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.059594%
+frame=   72 fps=0.0 q=30.0 Lsize=    6764KiB time=00:00:02.38 bitrate=23189.5kbits/s speed=2.92x elapsed=0:00:00.81
+[hevc_nvenc @ 000001b3c4994940] Nvenc unloaded
+[aac @ 000001b3cef5fbc0] Qavg: 59913.270
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4903fc0] Input file #0 (C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\measurements\4k\trace-hevc-hevc\source.bin):
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4903fc0]   Input stream #0:0 (video): 85 packets read (8163612 bytes); 74 frames decoded; 0 decode errors;
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4903fc0]   Input stream #0:1 (audio): 129 packets read (41101 bytes); 127 frames decoded; 0 decode errors (130048 samples);
+[in#0/mov,mp4,m4a,3gp,3g2,mj2 @ 000001b3c4903fc0]   Total: 214 packets (8204713 bytes) demuxed
+[AVIOContext @ 000001b3c4904600] Statistics: 8271794 bytes read, 0 seeks
+
+Exiting with exit code 0

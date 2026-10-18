@@ -1,0 +1,9 @@
+PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
+PASS app image renders a full-size WebP and bounded poster with independent destinations
+PASS non-AAC audio uses the existing app delivery bitrate
+PASS common SDR H264 and HEVC use device frames on the selected NVENC device
+PASS unproven source formats retain the original software decode and encoding options
+PASS decode selection inspects the first input video only and leaves other backends and posters unchanged
+FAIL output descriptions and metadata cannot qualify an unknown input for CUDA decode: check failed at tests/media_rendition_test.cpp:76: ow::rendition_plan(true,false,"workspace",profiles,log)[0].arguments==original[0].arguments
+PASS device decode preserves every existing output encoder option
+8 contracts, 1 failures

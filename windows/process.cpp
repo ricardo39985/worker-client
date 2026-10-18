@@ -19,7 +19,7 @@ std::optional<ChildTiming> Child::sample_timing() const noexcept {
  ChildTiming result;result.cpu_us=static_cast<std::uint64_t>(accounting.TotalKernelTime.QuadPart+accounting.TotalUserTime.QuadPart)/10;
  result.launch_us=launch_us_;
  FILETIME created{},exited{},kernel{},user{};
- if(process_&&GetProcessTimes(process_.get(),&created,&exited,&kernel,&user)&&file_ticks(exited)>=file_ticks(created))
+ if(process_&&WaitForSingleObject(process_.get(),0)==WAIT_OBJECT_0&&GetProcessTimes(process_.get(),&created,&exited,&kernel,&user)&&file_ticks(exited)>=file_ticks(created))
   result.root_lifetime_us=(file_ticks(exited)-file_ticks(created))/10;
  return result;
 }
@@ -66,6 +66,9 @@ void Child::stop(){
    if(accounting.ActiveProcesses==0)break;
    Sleep(25);
   }
+  // Job accounting can reach zero just before the root handle is signalled.
+  // Exit timestamps are undefined until then, including on forced termination.
+  if(process_&&WaitForSingleObject(process_.get(),INFINITE)!=WAIT_OBJECT_0)std::terminate();
   timing_=sample_timing();
   job_.reset();
  }

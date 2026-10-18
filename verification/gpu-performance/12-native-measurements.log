@@ -1,0 +1,266 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- Configuring done (4.3s)
+-- Generating done (0.2s)
+-- Build files have been written to: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ZERO_CHECK.vcxproj]
+  1>Checking Build System
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_json.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  boost_json.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_pipeline_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_progress_contract_tests.vcxproj]
+  main.cpp
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  main.cpp
+  pipeline_test.cpp
+  progress_test.cpp
+  Generating Code...
+  encoder_run_test.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_rendition_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  main.cpp
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_pipeline_contract_tests.exe
+  ow_json.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_json.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_rendition_probe.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  media_rendition_probe.cpp
+  media_rendition_test.cpp
+  status_test.cpp
+  Generating Code...
+  ow_rendition_probe.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_rendition_probe.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_core.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  admission.cpp
+  ow_rendition_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_rendition_contract_tests.exe
+  stage_timing_test.cpp
+  store.cpp
+  protocol.cpp
+  Generating Code...
+  pairing.cpp
+  adaptive_hardware.cpp
+  Generating Code...
+  ow_progress_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_progress_contract_tests.exe
+  ow_core.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_core.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_windows.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_adaptive_hardware_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_adaptive_evidence_probe.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  main.cpp
+  main.cpp
+  adaptive_evidence_probe.cpp
+  adaptive_hardware_test.cpp
+  admission_test.cpp
+  store_test.cpp
+  ow_adaptive_evidence_probe.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_adaptive_evidence_probe.exe
+  platform.cpp
+  Generating Code...
+  protocol_test.cpp
+  pairing_test.cpp
+  process.cpp
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_adaptive_hardware_contract_tests.exe
+  http.cpp
+  Generating Code...
+  ow_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_contract_tests.exe
+  worker.cpp
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source\windows\worker.cpp(679,207): warning C4456: declaration of 'cancelled' hides previous local declaration [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_windows.vcxproj]
+      C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source\windows\worker.cpp(534,7):
+      see declaration of 'cancelled'
+
+  pairing_adapter.cpp
+  hardware.cpp
+  physical_adapters.cpp
+  Generating Code...
+  ow_windows.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_windows.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_gpu_measurements.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_pipeline_smoke.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_test_child.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\OrganizerWorker.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_gpu_baseline.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\OrganizerWorkerDoctor.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\OrganizerWorkerConsole.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  tray.cpp
+  console.cpp
+  windows_gpu_measurements.cpp
+  OrganizerWorker.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\OrganizerWorker.exe
+  doctor.cpp
+  ow_gpu_measurements.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_gpu_measurements.exe
+  windows_gpu_baseline.cpp
+  OrganizerWorkerConsole.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\OrganizerWorkerConsole.exe
+  windows_child.cpp
+  OrganizerWorkerDoctor.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\OrganizerWorkerDoctor.exe
+  windows_pipeline_smoke.cpp
+  ow_gpu_baseline.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_gpu_baseline.exe
+  ow_test_child.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_test_child.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ow_windows_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+  main.cpp
+  windows_test.cpp
+  ow_pipeline_smoke.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_pipeline_smoke.exe
+  Generating Code...
+  ow_windows_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\Release\ow_windows_tests.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build\ALL_BUILD.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source/CMakeLists.txt
+BUILD_EXIT=0
+EXPERIMENT mode=generate gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+TIMING stage=generation artifact=source wall_us=1190757 controller_cpu_us=0 child_cpu_us=5937500 launch_us=4448 root_lifetime_us=1136850 completed=true
+TIMING stage=generation artifact=source wall_us=4195318 controller_cpu_us=15625 child_cpu_us=20703125 launch_us=4029 root_lifetime_us=4088833 completed=true
+EXPERIMENT_PASS mode=generate
+MODE_EXIT=generate/0
+EXPERIMENT mode=baseline gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=baseline repeat=0
+TIMING stage=transcode artifact=feed.mp4 wall_us=6767136 controller_cpu_us=0 child_cpu_us=3859375 launch_us=4538 root_lifetime_us=6742185 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8257818 controller_cpu_us=0 child_cpu_us=4484375 launch_us=4470 root_lifetime_us=8234039 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=6553671 controller_cpu_us=0 child_cpu_us=3750000 launch_us=4634 root_lifetime_us=6499731 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10739057 controller_cpu_us=0 child_cpu_us=5656250 launch_us=4457 root_lifetime_us=10644983 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106740 controller_cpu_us=0 child_cpu_us=31250 launch_us=4490 root_lifetime_us=48885 completed=true
+TIMING total job_wall_us=32424560 stage_wall_sum_us=32424422 cpu_us=17781250 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=17781250 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=baseline repeat=1
+TIMING stage=transcode artifact=feed.mp4 wall_us=6883603 controller_cpu_us=0 child_cpu_us=3656250 launch_us=4458 root_lifetime_us=6780183 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8360975 controller_cpu_us=15625 child_cpu_us=4515625 launch_us=4558 root_lifetime_us=8267002 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=5266533 controller_cpu_us=0 child_cpu_us=3781250 launch_us=4737 root_lifetime_us=5228447 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10752037 controller_cpu_us=0 child_cpu_us=5828125 launch_us=4333 root_lifetime_us=10730255 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106197 controller_cpu_us=0 child_cpu_us=62500 launch_us=4433 root_lifetime_us=54189 completed=true
+TIMING total job_wall_us=31369478 stage_wall_sum_us=31369345 cpu_us=17859375 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=17859375 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=baseline repeat=2
+TIMING stage=transcode artifact=feed.mp4 wall_us=6461411 controller_cpu_us=0 child_cpu_us=3484375 launch_us=4414 root_lifetime_us=6428768 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8271869 controller_cpu_us=0 child_cpu_us=4406250 launch_us=4467 root_lifetime_us=8190103 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=6022075 controller_cpu_us=0 child_cpu_us=3593750 launch_us=4668 root_lifetime_us=5949247 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=11161902 controller_cpu_us=0 child_cpu_us=5781250 launch_us=4541 root_lifetime_us=11072056 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=108494 controller_cpu_us=0 child_cpu_us=46875 launch_us=4986 root_lifetime_us=50352 completed=true
+TIMING total job_wall_us=32025865 stage_wall_sum_us=32025751 cpu_us=17312500 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=17312500 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=baseline repeat=0
+TIMING stage=transcode artifact=feed.mp4 wall_us=19756917 controller_cpu_us=15625 child_cpu_us=10500000 launch_us=4255 root_lifetime_us=19652696 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=32968845 controller_cpu_us=0 child_cpu_us=17156250 launch_us=4585 root_lifetime_us=32938573 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=19553011 controller_cpu_us=0 child_cpu_us=10328125 launch_us=4493 root_lifetime_us=19455270 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=33215733 controller_cpu_us=0 child_cpu_us=17046875 launch_us=4686 root_lifetime_us=33202294 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=105948 controller_cpu_us=0 child_cpu_us=78125 launch_us=4566 root_lifetime_us=81430 completed=true
+TIMING total job_wall_us=105600579 stage_wall_sum_us=105600454 cpu_us=55125000 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=55125000 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=baseline repeat=1
+TIMING stage=transcode artifact=feed.mp4 wall_us=19124774 controller_cpu_us=0 child_cpu_us=10500000 launch_us=4604 root_lifetime_us=19023795 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33031888 controller_cpu_us=0 child_cpu_us=16906250 launch_us=5003 root_lifetime_us=32972648 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=19771391 controller_cpu_us=0 child_cpu_us=10437500 launch_us=5142 root_lifetime_us=19751589 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=33193601 controller_cpu_us=15625 child_cpu_us=17109375 launch_us=4756 root_lifetime_us=33089462 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=108256 controller_cpu_us=0 child_cpu_us=140625 launch_us=4905 root_lifetime_us=90133 completed=true
+TIMING total job_wall_us=105230030 stage_wall_sum_us=105229910 cpu_us=55109375 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=55109375 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=baseline repeat=2
+TIMING stage=transcode artifact=feed.mp4 wall_us=19529032 controller_cpu_us=0 child_cpu_us=10218750 launch_us=4546 root_lifetime_us=19446771 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33089586 controller_cpu_us=0 child_cpu_us=17062500 launch_us=4614 root_lifetime_us=33065648 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=19774268 controller_cpu_us=15625 child_cpu_us=9640625 launch_us=4593 root_lifetime_us=19725235 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=33306247 controller_cpu_us=0 child_cpu_us=17281250 launch_us=4604 root_lifetime_us=33196482 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106658 controller_cpu_us=0 child_cpu_us=109375 launch_us=4772 root_lifetime_us=89847 completed=true
+TIMING total job_wall_us=105805928 stage_wall_sum_us=105805791 cpu_us=54328125 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=54328125 job_cpu_scope=main_thread_background_stages_and_child_trees
+EXPERIMENT_PASS mode=baseline
+MODE_EXIT=baseline/0
+EXPERIMENT mode=device gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=device repeat=0
+TIMING stage=transcode artifact=feed.mp4 wall_us=2593402 controller_cpu_us=0 child_cpu_us=1500000 launch_us=4392 root_lifetime_us=2483713 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8597657 controller_cpu_us=0 child_cpu_us=4375000 launch_us=4332 root_lifetime_us=8482807 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=2895720 controller_cpu_us=0 child_cpu_us=1593750 launch_us=4570 root_lifetime_us=2829289 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10953494 controller_cpu_us=0 child_cpu_us=5875000 launch_us=4245 root_lifetime_us=10914588 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107018 controller_cpu_us=0 child_cpu_us=46875 launch_us=4819 root_lifetime_us=49846 completed=true
+TIMING total job_wall_us=25147423 stage_wall_sum_us=25147291 cpu_us=13390625 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=13390625 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=device repeat=1
+TIMING stage=transcode artifact=feed.mp4 wall_us=2688094 controller_cpu_us=15625 child_cpu_us=1562500 launch_us=4379 root_lifetime_us=2611482 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8478162 controller_cpu_us=15625 child_cpu_us=4468750 launch_us=4342 root_lifetime_us=8411381 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=2683774 controller_cpu_us=0 child_cpu_us=1437500 launch_us=4615 root_lifetime_us=2656027 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10961178 controller_cpu_us=0 child_cpu_us=5703125 launch_us=4093 root_lifetime_us=10886347 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106991 controller_cpu_us=0 child_cpu_us=46875 launch_us=4718 root_lifetime_us=49314 completed=true
+TIMING total job_wall_us=24918310 stage_wall_sum_us=24918199 cpu_us=13250000 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=13250000 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=device repeat=2
+TIMING stage=transcode artifact=feed.mp4 wall_us=2803228 controller_cpu_us=0 child_cpu_us=1421875 launch_us=4341 root_lifetime_us=2700198 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8364163 controller_cpu_us=0 child_cpu_us=4500000 launch_us=4325 root_lifetime_us=8281948 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=2683331 controller_cpu_us=0 child_cpu_us=1593750 launch_us=4644 root_lifetime_us=2626239 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10954710 controller_cpu_us=0 child_cpu_us=5671875 launch_us=4286 root_lifetime_us=10909491 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107796 controller_cpu_us=0 child_cpu_us=62500 launch_us=4612 root_lifetime_us=49416 completed=true
+TIMING total job_wall_us=24913338 stage_wall_sum_us=24913228 cpu_us=13250000 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=13250000 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=device repeat=0
+TIMING stage=transcode artifact=feed.mp4 wall_us=8679468 controller_cpu_us=0 child_cpu_us=1796875 launch_us=4348 root_lifetime_us=8630062 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=32851131 controller_cpu_us=31250 child_cpu_us=16953125 launch_us=4587 root_lifetime_us=32788241 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=9132962 controller_cpu_us=0 child_cpu_us=2046875 launch_us=4708 root_lifetime_us=9055903 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=34570976 controller_cpu_us=31250 child_cpu_us=17562500 launch_us=4598 root_lifetime_us=34504152 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=120801 controller_cpu_us=0 child_cpu_us=78125 launch_us=5390 root_lifetime_us=81752 completed=true
+TIMING total job_wall_us=85355456 stage_wall_sum_us=85355338 cpu_us=38500000 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=38500000 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=device repeat=1
+TIMING stage=transcode artifact=feed.mp4 wall_us=8711603 controller_cpu_us=0 child_cpu_us=1968750 launch_us=4722 root_lifetime_us=8653706 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33956350 controller_cpu_us=0 child_cpu_us=17187500 launch_us=4898 root_lifetime_us=33916618 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=9167082 controller_cpu_us=0 child_cpu_us=1921875 launch_us=5934 root_lifetime_us=9058117 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=34248212 controller_cpu_us=0 child_cpu_us=17437500 launch_us=4735 root_lifetime_us=34217461 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107733 controller_cpu_us=0 child_cpu_us=78125 launch_us=4755 root_lifetime_us=78086 completed=true
+TIMING total job_wall_us=86191102 stage_wall_sum_us=86190980 cpu_us=38593750 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=38593750 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=device repeat=2
+TIMING stage=transcode artifact=feed.mp4 wall_us=8721791 controller_cpu_us=0 child_cpu_us=2156250 launch_us=4581 root_lifetime_us=8641733 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33515441 controller_cpu_us=0 child_cpu_us=17140625 launch_us=5228 root_lifetime_us=33406729 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=9130939 controller_cpu_us=0 child_cpu_us=2062500 launch_us=4820 root_lifetime_us=9090101 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=33958952 controller_cpu_us=31250 child_cpu_us=17046875 launch_us=4599 root_lifetime_us=33900151 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107157 controller_cpu_us=0 child_cpu_us=109375 launch_us=5025 root_lifetime_us=86266 completed=true
+TIMING total job_wall_us=85434388 stage_wall_sum_us=85434280 cpu_us=38546875 cpu_scope=timed_stages_and_child_trees stages=5 stages_may_overlap=true job_cpu_us=38546875 job_cpu_scope=main_thread_background_stages_and_child_trees
+EXPERIMENT_PASS mode=device
+MODE_EXIT=device/0
+EXPERIMENT mode=shared gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=shared repeat=0
+TIMING stage=transcode artifact=both wall_us=5168944 controller_cpu_us=0 child_cpu_us=2906250 launch_us=4642 root_lifetime_us=5069504 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8700797 controller_cpu_us=0 child_cpu_us=4515625 launch_us=4912 root_lifetime_us=8584894 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10753227 controller_cpu_us=0 child_cpu_us=5625000 launch_us=5011 root_lifetime_us=10679487 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107322 controller_cpu_us=0 child_cpu_us=46875 launch_us=4475 root_lifetime_us=51200 completed=true
+TIMING total job_wall_us=24730408 stage_wall_sum_us=24730290 cpu_us=13093750 cpu_scope=timed_stages_and_child_trees stages=4 stages_may_overlap=true job_cpu_us=13093750 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=shared repeat=1
+TIMING stage=transcode artifact=both wall_us=4933966 controller_cpu_us=0 child_cpu_us=2937500 launch_us=4561 root_lifetime_us=4887378 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8594020 controller_cpu_us=0 child_cpu_us=4484375 launch_us=4715 root_lifetime_us=8515984 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10751941 controller_cpu_us=0 child_cpu_us=5687500 launch_us=5098 root_lifetime_us=10670609 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106391 controller_cpu_us=0 child_cpu_us=109375 launch_us=4936 root_lifetime_us=50103 completed=true
+TIMING total job_wall_us=24386424 stage_wall_sum_us=24386318 cpu_us=13218750 cpu_scope=timed_stages_and_child_trees stages=4 stages_may_overlap=true job_cpu_us=13218750 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=shared repeat=2
+TIMING stage=transcode artifact=both wall_us=4944347 controller_cpu_us=15625 child_cpu_us=2703125 launch_us=4495 root_lifetime_us=4915950 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8594011 controller_cpu_us=0 child_cpu_us=4343750 launch_us=4962 root_lifetime_us=8484137 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10745646 controller_cpu_us=0 child_cpu_us=5640625 launch_us=5073 root_lifetime_us=10630023 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107596 controller_cpu_us=0 child_cpu_us=93750 launch_us=4854 root_lifetime_us=49689 completed=true
+TIMING total job_wall_us=24391702 stage_wall_sum_us=24391600 cpu_us=12796875 cpu_scope=timed_stages_and_child_trees stages=4 stages_may_overlap=true job_cpu_us=12796875 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=shared repeat=0
+TIMING stage=transcode artifact=both wall_us=17513327 controller_cpu_us=0 child_cpu_us=3578125 launch_us=4314 root_lifetime_us=17418954 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=32863246 controller_cpu_us=0 child_cpu_us=17078125 launch_us=5019 root_lifetime_us=32790685 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=33000031 controller_cpu_us=0 child_cpu_us=16765625 launch_us=4839 root_lifetime_us=32941998 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106913 controller_cpu_us=0 child_cpu_us=93750 launch_us=5013 root_lifetime_us=82549 completed=true
+TIMING total job_wall_us=83483619 stage_wall_sum_us=83483517 cpu_us=37515625 cpu_scope=timed_stages_and_child_trees stages=4 stages_may_overlap=true job_cpu_us=37515625 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=shared repeat=1
+TIMING stage=transcode artifact=both wall_us=17545079 controller_cpu_us=0 child_cpu_us=3093750 launch_us=4324 root_lifetime_us=17507443 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33098155 controller_cpu_us=0 child_cpu_us=16968750 launch_us=4507 root_lifetime_us=33024976 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=33245636 controller_cpu_us=0 child_cpu_us=17156250 launch_us=4462 root_lifetime_us=33169204 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106059 controller_cpu_us=0 child_cpu_us=109375 launch_us=4962 root_lifetime_us=79942 completed=true
+TIMING total job_wall_us=83995032 stage_wall_sum_us=83994929 cpu_us=37328125 cpu_scope=timed_stages_and_child_trees stages=4 stages_may_overlap=true job_cpu_us=37328125 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=shared repeat=2
+TIMING stage=transcode artifact=both wall_us=17440948 controller_cpu_us=0 child_cpu_us=3703125 launch_us=4335 root_lifetime_us=17392294 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=32892735 controller_cpu_us=0 child_cpu_us=17000000 launch_us=4575 root_lifetime_us=32874705 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=33155449 controller_cpu_us=0 child_cpu_us=16984375 launch_us=4375 root_lifetime_us=33087987 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=105639 controller_cpu_us=0 child_cpu_us=78125 launch_us=4688 root_lifetime_us=81229 completed=true
+TIMING total job_wall_us=83594871 stage_wall_sum_us=83594771 cpu_us=37765625 cpu_scope=timed_stages_and_child_trees stages=4 stages_may_overlap=true job_cpu_us=37765625 job_cpu_scope=main_thread_background_stages_and_child_trees
+EXPERIMENT_PASS mode=shared
+MODE_EXIT=shared/0
+EXPERIMENT mode=quality gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+TIMING stage=parity artifact=source wall_us=8484746 controller_cpu_us=0 child_cpu_us=11015625 launch_us=4260 root_lifetime_us=8367040 completed=true
+Expected exactly 900 source frames
+MODE_EXIT=quality/1

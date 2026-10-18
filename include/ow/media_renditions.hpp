@@ -1,5 +1,6 @@
 #pragma once
 #include "ow/adaptive_hardware.hpp"
+#include "ow/device_decode.hpp"
 #include <algorithm>
 #include <filesystem>
 #include <string>
@@ -39,8 +40,18 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
  }
  return plan;
 }
+// The ordinary inspection remains a one-frame software decode. Optional poster
+// output reuses that frame, without opening another hardware encoder session.
+inline std::vector<std::wstring> rendition_inspection_arguments(const std::filesystem::path& workspace,bool prepare_poster=false){
+ auto args=std::vector<std::wstring>{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-protocol_whitelist",L"file",L"-noautorotate",L"-i",(workspace/"source.bin").wstring(),L"-map",L"0:v:0",L"-frames:v",L"1",L"-f",L"null",L"-"};
+ if(prepare_poster){const auto poster=rendition_plan(true,false,workspace).back().arguments;
+  args.insert(args.begin(),{L"-filter_threads",L"1"});
+  args.insert(args.end(),std::find(poster.begin(),poster.end(),L"-frames:v"),poster.end());}
+ return args;
+}
 inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const std::filesystem::path& workspace,
-                                               const std::vector<adaptive::Profile>& profiles) {
+                                               const std::vector<adaptive::Profile>& profiles, const std::string& source_info={}) {
+
  auto plan=rendition_plan(video,copy_audio,workspace);
  for(auto& rendition:plan){
   if(rendition.role!="feed"&&rendition.role!="feed_optimized")continue;
@@ -80,6 +91,12 @@ inline std::vector<Rendition> rendition_plan(bool video,bool copy_audio,const st
    *encoder=codec==adaptive::Codec::hevc?L"hevc_amf":L"h264_amf";
    args.erase(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),args.begin()+static_cast<std::ptrdiff_t>(encoder_position+3));
    args.insert(args.begin()+static_cast<std::ptrdiff_t>(encoder_position+1),{L"-quality",L"speed",L"-rc",L"cqp",L"-qp_i",L"24",L"-qp_p",L"26"});
+  }
+  if(selected->backend==adaptive::Backend::nvidia_nvenc&&cuda_sdr_decode_eligible(source_info)){
+   // Keep decoded frames on the same CUDA device as this reserved encoder.
+   // The underlying format is the inspected 8-bit 4:2:0; cuda is a frame type.
+   args.insert(std::find(args.begin(),args.end(),L"-i"),{L"-hwaccel",L"cuda",L"-hwaccel_device",std::to_wstring(selected->backend_index),L"-hwaccel_output_format",L"cuda"});
+   auto pix=std::find(args.begin(),args.end(),L"-pix_fmt");*(pix+1)=L"cuda";
   }
   auto crf=std::find(args.begin(),args.end(),L"-crf");if(crf!=args.end())args.erase(crf,crf+2);
   auto cpu_params=std::find(args.begin(),args.end(),codec==adaptive::Codec::hevc?L"-x265-params":L"-x264-params");

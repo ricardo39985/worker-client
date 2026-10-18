@@ -1,0 +1,1012 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+SOURCE_ARCHIVE_SHA256=4711849BA434F4E4ECCAE46B761C8574A61D9F1A9C52754DE8A535B1FE73E8C8
+
+AppData\Local\OrganizerWorker\dependencies\boost_1_89_0\boost\version.hpp:30:#define BOOST_LIB_VERSION "1_89"
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- Configuring done (2.0s)
+-- Generating done (0.7s)
+-- Build files have been written to: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ZERO_CHECK.vcxproj]
+  1>Checking Build System
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_json.vcxproj]
+  ow_json.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_json.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_core.vcxproj]
+  ow_core.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_core.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_windows.vcxproj]
+  ow_windows.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_windows.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\OrganizerWorker.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\OrganizerWorkerConsole.vcxproj]
+  OrganizerWorker.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\OrganizerWorker.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\OrganizerWorkerDoctor.vcxproj]
+  OrganizerWorkerDoctor.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\OrganizerWorkerDoctor.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_adaptive_evidence_probe.vcxproj]
+  OrganizerWorkerConsole.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\OrganizerWorkerConsole.exe
+  ow_adaptive_evidence_probe.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_adaptive_evidence_probe.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_adaptive_hardware_contract_tests.vcxproj]
+  ow_adaptive_hardware_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_adaptive_hardware_contract_tests.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_contract_tests.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_gpu_baseline.vcxproj]
+  ow_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_contract_tests.exe
+  ow_gpu_baseline.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_gpu_baseline.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_pipeline_contract_tests.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_gpu_measurements.vcxproj]
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_pipeline_contract_tests.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_pipeline_smoke.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_progress_contract_tests.vcxproj]
+  ow_pipeline_smoke.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_pipeline_smoke.exe
+  windows_gpu_measurements.cpp
+  ow_progress_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_progress_contract_tests.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_contract_tests.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_probe.vcxproj]
+  ow_rendition_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_rendition_contract_tests.exe
+  ow_rendition_probe.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_rendition_probe.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_test_child.vcxproj]
+  ow_test_child.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_test_child.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_windows_tests.vcxproj]
+  ow_windows_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_windows_tests.exe
+  ow_gpu_measurements.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_gpu_measurements.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ALL_BUILD.vcxproj]
+BUILD_EXIT=0
+EXPERIMENT mode=quality gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+TIMING stage=parity artifact=source wall_us=9227677 controller_cpu_us=0 child_cpu_us=11875000 launch_us=4373 root_lifetime_us=9160433 completed=true
+TIMING stage=parity artifact=feed.mp4 wall_us=9009459 controller_cpu_us=0 child_cpu_us=14000000 launch_us=4778 root_lifetime_us=8992324 completed=true
+PARITY size=1080p variant=baseline repeat=0 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=baseline repeat=0 file=feed.mp4 validated_reference_bytes=equal
+TIMING stage=parity artifact=optimized.mp4 wall_us=8463263 controller_cpu_us=15625 child_cpu_us=14218750 launch_us=5217 root_lifetime_us=8411105 completed=true
+PARITY size=1080p variant=baseline repeat=0 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=baseline repeat=0 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=device repeat=0 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=feed.mp4 wall_us=1515626 controller_cpu_us=0 child_cpu_us=10921875 launch_us=5593 root_lifetime_us=1442213 completed=true
+QUALITY size=1080p variant=device repeat=0 file=feed.mp4 [Parsed_psnr_3 @ 000001b34eace580] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=1080p variant=device repeat=0 file=feed.mp4 [Parsed_ssim_2 @ 000001b34e243b40] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+PARITY size=1080p variant=device repeat=0 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=optimized.mp4 wall_us=1940890 controller_cpu_us=0 child_cpu_us=13500000 launch_us=4997 root_lifetime_us=1874247 completed=true
+QUALITY size=1080p variant=device repeat=0 file=optimized.mp4 [Parsed_psnr_3 @ 000002484c55e280] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=1080p variant=device repeat=0 file=optimized.mp4 [Parsed_ssim_2 @ 000002484c55dfc0] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+PARITY size=1080p variant=shared repeat=0 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=feed.mp4 wall_us=1508487 controller_cpu_us=0 child_cpu_us=10703125 launch_us=5304 root_lifetime_us=1440431 completed=true
+QUALITY size=1080p variant=shared repeat=0 file=feed.mp4 [Parsed_psnr_3 @ 00000213a74f25c0] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=1080p variant=shared repeat=0 file=feed.mp4 [Parsed_ssim_2 @ 00000213a86145c0] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+PARITY size=1080p variant=shared repeat=0 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=optimized.mp4 wall_us=1935890 controller_cpu_us=0 child_cpu_us=13984375 launch_us=5157 root_lifetime_us=1881962 completed=true
+QUALITY size=1080p variant=shared repeat=0 file=optimized.mp4 [Parsed_psnr_3 @ 000002b10b76b480] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=1080p variant=shared repeat=0 file=optimized.mp4 [Parsed_ssim_2 @ 000002b10b794e00] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+PARITY size=1080p variant=baseline repeat=1 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=baseline repeat=1 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=baseline repeat=1 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=baseline repeat=1 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=device repeat=1 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=device repeat=1 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=device repeat=1 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=device repeat=1 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=shared repeat=1 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=shared repeat=1 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=shared repeat=1 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=shared repeat=1 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=baseline repeat=2 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=baseline repeat=2 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=baseline repeat=2 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=baseline repeat=2 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=device repeat=2 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=device repeat=2 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=device repeat=2 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=device repeat=2 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=shared repeat=2 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=shared repeat=2 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=1080p variant=shared repeat=2 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=1080p variant=shared repeat=2 file=optimized.mp4 validated_reference_bytes=equal
+TIMING stage=parity artifact=source wall_us=32833187 controller_cpu_us=0 child_cpu_us=42593750 launch_us=4718 root_lifetime_us=32744623 completed=true
+TIMING stage=parity artifact=feed.mp4 wall_us=33224021 controller_cpu_us=0 child_cpu_us=52843750 launch_us=5206 root_lifetime_us=33144210 completed=true
+PARITY size=4k variant=baseline repeat=0 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=baseline repeat=0 file=feed.mp4 validated_reference_bytes=equal
+TIMING stage=parity artifact=optimized.mp4 wall_us=33904937 controller_cpu_us=0 child_cpu_us=53328125 launch_us=5116 root_lifetime_us=33786577 completed=true
+PARITY size=4k variant=baseline repeat=0 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=baseline repeat=0 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=device repeat=0 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=feed.mp4 wall_us=5708814 controller_cpu_us=0 child_cpu_us=43062500 launch_us=5497 root_lifetime_us=5613503 completed=true
+QUALITY size=4k variant=device repeat=0 file=feed.mp4 [Parsed_psnr_3 @ 0000024b93cff940] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=4k variant=device repeat=0 file=feed.mp4 [Parsed_ssim_2 @ 0000024b93d1e200] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+PARITY size=4k variant=device repeat=0 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=optimized.mp4 wall_us=5816597 controller_cpu_us=15625 child_cpu_us=43093750 launch_us=5540 root_lifetime_us=5777800 completed=true
+QUALITY size=4k variant=device repeat=0 file=optimized.mp4 [Parsed_psnr_3 @ 000002afea12e400] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=4k variant=device repeat=0 file=optimized.mp4 [Parsed_ssim_2 @ 000002afea12ec00] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+PARITY size=4k variant=shared repeat=0 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=feed.mp4 wall_us=5696098 controller_cpu_us=15625 child_cpu_us=43921875 launch_us=4719 root_lifetime_us=5608082 completed=true
+QUALITY size=4k variant=shared repeat=0 file=feed.mp4 [Parsed_psnr_3 @ 000001a280f76880] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=4k variant=shared repeat=0 file=feed.mp4 [Parsed_ssim_2 @ 000001a280f75e80] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+PARITY size=4k variant=shared repeat=0 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+TIMING stage=quality artifact=optimized.mp4 wall_us=5800987 controller_cpu_us=15625 child_cpu_us=43343750 launch_us=4606 root_lifetime_us=5762703 completed=true
+QUALITY size=4k variant=shared repeat=0 file=optimized.mp4 [Parsed_psnr_3 @ 0000012b32fcdd40] PSNR y:inf u:inf v:inf average:inf min:inf max:inf
+
+QUALITY size=4k variant=shared repeat=0 file=optimized.mp4 [Parsed_ssim_2 @ 0000012b32fcdac0] SSIM Y:1.000000 (inf) U:1.000000 (inf) V:1.000000 (inf) All:1.000000 (inf)
+
+PARITY size=4k variant=baseline repeat=1 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=baseline repeat=1 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=baseline repeat=1 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=baseline repeat=1 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=device repeat=1 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=device repeat=1 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=device repeat=1 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=device repeat=1 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=shared repeat=1 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=shared repeat=1 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=shared repeat=1 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=shared repeat=1 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=baseline repeat=2 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=baseline repeat=2 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=baseline repeat=2 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=baseline repeat=2 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=device repeat=2 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=device repeat=2 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=device repeat=2 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=device repeat=2 file=optimized.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=shared repeat=2 file=feed.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=shared repeat=2 file=feed.mp4 validated_reference_bytes=equal
+PARITY size=4k variant=shared repeat=2 file=optimized.mp4 frames=900 geometry_timing=equal bytes_equal=true
+QUALITY_IDENTITY size=4k variant=shared repeat=2 file=optimized.mp4 validated_reference_bytes=equal
+EXPERIMENT_PASS mode=quality
+MODE_EXIT=quality/0
+EXPERIMENT mode=poster-reuse gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=poster-separate repeat=0
+TIMING stage=input_inspection artifact=source.bin wall_us=113124 controller_cpu_us=0 child_cpu_us=78125 launch_us=4448 root_lifetime_us=61030 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=105942 controller_cpu_us=0 child_cpu_us=62500 launch_us=4351 root_lifetime_us=48781 completed=true
+TIMING total job_wall_us=219172 stage_wall_sum_us=219066 cpu_us=140625 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=140625 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-fused repeat=0
+TIMING stage=inspection_poster artifact=source.bin wall_us=107649 controller_cpu_us=0 child_cpu_us=156250 launch_us=4272 root_lifetime_us=72380 completed=true
+TIMING total job_wall_us=107702 stage_wall_sum_us=107649 cpu_us=156250 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=156250 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-separate repeat=1
+TIMING stage=input_inspection artifact=source.bin wall_us=120041 controller_cpu_us=0 child_cpu_us=62500 launch_us=4294 root_lifetime_us=61777 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107130 controller_cpu_us=15625 child_cpu_us=62500 launch_us=4692 root_lifetime_us=49122 completed=true
+TIMING total job_wall_us=227246 stage_wall_sum_us=227171 cpu_us=140625 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=140625 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-fused repeat=1
+TIMING stage=inspection_poster artifact=source.bin wall_us=108838 controller_cpu_us=0 child_cpu_us=109375 launch_us=4427 root_lifetime_us=72529 completed=true
+TIMING total job_wall_us=108900 stage_wall_sum_us=108838 cpu_us=109375 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=109375 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-separate repeat=2
+TIMING stage=input_inspection artifact=source.bin wall_us=107341 controller_cpu_us=0 child_cpu_us=62500 launch_us=4070 root_lifetime_us=61464 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106353 controller_cpu_us=0 child_cpu_us=62500 launch_us=4639 root_lifetime_us=49290 completed=true
+TIMING total job_wall_us=213812 stage_wall_sum_us=213694 cpu_us=125000 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=125000 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-fused repeat=2
+TIMING stage=inspection_poster artifact=source.bin wall_us=121011 controller_cpu_us=0 child_cpu_us=78125 launch_us=5852 root_lifetime_us=74444 completed=true
+TIMING total job_wall_us=121063 stage_wall_sum_us=121011 cpu_us=78125 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=78125 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-separate repeat=3
+TIMING stage=input_inspection artifact=source.bin wall_us=106521 controller_cpu_us=0 child_cpu_us=109375 launch_us=4042 root_lifetime_us=60928 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106148 controller_cpu_us=0 child_cpu_us=78125 launch_us=4255 root_lifetime_us=49242 completed=true
+TIMING total job_wall_us=212747 stage_wall_sum_us=212669 cpu_us=187500 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=187500 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-fused repeat=3
+TIMING stage=inspection_poster artifact=source.bin wall_us=108662 controller_cpu_us=0 child_cpu_us=140625 launch_us=4473 root_lifetime_us=73220 completed=true
+TIMING total job_wall_us=108728 stage_wall_sum_us=108662 cpu_us=140625 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=140625 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-separate repeat=4
+TIMING stage=input_inspection artifact=source.bin wall_us=107682 controller_cpu_us=15625 child_cpu_us=140625 launch_us=4048 root_lifetime_us=60672 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107281 controller_cpu_us=15625 child_cpu_us=62500 launch_us=4322 root_lifetime_us=49341 completed=true
+TIMING total job_wall_us=215031 stage_wall_sum_us=214963 cpu_us=234375 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=234375 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-fused repeat=4
+TIMING stage=inspection_poster artifact=source.bin wall_us=107729 controller_cpu_us=0 child_cpu_us=156250 launch_us=4301 root_lifetime_us=72491 completed=true
+TIMING total job_wall_us=107781 stage_wall_sum_us=107729 cpu_us=156250 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=156250 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-separate repeat=5
+TIMING stage=input_inspection artifact=source.bin wall_us=119137 controller_cpu_us=15625 child_cpu_us=78125 launch_us=4065 root_lifetime_us=61206 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=105849 controller_cpu_us=0 child_cpu_us=62500 launch_us=4729 root_lifetime_us=54044 completed=true
+TIMING total job_wall_us=225065 stage_wall_sum_us=224986 cpu_us=156250 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=156250 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-fused repeat=5
+TIMING stage=inspection_poster artifact=source.bin wall_us=106663 controller_cpu_us=0 child_cpu_us=125000 launch_us=4443 root_lifetime_us=73390 completed=true
+TIMING total job_wall_us=106716 stage_wall_sum_us=106663 cpu_us=125000 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=125000 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-separate repeat=6
+TIMING stage=input_inspection artifact=source.bin wall_us=107737 controller_cpu_us=15625 child_cpu_us=93750 launch_us=4246 root_lifetime_us=65807 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107225 controller_cpu_us=0 child_cpu_us=93750 launch_us=4508 root_lifetime_us=49369 completed=true
+TIMING total job_wall_us=215034 stage_wall_sum_us=214962 cpu_us=203125 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=203125 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=1080p mode=poster-fused repeat=6
+TIMING stage=inspection_poster artifact=source.bin wall_us=106398 controller_cpu_us=0 child_cpu_us=109375 launch_us=4432 root_lifetime_us=72483 completed=true
+TIMING total job_wall_us=106451 stage_wall_sum_us=106398 cpu_us=109375 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=109375 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-separate repeat=0
+TIMING stage=input_inspection artifact=source.bin wall_us=212299 controller_cpu_us=0 child_cpu_us=171875 launch_us=4111 root_lifetime_us=123210 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=108387 controller_cpu_us=0 child_cpu_us=78125 launch_us=4268 root_lifetime_us=78523 completed=true
+TIMING total job_wall_us=320752 stage_wall_sum_us=320686 cpu_us=250000 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=250000 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-fused repeat=0
+TIMING stage=inspection_poster artifact=source.bin wall_us=214315 controller_cpu_us=0 child_cpu_us=281250 launch_us=4249 root_lifetime_us=149621 completed=true
+TIMING total job_wall_us=214367 stage_wall_sum_us=214315 cpu_us=281250 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=281250 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-separate repeat=1
+TIMING stage=input_inspection artifact=source.bin wall_us=214987 controller_cpu_us=0 child_cpu_us=203125 launch_us=4221 root_lifetime_us=125903 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=105728 controller_cpu_us=0 child_cpu_us=109375 launch_us=4375 root_lifetime_us=79195 completed=true
+TIMING total job_wall_us=320788 stage_wall_sum_us=320715 cpu_us=312500 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=312500 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-fused repeat=1
+TIMING stage=inspection_poster artifact=source.bin wall_us=214119 controller_cpu_us=15625 child_cpu_us=250000 launch_us=4563 root_lifetime_us=140713 completed=true
+TIMING total job_wall_us=214180 stage_wall_sum_us=214119 cpu_us=265625 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=265625 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-separate repeat=2
+TIMING stage=input_inspection artifact=source.bin wall_us=213411 controller_cpu_us=0 child_cpu_us=203125 launch_us=4073 root_lifetime_us=124686 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107552 controller_cpu_us=0 child_cpu_us=125000 launch_us=4168 root_lifetime_us=89377 completed=true
+TIMING total job_wall_us=321032 stage_wall_sum_us=320963 cpu_us=328125 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=328125 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-fused repeat=2
+TIMING stage=inspection_poster artifact=source.bin wall_us=217941 controller_cpu_us=0 child_cpu_us=281250 launch_us=4113 root_lifetime_us=146834 completed=true
+TIMING total job_wall_us=217998 stage_wall_sum_us=217941 cpu_us=281250 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=281250 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-separate repeat=3
+TIMING stage=input_inspection artifact=source.bin wall_us=213674 controller_cpu_us=0 child_cpu_us=218750 launch_us=4607 root_lifetime_us=123591 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106565 controller_cpu_us=0 child_cpu_us=109375 launch_us=4187 root_lifetime_us=79375 completed=true
+TIMING total job_wall_us=320319 stage_wall_sum_us=320239 cpu_us=328125 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=328125 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-fused repeat=3
+TIMING stage=inspection_poster artifact=source.bin wall_us=214055 controller_cpu_us=0 child_cpu_us=265625 launch_us=4185 root_lifetime_us=143714 completed=true
+TIMING total job_wall_us=214108 stage_wall_sum_us=214055 cpu_us=265625 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=265625 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-separate repeat=4
+TIMING stage=input_inspection artifact=source.bin wall_us=228121 controller_cpu_us=0 child_cpu_us=203125 launch_us=4195 root_lifetime_us=125449 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107268 controller_cpu_us=0 child_cpu_us=156250 launch_us=4245 root_lifetime_us=89990 completed=true
+TIMING total job_wall_us=335462 stage_wall_sum_us=335389 cpu_us=359375 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=359375 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-fused repeat=4
+TIMING stage=inspection_poster artifact=source.bin wall_us=213864 controller_cpu_us=0 child_cpu_us=250000 launch_us=4143 root_lifetime_us=142307 completed=true
+TIMING total job_wall_us=213920 stage_wall_sum_us=213864 cpu_us=250000 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=250000 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-separate repeat=5
+TIMING stage=input_inspection artifact=source.bin wall_us=212303 controller_cpu_us=15625 child_cpu_us=187500 launch_us=4823 root_lifetime_us=123780 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107542 controller_cpu_us=0 child_cpu_us=93750 launch_us=4169 root_lifetime_us=81760 completed=true
+TIMING total job_wall_us=319918 stage_wall_sum_us=319845 cpu_us=296875 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=296875 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-fused repeat=5
+TIMING stage=inspection_poster artifact=source.bin wall_us=214973 controller_cpu_us=0 child_cpu_us=218750 launch_us=4295 root_lifetime_us=139818 completed=true
+TIMING total job_wall_us=215031 stage_wall_sum_us=214973 cpu_us=218750 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=218750 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-separate repeat=6
+TIMING stage=input_inspection artifact=source.bin wall_us=227227 controller_cpu_us=0 child_cpu_us=171875 launch_us=4573 root_lifetime_us=124102 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107499 controller_cpu_us=0 child_cpu_us=125000 launch_us=4269 root_lifetime_us=89648 completed=true
+TIMING total job_wall_us=334800 stage_wall_sum_us=334726 cpu_us=296875 cpu_scope=timed_stages_and_child_trees stages=2 stages_may_overlap=true job_cpu_us=296875 job_cpu_scope=main_thread_background_stages_and_child_trees
+JOB size=4k mode=poster-fused repeat=6
+TIMING stage=inspection_poster artifact=source.bin wall_us=213708 controller_cpu_us=0 child_cpu_us=296875 launch_us=4338 root_lifetime_us=142751 completed=true
+TIMING total job_wall_us=213772 stage_wall_sum_us=213708 cpu_us=296875 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=296875 job_cpu_scope=main_thread_background_stages_and_child_trees
+EXPERIMENT_PASS mode=poster-reuse
+MODE_EXIT=poster-reuse/0
+EXPERIMENT mode=negotiation gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+TIMING stage=inspection artifact=source.bin wall_us=111714 controller_cpu_us=0 child_cpu_us=78125 launch_us=4300 root_lifetime_us=60546 completed=true
+TIMING stage=negotiation artifact=h264 wall_us=752034 controller_cpu_us=0 child_cpu_us=328125 launch_us=4410 root_lifetime_us=639466 completed=true
+TIMING stage=trace_validation artifact=h264 wall_us=536978 controller_cpu_us=15625 child_cpu_us=437500 launch_us=4220 root_lifetime_us=436740 completed=true
+NEGOTIATION size=1080p input=h264 output=h264 pixfmt=cuda host_conversion=none production_arguments=equal
+TIMING stage=inspection artifact=source.bin wall_us=106281 controller_cpu_us=0 child_cpu_us=78125 launch_us=4025 root_lifetime_us=63383 completed=true
+TIMING stage=negotiation artifact=hevc wall_us=536910 controller_cpu_us=15625 child_cpu_us=375000 launch_us=5002 root_lifetime_us=483459 completed=true
+TIMING stage=trace_validation artifact=hevc wall_us=536686 controller_cpu_us=0 child_cpu_us=500000 launch_us=4233 root_lifetime_us=522391 completed=true
+NEGOTIATION size=1080p input=h264 output=hevc pixfmt=cuda host_conversion=none production_arguments=equal
+TIMING stage=inspection artifact=source.bin wall_us=107756 controller_cpu_us=15625 child_cpu_us=171875 launch_us=5109 root_lifetime_us=94683 completed=true
+TIMING stage=negotiation artifact=h264 wall_us=538237 controller_cpu_us=0 child_cpu_us=359375 launch_us=4198 root_lifetime_us=465786 completed=true
+TIMING stage=trace_validation artifact=h264 wall_us=534393 controller_cpu_us=0 child_cpu_us=406250 launch_us=4122 root_lifetime_us=439491 completed=true
+NEGOTIATION size=1080p input=hevc output=h264 pixfmt=cuda host_conversion=none production_arguments=equal
+TIMING stage=inspection artifact=source.bin wall_us=107041 controller_cpu_us=0 child_cpu_us=156250 launch_us=4423 root_lifetime_us=93322 completed=true
+TIMING stage=negotiation artifact=hevc wall_us=536687 controller_cpu_us=0 child_cpu_us=421875 launch_us=4291 root_lifetime_us=481908 completed=true
+TIMING stage=trace_validation artifact=hevc wall_us=644553 controller_cpu_us=0 child_cpu_us=453125 launch_us=4301 root_lifetime_us=530835 completed=true
+NEGOTIATION size=1080p input=hevc output=hevc pixfmt=cuda host_conversion=none production_arguments=equal
+TIMING stage=inspection artifact=source.bin wall_us=213144 controller_cpu_us=0 child_cpu_us=203125 launch_us=4023 root_lifetime_us=121380 completed=true
+TIMING stage=negotiation artifact=h264 wall_us=1179893 controller_cpu_us=0 child_cpu_us=390625 launch_us=4314 root_lifetime_us=1077446 completed=true
+TIMING stage=trace_validation artifact=h264 wall_us=2783279 controller_cpu_us=15625 child_cpu_us=1515625 launch_us=4519 root_lifetime_us=2674179 completed=true
+NEGOTIATION size=4k input=h264 output=h264 pixfmt=cuda host_conversion=none production_arguments=equal
+TIMING stage=inspection artifact=source.bin wall_us=226682 controller_cpu_us=0 child_cpu_us=187500 launch_us=4249 root_lifetime_us=123670 completed=true
+TIMING stage=negotiation artifact=hevc wall_us=1177015 controller_cpu_us=0 child_cpu_us=359375 launch_us=4204 root_lifetime_us=1163018 completed=true
+TIMING stage=trace_validation artifact=hevc wall_us=2786176 controller_cpu_us=15625 child_cpu_us=1531250 launch_us=5455 root_lifetime_us=2672955 completed=true
+NEGOTIATION size=4k input=h264 output=hevc pixfmt=cuda host_conversion=none production_arguments=equal
+TIMING stage=inspection artifact=source.bin wall_us=320474 controller_cpu_us=0 child_cpu_us=468750 launch_us=4057 root_lifetime_us=223669 completed=true
+TIMING stage=negotiation artifact=h264 wall_us=1070225 controller_cpu_us=0 child_cpu_us=375000 launch_us=4200 root_lifetime_us=1040339 completed=true
+TIMING stage=trace_validation artifact=h264 wall_us=2568700 controller_cpu_us=0 child_cpu_us=1375000 launch_us=4446 root_lifetime_us=2540992 completed=true
+NEGOTIATION size=4k input=hevc output=h264 pixfmt=cuda host_conversion=none production_arguments=equal
+TIMING stage=inspection artifact=source.bin wall_us=322403 controller_cpu_us=15625 child_cpu_us=468750 launch_us=3991 root_lifetime_us=224651 completed=true
+TIMING stage=negotiation artifact=hevc wall_us=1189868 controller_cpu_us=0 child_cpu_us=500000 launch_us=4489 root_lifetime_us=1083420 completed=true
+TIMING stage=trace_validation artifact=hevc wall_us=2672934 controller_cpu_us=0 child_cpu_us=1421875 launch_us=4291 root_lifetime_us=2633042 completed=true
+NEGOTIATION size=4k input=hevc output=hevc pixfmt=cuda host_conversion=none production_arguments=equal
+EXPERIMENT_PASS mode=negotiation
+MODE_EXIT=negotiation/0
+EXPERIMENT mode=baseline-full gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=baseline-full repeat=0
+TIMING stage=input_hash artifact=source.bin wall_us=90823 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=116365 controller_cpu_us=0 child_cpu_us=93750 launch_us=4850 root_lifetime_us=61518 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=6867755 controller_cpu_us=0 child_cpu_us=3609375 launch_us=4395 root_lifetime_us=6783343 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8555686 controller_cpu_us=0 child_cpu_us=4421875 launch_us=4542 root_lifetime_us=8497869 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=6535920 controller_cpu_us=0 child_cpu_us=3734375 launch_us=4755 root_lifetime_us=6519604 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10941159 controller_cpu_us=0 child_cpu_us=5750000 launch_us=4560 root_lifetime_us=10893858 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107420 controller_cpu_us=0 child_cpu_us=93750 launch_us=4592 root_lifetime_us=50159 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=45295 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=46544 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=421 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=33307633 stage_wall_sum_us=33307388 cpu_us=17890625 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=17890625 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=baseline-full repeat=0 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-full repeat=0 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-full repeat=0 artifact=poster.webp bytes_equal_original=true
+JOB size=1080p mode=baseline-full repeat=1
+TIMING stage=input_hash artifact=source.bin wall_us=93651 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=117515 controller_cpu_us=0 child_cpu_us=78125 launch_us=4471 root_lifetime_us=62562 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=6554696 controller_cpu_us=0 child_cpu_us=3562500 launch_us=4677 root_lifetime_us=6463645 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8259481 controller_cpu_us=0 child_cpu_us=4421875 launch_us=4531 root_lifetime_us=8170934 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=6334065 controller_cpu_us=15625 child_cpu_us=3828125 launch_us=4988 root_lifetime_us=6279383 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10831051 controller_cpu_us=0 child_cpu_us=5687500 launch_us=4552 root_lifetime_us=10804337 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=109427 controller_cpu_us=0 child_cpu_us=31250 launch_us=4714 root_lifetime_us=51051 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=44435 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=42519 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=380 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=32387422 stage_wall_sum_us=32387220 cpu_us=17812500 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=17812500 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=baseline-full repeat=1 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-full repeat=1 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-full repeat=1 artifact=poster.webp bytes_equal_original=true
+JOB size=1080p mode=baseline-full repeat=2
+TIMING stage=input_hash artifact=source.bin wall_us=93027 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=115779 controller_cpu_us=0 child_cpu_us=78125 launch_us=4661 root_lifetime_us=61469 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=6642751 controller_cpu_us=0 child_cpu_us=3890625 launch_us=4679 root_lifetime_us=6551221 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8351481 controller_cpu_us=15625 child_cpu_us=4437500 launch_us=4575 root_lifetime_us=8235874 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=5687184 controller_cpu_us=0 child_cpu_us=3593750 launch_us=4670 root_lifetime_us=5672667 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10819965 controller_cpu_us=0 child_cpu_us=5656250 launch_us=4582 root_lifetime_us=10753823 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107105 controller_cpu_us=15625 child_cpu_us=78125 launch_us=4622 root_lifetime_us=49053 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=44247 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=42581 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=374 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=31904703 stage_wall_sum_us=31904494 cpu_us=17953125 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=17953125 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=baseline-full repeat=2 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-full repeat=2 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=baseline-full repeat=2 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=baseline-full repeat=0
+TIMING stage=input_hash artifact=source.bin wall_us=351449 controller_cpu_us=359375 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=227451 controller_cpu_us=0 child_cpu_us=203125 launch_us=4450 root_lifetime_us=125076 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=19753982 controller_cpu_us=0 child_cpu_us=10562500 launch_us=5479 root_lifetime_us=19742561 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=32782649 controller_cpu_us=0 child_cpu_us=16875000 launch_us=4309 root_lifetime_us=32760798 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=19410403 controller_cpu_us=0 child_cpu_us=10609375 launch_us=6412 root_lifetime_us=19387106 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=32899946 controller_cpu_us=0 child_cpu_us=16859375 launch_us=4485 root_lifetime_us=32829997 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=106933 controller_cpu_us=15625 child_cpu_us=156250 launch_us=4741 root_lifetime_us=89853 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=173445 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=90487 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=395 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=105797355 stage_wall_sum_us=105797140 cpu_us=55906250 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=55906250 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=baseline-full repeat=0 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-full repeat=0 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-full repeat=0 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=baseline-full repeat=1
+TIMING stage=input_hash artifact=source.bin wall_us=352828 controller_cpu_us=343750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=222433 controller_cpu_us=0 child_cpu_us=187500 launch_us=4661 root_lifetime_us=125789 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=20272460 controller_cpu_us=0 child_cpu_us=10062500 launch_us=4372 root_lifetime_us=20202107 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33359226 controller_cpu_us=0 child_cpu_us=17031250 launch_us=4666 root_lifetime_us=33261305 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=20791422 controller_cpu_us=0 child_cpu_us=11312500 launch_us=4639 root_lifetime_us=20729176 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=34242836 controller_cpu_us=0 child_cpu_us=17640625 launch_us=5158 root_lifetime_us=34216266 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=108454 controller_cpu_us=0 child_cpu_us=93750 launch_us=4701 root_lifetime_us=79638 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=168929 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=91186 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=389 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=109610364 stage_wall_sum_us=109610163 cpu_us=56937500 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=56937500 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=baseline-full repeat=1 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-full repeat=1 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-full repeat=1 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=baseline-full repeat=2
+TIMING stage=input_hash artifact=source.bin wall_us=360049 controller_cpu_us=359375 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=input_inspection artifact=source.bin wall_us=216415 controller_cpu_us=0 child_cpu_us=203125 launch_us=5420 root_lifetime_us=128010 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=20492751 controller_cpu_us=0 child_cpu_us=10500000 launch_us=5020 root_lifetime_us=20469938 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33985306 controller_cpu_us=0 child_cpu_us=17468750 launch_us=5661 root_lifetime_us=33915044 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=20049235 controller_cpu_us=0 child_cpu_us=10062500 launch_us=5112 root_lifetime_us=19975038 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=32891394 controller_cpu_us=31250 child_cpu_us=16843750 launch_us=5699 root_lifetime_us=32870502 completed=true
+TIMING stage=poster artifact=poster.webp wall_us=107280 controller_cpu_us=0 child_cpu_us=140625 launch_us=4480 root_lifetime_us=80965 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=171771 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=92602 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=396 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=108367407 stage_wall_sum_us=108367199 cpu_us=55875000 cpu_scope=timed_stages_and_child_trees stages=10 stages_may_overlap=true job_cpu_us=55875000 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=baseline-full repeat=2 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-full repeat=2 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=baseline-full repeat=2 artifact=poster.webp bytes_equal_original=true
+EXPERIMENT_PASS mode=baseline-full
+MODE_EXIT=baseline-full/0
+EXPERIMENT mode=fused-full gpu=1 card=NVIDIA GeForce RTX 3050 physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8 measured_RAM_MB=2048 CPU=1 priority=low poll_ms=100 frames=900 fps=30
+JOB size=1080p mode=fused-full repeat=0
+TIMING stage=input_hash artifact=source.bin wall_us=92029 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=106746 controller_cpu_us=0 child_cpu_us=125000 launch_us=4683 root_lifetime_us=75795 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=2684603 controller_cpu_us=0 child_cpu_us=1625000 launch_us=5015 root_lifetime_us=2652612 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8360043 controller_cpu_us=0 child_cpu_us=4375000 launch_us=4560 root_lifetime_us=8264727 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=2789013 controller_cpu_us=0 child_cpu_us=1593750 launch_us=4631 root_lifetime_us=2731184 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10946526 controller_cpu_us=0 child_cpu_us=5531250 launch_us=5195 root_lifetime_us=10828002 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=43717 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=42609 controller_cpu_us=31250 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=364 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=25065984 stage_wall_sum_us=25065650 cpu_us=13421875 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=13421875 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=fused-full repeat=0 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-full repeat=0 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-full repeat=0 artifact=poster.webp bytes_equal_original=true
+JOB size=1080p mode=fused-full repeat=1
+TIMING stage=input_hash artifact=source.bin wall_us=92816 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=106118 controller_cpu_us=0 child_cpu_us=156250 launch_us=5133 root_lifetime_us=73424 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=2685358 controller_cpu_us=0 child_cpu_us=1437500 launch_us=4734 root_lifetime_us=2588468 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8564971 controller_cpu_us=15625 child_cpu_us=4437500 launch_us=4685 root_lifetime_us=8533583 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=2791515 controller_cpu_us=0 child_cpu_us=1296875 launch_us=4574 root_lifetime_us=2743687 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10931015 controller_cpu_us=15625 child_cpu_us=5609375 launch_us=4583 root_lifetime_us=10882048 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=45634 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=43859 controller_cpu_us=31250 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=431 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=25262041 stage_wall_sum_us=25261717 cpu_us=13140625 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=13140625 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=fused-full repeat=1 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-full repeat=1 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-full repeat=1 artifact=poster.webp bytes_equal_original=true
+JOB size=1080p mode=fused-full repeat=2
+TIMING stage=input_hash artifact=source.bin wall_us=91700 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=116777 controller_cpu_us=0 child_cpu_us=140625 launch_us=5228 root_lifetime_us=73109 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=2788112 controller_cpu_us=0 child_cpu_us=1406250 launch_us=4344 root_lifetime_us=2708238 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=8562977 controller_cpu_us=15625 child_cpu_us=4468750 launch_us=4566 root_lifetime_us=8473655 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=2804319 controller_cpu_us=15625 child_cpu_us=1468750 launch_us=5927 root_lifetime_us=2723225 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=10929934 controller_cpu_us=15625 child_cpu_us=5671875 launch_us=4528 root_lifetime_us=10876904 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=44865 controller_cpu_us=31250 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=44681 controller_cpu_us=46875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=408 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=25384095 stage_wall_sum_us=25383773 cpu_us=13375000 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=13375000 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=1080p mode=fused-full repeat=2 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-full repeat=2 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=1080p mode=fused-full repeat=2 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=fused-full repeat=0
+TIMING stage=input_hash artifact=source.bin wall_us=372381 controller_cpu_us=375000 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=227269 controller_cpu_us=0 child_cpu_us=234375 launch_us=5138 root_lifetime_us=146020 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=8680450 controller_cpu_us=15625 child_cpu_us=1921875 launch_us=4452 root_lifetime_us=8665727 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33241321 controller_cpu_us=0 child_cpu_us=17015625 launch_us=7480 root_lifetime_us=33135531 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=9116240 controller_cpu_us=15625 child_cpu_us=1859375 launch_us=4593 root_lifetime_us=9103182 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=33545440 controller_cpu_us=0 child_cpu_us=17046875 launch_us=4763 root_lifetime_us=33509318 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=168284 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=91989 controller_cpu_us=78125 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=420 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=85444121 stage_wall_sum_us=85443794 cpu_us=38734375 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=38734375 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=fused-full repeat=0 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-full repeat=0 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-full repeat=0 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=fused-full repeat=1
+TIMING stage=input_hash artifact=source.bin wall_us=351241 controller_cpu_us=343750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=228819 controller_cpu_us=0 child_cpu_us=250000 launch_us=5485 root_lifetime_us=142319 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=8792716 controller_cpu_us=0 child_cpu_us=1937500 launch_us=4241 root_lifetime_us=8682097 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33681266 controller_cpu_us=0 child_cpu_us=17390625 launch_us=5016 root_lifetime_us=33668284 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=9115588 controller_cpu_us=0 child_cpu_us=2093750 launch_us=4593 root_lifetime_us=9076760 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=34311195 controller_cpu_us=0 child_cpu_us=17390625 launch_us=4679 root_lifetime_us=34252412 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=170565 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=94646 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=384 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=86746743 stage_wall_sum_us=86746420 cpu_us=39671875 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=39671875 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=fused-full repeat=1 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-full repeat=1 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-full repeat=1 artifact=poster.webp bytes_equal_original=true
+JOB size=4k mode=fused-full repeat=2
+TIMING stage=input_hash artifact=source.bin wall_us=357451 controller_cpu_us=359375 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=inspection_poster artifact=source.bin wall_us=224358 controller_cpu_us=0 child_cpu_us=265625 launch_us=5631 root_lifetime_us=143874 completed=true
+TIMING stage=transcode artifact=feed.mp4 wall_us=8696780 controller_cpu_us=0 child_cpu_us=1953125 launch_us=4864 root_lifetime_us=8639820 completed=true
+TIMING stage=validation artifact=feed.mp4 wall_us=33802363 controller_cpu_us=0 child_cpu_us=17265625 launch_us=5063 root_lifetime_us=33703745 completed=true
+TIMING stage=transcode artifact=optimized.mp4 wall_us=9114643 controller_cpu_us=0 child_cpu_us=1843750 launch_us=5655 root_lifetime_us=9059815 completed=true
+TIMING stage=validation artifact=optimized.mp4 wall_us=34210566 controller_cpu_us=0 child_cpu_us=17468750 launch_us=5646 root_lifetime_us=34165607 completed=true
+TIMING stage=output_hash artifact=feed.mp4 wall_us=176776 controller_cpu_us=171875 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=optimized.mp4 wall_us=90695 controller_cpu_us=93750 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING stage=output_hash artifact=poster.webp wall_us=364 controller_cpu_us=0 child_cpu_us=0 launch_us=0 root_lifetime_us=0 completed=true
+TIMING total job_wall_us=86674304 stage_wall_sum_us=86673996 cpu_us=39421875 cpu_scope=timed_stages_and_child_trees stages=9 stages_may_overlap=true job_cpu_us=39421875 job_cpu_scope=main_thread_background_stages_and_child_trees
+FULL_PARITY size=4k mode=fused-full repeat=2 artifact=feed.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-full repeat=2 artifact=optimized.mp4 bytes_equal_original=true
+FULL_PARITY size=4k mode=fused-full repeat=2 artifact=poster.webp bytes_equal_original=true
+EXPERIMENT_PASS mode=fused-full
+MODE_EXIT=fused-full/0
+Internal ctest changing into directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+UpdateCTestConfiguration  from :C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final/DartConfiguration.tcl
+Parse Config file:C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final/DartConfiguration.tcl
+UpdateCTestConfiguration  from :C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final/DartConfiguration.tcl
+Parse Config file:C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final/DartConfiguration.tcl
+Test project C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+      Start  1: ffmpeg_dependency_contracts
+
+1: Test command: C:\Users\Danny\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/tests/ffmpeg_dependency_test.py"
+1: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+1: Test timeout computed to be: 30
+1: .......................
+1: ----------------------------------------------------------------------
+1: Ran 23 tests in 0.231s
+1:
+1: OK
+ 1/10 Test  #1: ffmpeg_dependency_contracts ......   Passed    0.82 sec
+test 2
+      Start  2: worker_contracts
+
+2: Test command: C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_contract_tests.exe
+2: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+2: Test timeout computed to be: 30
+2: PASS verified capabilities accept independent jobs concurrently
+2: PASS four single-CPU app jobs reserve and begin independently within configured limits
+2: PASS missing capability fails closed
+2: PASS installed but unverified does not mean capable
+2: PASS local disabled vetoes a preferred server offer
+2: PASS reservation consumes capacity before execution
+2: PASS dynamic low memory rejects despite configured budget
+2: PASS duplicate offer is idempotent
+2: PASS changed duplicate payload is rejected
+2: PASS same content job cannot run in two attempts on one host
+2: PASS job guardrail is independent of resource budget
+2: PASS oversized resource numbers cannot overflow accounting
+2: PASS zero CPU or memory declaration is rejected
+2: PASS invalid IDs cannot become filesystem paths
+2: PASS expired reservation cannot be started
+2: PASS start without lease is rejected
+2: PASS replayed begin does not start a second process
+2: PASS pause refuses new work but preserves active execution
+2: PASS pause prevents an unstarted reservation from beginning
+2: PASS only a valid fresh renewal extends the lease
+2: PASS expired running lease cannot be revived by late renewal
+2: PASS expiry returns unused reservations to the budget
+2: PASS expired running job retains resources until child shutdown
+2: PASS cancelling one job preserves the other
+2: PASS duplicate finish cannot release resources twice
+2: PASS simultaneous offers never oversubscribe
+2: PASS two outstanding offers cannot both reserve the same live free memory
+2: PASS disabling a capability prevents a reserved job from starting
+2: PASS a duplicate offer cannot extend a reservation indefinitely
+2: PASS accepted attempt and pending result survive journal reopen
+2: PASS outbox cannot be acknowledged with wrong attempt or sequence
+2: PASS repeated result does not create duplicate outbox entry
+2: PASS attempt collision cannot change persisted payload
+2: PASS restart exposes interrupted work without automatically rerunning it
+2: PASS denied BEGIN capacity is terminally never-started across journal restart
+2: PASS priority settings survive restart
+2: PASS result without accepted job fails instead of making orphan output
+2: PASS pending counter follows durable results and acknowledgements
+2: PASS journal coordinator binding survives reopen and rejects a different server
+2: PASS legacy pending results cannot be adopted without endpoint provenance
+2: PASS legacy interrupted attempt needs the same protected coordinator origin
+2: PASS media transfer requires exact approved HTTPS host
+2: PASS well formed offer translates to validated typed job
+2: PASS wire requests cannot smuggle arbitrary commands as capabilities
+2: PASS negative or floating resource values are rejected
+2: PASS unverified GPU is never requested by the CPU converter
+2: PASS download digest is mandatory and strictly encoded
+2: PASS input and output must fit declared temporary storage
+2: PASS control message size and parser nesting are bounded
+2: PASS null bytes cannot reach Win32 URL or process APIs
+2: PASS Windows argument quoting preserves spaces quotes and trailing slashes
+2: PASS converter receives local files not remote URLs or shell commands
+2: PASS leases use the shorter of local and server remaining time
+2: PASS expired and unsigned-underflow lease cases fail closed
+2: PASS lease duration and monotonic addition cannot overflow
+2: PASS app rendition contract requires every fixed output and budgets all simultaneous files
+2: PASS app jobs refuse arbitrary output roles and mixed media type declarations
+2: PASS endpoint supplied by operator has a stable HTTPS origin
+2: PASS missing unsafe or ambiguous endpoints cannot become network destinations
+2: PASS an absent endpoint fails before enrollment or key disclosure
+2: PASS credential reopen reconnects without a new enrollment
+2: PASS credential canonicalization allows same origin but never a different server
+2: PASS corrupt saved credential never triggers silent reenrollment
+2: PASS successful pairing persists identity before returning and removes pending secret
+2: PASS incompatible coordinator receives no public key or enrollment request
+2: PASS lost initial response reuses durable request id rather than inventing another enrollment
+2: PASS lost approval response resumes same enrollment with its private key proof
+2: PASS pending enrollment is never sent to a different endpoint
+2: PASS failed credential persistence preserves resumable approval and returns no success
+2: PASS pending cleanup failure cannot discard an already durable credential
+2: PASS late approval after cancellation does not publish credentials
+2: PASS denial is explicit and cannot erase an existing pending record
+2: PASS server revocation does not silently start another pairing
+2: PASS rate limited polling waits and remains bounded by pairing expiry
+2: PASS invalid permanent tokens and worker ids never reach credential storage
+2: 75 contracts, 0 failures
+ 2/10 Test  #2: worker_contracts .................   Passed    0.30 sec
+test 3
+      Start  3: pipeline_contracts
+
+3: Test command: C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_pipeline_contract_tests.exe
+3: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+3: Test timeout computed to be: 30
+3: PASS rendition pipeline returns ordered metadata for every artifact
+3: PASS next encode overlaps previous transfer
+3: PASS empty rendition pipeline starts no stages
+3: PASS transfer backpressure keeps one encoder and one transfer at a time
+3: PASS final transfer must join before result is returned
+3: PASS transfer failure cancels next encode and preserves original cause
+3: PASS encode failure cancels and joins transfer before unwinding
+3: PASS failed final checksum cannot return a successful partial result
+3: PASS independent pipelines do not share cancellation or metadata
+3: 9 contracts, 0 failures
+ 3/10 Test  #3: pipeline_contracts ...............   Passed    0.10 sec
+test 4
+      Start  4: rendition_contracts
+
+4: Test command: C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_rendition_contract_tests.exe
+4: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+4: Test timeout computed to be: 30
+4: PASS app video rendition commands preserve dimensions and frame timing and copy existing AAC
+4: PASS app image renders a full-size WebP and bounded poster with independent destinations
+4: PASS non-AAC audio uses the existing app delivery bitrate
+4: PASS common SDR H264 and HEVC use device frames on the selected NVENC device
+4: PASS unproven source formats retain the original software decode and encoding options
+4: PASS decode selection inspects the first input video only and leaves other backends and posters unchanged
+4: PASS output descriptions and metadata cannot qualify an unknown input for CUDA decode
+4: PASS device decode preserves every existing output encoder option
+4: PASS input inspection can produce the identical fixed poster from the same decode
+4: PASS poster reuse is restricted to a single ordinary unrotated SDR video stream
+4: 10 contracts, 0 failures
+ 4/10 Test  #4: rendition_contracts ..............   Passed    0.52 sec
+test 5
+      Start  5: adaptive_hardware_contracts
+
+5: Test command: C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_adaptive_hardware_contract_tests.exe
+5: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+5: Test timeout computed to be: 30
+5: PASS CPU remains the safe profile when no supported GPU is installed
+5: PASS GPU adapter and compiled encoder listing do not qualify a broken driver
+5: PASS single GPU profile requires matching encode decode and validated output
+5: PASS heterogeneous GPUs retain independent identities and schedules
+5: PASS two synthetic NVIDIA GPUs schedule independently through the production scheduler
+5: PASS codec-specific evidence keeps unsupported HEVC on a verified CPU profile
+5: PASS low VRAM and machine resource caps reject unsafe tuning
+5: PASS measured concurrency stays under CPU RAM scratch VRAM and job ceilings
+5: PASS profile invalidates on adapter identity driver or approved FFmpeg change
+5: PASS cancelled or failed tuning falls back to CPU without leaking a device reservation
+5: PASS selected hardware rendition binds an explicit adapter and conservative codec mode
+5: PASS Intel QSV and AMD AMF commands bind their probed DirectX adapter
+5: PASS hardware failure removes partial output and validates a clean CPU retry before success
+5: PASS cancelled hardware work does not start a CPU retry or retain partial output
+5: PASS runtime scheduler atomically enforces global and per-device costs until drain
+5: PASS task caps limit each reservation while global capacity admits four small jobs
+5: PASS native drain fixture keeps its GPU reservation while admitting independent CPU work
+5: PASS temporary CPU admission and GPU reservation moves preserve separate backend capacity
+5: PASS exhausted backend capacity stays owned across reservation moves until release
+5: PASS CUDA LUID mapping survives ordinal reorder and rejects duplicate or invalid mappings
+5: PASS GPU memory telemetry is child and LUID scoped and rejects ambiguous physical nodes
+5: PASS missing foreign invalid and zero GPU counters never mean idle headroom
+5: PASS serial and parallel tuning compare equal work repeated stages and child budgets
+5: PASS two independent GPU jobs fit with one CPU encoder slot and can wait for safe CPU retry
+5: PASS GPU fallback slot acquisition ignores a CPU codec already owned by the same task
+5: PASS runtime profile ties resolve by stable device identity and CPU profile is selectable
+5: PASS hardware adapter mapping ambiguity fails closed independent of enumeration order
+5: PASS runtime admission falls back to the measured CPU profile when configured VRAM is too small
+5: PASS live adapter headroom closes GPU admission and restores it after headroom returns
+5: PASS CPU concurrency reflects repeated tuning candidates within every configured cap
+5: PASS multi-codec runtime reservation uses peak per-job CPU memory and scratch costs
+5: PASS runtime scheduler invalidation stops stale hardware while active reservations drain
+5: PASS runtime command generation applies the scheduler-selected measured CPU profile
+5: PASS cancellation before an encode prevents every helper spawn
+5: PASS cancellation during output validation cannot publish a successful artifact
+5: PASS declared VRAM fallback permits proven hardware and retains CPU and drain budgets
+5: PASS VRAM budgets preserve live headroom and fail closed without either source
+5: PASS declared budget never substitutes for encode decode identity or tuning proof
+5: PASS encoder tokens name every backend that survived probing
+5: PASS encoder tokens never claim hardware when only CPU was profiled
+5: PASS a hardware-only profile set cannot imply a CPU profile
+5: PASS runtime hardware failure reports exactly once without changing selected profiles
+5: PASS reporting retains another profiled codec and handles profile removal and binary invalidation
+5: PASS diagnostic CPU evidence is distinct from missing adaptive profiles
+5: PASS converter invalidation retracts CPU as well as hardware evidence once
+5: PASS backup presentation promises a routing hint only
+5: PASS unobserved inventory is unknown while an observed zero stays zero
+5: PASS status evidence separates unrun checks from failed probes and requires current CPU app profiles
+5: PASS sample dimensions describe evidence while encoder geometry governs admission
+5: PASS only equal realistic measurements may withhold hardware for CPU throughput
+5: PASS large hardware encode or validation failure demotes once and retries CPU while capacity stays owned
+5: PASS saved profiles and rejected measurements name their actual tuning resolution
+5: PASS demotion is atomic codec specific and preserves already reserved capacity
+5: PASS ambiguous duplicate adapter identities never produce profiles
+5: PASS one physical card shares its session budget across codecs until drain
+5: PASS complete rendition jobs use both cards concurrently with a single CPU fallback slot
+5: PASS different LUID aliases of a PCI instance are withheld while identical real cards stay independent
+5: PASS scheduler rejects forged alias profiles and missing NVIDIA PCI identities
+5: PASS NVIDIA worker session ceiling is shared by all cards independently of VRAM
+5: PASS unrelated release and reservation moves cannot steal a running CPU fallback slot
+5: PASS profile device totals count encodable cards once across codecs
+5: PASS PCI instance drift invalidates a saved profile even when the DXGI identity stayed the same
+5: PASS simultaneous reservations cannot create a third hardware session or reuse a busy card
+5: PASS opposite codec speed winners do not split each rendition job across both cards
+5: PASS Windows ROOT display instances never become capacity even with successful encoder evidence
+5: PASS missing PCI instance withholds every backend including non NVIDIA devices
+5: PASS two PCI instances and a ROOT alias report two independently schedulable cards
+5: PASS PCI instance aliases are case insensitive and never create two placements
+5: PASS physical card exclusions explain software identity session and VRAM denial
+5: PASS saved ROOT profiles cannot bypass PCI admission in reporting or scheduling
+5: 70 contracts, 0 failures
+ 5/10 Test  #5: adaptive_hardware_contracts ......   Passed    0.32 sec
+test 6
+      Start  6: progress_contracts
+
+6: Test command: C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_progress_contract_tests.exe
+6: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+6: Test timeout computed to be: 30
+6: PASS idle connection emits no activity and active states stay terse
+6: PASS encoder timeline and byte accounting behavior are preserved
+6: PASS unmeasurable stages say only stage and elapsed once
+6: PASS a repeated stage is a visible retry with one stable suffix
+6: PASS local timestamp format is exact through midnight month and zone changes
+6: PASS job suffixes are lowercase last four and stable for a job life
+6: PASS two live jobs with the same four characters stay distinguishable
+6: PASS a shown suffix resolves to exactly one full attempt id in the durable log
+6: PASS restart needs no counter and never implies continuation
+6: PASS every rendered line fits eighty columns including an impossible message
+6: PASS old durable lines still render plainly without breaking the viewer
+6: PASS exactly five colours carry one consistent meaning
+6: PASS progress rows keep a bounded bar and vanish on terminal events
+6: PASS four concurrent rows and activity stay readable and cancellation clears at any percent
+6: PASS many jobs keep suffix-to-id resolvability and concurrent accounting
+6: PASS the ready line names the encoders the worker actually reported
+6: PASS a probe record without encoder detail claims no backend
+6: PASS a malformed encoder list cannot invent a backend
+6: PASS explicit failed app probes never inherit successful diagnostics
+6: PASS absent capability and priority evidence is explicitly unknown
+6: PASS capability flags require complete field values and boundaries
+6: PASS probe elapsed phases and remaining candidates use an injected clock
+6: PASS probe has one bounded row alongside jobs and clears on result or failure
+6: PASS encoder change and sample scope fit the existing neutral and warning style
+6: PASS an encoder substring is not backend evidence and unknown lists stay empty
+6: PASS probe phase labels cannot hide elapsed time at console width
+6: PASS hardware demotion is one short warning line in the existing console style
+6: PASS geometry and performance fallback reasons remain distinct and readable
+6: PASS encoder placement remains short blue activity with distinct device and CPU retry
+6: PASS the short log distinguishes schedulable card count from raw DXGI inventory
+6: PASS all hardware command plans retain device selection and measured timeline progress
+6: PASS four hardware failures reset timeline and stage generation on CPU retry independently
+6: PASS outcomes increment once per executed attempt and survive pause resume
+6: PASS fixed clock summary has exact finish time duration queue and computed idle
+6: PASS idle table is fixed width deterministic and derives since and uptime
+6: PASS missing readings and last job stay unknown never numeric zero
+6: PASS idle live and durable cadence are independent and no table runs during work
+6: PASS physical cards deduplicate by identity truncate names and wrap fixed cells
+6: PASS outcome and state colours have only nonzero failures red
+6: PASS placement describes actual running encoder and clears on drain
+6: PASS status sidecar rows roundtrip colours and durable blocks stay out of live scrollback
+6: PASS live idle frame is suppressed until the last concurrent job terminates
+6: PASS bounded history survives new jobs and derives duration across wall clock correction
+6: PASS asset stages retries completions and full summaries keep observable words
+6: PASS idle ticks do not reset state since and nonzero failed span roundtrips
+6: PASS redirected durable table keeps the same fixed width plain block
+6: PASS summary carries running placement free resources priority and accepting state
+6: PASS totals keep outcome columns at fixed positions as counts grow
+6: PASS encoder and failure records retain asset names and failure colour
+6: PASS running progress row retains the physical card across asset updates
+6: PASS outcome colour follows the outcome word regardless of reason wording
+6: PASS timing separates wall controller CPU child CPU launch and process lifetime
+6: PASS failed timed work retains its exception and reports incomplete work
+6: PASS missing child accounting never becomes a measured zero
+6: PASS timing observer failure cannot fail or replace conversion outcome
+6: PASS concurrent stage sums are explicitly distinct from job wall time
+6: PASS one unavailable CPU measurement makes aggregate CPU unavailable
+6: PASS job CPU includes main thread once plus background CPU and all child trees
+6: 58 contracts, 0 failures
+ 6/10 Test  #6: progress_contracts ...............   Passed    0.19 sec
+test 7
+      Start  7: windows_contracts
+
+7: Test command: C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_windows_tests.exe
+7: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+7: Test timeout computed to be: 60
+7: PASS Windows UTF8 conversion preserves non-ASCII filenames
+7: PASS Windows adapter inventory has repeatable unique identities and real VRAM and driver fields
+7: NOCONVERSION_REASON ; converter not configured: capabilities disabled; display inventory entries=4; configured_global_VRAM_override_MB=not_set [NVIDIA GeForce RTX 3070 id=pci:10de:2488:153a10de:a1:luid:00000000:0001e79a dedicated_VRAM_MB=8017; physical_id=ROOT\DISPLAY\0000; encoder mapping=unavailable; software adapter (ROOT instance); excluded from capacity and scheduling] [NVIDIA GeForce RTX 3050 id=pci:10de:2507:c9781462:a1:luid:00000000:00016411 dedicated_VRAM_MB=8041; physical_id=PCI\VEN_10DE&DEV_2507&SUBSYS_C9781462&REV_A1\4&EB98076&0&00E8; encoder mapping=verified; ] [NVIDIA GeForce RTX 3070 id=pci:10de:2488:153a10de:a1:luid:00000000:0001418e dedicated_VRAM_MB=8017; physical_id=PCI\VEN_10DE&DEV_2488&SUBSYS_153A10DE&REV_A1\4&22651C9C&0&0008; encoder mapping=verified; ] [Microsoft Basic Render Driver id=pci:1414:008c:00000000:00:luid:00000000:000163c2 dedicated_VRAM_MB=0; physical_id=; encoder mapping=unavailable; unsupported or unmappable display adapter; GPU profile withheld]
+7: PASS NoConversion setup inventories adapters before reporting disabled conversion
+7: PASS global VRAM override is optional for old configs and honored when configured
+7: PASS DPAPI round-trips binary credentials and rejects corruption
+7: PASS pairing public identity persists without storing a plaintext private key
+7: PASS stopping a contained job terminates both root and descendant
+7: FAIL native timing retains process-tree CPU and root lifetime after drain: check failed at C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\tests\windows_test.cpp:124: measured->root_lifetime_us
+7: PASS adaptive capacity stays reserved until a cancelled native process tree drains
+7: PASS protected enrollment and credentials remain readable after adapter reopen
+7: PASS runtime readiness identifies this process and is removed on shutdown
+7: PASS durable log rotation keeps concurrent lines whole and free of terminal escapes
+7: PASS pipeline upload failure drains a real contained process tree before unwinding
+7: 13 contracts, 1 failures
+ 7/10 Test  #7: windows_contracts ................***Failed    0.58 sec
+test 8
+      Start  8: setup_contracts
+
+8: Test command: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe "-NoLogo" "-NoProfile" "-ExecutionPolicy" "Bypass" "-File" "C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/tests/setup_policy_test.ps1"
+8: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+8: Test timeout computed to be: 60
+8: PASS expired pairing is identified without deleting identity and healthy credentials are retained
+8: PASS unreadable or cross-endpoint identity requires explicit full archival
+8: [00:06:42] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+8: [00:06:42] [DONE] Enumerate dependency files | 1 files | elapsed 0.1s | 1 files found
+8: [00:06:42] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s |
+8: [00:06:42] [DONE] Build dependency checksum manifest | 1 / 1 files (100%) | elapsed 0.1s |
+8: [00:06:43] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+8: [00:06:43] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s |
+8: [00:06:43] [DONE] Verify cached dependency | 1 / 1 files (100%) | elapsed 0.0s | Every cached file verified
+8: [00:06:43] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+8: [00:06:43] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s |
+8: [00:06:43] [DONE] Verify cached dependency | 1 / 1 files (100%) | elapsed 0.0s | Every cached file verified
+8: [CACHE] Verified extracted dependency reused.
+8: [00:06:43] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+8: [00:06:43] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s |
+8: [00:06:43] [FAILED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s | Cache mismatch; fresh extraction required
+8: [00:06:43] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+8: [00:06:43] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s |
+8: [00:06:43] [DONE] Build dependency checksum manifest | 1 / 1 files (100%) | elapsed 0.0s |
+8: [REPAIR] Replacing damaged generated dependency files.
+8: [00:06:43] [STARTED] Clean generated files |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Clean generated files | 2 files | elapsed 0.0s | 2 generated files removed
+8: PASS verified dependency tree is reused but changed or missing files are repaired
+8: [00:06:43] [STARTED] Clean generated files |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Clean generated files |  | elapsed 0.0s | 0 generated files removed
+8: PASS failed fresh extraction preserves existing files and unrelated identity
+8: Enter an HTTPS worker origin on port 443, without a path, query, fragment or credentials.
+8: PASS bare DNS input selects verified HTTPS and invalid interactive input can be corrected
+8: PASS repair retries recoverable setup once and preserves user state
+8: PASS persistent failure stops after bounded repair and healthy step never repairs
+8: [00:06:43] [STARTED] SHA-256 download.bin | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+8: [00:06:43] [DONE] SHA-256 download.bin | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s |
+8: [REPAIR] Replacing a damaged download from the reviewed dependency lock.
+8: [00:06:43] [STARTED] SHA-256 download.bin.83345b2054544ce1997222bcd696d869.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+8: [00:06:43] [DONE] SHA-256 download.bin.83345b2054544ce1997222bcd696d869.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s |
+8: [00:06:43] [STARTED] SHA-256 download.bin | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+8: [00:06:43] [DONE] SHA-256 download.bin | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s |
+8: [REPAIR] Replacing a damaged download from the reviewed dependency lock.
+8: [00:06:43] [STARTED] SHA-256 download.bin.205130c0935f4fc09ddbbc305b33ce13.part | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+8: [00:06:43] [DONE] SHA-256 download.bin.205130c0935f4fc09ddbbc305b33ce13.part | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s |
+8: PASS damaged checksum cache is replaced and unverified replacement is never retained
+8: [00:06:43] [STARTED] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [STARTED] Verify startup registration |  | elapsed 0.0s |
+8: [00:06:43] [FAILED] Verify startup registration |  | elapsed 0.0s | Windows startup registration could not be verified. Setup is incomplete.
+8: [REPAIR] Re-registering this users normal-privilege startup task.
+8: [00:06:43] [STARTED] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [STARTED] Verify startup registration |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Verify startup registration |  | elapsed 0.0s |
+8: [00:06:43] [STARTED] Launch and verify worker |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Launch and verify worker |  | elapsed 0.0s |
+8: PASS startup repairs a failed verification before launch and never elevates the worker
+8: PASS Windows account aliases identify the same startup owner by SID
+8: PASS another account SID cannot own this users startup task
+8: PASS missing or unresolvable startup owner fails closed
+8: PASS first setup asks for endpoint and canonicalizes it
+8: PASS existing endpoint is reused without a prompt
+8: PASS blank or unsafe endpoint fails instead of choosing production
+8: PASS changing endpoint with identity requires explicit re-pair
+8: [00:06:43] [STARTED] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [STARTED] Verify startup registration |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Verify startup registration |  | elapsed 0.0s |
+8: [00:06:43] [STARTED] Launch and verify worker |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Launch and verify worker |  | elapsed 0.0s |
+8: PASS ordinary setup registers verifies and starts without opt-in switches
+8: [00:06:43] [STARTED] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [STARTED] Verify startup registration |  | elapsed 0.0s |
+8: [00:06:43] [FAILED] Verify startup registration |  | elapsed 0.0s | Windows startup registration could not be verified. Setup is incomplete.
+8: [REPAIR] Re-registering this users normal-privilege startup task.
+8: [00:06:43] [STARTED] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [DONE] Register normal-user startup |  | elapsed 0.0s |
+8: [00:06:43] [STARTED] Verify startup registration |  | elapsed 0.0s |
+8: [00:06:43] [FAILED] Verify startup registration |  | elapsed 0.0s | Windows startup registration could not be verified. Setup is incomplete.
+8: PASS failed startup verification cannot report success or launch
+8: PASS explicit maintenance opt-outs suppress only requested side effects
+8: PASS atomic JSON replacement preserves old bytes when publication fails
+8: PASS readiness needs the matching process image and creation time not a stale PID
+8: PASS changing coordinators archives the old journal and keys instead of sending old results
+8: PASS explicit re-pair archives encrypted identity but retains key and job journal
+8: PASS an absent toolchain is reported as missing instead of crashing
+8: PASS a real toolchain instance still supplies the compiler path
+8: 25 setup contracts passed; 0 failed
+ 8/10 Test  #8: setup_contracts ..................   Passed    2.38 sec
+test 9
+      Start  9: setup_progress_contracts
+
+9: Test command: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe "-NoLogo" "-NoProfile" "-ExecutionPolicy" "Bypass" "-File" "C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/tests/setup_progress_test.ps1"
+9: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+9: Test timeout computed to be: 90
+9: PASS unknown total never acquires a percentage just because time passes
+9: PASS measured work gives a percentage and successful completion ends the stage
+9: PASS heartbeat reports quiet activity without pretending work advanced
+9: PASS failure stays a failure and does not display completed work
+9: PASS URLs and credential values never reach a progress log
+9: PASS streaming checksum retains the actual SHA256 contract
+9: [00:06:45] [STARTED] Truncated |  | elapsed 0.0s |
+9: PASS stream transfer counts real bytes and rejects truncated content
+9: [00:06:45] [STARTED] Move extracted dependency into staging | 0 / 1 entries (0%) | elapsed 0.0s |
+9: [00:06:45] [DONE] Move extracted dependency into staging | 1 / 1 entries (100%) | elapsed 0.0s | Same-volume move; no duplicate tree copy
+9: [00:06:45] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+9: [00:06:45] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+9: [00:06:45] [STARTED] Build dependency checksum manifest | 0 / 1 files (0%) | elapsed 0.0s |
+9: [00:06:45] [DONE] Build dependency checksum manifest | 1 / 1 files (100%) | elapsed 0.1s |
+9: [00:06:45] [STARTED] Enumerate dependency files |  | elapsed 0.0s |
+9: [00:06:45] [DONE] Enumerate dependency files | 1 files | elapsed 0.0s | 1 files found
+9: [00:06:45] [STARTED] Verify cached dependency | 0 / 1 files (0%) | elapsed 0.0s |
+9: [00:06:45] [DONE] Verify cached dependency | 1 / 1 files (100%) | elapsed 0.0s | Every cached file verified
+9: PASS staging move preserves dependency contents and unrelated user state
+9: PASS dependency staging collision fails without overwriting either tree
+9: [00:06:45] [STARTED] Oversized |  | elapsed 0.0s |
+9: [00:06:45] [STARTED] Declared empty |  | elapsed 0.0s |
+9: PASS download bounds reject oversized and declared-empty content
+9: [00:06:45] [STARTED] Synthetic ZIP |  | elapsed 0.0s |
+9: [00:06:47] [PROGRESS] Synthetic ZIP |  | elapsed 2.0s | Process running; percentage unavailable
+9: [00:06:47] [DONE] Synthetic ZIP |  | elapsed 2.3s |
+9: PASS owned ZIP extractor preserves real nested dependency files
+9: [00:06:47] [STARTED] Synthetic child |  | elapsed 0.0s |
+9: first:7860
+9: stderr
+9: [00:06:49] [PROGRESS] Synthetic child | 2 output lines | elapsed 2.1s | Process running; percentage unavailable
+9: [00:06:50] [DONE] Synthetic child | 2 output lines | elapsed 2.9s |
+9: PASS real native stdout and stderr are delivered while the child is still running
+9: [00:06:50] [STARTED] Argument fixture |  | elapsed 0.0s |
+9: [00:06:51] [DONE] Argument fixture | 4 output lines | elapsed 0.5s |
+9: PASS native arguments retain spaces quotes empty values and trailing slashes
+9: [00:06:51] [STARTED] Failing child |  | elapsed 0.0s |
+9: synthetic defect
+9: [00:06:51] [FAILED] Failing child | 1 output lines | elapsed 0.8s | Native stage failed with exit code 7
+9: PASS a nonzero native exit cannot report a successful stage
+9: [00:06:51] [STARTED] Timed out child |  | elapsed 0.0s |
+9: pid:34292
+9: [00:06:53] [PROGRESS] Timed out child | 1 output lines | elapsed 2.1s | Process running; percentage unavailable
+9: [00:06:54] [FAILED] Timed out child | 1 output lines | elapsed 3.1s | Stage exceeded its 3s timeout.
+9: PASS native timeout stops the owned child and remains a failure
+9: 15 progress contracts passed; 0 failed
+ 9/10 Test  #9: setup_progress_contracts .........   Passed   11.64 sec
+test 10
+      Start 10: setup_converter_contracts
+
+10: Test command: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe "-NoLogo" "-NoProfile" "-NonInteractive" "-ExecutionPolicy" "Bypass" "-File" "C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/tests/setup_converter_test.ps1"
+10: Working Directory: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+10: Test timeout computed to be: 60
+10: START a fresh machine downloads pinned bytes after consent and records acceptance
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: FAIL a fresh machine downloads pinned bytes after consent and records acceptance : Could not find a part of the path 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\ow-converter-efbf33f7428147dba6f4de64ad8bf426\1bbb723566bd46389df0658e099817ff\dependencies\ffmpeg-1dc6057227edf6c231ad80e56525a7f4c111f98abd03965f7e2454081aa4aa44\ffmpeg.exe.a436871e197b4b7798ddaf7e372fd7d0.part'.
+10: START corrupt transfers retry the supplied transport and only verified bytes publish
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: FAIL corrupt transfers retry the supplied transport and only verified bytes publish : Could not find a part of the path 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\ow-converter-efbf33f7428147dba6f4de64ad8bf426\5f4a20f8b8f34de2b5b64335ef010851\dependencies\ffmpeg-1dc6057227edf6c231ad80e56525a7f4c111f98abd03965f7e2454081aa4aa44\ffmpeg.exe.310cca05b6b344bea35207423ef7fe12.part'.
+10: START a verified retained converter is reused without another transfer or prompt
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: FAIL a verified retained converter is reused without another transfer or prompt : Could not find a part of the path 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\ow-converter-efbf33f7428147dba6f4de64ad8bf426\ed54d4bba43c4d4a9516013208f821ca\dependencies\ffmpeg-1dc6057227edf6c231ad80e56525a7f4c111f98abd03965f7e2454081aa4aa44\ffmpeg.exe.d7bee7e67f6d4691ab67eb843bae1b47.part'.
+10: START a tampered installed converter is replaced with verified bytes
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: FAIL a tampered installed converter is replaced with verified bytes : Could not find a part of the path 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\ow-converter-efbf33f7428147dba6f4de64ad8bf426\222c462ea05f4460ae64ac1bea584dbd\dependencies\ffmpeg-1dc6057227edf6c231ad80e56525a7f4c111f98abd03965f7e2454081aa4aa44\ffmpeg.exe.9c84a9f0195e45a5bb34e761f38ff6e4.part'.
+10: START same-size wrong bytes cannot publish converter or license receipt
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: FAIL same-size wrong bytes cannot publish converter or license receipt : Exception calling "WriteAllText" with "2" argument(s): "Could not find a part of the path 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\ow-converter-efbf33f7428147dba6f4de64ad8bf426\246ae4ea4a8045c698517536cff0aee6\dependencies\ffmpeg-1dc6057227edf6c231ad80e56525a7f4c111f98abd03965f7e2454081aa4aa44\ffmpeg.exe.e6cb8de62f5f40e5822946bbf5509fd9.part'."
+10: START truncated download is rejected and temporary bytes removed
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: FAIL truncated download is rejected and temporary bytes removed : Exception calling "WriteAllText" with "2" argument(s): "Could not find a part of the path 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\ow-converter-efbf33f7428147dba6f4de64ad8bf426\0e578ba5ad1b44c9ad763248ce21a86b\dependencies\ffmpeg-1dc6057227edf6c231ad80e56525a7f4c111f98abd03965f7e2454081aa4aa44\ffmpeg.exe.ef2f6e623bdd4221b3492c4f7a661cc5.part'."
+10: START unpublished artifact fails clearly before consent or network
+10: PASS unpublished artifact fails clearly before consent or network
+10: START NoConversion bypasses unpublished dependency and clears converter selection
+10: PASS NoConversion bypasses unpublished dependency and clears converter selection
+10: START an already approved installed converter survives a pending publication
+10: [00:07:32] [STARTED] SHA-256 synthetic.exe | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+10: [00:07:32] [DONE] SHA-256 synthetic.exe | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s |
+10: PASS an already approved installed converter survives a pending publication
+10: START a damaged stored converter cannot bypass pending publication
+10: [00:07:32] [STARTED] SHA-256 synthetic.exe | 0.0 MiB / 0.0 MiB (0%) | elapsed 0.0s |
+10: [00:07:32] [DONE] SHA-256 synthetic.exe | 0.0 MiB / 0.0 MiB (100%) | elapsed 0.0s |
+10: PASS a damaged stored converter cannot bypass pending publication
+10: START noninteractive installation requires explicit license consent
+10: PASS noninteractive installation requires explicit license consent
+10: START declining consent performs no download and creates no receipt
+10: PASS declining consent performs no download and creates no receipt
+10: START a receipt for another digest does not authorize this dependency
+10: FAIL a receipt for another digest does not authorize this dependency : Exception calling "WriteAllText" with "3" argument(s): "Could not find a part of the path 'C:\Users\danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\ow-converter-efbf33f7428147dba6f4de64ad8bf426\ea7464719ad0480fa520c4c8647ecf50\ffmpeg-license-1dc6057227edf6c231ad80e56525a7f4c111f98abd03965f7e2454081aa4aa44.json.e2e0756bb2ea45399022d443eb4fb13e.tmp'."
+10: START network failure retains unrelated identity and cannot publish success
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: [REPAIR] Retrying the locked FFmpeg after a failed transfer or checksum check.
+10: PASS network failure retains unrelated identity and cannot publish success
+10: START unsafe expiring and unpinned endpoints fail before fetching
+10: PASS unsafe expiring and unpinned endpoints fail before fetching
+10: START invalid executable metadata and missing checksum fail closed
+10: PASS invalid executable metadata and missing checksum fail closed
+10: START forced repair cannot switch a supplied converter silently
+10: PASS forced repair cannot switch a supplied converter silently
+10: 10 converter contracts passed; 7 failed
+10/10 Test #10: setup_converter_contracts ........***Failed   43.53 sec
+
+80% tests passed, 2 tests failed out of 10
+
+Total Test time (real) =  60.39 sec
+
+The following tests FAILED:
+	  7 - windows_contracts (Failed)
+	 10 - setup_converter_contracts (Failed)
+Errors while running CTest
+Output from these tests are in: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final/Testing/Temporary/LastTest.log
+Use "--rerun-failed --output-on-failure" to re-run the failed cases verbosely.
+CTEST_EXIT=8

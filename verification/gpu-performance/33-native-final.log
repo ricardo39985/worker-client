@@ -1,0 +1,95 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+SOURCE_ARCHIVE_SHA256=6C5B1F21962174B041C74F934658DA2262E77D46331AA0011DA294C110717288
+
+AppData\Local\OrganizerWorker\dependencies\boost_1_89_0\boost\version.hpp:30:#define BOOST_LIB_VERSION "1_89"
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - not found
+-- Found Threads: TRUE
+-- Configuring done (6.2s)
+-- Generating done (0.2s)
+-- Build files have been written to: C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/build-final
+CONFIGURE_EXIT=0
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ZERO_CHECK.vcxproj]
+  1>Checking Build System
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_json.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  boost_json.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_pipeline_contract_tests.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_progress_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  main.cpp
+  main.cpp
+  progress_test.cpp
+  pipeline_test.cpp
+  encoder_run_test.cpp
+  Generating Code...
+  ow_json.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_json.lib
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_contract_tests.vcxproj]
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_core.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  main.cpp
+  ow_pipeline_contract_tests.vcxproj -> C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\Release\ow_pipeline_contract_tests.exe
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(548,5): warning MSB8029: The Intermediate directory or Output directory cannot reside under the Temporary directory as it could lead to issues with incremental build. [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_probe.vcxproj]
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\include\ow\device_decode.hpp(14,154): error C2039: 'multiline': is not a member of 'std::basic_regex<char,std::regex_traits<char>>' [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_progress_contract_tests.vcxproj]
+  Building Custom Rule C:/Users/Danny/AppData/Local/Temp/ow-gpu-measured-20261018-a72c/source-final/CMakeLists.txt
+  (compiling source file '../source-final/tests/encoder_run_test.cpp')
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\regex(1823,7):
+      see declaration of 'std::basic_regex<char,std::regex_traits<char>>'
+
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\include\ow\device_decode.hpp(14,154): error C2065: 'multiline': undeclared identifier [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_progress_contract_tests.vcxproj]
+  (compiling source file '../source-final/tests/encoder_run_test.cpp')
+
+  media_rendition_probe.cpp
+  status_test.cpp
+  media_rendition_test.cpp
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\include\ow\device_decode.hpp(14,154): error C2039: 'multiline': is not a member of 'std::basic_regex<char,std::regex_traits<char>>' [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_probe.vcxproj]
+  (compiling source file '../source-final/tests/media_rendition_probe.cpp')
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\regex(1823,7):
+      see declaration of 'std::basic_regex<char,std::regex_traits<char>>'
+
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\include\ow\device_decode.hpp(14,154): error C2065: 'multiline': undeclared identifier [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_probe.vcxproj]
+  (compiling source file '../source-final/tests/media_rendition_probe.cpp')
+
+  admission.cpp
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\include\ow\device_decode.hpp(14,154): error C2039: 'multiline': is not a member of 'std::basic_regex<char,std::regex_traits<char>>' [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_contract_tests.vcxproj]
+  (compiling source file '../source-final/tests/media_rendition_test.cpp')
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\regex(1823,7):
+      see declaration of 'std::basic_regex<char,std::regex_traits<char>>'
+
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\include\ow\device_decode.hpp(14,154): error C2065: 'multiline': undeclared identifier [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_rendition_contract_tests.vcxproj]
+  (compiling source file '../source-final/tests/media_rendition_test.cpp')
+
+  Generating Code...
+  store.cpp
+  stage_timing_test.cpp
+  protocol.cpp
+  Generating Code...
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\include\ow\device_decode.hpp(14,154): error C2039: 'multiline': is not a member of 'std::basic_regex<char,std::regex_traits<char>>' [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_core.vcxproj]
+  (compiling source file '../source-final/src/protocol.cpp')
+      C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\regex(1823,7):
+      see declaration of 'std::basic_regex<char,std::regex_traits<char>>'
+
+C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\source-final\include\ow\device_decode.hpp(14,154): error C2065: 'multiline': undeclared identifier [C:\Users\Danny\AppData\Local\Temp\ow-gpu-measured-20261018-a72c\build-final\ow_core.vcxproj]
+  (compiling source file '../source-final/src/protocol.cpp')
+
+  pairing.cpp
+  adaptive_hardware.cpp
+  Generating Code...
+BUILD_EXIT=1

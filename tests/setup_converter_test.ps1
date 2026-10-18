@@ -14,11 +14,12 @@ function Rejects([scriptblock]$Body,[string]$Reason=''){
     Assert $caught 'Expected explicit failure'
 }
 function Case([string]$Name,[scriptblock]$Body){
-    $caseRoot=Join-Path $root ([guid]::NewGuid().ToString('N'));New-Item -ItemType Directory $caseRoot | Out-Null
+    $caseRoot=Join-Path $root ([guid]::NewGuid().ToString('N').Substring(0,16));New-Item -ItemType Directory $caseRoot | Out-Null
     Write-Host "START $Name"
     try{& $Body;Write-Host "PASS $Name";$script:passed++}catch{Write-Host "FAIL $Name : $($_.Exception.Message)";$script:failed++}
 }
-$root=Join-Path ([IO.Path]::GetTempPath()) ('ow-converter-'+[guid]::NewGuid().ToString('N'))
+# Keep synthetic .part paths below legacy PowerShell MAX_PATH in deep isolated roots.
+$root=Join-Path ([IO.Path]::GetTempPath()) ('ow-c-'+[guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory $root | Out-Null
 $payload=Join-Path $root 'synthetic.exe';[IO.File]::WriteAllText($payload,'synthetic, never executed')
 $sha=(Get-WorkerFileSha256 $payload -Quiet).ToLowerInvariant()

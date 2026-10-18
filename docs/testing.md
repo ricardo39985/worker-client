@@ -1,9 +1,17 @@
 # Test policy and evidence
 
-Stage-timing optimization authoring evidence and the explicit PC approval gate:
-[verification/gpu-performance/REPORT.md](../verification/gpu-performance/REPORT.md).
-Seven timing contracts passed locally; native compilation and real-source GPU
-measurements remain pending. No performance gain is claimed.
+Current measured-decode gates and exact stage/quality numbers are in
+[verification/gpu-performance/MEASURED.md](../verification/gpu-performance/MEASURED.md).
+Linux passed six suites / 245 cases; MSVC compiled the current source and Windows
+passed all ten suites / 315 cases. The ten rendition contracts also passed with
+explicit ASan/UBSan and leak detection. Generated 900-frame GPU comparisons kept
+identical artifact bytes (SSIM 1.000000, PSNR infinity), including 4K. Separate
+72-frame H.264/HEVC source comparisons and CUDA graph checks passed. Temporary PC
+files were removed and independently checked absent. Normal and Low CPU caps are
+reported separately; Low 4K validation exceeds the unchanged runtime 30-second
+limit. Actual admitted jobs and operator playback/responsiveness remain unrun.
+
+Historical module-specific snapshots follow.
 
 Current worker-console reporting evidence: see
 [the log-content gate ledger](../verification/log-content/REPORT.md) and

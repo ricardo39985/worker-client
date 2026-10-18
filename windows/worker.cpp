@@ -65,9 +65,12 @@ ProbeRun run_child_probe(const std::filesystem::path& exe,const std::vector<std:
  return {static_cast<std::uint64_t>(std::max<Tick>(1,monotonic_ms()-started)),peak_vram/(1024*1024)+(peak_vram%(1024*1024)!=0),estimated_vram};
 }
 std::optional<std::pair<std::uint32_t,std::uint32_t>> inspect_video_dimensions(const std::filesystem::path& exe,
- const std::filesystem::path& input,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits,StageTimer* timing=nullptr){
- run_child_probe(exe,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-protocol_whitelist",L"file",L"-noautorotate",L"-i",input.wstring(),L"-map",L"0:v:0",L"-frames:v",L"1",L"-f",L"null",L"-"},workspace,cancelled,limits,nullptr,UINT64_MAX,30000,timing);
+ const std::filesystem::path& input,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits,StageTimer* timing=nullptr,std::string* source_info=nullptr,bool prepare_poster=false){
+ auto args=rendition_inspection_arguments(workspace,prepare_poster);
+ *(std::find(args.begin(),args.end(),L"-i")+1)=input.wstring();
+ run_child_probe(exe,args,workspace,cancelled,limits,nullptr,UINT64_MAX,30000,timing);
  const auto log=read_file(workspace/"process.log");
+ if(source_info)*source_info=log.substr(0,log.find("Output #"));
  static const std::regex dimensions(R"(Video:[^\r\n]*?([1-9][0-9]{0,4})x([1-9][0-9]{0,4})(?:[ ,]|$))");
  std::smatch match;if(!std::regex_search(log,match,dimensions))return {};
  try{return std::pair{static_cast<std::uint32_t>(std::stoul(match[1].str())),static_cast<std::uint32_t>(std::stoul(match[2].str()))};}
@@ -580,7 +583,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     ChildTimingCapture capture(child,&timing);
     {std::lock_guard lock(report_mutex_);report_.placement(id,gpu_device?gpu_device->physical_id:"cpu");}
     auto card_label=gpu_device?status_detail::card_name(gpu_device->name):"cpu";std::replace(card_label.begin(),card_label.end(),' ','_');
-    safe_log("JOB "+id+" ENCODER | "+encoder_label+" | file="+filename+" card="+card_label+" pid="+std::to_string(child.process_id())+" device_id="+(gpu_device?gpu_device->stable_id:"cpu")+" physical_id="+(gpu_device?gpu_device->physical_id:"cpu"));
+    safe_log("JOB "+id+" ENCODER | "+encoder_label+" | file="+filename+" decode="+(std::find(selected.begin(),selected.end(),L"-hwaccel_output_format")!=selected.end()?"cuda":"software")+" scale="+(filename=="poster.webp"?"software":"none")+" card="+card_label+" pid="+std::to_string(child.process_id())+" device_id="+(gpu_device?gpu_device->stable_id:"cpu")+" physical_id="+(gpu_device?gpu_device->physical_id:"cpu"));
     EncoderProgressFile encoder(workspace/"process.log");
     for(;;){check_gpu(child.process_id());if(cancelled()||pipeline_stop.stop_requested()||monotonic_ms()-started>=static_cast<Tick>(seconds)*1000)throw std::runtime_error("Job cancelled or conversion timed out");if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Conversion process failed; see per-job log");break;}
      auto latest=priority_.load();if(latest!=current){child.priority(latest);current=latest;}
@@ -628,12 +631,14 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   if(!s.artifacts.empty()){
    const bool video=s.offer.capability=="media.video.renditions.v1";
    const auto selected_profiles=data->profile_reservation?data->profile_reservation->profiles():std::vector<adaptive::Profile>{};
-   auto applicable_profiles=selected_profiles;
+   auto applicable_profiles=selected_profiles;std::string source_info;bool poster_ready=false;
    const auto has_hardware=std::any_of(applicable_profiles.begin(),applicable_profiles.end(),[](const auto& p){return p.backend!=adaptive::Backend::cpu;});
    if(video&&has_hardware){
     std::optional<std::pair<std::uint32_t,std::uint32_t>> dimensions;
-    try{StageTimer timing("input_inspection","source.bin",timing_sink,timing_wall_us,thread_cpu_us,true);dimensions=inspect_video_dimensions(config_.ffmpeg,workspace/"source.bin",workspace,cancelled,Resources{s.offer.resources.ram_mb,0,s.offer.resources.scratch_mb,s.offer.resources.cpu_threads},&timing);}
+    try{StageTimer timing("input_inspection_poster","source.bin+poster.webp",timing_sink,timing_wall_us,thread_cpu_us,true);dimensions=inspect_video_dimensions(config_.ffmpeg,workspace/"source.bin",workspace,cancelled,Resources{s.offer.resources.ram_mb,0,s.offer.resources.scratch_mb,s.offer.resources.cpu_threads},&timing,&source_info,true);
+     poster_ready=inspection_poster_reusable(source_info)&&std::filesystem::is_regular_file(workspace/"poster.webp")&&std::filesystem::file_size(workspace/"poster.webp")>0;}
     catch(const std::exception&){dimensions.reset();}
+    if(!poster_ready){std::error_code error;std::filesystem::remove(workspace/"poster.webp",error);}
     input_dimensions=dimensions;
     applicable_profiles.erase(std::remove_if(applicable_profiles.begin(),applicable_profiles.end(),[&](const auto& profile){
      if(profile.backend==adaptive::Backend::cpu)return false;
@@ -641,25 +646,33 @@ void Worker::execute(std::shared_ptr<TaskData> data){
      const auto size=dimensions?std::to_string(dimensions->first)+"x"+std::to_string(dimensions->second):"unknown size";
      const auto evidence=adaptive::geometry_evidence(profile,dimensions?dimensions->first:0,dimensions?dimensions->second:0);
      if(!dimensions||evidence==adaptive::GeometryEvidence::unsupported){
-      safe_log("JOB "+id+" CPU fallback: "+name+" "+adaptive::geometry_reason(evidence)+" "+size);
+      safe_log("JOB "+id+" CPU fallback: "+name+" "+adaptive::geometry_reason(evidence)+" "+size+" decode=software scale=none encode=software");
       return true;
      }
      safe_log("JOB "+id+" selected "+name+" "+size+
-       (evidence==adaptive::GeometryEvidence::unproven?"; not yet proven; guarded":"; sampled; guarded"));
+       (evidence==adaptive::GeometryEvidence::unproven?"; not yet proven; guarded":"; sampled; guarded")+
+       " decode="+(profile.backend==adaptive::Backend::nvidia_nvenc&&cuda_sdr_decode_eligible(source_info)?"cuda":"software")+" scale=none encode="+name);
      return false;
     }),applicable_profiles.end());
    }
-   auto plan=rendition_plan(video,s.copy_audio,workspace,applicable_profiles);
+   auto plan=rendition_plan(video,s.copy_audio,workspace,applicable_profiles,source_info);
+   // Deliver the prepared poster first, keeping the existing one-artifact
+   // backpressure bound while its upload overlaps the first video encode.
+   if(poster_ready)std::rotate(plan.begin(),plan.end()-1,plan.end());
    if(video)for(const auto& rendition:plan){
     if(rendition.hardware||(rendition.role!="feed"&&rendition.role!="feed_optimized"))continue;
     const auto codec=rendition.role=="feed_optimized"?adaptive::Codec::hevc:adaptive::Codec::h264;
     // A geometry rejection already names this CPU fallback in one line.
     if(std::none_of(selected_profiles.begin(),selected_profiles.end(),[&](const auto& p){return p.backend!=adaptive::Backend::cpu&&p.codec==codec;}))
-     safe_log("JOB "+id+" selected cpu/"+(codec==adaptive::Codec::hevc?"hevc":"h264"));
+     safe_log("JOB "+id+" selected cpu/"+(codec==adaptive::Codec::hevc?"hevc":"h264")+" decode=software scale=none encode=software");
    }
    std::vector<adaptive::Profile> cpu_profiles;{std::lock_guard lock(mutex_);for(const auto& profile:hardware_profiles_)if(profile.backend==adaptive::Backend::cpu)cpu_profiles.push_back(profile);}
    auto cpu_plan=rendition_plan(video,s.copy_audio,workspace,cpu_profiles);json::object outputs;
    auto metadata=run_rendition_pipeline(plan,[&](const Rendition& rendition,std::stop_token stop){
+    if(rendition.filename=="poster.webp"&&poster_ready){
+     if(cancelled()||stop.stop_requested())throw std::runtime_error("Job cancelled before poster reuse");
+     phase("reuse inspected poster.webp");data->progress.finish(true,monotonic_ms());return;
+    }
     auto cpu=std::find_if(cpu_plan.begin(),cpu_plan.end(),[&](const auto& value){return value.role==rendition.role;});
     if(cpu==cpu_plan.end())throw std::runtime_error("CPU fallback rendition missing");
     convert(rendition.arguments,cpu->arguments,rendition.filename,rendition.timeout_seconds,rendition.hardware,stop);

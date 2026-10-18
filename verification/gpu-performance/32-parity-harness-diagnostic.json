@@ -1,0 +1,9 @@
+{
+  "cpp_getline_visible_frames": 884,
+  "actual_frame_rows": 900,
+  "progress_prefixed_frame_rows": 16,
+  "examples": [
+    "frame=   50 fps=0.0 q=-0.0 size=       6KiB time=00:00:01.93 bitrate=  23.6kbits/s speed=3.74x elapsed=0:00:00.51    \r0,    1666667,    1666667,    33333,  3110400, 2cf46c29831dc0b4171d4f2a33fec5dcd160949983e533a8b76173994015c626",
+    "frame=  104 fps=101 q=-0.0 size=      11KiB time=00:00:03.73 bitrate=  25.2kbits/s speed=3.63x elapsed=0:00:01.02    \r0,    3433333,    3433333,    33333,  3110400, 95425bd345479dae935b8729f6891109e403394a94a54c0d222779fcfad3caf2"
+  ]
+}
