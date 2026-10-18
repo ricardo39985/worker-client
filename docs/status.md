@@ -1,9 +1,10 @@
 # Candidate status — 0.1.2
 
 Worker-flex stage-concurrency checkpoint: [implementation, enforced/sampled limits and gates](../verification/worker-flex-r2/REPORT.md).
-Linux Release and both-PC MSVC/native suites pass. Throughput, foreground impact,
-exact-asset replay and rollout acceptance remain separate open gates. The operator
-has authorized the related Windows experiments; installed workers are unchanged.
+Linux/sanitizer and clean both-PC MSVC/native gates pass. Identical-quality
+Windows throughput measured 4.78x on Danny and 1.28x on Rick; the exact refused
+asset completed in 53.4 s with independently verified timing. Active-desktop impact
+and rollout acceptance remain open; both installed workers are unchanged.
 The [first-pass investigation](../verification/worker-flex/REPORT.md) is historical.
 
 Current frame-timing correction: [measurement, gates and rollout ledger](../verification/fps/REPORT.md).

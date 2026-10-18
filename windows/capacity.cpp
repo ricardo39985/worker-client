@@ -8,6 +8,7 @@
 #include <mutex>
 #include <regex>
 #include <sstream>
+#include <set>
 namespace ow::win {
 namespace {
 std::uint64_t ticks(FILETIME t){return (std::uint64_t{t.dwHighDateTime}<<32)|t.dwLowDateTime;}
@@ -34,12 +35,13 @@ bool foreground(){
  return true;
 }
 struct Meter {
- PDH_HQUERY query{};PDH_HCOUNTER disk{},gpu{};std::uint64_t idle{},total{};bool cpu_seen{};
+ PDH_HQUERY query{};PDH_HCOUNTER disk{},gpu{},gpu_memory{};std::uint64_t idle{},total{};bool cpu_seen{};
  explicit Meter(const std::wstring& volume){
   if(PdhOpenQueryW(nullptr,0,&query)!=ERROR_SUCCESS)return;
   const auto name=L"\\LogicalDisk("+volume+L")\\% Idle Time";
   if(PdhAddEnglishCounterW(query,name.c_str(),0,&disk)!=ERROR_SUCCESS)disk=nullptr;
   if(PdhAddEnglishCounterW(query,L"\\GPU Engine(*)\\Utilization Percentage",0,&gpu)!=ERROR_SUCCESS)gpu=nullptr;
+  if(PdhAddEnglishCounterW(query,L"\\GPU Adapter Memory(*)\\Dedicated Usage",0,&gpu_memory)!=ERROR_SUCCESS)gpu_memory=nullptr;
  }
  ~Meter(){if(query)PdhCloseQuery(query);}
  RuntimePressure sample(){
@@ -54,13 +56,30 @@ struct Meter {
   PDH_FMT_COUNTERVALUE value{};
   if(disk&&PdhGetFormattedCounterValue(disk,PDH_FMT_DOUBLE,nullptr,&value)==ERROR_SUCCESS&&value.CStatus==ERROR_SUCCESS)
    out.host.disk_percent=std::clamp(100.0-value.doubleValue,0.0,100.0);
+  if(gpu_memory){
+   DWORD size=0,items=0;
+   if(PdhGetFormattedCounterArrayW(gpu_memory,PDH_FMT_LARGE,&size,&items,nullptr)==PDH_MORE_DATA&&size&&size<=16*1024*1024){
+    std::vector<unsigned char> data(size);auto values=reinterpret_cast<PDH_FMT_COUNTERVALUE_ITEM_W*>(data.data());
+    if(PdhGetFormattedCounterArrayW(gpu_memory,PDH_FMT_LARGE,&size,&items,values)==ERROR_SUCCESS){
+     static const std::wregex id(L"luid_0x([0-9a-fA-F]{8})_0x([0-9a-fA-F]{8})_phys_[0-9]+");
+     std::set<std::string> invalid;
+     for(DWORD n=0;n<items;++n){const auto& value=values[n].FmtValue;
+      const std::wstring name=values[n].szName;std::wsmatch match;if(!std::regex_search(name,match,id))continue;
+      std::ostringstream key;key<<std::hex<<std::setfill('0')<<std::setw(8)<<std::stoul(match[1].str(),nullptr,16)<<':'<<std::setw(8)<<std::stoul(match[2].str(),nullptr,16);
+      if((value.CStatus!=PDH_CSTATUS_VALID_DATA&&value.CStatus!=PDH_CSTATUS_NEW_DATA)||value.largeValue<0){invalid.insert(key.str());continue;}
+      out.dedicated_vram_bytes[key.str()]+=static_cast<std::uint64_t>(value.largeValue);
+     }
+     for(const auto& key:invalid)out.dedicated_vram_bytes.erase(key);
+    }
+   }
+  }
   if(!gpu)return out;
   DWORD bytes=0,count=0;
-  if(PdhGetFormattedCounterArrayW(gpu,PDH_FMT_DOUBLE,&bytes,&count,nullptr)!=PDH_MORE_DATA)return out;
+  if(PdhGetFormattedCounterArrayW(gpu,PDH_FMT_DOUBLE,&bytes,&count,nullptr)!=PDH_MORE_DATA||!bytes||bytes>16*1024*1024)return out;
   std::vector<unsigned char> buffer(bytes);auto* entries=reinterpret_cast<PDH_FMT_COUNTERVALUE_ITEM_W*>(buffer.data());
   if(PdhGetFormattedCounterArrayW(gpu,PDH_FMT_DOUBLE,&bytes,&count,entries)!=ERROR_SUCCESS)return out;
   std::map<std::pair<std::string,std::string>,double> engines;
-  static const std::wregex pattern(L"luid_0x([0-9a-fA-F]+)_0x([0-9a-fA-F]+).*_eng_([0-9]+)_");
+  static const std::wregex pattern(L"luid_0x([0-9a-fA-F]{8})_0x([0-9a-fA-F]{8}).*_eng_([0-9]+)_");
   for(DWORD n=0;n<count;++n){
    if(entries[n].FmtValue.CStatus!=ERROR_SUCCESS)continue;
    const std::wstring name=entries[n].szName;std::wsmatch match;

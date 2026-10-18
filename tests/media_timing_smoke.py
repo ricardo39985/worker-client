@@ -51,7 +51,9 @@ for name, rate, count in [('integer', '30', 90),
                           ('fractional', '30000/1001', 90),
                           ('vfr', '30', 90),
                           ('rounded-vfr', '30', 717),
-                          ('single-frame', '30000/1001', 1)]:
+                          ('single-frame', '30000/1001', 1),
+                          ('fine-vfr-mux-tail', '30', 60),
+                          ('legacy-90k-vfr', '30', 90)]:
     work = root / name
     work.mkdir(exist_ok=True)
     source = work / 'source.bin'
@@ -65,7 +67,18 @@ for name, rate, count in [('integer', '30', 90),
         # and rounded 29.92 tbr as the refused upload. No personal media fixture.
         args += ['-vf', 'settb=1/30000,setpts=N*1000+round(floor(N/63)*1668/11)',
                  '-enc_time_base:v', '1:30000', '-fps_mode', 'passthrough']
-    run(args + ['-c:v', 'libx264', '-threads', '1', '-f', 'mp4', str(source)])
+    if name in ('fine-vfr-mux-tail', 'legacy-90k-vfr'):
+        # A real mux-tail difference: identical frame PTS/count are insufficient
+        # if an encoder's guessed final packet duration changes the sample sum.
+        expression = (r'settb=1/90000,setpts=N*3000+mod(N\,2)*1999'
+                      if name == 'legacy-90k-vfr' else r'settb=1/90000,setpts=N*2203+mod(N\,19)*103')
+        args += ['-vf', expression,
+                 '-enc_time_base:v', '1:90000', '-fps_mode', 'passthrough',
+                 '-c:v', 'libx265', '-preset', 'fast', '-bf', '0',
+                 '-x265-params', 'fps=90000/1:pools=none:frame-threads=1:wpp=0:log-level=error']
+    else:
+        args += ['-c:v', 'libx264']
+    run(args + ['-threads', '1', '-f', 'mp4', str(source)])
     expected, pts, duration = timeline(source)
     source_log = work / 'timing.log'
     source_log.write_bytes(evidence(source))
@@ -81,6 +94,9 @@ for name, rate, count in [('integer', '30', 90),
         actual, out, out_duration = timeline(output)
         print(name, role, 'source=', expected, 'output=', actual, flush=True)
         # Nominal/VUI and container-average rates may legitimately differ.
+        if name == 'legacy-90k-vfr':
+            assert expected['r_frame_rate'] == '90000/1', expected
+            assert actual['r_frame_rate'] == expected['r_frame_rate'], 'Legacy coordinator rate compatibility regressed'
         assert out == pts, 'Dropped, duplicated or retimed decoded frames'
         assert out_duration == duration, 'Total video sample duration changed'
         output_log = work / (file + '.timing.log')

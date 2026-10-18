@@ -1,0 +1,8 @@
+WINDOWS_GATE_EXIT=0
+{"device":"NVIDIA GeForce RTX 3050","raw_positive_bytes":457474048,"raw_zero_records":6,"raw_invalid_records":0,"worker_known":true,"worker_bytes":457474048}
+{"device":"NVIDIA GeForce RTX 3070","raw_positive_bytes":0,"raw_zero_records":0,"raw_invalid_records":0,"worker_known":true,"worker_bytes":1950457856}
+RESOURCE_CHECKED=1 RESOURCE_FAILURES=0
+RESOURCE_PROBE_EXIT=0
+BASELINE_PORTS_SHA=374cceefe0d0303e7218f55cbb977d840cca1d4daaadce06697567ca745cba86
+
+[25 more lines in file. Use offset=933 to continue.]

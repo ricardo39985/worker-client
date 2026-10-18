@@ -17,7 +17,7 @@ int WINAPI wWinMain(HINSTANCE,HINSTANCE,PWSTR,int){try{
   const auto age=static_cast<DWORD>(GetTickCount()-input.dwTime);
   const auto window=GetForegroundWindow();DWORD_PTR reply{};const auto begin=monotonic_ms();
   const bool responsive=window&&SendMessageTimeoutW(window,WM_NULL,0,0,SMTO_ABORTIFHUNG|SMTO_BLOCK,100,&reply)!=0;
-  json::object record{{"observed_utc_ms",utc_ms()},{"session",session},{"pid",GetCurrentProcessId()},{"input_age_ms",age},{"foreground_active",age<3000},{"message_response_known",responsive},{"message_response_ms",monotonic_ms()-begin}};
+  json::object record{{"observed_utc_ms",utc_ms()},{"session",session},{"pid",GetCurrentProcessId()},{"input_age_ms",age},{"foreground_active",age<3000},{"window_present",window!=nullptr},{"message_response_known",responsive},{"message_response_ms",monotonic_ms()-begin}};
   const auto line=json::serialize(record);for(unsigned retry=0;;++retry){try{atomic_write(root/"foreground.json",line);break;}catch(...){if(retry==5)throw;Sleep(10);}}
   std::ofstream(root/"foreground-samples.jsonl",std::ios::app|std::ios::binary)<<line<<'\n';Sleep(100);
  }

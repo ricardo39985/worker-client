@@ -3,6 +3,7 @@
 #include "hardware.hpp"
 #include "capacity.hpp"
 #include "ow/adaptive_evidence.hpp"
+#include "windows_crash_trace.hpp"
 #include <psapi.h>
 #include <tlhelp32.h>
 #include <algorithm>
@@ -18,13 +19,13 @@ bool below(const std::filesystem::path& path,const std::filesystem::path& parent
 }
 struct Peaks {
  double cpu{};std::uint64_t host_ram{},process_commit{},working_set{};std::map<std::string,std::uint64_t> vram;
- bool external_ffmpeg{};unsigned samples{},cpu_samples{},vram_samples{},foreground_samples{},unknown_foreground_samples{};std::vector<std::uint64_t> message_latency;
+ bool external_ffmpeg{};unsigned samples{},cpu_samples{},vram_samples{},foreground_samples{},unknown_foreground_samples{},no_foreground_window_samples{};std::vector<std::uint64_t> message_latency;
  void sample(const std::filesystem::path& root,const std::vector<adaptive::Device>& devices){
   const auto pressure=sample_runtime_pressure(root);
   try{const auto staging=data_directory().parent_path()/"Temp"/"ow-worker-flex-20261018-r2";const auto state=parse(read_file(staging/"foreground.json",4096)).as_object();
    const auto observed=static_cast<Tick>(number(state,"observed_utc_ms",INT64_MAX));
    if(utc_ms()<observed||utc_ms()-observed>2000)++unknown_foreground_samples;
-   else{if(state.at("foreground_active").as_bool())++foreground_samples;if(state.at("message_response_known").as_bool())message_latency.push_back(number(state,"message_response_ms",1000));else ++unknown_foreground_samples;}
+   else{if(state.at("foreground_active").as_bool())++foreground_samples;if(state.contains("window_present")&&!state.at("window_present").as_bool())++no_foreground_window_samples;else if(state.at("message_response_known").as_bool())message_latency.push_back(number(state,"message_response_ms",1000));else ++unknown_foreground_samples;}
   }catch(...){++unknown_foreground_samples;}
   if(pressure.host.cpu_percent){cpu=std::max(cpu,*pressure.host.cpu_percent);++cpu_samples;}
   MEMORYSTATUSEX memory{};memory.dwLength=sizeof(memory);if(GlobalMemoryStatusEx(&memory))host_ram=std::max(host_ram,static_cast<std::uint64_t>(memory.ullTotalPhys-memory.ullAvailPhys));
@@ -38,12 +39,12 @@ struct Peaks {
    if(process&&GetProcessMemoryInfo(process.get(),reinterpret_cast<PROCESS_MEMORY_COUNTERS*>(&counters),sizeof(counters))){commit+=counters.PrivateUsage;rss+=counters.WorkingSetSize;}
   }while(Process32NextW(snapshot.get(),&entry));
   process_commit=std::max(process_commit,commit);working_set=std::max(working_set,rss);
-  for(const auto& d:devices)if(d.backend_identity_verified)if(auto value=sample_gpu_memory(0,d)){vram[d.name]=std::max(vram[d.name],value->adapter_bytes);++vram_samples;}
+  for(const auto& d:devices)if(d.backend_identity_verified){const auto marker=d.stable_id.find(":luid:");if(marker==std::string::npos)continue;auto value=pressure.dedicated_vram_bytes.find(d.stable_id.substr(marker+6));if(value!=pressure.dedicated_vram_bytes.end()){vram[d.name]=std::max(vram[d.name],value->second);++vram_samples;}}
   ++samples;
  }
  json::object json_value() const{
   json::object g;for(const auto& [name,value]:vram)g[name]=value;
-  return {{"cpu_percent_sampled",cpu},{"host_used_ram_bytes_sampled",host_ram},{"harness_and_children_commit_bytes_sampled",process_commit},{"harness_and_children_working_set_bytes_sampled",working_set},{"adapter_dedicated_vram_bytes_sampled",std::move(g)},{"samples",samples},{"cpu_samples",cpu_samples},{"vram_samples",vram_samples},{"external_ffmpeg_observed",external_ffmpeg},{"nominal_sample_interval_ms",200},{"includes_warmup",true},{"foreground_active_samples",foreground_samples},{"foreground_unknown_samples",unknown_foreground_samples},{"foreground_message_samples",message_latency.size()},{"foreground_message_max_ms",message_latency.empty()?0:*std::max_element(message_latency.begin(),message_latency.end())}};
+  return {{"cpu_percent_sampled",cpu},{"host_used_ram_bytes_sampled",host_ram},{"harness_and_children_commit_bytes_sampled",process_commit},{"harness_and_children_working_set_bytes_sampled",working_set},{"adapter_dedicated_vram_bytes_sampled",std::move(g)},{"samples",samples},{"cpu_samples",cpu_samples},{"vram_samples",vram_samples},{"external_ffmpeg_observed",external_ffmpeg},{"nominal_sample_interval_ms",200},{"includes_warmup",true},{"foreground_active_samples",foreground_samples},{"foreground_unknown_samples",unknown_foreground_samples},{"no_foreground_window_samples",no_foreground_window_samples},{"foreground_message_samples",message_latency.size()},{"foreground_message_max_ms",message_latency.empty()?0:*std::max_element(message_latency.begin(),message_latency.end())}};
  }
 };
 }
@@ -53,6 +54,9 @@ int wmain(int argc,wchar_t** argv){try{
  const auto staging=data_directory().parent_path()/"Temp"/"ow-worker-flex-20261018-r2";
  const std::filesystem::path root=argv[1];
  if(!root.is_absolute()||!below(root,staging)||!std::filesystem::create_directory(root))throw std::runtime_error("New root below the approved staging directory required");
+#ifndef OW_FLEX_BASELINE
+ install_measurement_crash_trace(root);
+#endif
  auto config=load_config(data_directory());
  if(sha256_file(config.ffmpeg)!="f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4")throw std::runtime_error("Reviewed FFmpeg hash mismatch");
  const auto installed_budget=config.budget;const auto installed_max_jobs=config.max_jobs;
@@ -69,7 +73,8 @@ int wmain(int argc,wchar_t** argv){try{
  const auto trial_budget=config.budget;const auto trial_max_jobs=config.max_jobs;
  config.capacity_foreground=[staging]{try{
   const auto state=parse(read_file(staging/"foreground.json",4096)).as_object();const auto observed=static_cast<Tick>(number(state,"observed_utc_ms",INT64_MAX));
-  return utc_ms()<observed||utc_ms()-observed>2000||state.at("foreground_active").as_bool()||!state.at("message_response_known").as_bool()||number(state,"message_response_ms",1000)>=16;
+  const bool window=state.contains("window_present")?state.at("window_present").as_bool():true;
+  return utc_ms()<observed||utc_ms()-observed>2000||state.at("foreground_active").as_bool()||(window&&(!state.at("message_response_known").as_bool()||number(state,"message_response_ms",1000)>=16));
  }catch(...){return true;}};
  if(config.capacity_foreground())throw std::runtime_error("Foreground observation requests capacity; measurement deferred");
  auto source=std::filesystem::path(argv[2]);
@@ -81,7 +86,15 @@ int wmain(int argc,wchar_t** argv){try{
  }
  if(!source.is_absolute()||!below(source,staging))throw std::runtime_error("Source must stay in the approved measurement directory");
  config.root=root/"proof";std::filesystem::create_directory(config.root);
- auto proof=probe_ffmpeg(config,{},[](const std::string& name,unsigned,unsigned){std::cout<<"PROBE "<<name<<std::endl;});
+ auto qualification=config;bool baseline_single=false;
+#ifndef OW_FLEX_BASELINE
+ wchar_t fast[8]{};if(GetEnvironmentVariableW(L"OW_FLEX_FAST_PROOF",fast,8)&&std::wstring(fast)==L"1"){qualification.budget.cpu_threads=1;qualification.max_jobs=1;}
+#endif
+#ifdef OW_FLEX_BASELINE
+ wchar_t single[8]{};baseline_single=GetEnvironmentVariableW(L"OW_FLEX_BASELINE_SINGLE",single,8)&&std::wstring(single)==L"1";
+ if(baseline_single)qualification.budget.cpu_threads=1; // proof only; runtime hard budgets stay unchanged
+#endif
+ auto proof=probe_ffmpeg(qualification,{},[](const std::string& name,unsigned,unsigned){std::cout<<"PROBE "<<name<<std::endl;});
  if(!proof.complete||!proof.media_video)throw std::runtime_error("Current converter probe did not qualify app video");
  json::array profiles;for(const auto& p:proof.profiles)profiles.emplace_back(adaptive::profile_record(p));
  std::cout<<"CURRENT_PROOF "<<json::serialize(profiles)<<std::endl;
@@ -106,6 +119,7 @@ int wmain(int argc,wchar_t** argv){try{
  const auto wall=result.at("wall_ms").as_int64();
  result["jobs_per_hour_observed_batch"]=static_cast<double>(jobs.size())*3600000.0/static_cast<double>(wall);
  result["job_wall_mean_ms"]=sum/static_cast<double>(jobs.size());result["job_wall_p50_ms"]=latency[latency.size()/2];result["job_wall_p95_ms"]=latency[std::min(latency.size()-1,(latency.size()*95)/100)];
+ result["baseline_single_session_qualification"]=baseline_single;
  result["peaks"]=peaks.json_value();result["encoder_pins"]=json::object{{"h264",pins.at(adaptive::Codec::h264)},{"hevc",pins.at(adaptive::Codec::hevc)}};
  result["operator_limits"]=json::object{{"cpu_threads",installed_budget.cpu_threads},{"ram_mb",installed_budget.ram_mb},{"scratch_mb",installed_budget.scratch_mb},{"max_jobs",installed_max_jobs}};
  result["trial_limits"]=json::object{{"cpu_threads",trial_budget.cpu_threads},{"ram_mb",trial_budget.ram_mb},{"scratch_mb",trial_budget.scratch_mb},{"max_jobs",trial_max_jobs},{"automatic_requested",automatic}};

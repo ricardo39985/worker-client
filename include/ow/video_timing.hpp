@@ -19,6 +19,22 @@ struct VideoTiming {
  // Total demuxed sample duration, independent of B-frame packet order.
  std::int64_t duration_ticks{};
  std::uint32_t width{},height{};
+ // Optional codec/VUI compatibility hint for the legacy coordinator. Never an
+ // execution prerequisite or a substitute for measured presentation timestamps.
+ std::optional<std::pair<std::int64_t,std::int64_t>> codec_rate_hint() const {
+  if(numerator<=0||denominator<=0)return {};
+  if(constant_rate()){
+   auto step=pts[1]-pts[0],g=std::gcd(step,denominator);step/=g;auto n=denominator/g;
+   if(step>std::numeric_limits<std::int64_t>::max()/numerator)return {};
+   auto d=step*numerator;g=std::gcd(n,d);return std::pair{n/g,d/g};
+  }
+  if(reported_rate.empty())return {};
+  auto number=reported_rate;std::int64_t multiplier=1;
+  if(number.back()=='k'){multiplier=1000;number.pop_back();}else if(number.back()=='M'){multiplier=1000000;number.pop_back();}
+  if(number.empty()||number.find_first_not_of("0123456789")!=std::string::npos)return {};
+  try{const auto value=std::stoll(number);if(value>0&&value<=1000000000/multiplier)return std::pair{value*multiplier,std::int64_t{1}};}catch(...){}
+  return {};
+ }
  bool constant_rate() const {
   if(pts.size()<2)return false;
   const auto step=pts[1]-pts[0];

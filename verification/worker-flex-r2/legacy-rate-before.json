@@ -1,0 +1,32 @@
+[
+  {
+    "role": "feed",
+    "encode_exit": 0
+  },
+  {
+    "role": "feed_optimized",
+    "encode_exit": 0
+  },
+  {
+    "file": "source.bin",
+    "r_frame_rate": "90000/1",
+    "avg_frame_rate": "8100000/271999",
+    "time_base": "1/90000",
+    "duration": "3.022211"
+  },
+  {
+    "file": "feed.mp4",
+    "r_frame_rate": "90000/1",
+    "avg_frame_rate": "8100000/271999",
+    "time_base": "1/90000",
+    "duration": "3.022211"
+  },
+  {
+    "file": "optimized.mp4",
+    "r_frame_rate": "8100000/271999",
+    "avg_frame_rate": "4050000/136999",
+    "time_base": "1/90000",
+    "duration": "3.022211"
+  }
+]
+

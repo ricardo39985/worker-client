@@ -9,11 +9,12 @@ json::object OfflineMediaHarness::run(Config config,const Probe& proof,const std
  config.coordinator="https://offline.invalid";config.storage_hosts.clear();
  auto worker=std::unique_ptr<Worker>(new Worker(config,true));
  worker->offline_source_=source;worker->offline_output_=config.root/"delivered";worker->offline_pins_=pins;
- worker->priority_=Priority::low;
+ worker->priority_=Priority::low;worker->safe_log("ISOLATED SETUP priority");
  worker->hardware_profiles_=proof.profiles;
  worker->hardware_profiles_.erase(std::remove_if(worker->hardware_profiles_.begin(),worker->hardware_profiles_.end(),[&](const auto& p){
   return p.backend!=adaptive::Backend::cpu&&(!pins.contains(p.codec)||pins.at(p.codec)!=p.stable_id);
  }),worker->hardware_profiles_.end());
+ worker->safe_log("ISOLATED SETUP profiles");
  for(const auto& [codec,id]:pins)if(std::none_of(worker->hardware_profiles_.begin(),worker->hardware_profiles_.end(),[&](const auto& p){return p.codec==codec&&p.stable_id==id;}))throw std::runtime_error("Pinned backend lacks current encode/decode proof");
  const auto vram=config.vram_override_set?config.budget.vram_mb:adaptive::profile_vram_capacity(worker->hardware_profiles_);
  adaptive::Limits caps{config.budget.cpu_threads,config.budget.ram_mb,vram,config.budget.scratch_mb,static_cast<unsigned>(config.max_jobs)};
@@ -21,8 +22,10 @@ json::object OfflineMediaHarness::run(Config config,const Probe& proof,const std
  caps.nvenc_sessions=adaptive::proven_nvenc_sessions(worker->hardware_profiles_);
 #endif
  worker->adaptive_scheduler_=std::make_unique<adaptive::Scheduler>(caps,worker->hardware_profiles_);
+ worker->safe_log("ISOLATED SETUP scheduler");
  worker->admission_.capability("media.video.renditions.v1",true,Preference::allowed);
- worker->watchdog_=std::jthread([&worker]{worker->watchdog();});
+ worker->safe_log("ISOLATED SETUP before watchdog");
+ worker->watchdog_=std::jthread([&worker]{worker->watchdog();});worker->safe_log("ISOLATED SETUP watchdog started");
  const auto digest=sha256_file(source);const auto size=std::filesystem::file_size(source);
  auto batch=[&](unsigned minimum,unsigned concurrent,std::uint64_t duration,const std::string& prefix){
   struct Flight {std::shared_ptr<Worker::TaskData> data;Tick started,arrived;std::uint64_t renew{};};

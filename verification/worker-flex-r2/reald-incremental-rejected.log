@@ -1,0 +1,35 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  ow_json.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\Release\ow_json.lib
+  ow_core.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\Release\ow_core.lib
+  ow_windows.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\Release\ow_windows.lib
+  windows_flex_benchmark.cpp
+  Generating code
+  26 of 10606 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    25 functions were new in current compilation
+    64 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  ow_flex_benchmark.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\baseline\build\Release\ow_flex_benchmark.exe
+MEASUREMENT_BEGIN=baseline 2026-10-18T18:58:45.1683903Z
+BENCHMARK_EXE_SHA=26c1e0cf119f5d3e896b9a2eb0fe47d7730b32a2904758edd09394913ea81dfd
+MEASUREMENT_RUNNING=baseline 2026-10-18T18:59:15.4268648Z
+MEASUREMENT_RUNNING=baseline 2026-10-18T18:59:45.4354827Z
+MEASUREMENT_RUNNING=baseline 2026-10-18T19:00:15.4477242Z
+MEASUREMENT_RUNNING=baseline 2026-10-18T19:00:45.4669030Z
+MEASUREMENT_RUNNING=baseline 2026-10-18T19:01:15.4741924Z
+MEASUREMENT_RUNNING=baseline 2026-10-18T19:01:45.4758843Z
+MEASUREMENT_RUNNING=baseline 2026-10-18T19:02:15.4839915Z
+MEASUREMENT_EXIT baseline=0
+MEASUREMENT_SUMMARY={"wall_ms":80149,"jobs_per_hour_observed_batch":538.99611972700848,"job_wall_mean_ms":6678.916666666667,"job_wall_p95_ms":7082,"peaks":{"cpu_percent_sampled":78.125,"host_used_ram_bytes_sampled":7718305792,"harness_and_children_commit_bytes_sampled":368455680,"harness_and_children_working_set_bytes_sampled":261799936,"adapter_dedicated_vram_bytes_sampled":{"Intel(R) HD Graphics 630":0,"Radeon RX Vega M GL Graphics":0},"samples":442,"cpu_samples":441,"vram_samples":884,"external_ffmpeg_observed":false,"nominal_sample_interval_ms":200,"includes_warmup":true,"foreground_active_samples":0,"foreground_unknown_samples":6,"no_foreground_window_samples":436,"foreground_message_samples":0,"foreground_message_max_ms":0},"operator_limits":{"cpu_threads":4,"ram_mb":2667,"scratch_mb":8192,"max_jobs":4},"trial_limits":{"cpu_threads":4,"ram_mb":2667,"scratch_mb":8192,"max_jobs":4,"automatic_requested":false},"source_sha256":"b27e0b3a6fb7621231fa38ef0d408f97e075ef6d02df65f4e089abc10b90990c","source_bytes":4822953}
+MEASUREMENT_BEGIN=candidate 2026-10-18T19:02:34.9752584Z
+BENCHMARK_EXE_SHA=a994104dfeea3f6774843820c25edb8adcd279c6f78bf51ca968130643829995
+MEASUREMENT_RUNNING=candidate 2026-10-18T19:03:05.6121687Z
+MEASUREMENT_RUNNING=candidate 2026-10-18T19:03:35.6259014Z
+MEASUREMENT_RUNNING=candidate 2026-10-18T19:04:05.6388155Z
+MEASUREMENT_EXIT candidate=-1073741819
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>

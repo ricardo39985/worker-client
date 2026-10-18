@@ -1,9 +1,10 @@
 # Test policy and evidence
 
 Worker-flex stage-concurrency checkpoint: [implementation, enforced/sampled limits and gates](../verification/worker-flex-r2/REPORT.md).
-Linux Release and both-PC MSVC/native suites pass. Throughput, foreground impact,
-exact-asset replay and rollout acceptance remain separate open gates. The operator
-has authorized the related Windows experiments; installed workers are unchanged.
+Linux/sanitizer and clean both-PC MSVC/native gates pass. Identical-quality
+Windows throughput measured 4.78x on Danny and 1.28x on Rick; the exact refused
+asset completed in 53.4 s with independently verified timing. Active-desktop impact
+and rollout acceptance remain open; both installed workers are unchanged.
 The [first-pass investigation](../verification/worker-flex/REPORT.md) is historical.
 
 Current frame-timing correction: [measurement, gates and rollout ledger](../verification/fps/REPORT.md).
@@ -121,9 +122,15 @@ installation. A standalone build is also possible with a verified Boost root:
 
 ```powershell
 cmake -S . -B build-win -G 'Visual Studio 17 2022' -A x64 -DOW_BOOST_ROOT='C:\verified\boost_1_89_0'
-cmake --build build-win --config Release --parallel 2
+cmake --build build-win --config Release --clean-first --parallel 2
 ctest --test-dir build-win -C Release --output-on-failure
 ```
+
+For source staged under Windows Temp, use a fresh build directory (preferred)
+or `--clean-first` after every source/header update. The worker-flex experiment
+found MSVC tracking logs with no project headers and stale objects after header
+changes; green unit suites did not prevent a real-worker access violation.
+Incremental artifacts are not release evidence. Run actual worker execution too.
 
 Native tests cover UTF-8 filenames, DPAPI round-trip/corruption rejection, durable
 pairing-key identity and termination of a real root/descendant process tree.

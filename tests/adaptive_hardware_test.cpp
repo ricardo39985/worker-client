@@ -330,7 +330,7 @@ TEST("CUDA LUID mapping survives ordinal reorder and rejects duplicate or invali
 }
 TEST("GPU memory telemetry is child and LUID scoped and rejects ambiguous physical nodes"){
  std::vector<GpuMemoryRecord> records{{100,0,200,"gpu-a"},{100,1,300,"gpu-a"},
-  {200,0,1000,"gpu-a"},{100,0,500,"gpu-b"}};
+  {200,0,1000,"gpu-a"},{300,0,0,"gpu-a"},{100,0,500,"gpu-b"}};
  auto child=gpu_memory_totals(records,100,"gpu-a");CHECK(child);
  CHECK(child->child_bytes==500&&child->adapter_bytes==1500);
  auto idle=gpu_memory_totals(records,0,"gpu-a");CHECK(idle&&idle->adapter_bytes==1500); // only matching valid nonzero LUID counters qualify

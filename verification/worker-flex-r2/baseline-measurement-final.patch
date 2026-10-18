@@ -1,0 +1,522 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 571ace5..43dfdff 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -98,6 +98,9 @@ if(WIN32)
+  add_executable(OrganizerWorkerDoctor windows/doctor.cpp)
+  target_link_libraries(OrganizerWorkerDoctor PRIVATE ow_windows)
+  if(BUILD_TESTING)
++   add_executable(ow_flex_benchmark tests/windows_flex_benchmark.cpp windows/offline_media.cpp windows/capacity.cpp)
++   target_compile_definitions(ow_flex_benchmark PRIVATE OW_FLEX_BASELINE=1)
++   target_link_libraries(ow_flex_benchmark PRIVATE ow_windows wtsapi32)
+    add_executable(ow_gpu_budget_probe tests/windows_gpu_budget_probe.cpp)
+    target_link_libraries(ow_gpu_budget_probe PRIVATE ow_windows)
+    add_executable(ow_pipeline_smoke tests/windows_pipeline_smoke.cpp)
+diff --git a/include/ow/capacity_control.hpp b/include/ow/capacity_control.hpp
+new file mode 100644
+index 0000000..0138e14
+--- /dev/null
++++ b/include/ow/capacity_control.hpp
+@@ -0,0 +1,54 @@
++#pragma once
++#include "ow/admission.hpp"
++#include <algorithm>
++#include <cmath>
++#include <mutex>
++#include <optional>
++namespace ow {
++struct Pressure {std::optional<double> cpu_percent,disk_percent;bool foreground{};std::optional<double> ram_percent{0.0};};
++// Feedback is a sampled utilization target, NOT a GPU/disk OS quota. Atomic
++// resource accounting and independently proven encoder limits remain mandatory.
++// Trial concurrency grows only after sustained quiet measurements + validated
++// work. Pressure/foreground backoff never frees or kills an active reservation.
++class CapacityControl {
++ mutable std::mutex mutex_;
++ unsigned ceiling_,limit_{1},qualified_{};
++ Tick window_ms_,since_{},observed_{},retry_after_{};
++ unsigned completed_{},observed_active_{};bool started_{},healthy_{};
++ std::string reason_{"telemetry_unavailable"},resource_{"cpu"};
++ bool fresh(Tick now) const{return started_&&now>=observed_&&now-observed_<=5000;}
++public:
++ explicit CapacityControl(unsigned ceiling,Tick window_ms=10000,std::string resource="cpu"):ceiling_(std::clamp(ceiling,1u,64u)),window_ms_(std::max<Tick>(1,window_ms)),resource_(resource){}
++ void ceiling(unsigned value){std::lock_guard lock(mutex_);ceiling_=std::clamp(value,1u,64u);limit_=std::min(limit_,ceiling_);qualified_=std::min(qualified_,ceiling_);}
++ void activity(unsigned count){std::lock_guard lock(mutex_);if(count>=limit_&&observed_active_<limit_)completed_=0;observed_active_=std::max(observed_active_,count);}
++ void validated(){std::lock_guard lock(mutex_);++completed_;}
++ void observe(const Pressure& p,Tick now){
++  std::lock_guard lock(mutex_);
++  auto valid=[](auto v){return v&&std::isfinite(*v)&&*v>=0&&*v<=100;};
++  const bool values=valid(p.cpu_percent)&&valid(p.disk_percent)&&valid(p.ram_percent);
++  if(!started_||now<observed_){since_=now;completed_=0;}
++  started_=true;observed_=now;
++  reason_=!values?"telemetry_unavailable":p.foreground?"foreground_activity":
++          *p.cpu_percent>=90?resource_+"_pressure":*p.ram_percent>=90?"ram_pressure":*p.disk_percent>=90?"disk_pressure":"tracking_90_percent_target";
++  healthy_=values&&!p.foreground&&*p.cpu_percent<90&&*p.ram_percent<90&&*p.disk_percent<90;
++  if(!healthy_){
++   if(!values||p.foreground){limit_=1;if(!values)qualified_=0;}
++   else{limit_=std::max(1u,qualified_&&limit_>qualified_?qualified_:limit_/2);qualified_=std::min(qualified_,limit_);retry_after_=now+60000;}
++   since_=now;completed_=0;observed_active_=0;return;
++  }
++  if(now<retry_after_)reason_="cooldown_after_pressure";
++  if(now-since_>=window_ms_&&completed_>=2&&observed_active_>=limit_){qualified_=limit_;if(now>=retry_after_)limit_=std::min(ceiling_,limit_*2);since_=now;completed_=0;observed_active_=0;}
++ }
++ Decision admit(unsigned active,Tick now) const{
++  std::lock_guard lock(mutex_);const auto limit=fresh(now)?limit_:1;
++  return {active<limit,active<limit?"capacity_ready":fresh(now)?reason_:"stale_telemetry"};
++ }
++ Decision admit_offer(Tick now) const{
++  std::lock_guard lock(mutex_);return {fresh(now)&&healthy_,fresh(now)?reason_:"stale_telemetry"};
++ }
++ unsigned stage_limit(Tick now) const{std::lock_guard lock(mutex_);return fresh(now)?limit_:1;}
++ unsigned limit() const{std::lock_guard lock(mutex_);return limit_;}
++ unsigned qualified() const{std::lock_guard lock(mutex_);return qualified_;}
++ std::string reason() const{std::lock_guard lock(mutex_);return reason_;}
++};
++}
+diff --git a/tests/windows_flex_benchmark.cpp b/tests/windows_flex_benchmark.cpp
+new file mode 100644
+index 0000000..d6d07e6
+--- /dev/null
++++ b/tests/windows_flex_benchmark.cpp
+@@ -0,0 +1,129 @@
++// Opt-in real worker execution with local storage ports; never a CTest GPU test.
++#include "offline_media.hpp"
++#include "hardware.hpp"
++#include "capacity.hpp"
++#include "ow/adaptive_evidence.hpp"
++#include <psapi.h>
++#include <tlhelp32.h>
++#include <algorithm>
++#include <atomic>
++#include <fstream>
++#include <iostream>
++#include <thread>
++using namespace ow;using namespace ow::win;
++namespace {
++bool below(const std::filesystem::path& path,const std::filesystem::path& parent){
++ const auto relative=path.lexically_normal().lexically_relative(parent.lexically_normal());
++ return !relative.empty()&&!relative.is_absolute()&&*relative.begin()!=L"..";
++}
++struct Peaks {
++ double cpu{};std::uint64_t host_ram{},process_commit{},working_set{};std::map<std::string,std::uint64_t> vram;
++ bool external_ffmpeg{};unsigned samples{},cpu_samples{},vram_samples{},foreground_samples{},unknown_foreground_samples{},no_foreground_window_samples{};std::vector<std::uint64_t> message_latency;
++ void sample(const std::filesystem::path& root,const std::vector<adaptive::Device>& devices){
++  const auto pressure=sample_runtime_pressure(root);
++  try{const auto staging=data_directory().parent_path()/"Temp"/"ow-worker-flex-20261018-r2";const auto state=parse(read_file(staging/"foreground.json",4096)).as_object();
++   const auto observed=static_cast<Tick>(number(state,"observed_utc_ms",INT64_MAX));
++   if(utc_ms()<observed||utc_ms()-observed>2000)++unknown_foreground_samples;
++   else{if(state.at("foreground_active").as_bool())++foreground_samples;if(state.contains("window_present")&&!state.at("window_present").as_bool())++no_foreground_window_samples;else if(state.at("message_response_known").as_bool())message_latency.push_back(number(state,"message_response_ms",1000));else ++unknown_foreground_samples;}
++  }catch(...){++unknown_foreground_samples;}
++  if(pressure.host.cpu_percent){cpu=std::max(cpu,*pressure.host.cpu_percent);++cpu_samples;}
++  MEMORYSTATUSEX memory{};memory.dwLength=sizeof(memory);if(GlobalMemoryStatusEx(&memory))host_ram=std::max(host_ram,static_cast<std::uint64_t>(memory.ullTotalPhys-memory.ullAvailPhys));
++  Handle snapshot(CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0));std::uint64_t commit=0,rss=0;
++  PROCESSENTRY32W entry{};entry.dwSize=sizeof(entry);
++  if(snapshot&&Process32FirstW(snapshot.get(),&entry))do{
++   const bool ours=entry.th32ProcessID==GetCurrentProcessId()||entry.th32ParentProcessID==GetCurrentProcessId();
++   if(_wcsicmp(entry.szExeFile,L"ffmpeg.exe")==0&&!ours)external_ffmpeg=true;
++   if(!ours)continue;
++   Handle process(OpenProcess(PROCESS_QUERY_INFORMATION|PROCESS_VM_READ,FALSE,entry.th32ProcessID));PROCESS_MEMORY_COUNTERS_EX counters{};
++   if(process&&GetProcessMemoryInfo(process.get(),reinterpret_cast<PROCESS_MEMORY_COUNTERS*>(&counters),sizeof(counters))){commit+=counters.PrivateUsage;rss+=counters.WorkingSetSize;}
++  }while(Process32NextW(snapshot.get(),&entry));
++  process_commit=std::max(process_commit,commit);working_set=std::max(working_set,rss);
++  for(const auto& d:devices)if(d.backend_identity_verified){const auto marker=d.stable_id.find(":luid:");if(marker==std::string::npos)continue;auto value=pressure.dedicated_vram_bytes.find(d.stable_id.substr(marker+6));if(value!=pressure.dedicated_vram_bytes.end()){vram[d.name]=std::max(vram[d.name],value->second);++vram_samples;}}
++  ++samples;
++ }
++ json::object json_value() const{
++  json::object g;for(const auto& [name,value]:vram)g[name]=value;
++  return {{"cpu_percent_sampled",cpu},{"host_used_ram_bytes_sampled",host_ram},{"harness_and_children_commit_bytes_sampled",process_commit},{"harness_and_children_working_set_bytes_sampled",working_set},{"adapter_dedicated_vram_bytes_sampled",std::move(g)},{"samples",samples},{"cpu_samples",cpu_samples},{"vram_samples",vram_samples},{"external_ffmpeg_observed",external_ffmpeg},{"nominal_sample_interval_ms",200},{"includes_warmup",true},{"foreground_active_samples",foreground_samples},{"foreground_unknown_samples",unknown_foreground_samples},{"no_foreground_window_samples",no_foreground_window_samples},{"foreground_message_samples",message_latency.size()},{"foreground_message_max_ms",message_latency.empty()?0:*std::max_element(message_latency.begin(),message_latency.end())}};
++ }
++};
++}
++int wmain(int argc,wchar_t** argv){try{
++ SetErrorMode(SEM_FAILCRITICALERRORS|SEM_NOGPFAULTERRORBOX|SEM_NOOPENFILEERRORBOX);SetPriorityClass(GetCurrentProcess(),BELOW_NORMAL_PRIORITY_CLASS);
++ if(argc<7||argc>8)throw std::runtime_error("usage: ow_flex_benchmark new-root source-or-generate minimum-jobs minimum-ms h264-backend:ordinal hevc-backend:ordinal [warmups]");
++ const auto staging=data_directory().parent_path()/"Temp"/"ow-worker-flex-20261018-r2";
++ const std::filesystem::path root=argv[1];
++ if(!root.is_absolute()||!below(root,staging)||!std::filesystem::create_directory(root))throw std::runtime_error("New root below the approved staging directory required");
++ auto config=load_config(data_directory());
++ if(sha256_file(config.ffmpeg)!="f78373b58fa0a239ca062cbd9e03130285ec4e835e57abc22a5d4025e293d2b4")throw std::runtime_error("Reviewed FFmpeg hash mismatch");
++ const auto installed_budget=config.budget;const auto installed_max_jobs=config.max_jobs;
++ wchar_t auto_mode[8]{};const bool automatic=GetEnvironmentVariableW(L"OW_FLEX_AUTO",auto_mode,8)&&std::wstring(auto_mode)==L"1";
++ if(automatic){
++  MEMORYSTATUSEX memory{};memory.dwLength=sizeof(memory);if(!GlobalMemoryStatusEx(&memory)||memory.dwMemoryLoad>=90)throw std::runtime_error("Insufficient quiet RAM headroom for a capacity sweep");
++  config.budget.cpu_threads=std::clamp<std::uint64_t>(static_cast<std::uint64_t>(GetActiveProcessorCount(ALL_PROCESSOR_GROUPS))*9/10,1,64);
++  const auto total=memory.ullTotalPhys/(1024*1024),available=memory.ullAvailPhys/(1024*1024);
++  const auto free=available>config.reserve_ram_mb?available-config.reserve_ram_mb:0;
++  const auto ram=total<=16384?free*9/10:std::min(total/2,free*3/4);
++  if(ram<512)throw std::runtime_error("Insufficient RAM for app converter qualification");config.budget.ram_mb=ram/128*128;
++  config.max_jobs=static_cast<std::size_t>(std::clamp<std::uint64_t>(config.budget.cpu_threads*2,4,32));
++ }
++ const auto trial_budget=config.budget;const auto trial_max_jobs=config.max_jobs;
++ config.capacity_foreground=[staging]{try{
++  const auto state=parse(read_file(staging/"foreground.json",4096)).as_object();const auto observed=static_cast<Tick>(number(state,"observed_utc_ms",INT64_MAX));
++  const bool window=state.contains("window_present")?state.at("window_present").as_bool():true;
++  return utc_ms()<observed||utc_ms()-observed>2000||state.at("foreground_active").as_bool()||(window&&(!state.at("message_response_known").as_bool()||number(state,"message_response_ms",1000)>=16));
++ }catch(...){return true;}};
++ if(config.capacity_foreground())throw std::runtime_error("Foreground observation requests capacity; measurement deferred");
++ auto source=std::filesystem::path(argv[2]);
++ if(source==L"generate"){
++  source=root/"source.bin";const auto directory=root/"generation";std::filesystem::create_directory(directory);
++  Child seed(config.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"error",L"-f",L"lavfi",L"-i",L"testsrc2=size=1920x1080:rate=24",L"-f",L"lavfi",L"-i",L"sine=frequency=880:sample_rate=48000",L"-frames:v",L"72",L"-t",L"3",L"-c:v",L"libx264",L"-preset",L"ultrafast",L"-threads",L"1",L"-pix_fmt",L"yuv420p",L"-c:a",L"aac",L"-f",L"mp4",source.wstring()},directory,{512,0,128,1},Priority::low);
++  const auto deadline=monotonic_ms()+120000;
++  for(;;){if(auto code=seed.exit_code()){if(*code)throw std::runtime_error("Synthetic generation failed");break;}if(monotonic_ms()>deadline)throw std::runtime_error("Synthetic generation timeout");Sleep(100);}seed.stop();
++ }
++ if(!source.is_absolute()||!below(source,staging))throw std::runtime_error("Source must stay in the approved measurement directory");
++ config.root=root/"proof";std::filesystem::create_directory(config.root);
++ auto proof=probe_ffmpeg(config,{},[](const std::string& name,unsigned,unsigned){std::cout<<"PROBE "<<name<<std::endl;});
++ if(!proof.complete||!proof.media_video)throw std::runtime_error("Current converter probe did not qualify app video");
++ json::array profiles;for(const auto& p:proof.profiles)profiles.emplace_back(adaptive::profile_record(p));
++ std::cout<<"CURRENT_PROOF "<<json::serialize(profiles)<<std::endl;
++ std::map<adaptive::Codec,std::string> pins;
++ for(const auto codec:{adaptive::Codec::h264,adaptive::Codec::hevc}){
++  const auto token=utf8(argv[codec==adaptive::Codec::h264?5:6]);const auto colon=token.find(':');
++  if(colon==std::string::npos)throw std::runtime_error("Explicit backend and ordinal required for identical-quality comparison");
++  const auto backend=token.substr(0,colon);const auto ordinal=std::stoul(token.substr(colon+1));
++  for(const auto& p:proof.profiles)if(p.codec==codec&&adaptive::backend_token(p.backend)==backend&&(p.backend==adaptive::Backend::nvidia_nvenc?p.backend_index:p.adapter_index)==ordinal){pins[codec]=p.stable_id;break;}
++  if(!pins.contains(codec))throw std::runtime_error("Requested identical-quality backend not proven: "+token);
++ }
++ const auto devices=enumerate_video_devices();Peaks peaks;
++ config.root=root/"worker";
++ std::jthread sampler([&](std::stop_token stop){while(!stop.stop_requested()){peaks.sample(root,devices);for(int n=0;n<20&&!stop.stop_requested();++n)Sleep(10);}});
++ json::object result;
++ try{result=OfflineMediaHarness::run(config,proof,source,pins,std::stoul(argv[3]),static_cast<unsigned>(config.max_jobs),std::stoull(argv[4]),argc==8?std::stoul(argv[7]):2);}catch(...){sampler.request_stop();sampler.join();throw;}
++ sampler.request_stop();sampler.join();
++ if(peaks.external_ffmpeg)throw std::runtime_error("External FFmpeg overlapped this measurement; do not compare contaminated results");
++ auto& jobs=result.at("jobs").as_array();std::vector<std::uint64_t> latency;double sum=0;
++ for(const auto& job:jobs){const auto ms=job.as_object().at("wall_ms").as_int64();latency.push_back(static_cast<std::uint64_t>(ms));sum+=static_cast<double>(ms);}
++ std::sort(latency.begin(),latency.end());
++ const auto wall=result.at("wall_ms").as_int64();
++ result["jobs_per_hour_observed_batch"]=static_cast<double>(jobs.size())*3600000.0/static_cast<double>(wall);
++ result["job_wall_mean_ms"]=sum/static_cast<double>(jobs.size());result["job_wall_p50_ms"]=latency[latency.size()/2];result["job_wall_p95_ms"]=latency[std::min(latency.size()-1,(latency.size()*95)/100)];
++ result["peaks"]=peaks.json_value();result["encoder_pins"]=json::object{{"h264",pins.at(adaptive::Codec::h264)},{"hevc",pins.at(adaptive::Codec::hevc)}};
++ result["operator_limits"]=json::object{{"cpu_threads",installed_budget.cpu_threads},{"ram_mb",installed_budget.ram_mb},{"scratch_mb",installed_budget.scratch_mb},{"max_jobs",installed_max_jobs}};
++ result["trial_limits"]=json::object{{"cpu_threads",trial_budget.cpu_threads},{"ram_mb",trial_budget.ram_mb},{"scratch_mb",trial_budget.scratch_mb},{"max_jobs",trial_max_jobs},{"automatic_requested",automatic}};
++ result["source_asset_reproduction"]=result.at("source_bytes").as_uint64()==24609052&&result.at("source_sha256").as_string()=="43806f9d921afe0def16befac5e6a95374f9571f2ae480c6950e9e0f3f85ef27";
++ std::ofstream(root/"result.json",std::ios::binary)<<json::serialize(result)<<'\n';
++ std::cout<<"OFFLINE_RESULT "<<json::serialize(result)<<std::endl;
++ wchar_t asset_path[32768]{};
++ if(GetEnvironmentVariableW(L"OW_FLEX_ASSET",asset_path,32768)){
++  const std::filesystem::path asset=asset_path;
++  if(!below(asset,staging)||std::filesystem::file_size(asset)!=24609052||sha256_file(asset)!="43806f9d921afe0def16befac5e6a95374f9571f2ae480c6950e9e0f3f85ef27")throw std::runtime_error("Exact regression asset size/SHA mismatch");
++  config.root=root/"actual-worker";Peaks actual_peaks;
++  std::jthread actual_sampler([&](std::stop_token stop){while(!stop.stop_requested()){actual_peaks.sample(root,devices);for(int pause=0;pause<20&&!stop.stop_requested();++pause)Sleep(10);}});
++  json::object actual;
++  try{actual=OfflineMediaHarness::run(config,proof,asset,pins,1,1,0,0);}catch(...){actual_sampler.request_stop();actual_sampler.join();throw;}
++  actual_sampler.request_stop();actual_sampler.join();actual["peaks"]=actual_peaks.json_value();actual["source_asset_reproduction"]=true;
++  std::ofstream(root/"actual-result.json",std::ios::binary)<<json::serialize(actual)<<'\n';std::cout<<"OFFLINE_ASSET_RESULT "<<json::serialize(actual)<<std::endl;
++  if(actual_peaks.external_ffmpeg)throw std::runtime_error("External FFmpeg overlapped the asset measurement");
++ }
++ return 0;
++}catch(const std::exception& e){std::cerr<<e.what()<<std::endl;return 1;}}
+diff --git a/windows/capacity.cpp b/windows/capacity.cpp
+new file mode 100644
+index 0000000..e06dcc7
+--- /dev/null
++++ b/windows/capacity.cpp
+@@ -0,0 +1,107 @@
++#include "capacity.hpp"
++#include <pdh.h>
++#include <pdhmsg.h>
++#include <thread>
++#include <wtsapi32.h>
++#include <algorithm>
++#include <iomanip>
++#include <mutex>
++#include <regex>
++#include <sstream>
++#include <set>
++namespace ow::win {
++namespace {
++std::uint64_t ticks(FILETIME t){return (std::uint64_t{t.dwHighDateTime}<<32)|t.dwLowDateTime;}
++bool foreground(){
++ const auto session=WTSGetActiveConsoleSessionId();
++ if(session==0xffffffff)return false;
++ DWORD own=0;if(ProcessIdToSessionId(GetCurrentProcessId(),&own)&&own==session){
++  LASTINPUTINFO input{sizeof(input)};if(GetLastInputInfo(&input)){
++   if(static_cast<DWORD>(GetTickCount()-input.dwTime)<3000)return true;
++   if(auto window=GetForegroundWindow()){DWORD_PTR reply{};const auto begin=monotonic_ms();
++    if(!SendMessageTimeoutW(window,WM_NULL,0,0,SMTO_ABORTIFHUNG|SMTO_BLOCK,16,&reply)||monotonic_ms()-begin>=16)return true;
++   }
++   return false;
++  }
++ }
++ LPWSTR bytes=nullptr;DWORD size=0;
++ if(WTSQuerySessionInformationW(WTS_CURRENT_SERVER_HANDLE,session,WTSSessionInfo,&bytes,&size)){
++  const auto* info=reinterpret_cast<const WTSINFOW*>(bytes);
++  const auto last=size>=sizeof(WTSINFOW)?info->LastInputTime.QuadPart:0;
++  WTSFreeMemory(bytes);FILETIME now{};GetSystemTimeAsFileTime(&now);
++  if(last>0)return ticks(now)>=static_cast<std::uint64_t>(last)&&ticks(now)-static_cast<std::uint64_t>(last)<30000000;
++ }
++ // Unknown foreground state never masquerades as an idle desktop.
++ return true;
++}
++struct Meter {
++ PDH_HQUERY query{};PDH_HCOUNTER disk{},gpu{},gpu_memory{};std::uint64_t idle{},total{};bool cpu_seen{};
++ explicit Meter(const std::wstring& volume){
++  if(PdhOpenQueryW(nullptr,0,&query)!=ERROR_SUCCESS)return;
++  const auto name=L"\\LogicalDisk("+volume+L")\\% Idle Time";
++  if(PdhAddEnglishCounterW(query,name.c_str(),0,&disk)!=ERROR_SUCCESS)disk=nullptr;
++  if(PdhAddEnglishCounterW(query,L"\\GPU Engine(*)\\Utilization Percentage",0,&gpu)!=ERROR_SUCCESS)gpu=nullptr;
++  if(PdhAddEnglishCounterW(query,L"\\GPU Adapter Memory(*)\\Dedicated Usage",0,&gpu_memory)!=ERROR_SUCCESS)gpu_memory=nullptr;
++ }
++ ~Meter(){if(query)PdhCloseQuery(query);}
++ RuntimePressure sample(){
++  RuntimePressure out;out.host.foreground=foreground();
++  MEMORYSTATUSEX memory{};memory.dwLength=sizeof(memory);out.host.ram_percent=GlobalMemoryStatusEx(&memory)?std::optional<double>{static_cast<double>(memory.dwMemoryLoad)}:std::nullopt;
++  FILETIME i{},k{},u{};if(GetSystemTimes(&i,&k,&u)){
++   const auto current=ticks(k)+ticks(u),idle_now=ticks(i);
++   if(cpu_seen&&current>total&&idle_now>=idle){out.host.cpu_percent=100.0*(1.0-static_cast<double>(idle_now-idle)/static_cast<double>(current-total));}
++   total=current;idle=idle_now;cpu_seen=true;
++  }
++  if(!query||PdhCollectQueryData(query)!=ERROR_SUCCESS)return out;
++  PDH_FMT_COUNTERVALUE value{};
++  if(disk&&PdhGetFormattedCounterValue(disk,PDH_FMT_DOUBLE,nullptr,&value)==ERROR_SUCCESS&&value.CStatus==ERROR_SUCCESS)
++   out.host.disk_percent=std::clamp(100.0-value.doubleValue,0.0,100.0);
++  if(gpu_memory){
++   DWORD size=0,items=0;
++   if(PdhGetFormattedCounterArrayW(gpu_memory,PDH_FMT_LARGE,&size,&items,nullptr)==PDH_MORE_DATA&&size&&size<=16*1024*1024){
++    std::vector<unsigned char> data(size);auto values=reinterpret_cast<PDH_FMT_COUNTERVALUE_ITEM_W*>(data.data());
++    if(PdhGetFormattedCounterArrayW(gpu_memory,PDH_FMT_LARGE,&size,&items,values)==ERROR_SUCCESS){
++     static const std::wregex id(L"luid_0x([0-9a-fA-F]{8})_0x([0-9a-fA-F]{8})_phys_[0-9]+");
++     std::set<std::string> invalid;
++     for(DWORD n=0;n<items;++n){const auto& value=values[n].FmtValue;
++      const std::wstring name=values[n].szName;std::wsmatch match;if(!std::regex_search(name,match,id))continue;
++      std::ostringstream key;key<<std::hex<<std::setfill('0')<<std::setw(8)<<std::stoul(match[1].str(),nullptr,16)<<':'<<std::setw(8)<<std::stoul(match[2].str(),nullptr,16);
++      if((value.CStatus!=PDH_CSTATUS_VALID_DATA&&value.CStatus!=PDH_CSTATUS_NEW_DATA)||value.largeValue<0){invalid.insert(key.str());continue;}
++      out.dedicated_vram_bytes[key.str()]+=static_cast<std::uint64_t>(value.largeValue);
++     }
++     for(const auto& key:invalid)out.dedicated_vram_bytes.erase(key);
++    }
++   }
++  }
++  if(!gpu)return out;
++  DWORD bytes=0,count=0;
++  if(PdhGetFormattedCounterArrayW(gpu,PDH_FMT_DOUBLE,&bytes,&count,nullptr)!=PDH_MORE_DATA||!bytes||bytes>16*1024*1024)return out;
++  std::vector<unsigned char> buffer(bytes);auto* entries=reinterpret_cast<PDH_FMT_COUNTERVALUE_ITEM_W*>(buffer.data());
++  if(PdhGetFormattedCounterArrayW(gpu,PDH_FMT_DOUBLE,&bytes,&count,entries)!=ERROR_SUCCESS)return out;
++  std::map<std::pair<std::string,std::string>,double> engines;
++  static const std::wregex pattern(L"luid_0x([0-9a-fA-F]{8})_0x([0-9a-fA-F]{8}).*_eng_([0-9]+)_");
++  for(DWORD n=0;n<count;++n){
++   if(entries[n].FmtValue.CStatus!=ERROR_SUCCESS)continue;
++   const std::wstring name=entries[n].szName;std::wsmatch match;
++   if(!std::regex_search(name,match,pattern))continue;
++   std::ostringstream luid;luid<<std::hex<<std::setfill('0')<<std::setw(8)<<std::stoul(match[1].str(),nullptr,16)<<':'<<std::setw(8)<<std::stoul(match[2].str(),nullptr,16);
++   engines[{luid.str(),utf8(match[3].str())}]+=std::max(0.0,entries[n].FmtValue.doubleValue);
++  }
++  for(const auto& [key,busy]:engines)out.gpu_busy[key.first]=std::max(out.gpu_busy[key.first],std::min(100.0,busy));
++  return out;
++ }
++};
++}
++RuntimePressure sample_runtime_pressure(const std::filesystem::path& root){
++ static std::mutex mutex;static std::map<std::pair<std::wstring,std::thread::id>,std::unique_ptr<Meter>> meters;
++ std::lock_guard lock(mutex);auto volume=root.root_name().wstring();auto& meter=meters[{volume,std::this_thread::get_id()}];
++ if(!meter)meter=std::make_unique<Meter>(volume);return meter->sample();
++}
++Priority desktop_priority(Priority requested){return (requested==Priority::maximum||requested==Priority::normal)&&foreground()?Priority::low:requested;}
++void background_gpu_process(HANDLE process) noexcept{
++ // WDDM scheduling priority is a hint, not a utilization/memory hard quota.
++ using SetGpuPriority=LONG(WINAPI*)(HANDLE,int);
++ const auto module=GetModuleHandleW(L"gdi32.dll");
++ if(module)if(auto set=reinterpret_cast<SetGpuPriority>(GetProcAddress(module,"D3DKMTSetProcessSchedulingPriorityClass")))set(process,1);
++}
++}
+diff --git a/windows/capacity.hpp b/windows/capacity.hpp
+new file mode 100644
+index 0000000..250a211
+--- /dev/null
++++ b/windows/capacity.hpp
+@@ -0,0 +1,12 @@
++#pragma once
++#include "platform.hpp"
++#include "ow/operator_status.hpp"
++#include "ow/capacity_control.hpp"
++#include <map>
++namespace ow::win {
++struct RuntimePressure {Pressure host;std::map<std::string,double> gpu_busy;std::map<std::string,std::uint64_t> dedicated_vram_bytes;};
++// Cross-session foreground input uses WTS, not the SSH service's input queue.
++RuntimePressure sample_runtime_pressure(const std::filesystem::path& root);
++Priority desktop_priority(Priority requested);
++void background_gpu_process(HANDLE process) noexcept;
++}
+diff --git a/windows/offline_media.cpp b/windows/offline_media.cpp
+new file mode 100644
+index 0000000..1660ff3
+--- /dev/null
++++ b/windows/offline_media.cpp
+@@ -0,0 +1,85 @@
++#include "offline_media.hpp"
++#include "ow/device_identity.hpp"
++#include <iostream>
++namespace ow::win {
++json::object OfflineMediaHarness::run(Config config,const Probe& proof,const std::filesystem::path& source,
++ const std::map<adaptive::Codec,std::string>& pins,unsigned jobs,unsigned concurrency,std::uint64_t minimum_ms,unsigned warmups){
++ if(!proof.media_video||!jobs||!concurrency||concurrency>config.max_jobs||jobs>512)throw std::runtime_error("Invalid offline media proof/batch");
++ if(!std::filesystem::create_directory(config.root))throw std::runtime_error("Offline worker root must be new");
++ config.coordinator="https://offline.invalid";config.storage_hosts.clear();
++ auto worker=std::unique_ptr<Worker>(new Worker(config,true));
++ worker->offline_source_=source;worker->offline_output_=config.root/"delivered";worker->offline_pins_=pins;
++ worker->priority_=Priority::low;
++ worker->hardware_profiles_=proof.profiles;
++ worker->hardware_profiles_.erase(std::remove_if(worker->hardware_profiles_.begin(),worker->hardware_profiles_.end(),[&](const auto& p){
++  return p.backend!=adaptive::Backend::cpu&&(!pins.contains(p.codec)||pins.at(p.codec)!=p.stable_id);
++ }),worker->hardware_profiles_.end());
++ for(const auto& [codec,id]:pins)if(std::none_of(worker->hardware_profiles_.begin(),worker->hardware_profiles_.end(),[&](const auto& p){return p.codec==codec&&p.stable_id==id;}))throw std::runtime_error("Pinned backend lacks current encode/decode proof");
++ const auto vram=config.vram_override_set?config.budget.vram_mb:adaptive::profile_vram_capacity(worker->hardware_profiles_);
++ adaptive::Limits caps{config.budget.cpu_threads,config.budget.ram_mb,vram,config.budget.scratch_mb,static_cast<unsigned>(config.max_jobs)};
++#ifndef OW_FLEX_BASELINE
++ caps.nvenc_sessions=adaptive::proven_nvenc_sessions(worker->hardware_profiles_);
++#endif
++ worker->adaptive_scheduler_=std::make_unique<adaptive::Scheduler>(caps,worker->hardware_profiles_);
++ worker->admission_.capability("media.video.renditions.v1",true,Preference::allowed);
++ worker->watchdog_=std::jthread([&worker]{worker->watchdog();});
++ const auto digest=sha256_file(source);const auto size=std::filesystem::file_size(source);
++ auto batch=[&](unsigned minimum,unsigned concurrent,std::uint64_t duration,const std::string& prefix){
++  struct Flight {std::shared_ptr<Worker::TaskData> data;Tick started,arrived;std::uint64_t renew{};};
++  std::map<std::string,Flight> live;json::array records;unsigned submitted=0;const auto started=monotonic_ms(),started_utc=utc_ms();Tick next_renew=0,queued_at=started;
++  for(;;){
++   const auto now=monotonic_ms();
++   for(auto i=live.begin();i!=live.end();){
++    if(!i->second.data->done){++i;continue;}
++    bool found=false;
++    for(const auto& pending:worker->store_.pending())if(pending.attempt_id==i->first){
++     auto result=parse(pending.body).as_object();
++     if(text(result,"status",32)!="succeeded")throw std::runtime_error("Offline actual worker failed: "+text(result,"reason",4096));
++     result["wall_ms"]=now-i->second.started;result["offered_to_result_ms"]=now-i->second.arrived;records.emplace_back(std::move(result));
++     if(!worker->store_.acknowledge(pending.sequence,pending.attempt_id))throw std::runtime_error("Offline durable result ACK mismatch");found=true;break;
++    }
++    if(!found)throw std::runtime_error("Completed offline job lacks durable result");
++    i=live.erase(i);
++   }
++   const bool enough=submitted>=minimum&&static_cast<std::uint64_t>(now-started)>=duration;
++   if(enough&&live.empty())break;
++   if(now-started>900000)throw std::runtime_error("Offline batch exceeded fifteen minutes");
++   if(!enough&&live.size()<concurrent){
++    if(submitted>=512)throw std::runtime_error("Offline batch count safety ceiling reached before window filled");
++    const auto id=prefix+std::to_string(submitted);
++    JobSpec spec;spec.offer={"job-"+id,id,"media.video.renditions.v1",digest+id,Resources{512,0,512,1},now+60000};
++    spec.input_bytes=size;spec.input_sha256=digest;spec.input_url="https://offline.invalid/source";spec.copy_audio=true;
++    spec.output_max_bytes=100*1024*1024;spec.timeout_ms=600000;
++    spec.artifacts={{"feed","https://offline.invalid/feed","video/mp4"},{"feed_optimized","https://offline.invalid/hevc","video/mp4"},{"thumbnail","https://offline.invalid/poster","image/webp"}};
++    if(worker->admission_.offer(spec.offer,now,available_resources(config.root,config.reserve_ram_mb)).accepted){
++     if(worker->admission_.begin(id,"offline-lease",now+300000,now)!=Start::started)throw std::runtime_error("Offline BEGIN failed");
++     auto data=std::make_shared<Worker::TaskData>();data->spec=spec;data->token="offline-lease";data->hard_deadline=now+600000;
++     bool ready=true;
++#ifdef OW_FLEX_BASELINE
++     auto reservation=worker->reserve_hardware_profiles({adaptive::Codec::h264,adaptive::Codec::hevc},data->spec.offer.resources,id);
++     ready=static_cast<bool>(reservation);
++     if(ready)for(const auto& [codec,pin]:pins){auto primary=std::find_if(reservation.profiles().begin(),reservation.profiles().end(),[&](const auto& p){return p.codec==codec;});if(primary==reservation.profiles().end()||primary->stable_id!=pin)ready=false;}
++     if(ready)data->profile_reservation.emplace(std::move(reservation));
++#endif
++     if(!ready){worker->admission_.finish(id);}
++     else{
++      if(!worker->store_.reserve(id,spec.offer.job_id,spec.offer.fingerprint)||!worker->store_.start(id))throw std::runtime_error("Offline journal start failed");
++      auto running=std::make_unique<Worker::Running>();running->data=data;
++      {std::lock_guard lock(worker->report_mutex_);worker->report_.start(id,"offline video",utc_ms(),now);}
++      {std::lock_guard lock(worker->mutex_);running->thread=std::jthread([&worker,data]{worker->execute(data);});worker->running_.emplace(id,std::move(running));}
++      live.emplace(id,Flight{data,now,queued_at,0});++submitted;queued_at=now;
++     }
++    }
++   }
++   if(now>=next_renew){for(auto& [id,f]:live)worker->admission_.renew(id,"offline-lease",++f.renew,now+300000,now);next_renew=now+1000;}
++   Sleep(10);
++  }
++  return json::object{{"wall_ms",monotonic_ms()-started},{"started_utc_ms",started_utc},{"ended_utc_ms",utc_ms()},{"jobs",std::move(records)}};
++ };
++ if(warmups)batch(warmups,concurrency,60000,"warmup-");
++ auto result=batch(jobs,concurrency,minimum_ms,"measured-");
++ result["source_sha256"]=digest;result["source_bytes"]=size;result["offline_storage_only"]=true;
++ result["child_priority"]="low";result["coordinator_acceptance"]=false;
++ return result;
++}
++}
+diff --git a/windows/offline_media.hpp b/windows/offline_media.hpp
+new file mode 100644
+index 0000000..e783d40
+--- /dev/null
++++ b/windows/offline_media.hpp
+@@ -0,0 +1,13 @@
++#pragma once
++#include "worker.hpp"
++namespace ow::win {
++// Test/measurement port only. Not linked into tray entry points and never
++// selected by configuration or a network message. Real media execution, hash,
++// validation, budgets, cancellation/drain and journal code are unchanged.
++class OfflineMediaHarness {
++public:
++ static json::object run(Config config,const Probe& proof,const std::filesystem::path& source,
++                         const std::map<adaptive::Codec,std::string>& pins,unsigned jobs,
++                         unsigned concurrency,std::uint64_t minimum_ms,unsigned warmups=2);
++};
++}
+diff --git a/windows/worker.cpp b/windows/worker.cpp
+index 1833efc..6039d90 100644
+--- a/windows/worker.cpp
++++ b/windows/worker.cpp
+@@ -323,7 +323,8 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const
+   totals.add(s,std::this_thread::get_id()!=main_thread);if(timing)timing(stage_record(s));
+  });
+ }
+-Worker::Worker(Config config):config_(std::move(config)),store_(config_.root/"journal.sqlite3"),log_(config_.root/"worker.log"),admission_(config_.budget,config_.max_jobs){
++Worker::Worker(Config config):Worker(std::move(config),false){}
++Worker::Worker(Config config,bool isolated):config_(std::move(config)),store_(config_.root/"journal.sqlite3"),log_(config_.root/"worker.log"),admission_(config_.budget,config_.max_jobs),isolated_(isolated){
+  std::optional<std::string> proven_origin;
+  ProtectedPairingSecrets identity(config_.root);
+  if(auto credential=identity.read(SecretSlot::credential)) {
+@@ -339,6 +340,7 @@ Worker::Worker(Config config):config_(std::move(config)),store_(config_.root/"jo
+  {std::lock_guard lock(report_mutex_);report_.priority(priority_name(priority_));report_.state("paused",paused_?"operator":"starting",utc_ms(),monotonic_ms());publish_report(config_.root/"worker-status.txt","");publish_report(config_.root/"worker-history.txt","");}
+  safe_log("STATE PRIORITY "+priority_name(priority_));
+  report_status();
++ if(isolated_)return;
+  // Slow capability probes run on the background thread, never blocking tray creation.
+  network_=std::jthread([this]{network();});try{watchdog_=std::jthread([this]{watchdog();});hash_watchdog_=std::jthread([this]{
+   while(!stop_){for(unsigned elapsed=0;elapsed<60000&&!stop_;elapsed+=100)Sleep(100);if(stop_)break;
+@@ -580,7 +582,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
+   phase("prepare source.bin workspace");
+   if(std::filesystem::exists(workspace))throw std::runtime_error("Attempt workspace already exists; refusing unsafe reuse");std::filesystem::create_directories(workspace);
+   Http http;phase("download source.bin",s.input_bytes);
+-  {StageTimer timing("download","source.bin",timing_sink,timing_wall_us,thread_cpu_us);http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);}
++  {StageTimer timing("download","source.bin",timing_sink,timing_wall_us,thread_cpu_us);if(offline_source_.empty())http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);else{std::filesystem::copy_file(offline_source_,workspace/"source.bin");if(std::filesystem::file_size(workspace/"source.bin")!=s.input_bytes)throw std::runtime_error("Offline input size differs");bytes_progress(s.input_bytes);}}
+   phase("verify source.bin sha256",s.input_bytes);
+   {StageTimer timing("input_hash","source.bin",timing_sink,timing_wall_us,thread_cpu_us);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");}
+   if(cancelled())throw std::runtime_error("Job cancelled before conversion");
+@@ -677,7 +679,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
+    auto label="verify "+filename+" SHA-256";transfer_phase(label,bytes);std::string hash;
+    {StageTimer timing("output_hash",filename,timing_sink,timing_wall_us,thread_cpu_us);hash=sha256_file(output,transfer_bytes);}
+    label="upload "+filename;transfer_phase(label,bytes);Http transfer_http;
+-   {StageTimer timing("upload",filename,timing_sink,timing_wall_us,thread_cpu_us);transfer_http.upload(url,output,mime,transfer_cancelled,transfer_bytes);}
++   {StageTimer timing("upload",filename,timing_sink,timing_wall_us,thread_cpu_us);if(offline_output_.empty())transfer_http.upload(url,output,mime,transfer_cancelled,transfer_bytes);else{auto target=offline_output_/id/filename;std::filesystem::create_directories(target.parent_path());std::filesystem::copy_file(output,target);if(sha256_file(target)!=hash)throw std::runtime_error("Offline delivered file integrity differs");transfer_bytes(bytes);}}
+    data->transfer_progress.finish(true,monotonic_ms());return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
+   };
+   if(!s.artifacts.empty()){
+diff --git a/windows/worker.hpp b/windows/worker.hpp
+index dd108c1..84fd3ae 100644
+--- a/windows/worker.hpp
++++ b/windows/worker.hpp
+@@ -19,6 +19,7 @@ struct Config {
+  Resources budget{2048,0,8192,2};
+  bool vram_override_set{};
+  std::uint64_t reserve_ram_mb{0};std::size_t max_jobs{4};
++ std::function<bool()> capacity_foreground; // measurement-only passive observer
+ };
+ Config load_config(const std::filesystem::path& root);
+ struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;std::vector<std::string> fallback_notes;std::vector<ProbeFailure> gpu_failures;bool complete{};};
+@@ -26,7 +27,10 @@ using ProbePhase=std::function<void(std::string,unsigned,unsigned)>;
+ using ProbeTiming=std::function<void(const std::string&)>;
+ // retained may refer only to current successful in-process evidence, never disk profiles.
+ Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={},const ProbePhase& phase={},const Probe* retained=nullptr,const ProbeTiming& timing={});
++class OfflineMediaHarness;
+ class Worker {
++ friend class OfflineMediaHarness;
++ Worker(Config config,bool isolated);
+  struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::optional<adaptive::Scheduler::Reservation> profile_reservation;std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;};
+  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
+  Config config_;Store store_;Log log_;Admission admission_;
+@@ -48,6 +52,8 @@ class Worker {
+  std::unordered_map<std::string,JobSpec> offered_; // network thread only
+  std::vector<adaptive::Profile> hardware_profiles_;
+  std::unique_ptr<adaptive::Scheduler> adaptive_scheduler_;
++ bool isolated_{};std::filesystem::path offline_source_,offline_output_;
++ std::map<adaptive::Codec,std::string> offline_pins_;
+  std::atomic<Preference> video_{Preference::allowed},image_{Preference::allowed};
+  void recover_gpus();
+  void network();void watchdog();void execute(std::shared_ptr<TaskData>);

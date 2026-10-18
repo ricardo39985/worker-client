@@ -665,7 +665,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    std::vector<adaptive::Profile> selected_profiles;std::optional<adaptive::Profile> failed_gpu;
    std::vector<std::wstring> selected_args=arguments;
    Resources cost=s.offer.resources;std::uint64_t validation_ram=cost.ram_mb,minimum_ram=0;
-   bool source_timing_mismatch=false;std::string retry_reason="GPU output failed validation";
+   bool source_timing_mismatch=false,coordinator_rate_mismatch=false;std::string retry_reason="GPU output failed validation";
    auto acquire=[&](bool cpu_only){
     cost=s.offer.resources;
     if(video&&data->compute_handoff){
@@ -758,13 +758,14 @@ void Worker::execute(std::shared_ptr<TaskData> data){
      run_child_probe(config_.ffmpeg,video_timing_arguments(path),child_workspace,stopped,limits,nullptr,UINT64_MAX,std::max<Tick>(1,data->hard_deadline-monotonic_ms()),0,0,&packet_timing);
      auto output=video_timing(read_file(child_workspace/"process.log",5*1024*1024));
      if(!output||!same_video_timing(*source_timing,*output)){source_timing_mismatch=true;retry_reason="Output video presentation timeline differs from source";return false;}
+     if(source_timing->codec_rate_hint()&&!source_timing->reported_rate.empty()&&!output->reported_rate.empty()&&source_timing->reported_rate!=output->reported_rate){coordinator_rate_mismatch=true;retry_reason="Legacy coordinator nominal-rate metadata differs; presentation timeline passed";return false;}
     }
     return true;
    };
    const bool initial_hardware=hardware;
    if(initial_hardware){
     adaptive::run_with_cpu_fallback(workspace/filename,true,stopped,[&](bool use_hardware){
-     if(!use_hardware&&failed_gpu&&!source_timing_mismatch&&!insufficient_child_budget(retry_reason))report_encoder_failure(*failed_gpu);
+     if(!use_hardware&&failed_gpu&&!source_timing_mismatch&&!coordinator_rate_mismatch&&!insufficient_child_budget(retry_reason))report_encoder_failure(*failed_gpu);
      try{encode_with_growth(!use_hardware);}catch(const std::exception& e){retry_reason=e.what();throw;}
     },validate);
    }else{encode_with_growth(false);if(!validate(workspace/filename))throw std::runtime_error(retry_reason);}
@@ -880,6 +881,7 @@ void Worker::watchdog(){
      control->observe(Pressure{busy,0.0,snapshot.host.foreground,0.0},now);adaptive_scheduler_->set_device_concurrency_limit(id,control->stage_limit(now));
      auto profile=std::find_if(hardware_profiles_.begin(),hardware_profiles_.end(),[&](const auto& p){return p.stable_id==id;});
      lines.push_back(profile->device_name+" busiest engine "+(busy?std::to_string(static_cast<int>(std::lround(*busy)))+"%":"unknown")+" sampled; "+control->reason());
+     if(luid!=std::string::npos){auto bytes=snapshot.dedicated_vram_bytes.find(id.substr(luid+6));lines.push_back("  dedicated VRAM in use "+(bytes==snapshot.dedicated_vram_bytes.end()?std::string{"unknown"}:std::to_string((bytes->second+1048575)/1048576)+" MiB sampled"));}
     }
     const auto cards=adaptive_scheduler_->capacity_lines();lines.insert(lines.end(),cards.begin(),cards.end());
    }}

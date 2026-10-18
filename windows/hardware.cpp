@@ -137,7 +137,7 @@ std::optional<GpuMemorySample> sample_gpu_memory(std::uint32_t process_id,const 
  std::vector<adaptive::GpuMemoryRecord> records;
  for(DWORD i=0;i<count;++i){
   std::uint32_t owner{},node{};if(!instance_for_adapter(items[i].szName,key,owner,node))continue;
-  if((items[i].FmtValue.CStatus!=PDH_CSTATUS_VALID_DATA&&items[i].FmtValue.CStatus!=PDH_CSTATUS_NEW_DATA)||items[i].FmtValue.largeValue<=0)return {};
+  if((items[i].FmtValue.CStatus!=PDH_CSTATUS_VALID_DATA&&items[i].FmtValue.CStatus!=PDH_CSTATUS_NEW_DATA)||items[i].FmtValue.largeValue<0)return {};
   records.push_back({owner,node,static_cast<std::uint64_t>(items[i].FmtValue.largeValue),device.stable_id,true});
  }
  auto totals=adaptive::gpu_memory_totals(records,process_id,device.stable_id);if(!totals)return {};

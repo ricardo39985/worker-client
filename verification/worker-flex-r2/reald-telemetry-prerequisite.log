@@ -1,0 +1,21 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+#< CLIXML
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  ow_json.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_json.lib
+  ow_core.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_core.lib
+  ow_windows.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_windows.lib
+  windows_resource_probe.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2157 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ow_resource_probe.vcxproj -> C:\Users\reald\AppData\Local\Temp\ow-worker-flex-20261018-r2\candidate\build\Release\ow_resource_probe.exe
+{"device":"Radeon RX Vega M GL Graphics","raw_positive_bytes":0,"raw_zero_records":0,"raw_invalid_records":0,"worker_known":false,"worker_bytes":0}
+{"device":"Intel(R) HD Graphics 630","raw_positive_bytes":0,"raw_zero_records":27,"raw_invalid_records":0,"worker_known":false,"worker_bytes":0}
+RESOURCE_CHECKED=0 RESOURCE_FAILURES=0
+RESOURCE_PROBE_EXIT=2
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="progress" RefId="0"><TN RefId="0"><T>System.Management.Automation.PSCustomObject</T><T>System.Object</T></TN><MS><I64 N="SourceId">1</I64><PR N="Record"><AV>Preparing modules for first use.</AV><AI>0</AI><Nil /><PI>-1</PI><PC>-1</PC><T>Completed</T><SR>-1</SR><SD> </SD></PR></MS></Obj></Objs>
