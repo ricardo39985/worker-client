@@ -2,7 +2,30 @@
 #include <vector>
 #include <algorithm>
 namespace ow::win {
+namespace {
+std::uint64_t file_ticks(FILETIME value) noexcept {
+ return (static_cast<std::uint64_t>(value.dwHighDateTime)<<32)|value.dwLowDateTime;
+}
+}
+std::optional<std::uint64_t> thread_cpu_us() noexcept {
+ FILETIME created{},exited{},kernel{},user{};
+ if(!GetThreadTimes(GetCurrentThread(),&created,&exited,&kernel,&user))return {};
+ return (file_ticks(kernel)+file_ticks(user))/10;
+}
+std::optional<ChildTiming> Child::sample_timing() const noexcept {
+ if(!job_)return timing_;
+ JOBOBJECT_BASIC_ACCOUNTING_INFORMATION accounting{};
+ if(!QueryInformationJobObject(job_.get(),JobObjectBasicAccountingInformation,&accounting,sizeof(accounting),nullptr))return {};
+ ChildTiming result;result.cpu_us=static_cast<std::uint64_t>(accounting.TotalKernelTime.QuadPart+accounting.TotalUserTime.QuadPart)/10;
+ result.launch_us=launch_us_;
+ FILETIME created{},exited{},kernel{},user{};
+ if(process_&&GetProcessTimes(process_.get(),&created,&exited,&kernel,&user)&&file_ticks(exited)>=file_ticks(created))
+  result.root_lifetime_us=(file_ticks(exited)-file_ticks(created))/10;
+ return result;
+}
+std::optional<ChildTiming> Child::timing() const noexcept {return job_?sample_timing():timing_;}
 Child::Child(const std::filesystem::path& exe,const std::vector<std::wstring>& args,const std::filesystem::path& workspace,Resources resources,Priority p):resources_(resources){
+ const auto launch_started=timing_wall_us();
  if(!exe.is_absolute()||!std::filesystem::is_regular_file(exe))throw std::runtime_error("Approved executable is missing or not absolute");
  job_.reset(CreateJobObjectW(nullptr,nullptr));if(!job_)fail("Create process containment");priority(p);
  SECURITY_ATTRIBUTES sa{sizeof(sa),nullptr,TRUE};
@@ -15,6 +38,7 @@ Child::Child(const std::filesystem::path& exe,const std::vector<std::wstring>& a
  require(CreateProcessW(exe.c_str(),command.data(),nullptr,nullptr,TRUE,CREATE_SUSPENDED|CREATE_NO_WINDOW|EXTENDED_STARTUPINFO_PRESENT,nullptr,workspace.c_str(),&si.StartupInfo,&pi),"Create job process");process_.reset(pi.hProcess);Handle thread(pi.hThread);
  if(!AssignProcessToJobObject(job_.get(),process_.get())){DWORD e=GetLastError();TerminateProcess(process_.get(),1);WaitForSingleObject(process_.get(),INFINITE);fail("Contain child process",e);}
  if(ResumeThread(thread.get())==static_cast<DWORD>(-1)){stop();fail("Start contained child");}
+ launch_us_=timing_wall_us()-launch_started;
  DeleteProcThreadAttributeList(si.lpAttributeList);
  }catch(...){DeleteProcThreadAttributeList(si.lpAttributeList);throw;}
 }
@@ -42,6 +66,7 @@ void Child::stop(){
    if(accounting.ActiveProcesses==0)break;
    Sleep(25);
   }
+  timing_=sample_timing();
   job_.reset();
  }
  process_.reset();

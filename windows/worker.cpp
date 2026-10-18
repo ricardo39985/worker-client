@@ -37,10 +37,11 @@ void check_protocol(const Response& r){
  auto v=parse(r.body);if(number(v.as_object(),"protocol",1)!=1)throw std::runtime_error("Coordinator worker protocol is incompatible");
 }
 struct ProbeRun {std::uint64_t elapsed_ms{},peak_vram_mb{};bool estimated_vram{};};
-ProbeRun run_child_probe(const std::filesystem::path& exe,const std::vector<std::wstring>& args,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits,const adaptive::Device* hardware_device=nullptr,std::uint64_t vram_limit_mb=UINT64_MAX,Tick timeout_ms=30000){
+ProbeRun run_child_probe(const std::filesystem::path& exe,const std::vector<std::wstring>& args,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits,const adaptive::Device* hardware_device=nullptr,std::uint64_t vram_limit_mb=UINT64_MAX,Tick timeout_ms=30000,StageTimer* timing=nullptr){
  const auto started=monotonic_ms();
  if(!limits.ram_mb||!limits.cpu_threads||!limits.scratch_mb)throw std::runtime_error("Configured/live resource budget cannot run converter probe");
  Child child(exe,args,workspace,limits,Priority::low);auto until=started+timeout_ms;std::uint64_t peak_vram{};bool estimated_vram=false;
+ ChildTimingCapture capture(child,timing);
  for(;;){
   if(cancelled&&cancelled())throw std::runtime_error("Capability probe cancelled");
   if(hardware_device){
@@ -64,8 +65,8 @@ ProbeRun run_child_probe(const std::filesystem::path& exe,const std::vector<std:
  return {static_cast<std::uint64_t>(std::max<Tick>(1,monotonic_ms()-started)),peak_vram/(1024*1024)+(peak_vram%(1024*1024)!=0),estimated_vram};
 }
 std::optional<std::pair<std::uint32_t,std::uint32_t>> inspect_video_dimensions(const std::filesystem::path& exe,
- const std::filesystem::path& input,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits){
- run_child_probe(exe,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-protocol_whitelist",L"file",L"-noautorotate",L"-i",input.wstring(),L"-map",L"0:v:0",L"-frames:v",L"1",L"-f",L"null",L"-"},workspace,cancelled,limits);
+ const std::filesystem::path& input,const std::filesystem::path& workspace,const std::function<bool()>& cancelled,Resources limits,StageTimer* timing=nullptr){
+ run_child_probe(exe,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-protocol_whitelist",L"file",L"-noautorotate",L"-i",input.wstring(),L"-map",L"0:v:0",L"-frames:v",L"1",L"-f",L"null",L"-"},workspace,cancelled,limits,nullptr,UINT64_MAX,30000,timing);
  const auto log=read_file(workspace/"process.log");
  static const std::regex dimensions(R"(Video:[^\r\n]*?([1-9][0-9]{0,4})x([1-9][0-9]{0,4})(?:[ ,]|$))");
  std::smatch match;if(!std::regex_search(log,match,dimensions))return {};
@@ -86,7 +87,12 @@ Config load_config(const std::filesystem::path& root){
  if(c.budget.ram_mb<256||!c.budget.cpu_threads||!c.max_jobs||!c.budget.scratch_mb)throw std::runtime_error("Invalid resource budget");
  return c;
 }
-Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const ProbePhase& phase){
+static Probe probe_ffmpeg_impl(const Config& c,const std::function<bool()>& cancelled,const ProbePhase& phase,const StageTimer::Sink& timing){
+ auto run_child_probe=[&](const std::filesystem::path& exe,const std::vector<std::wstring>& args,const std::filesystem::path& path,
+  const std::function<bool()>& cancel,Resources limits,const adaptive::Device* device=nullptr,std::uint64_t cap=UINT64_MAX,Tick timeout=30000){
+   StageTimer stage("startup_child","none",timing,timing_wall_us,thread_cpu_us,true);
+   return ::ow::win::run_child_probe(exe,args,path,cancel,limits,device,cap,timeout,&stage);
+ };
  auto progress=[&](std::string name,unsigned current=0,unsigned total=0){if(phase)phase(std::move(name),current,total);};
  progress("adapters");
  Probe p;std::vector<adaptive::Device> inventory;bool inventory_available=true;std::string inventory_failure;
@@ -278,6 +284,15 @@ Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const 
  }catch(const std::exception& e){p.reason=e.what();}
  std::error_code error;std::filesystem::remove_all(workspace,error);return p;
 }
+Probe probe_ffmpeg(const Config& c,const std::function<bool()>& cancelled,const ProbePhase& phase,const ProbeTiming& timing){
+ StageTotals totals;const auto main_thread=std::this_thread::get_id();
+ StageTimer startup("startup_probe","none",[&](const StageSample& s){
+  if(timing)timing("STARTUP "+totals.record(s.wall_us,s.controller_cpu_us));
+ },timing_wall_us,thread_cpu_us);
+ return probe_ffmpeg_impl(c,cancelled,phase,[&](const StageSample& s){
+  totals.add(s,std::this_thread::get_id()!=main_thread);if(timing)timing(stage_record(s));
+ });
+}
 Worker::Worker(Config config):config_(std::move(config)),store_(config_.root/"journal.sqlite3"),log_(config_.root/"worker.log"),admission_(config_.budget,config_.max_jobs){
  std::optional<std::string> proven_origin;
  ProtectedPairingSecrets identity(config_.root);
@@ -392,7 +407,8 @@ void Worker::network(){
  {std::lock_guard lock(mutex_);status_="PROBING";}
  try{
   auto probe=probe_ffmpeg(config_,[this]{return stop_||exit_requested_;},
-   [this](std::string phase,unsigned current,unsigned total){probe_status_.phase(std::move(phase),current,total);});
+   [this](std::string phase,unsigned current,unsigned total){probe_status_.phase(std::move(phase),current,total);},
+   [this](const std::string& record){try{log_.write(record);}catch(...){}});
   verified_video_=probe.video;verified_image_=probe.image;verified_media_video_=probe.media_video;verified_media_image_=probe.media_image;
   {
    std::lock_guard lock(mutex_);hardware_profiles_=std::move(probe.profiles);
@@ -513,8 +529,10 @@ void Worker::report_encoder_failure(const adaptive::Profile& profile){
  }catch(...){safe_log("Adaptive demotion could not update its diagnostic profile file");}
 }
 void Worker::execute(std::shared_ptr<TaskData> data){
+ const auto job_started=timing_wall_us();const auto cpu_started=thread_cpu_us();const auto main_thread=std::this_thread::get_id();StageTotals timings;
  const auto& s=data->spec;auto id=s.offer.attempt_id;auto workspace=config_.root/"jobs"/("job-"+id);json::object result{{"protocol",1},{"type","result"},{"attempt_id",id},{"job_id",s.offer.job_id},{"lease_token",data->token}};
  auto cancelled=[&]{return stop_||data->cancel||monotonic_ms()>=data->hard_deadline;};
+ auto timing_sink=[&](const StageSample& sample){timings.add(sample,std::this_thread::get_id()!=main_thread);try{log_.write("JOB "+id+" "+stage_record(sample));}catch(...){}};
  JobOutcome outcome=JobOutcome::succeeded;std::string outcome_reason;
  auto phase=[&](const char* name,std::uint64_t total=0){data->progress.begin(name,monotonic_ms(),total);safe_log("JOB "+id+" STAGE | "+name+" | run "+std::to_string(data->progress.snapshot(monotonic_ms()).run));};
  auto bytes_progress=[&](std::uint64_t bytes){if(cancelled())throw std::runtime_error("Job cancelled or lease expired");data->progress.update(bytes,monotonic_ms());};
@@ -522,8 +540,11 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   {std::lock_guard lock(report_mutex_);report_.placement(id,"cpu");}
   phase("prepare source.bin workspace");
   if(std::filesystem::exists(workspace))throw std::runtime_error("Attempt workspace already exists; refusing unsafe reuse");std::filesystem::create_directories(workspace);
-  Http http;phase("download source.bin",s.input_bytes);http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);
-  phase("verify source.bin sha256",s.input_bytes);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");if(cancelled())throw std::runtime_error("Job cancelled before conversion");
+  Http http;phase("download source.bin",s.input_bytes);
+  {StageTimer timing("download","source.bin",timing_sink,timing_wall_us,thread_cpu_us);http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);}
+  phase("verify source.bin sha256",s.input_bytes);
+  {StageTimer timing("input_hash","source.bin",timing_sink,timing_wall_us,thread_cpu_us);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");}
+  if(cancelled())throw std::runtime_error("Job cancelled before conversion");
   std::optional<std::pair<std::uint32_t,std::uint32_t>> input_dimensions;
   auto convert=[&](const std::vector<std::wstring>& arguments,const std::vector<std::wstring>& cpu_arguments,
                    const std::string& filename,unsigned seconds,bool hardware,std::stop_token pipeline_stop=std::stop_token{}){
@@ -554,7 +575,9 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     const auto encoder_label=use_hardware?adaptive::backend_token(gpu_device->family)+"/"+codec_name+" GPU "+std::to_string(gpu_device->backend_index):std::string("cpu/")+(filename=="feed.mp4"||filename=="optimized.mp4"?codec_name:"image");
     if(!use_hardware&&hardware)safe_log("JOB "+id+" RETRY | "+label+" | "+retry_reason+"; retrying CPU");
     phase(label.c_str());
+    StageTimer timing(filename=="poster.webp"?"poster":"transcode",filename,timing_sink,timing_wall_us,thread_cpu_us,true);
     const auto started=monotonic_ms();auto current=priority_.load();Child child(config_.ffmpeg,encoder_progress_arguments(selected),workspace,s.offer.resources,current);
+    ChildTimingCapture capture(child,&timing);
     {std::lock_guard lock(report_mutex_);report_.placement(id,gpu_device?gpu_device->physical_id:"cpu");}
     auto card_label=gpu_device?status_detail::card_name(gpu_device->name):"cpu";std::replace(card_label.begin(),card_label.end(),' ','_');
     safe_log("JOB "+id+" ENCODER | "+encoder_label+" | file="+filename+" card="+card_label+" pid="+std::to_string(child.process_id())+" device_id="+(gpu_device?gpu_device->stable_id:"cpu")+" physical_id="+(gpu_device?gpu_device->physical_id:"cpu"));
@@ -581,7 +604,8 @@ void Worker::execute(std::shared_ptr<TaskData> data){
       },
      [&](const std::filesystem::path& path){
       if(cancelled()||pipeline_stop.stop_requested())return false;
-      try{run_child_probe(config_.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-xerror",L"-threads",L"1",L"-i",path.wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},s.offer.resources);}catch(const std::exception& e){retry_reason=e.what();throw;}
+      StageTimer timing("validation",filename,timing_sink,timing_wall_us,thread_cpu_us,true);
+      try{run_child_probe(config_.ffmpeg,{L"-nostdin",L"-hide_banner",L"-v",L"info",L"-xerror",L"-threads",L"1",L"-i",path.wstring(),L"-threads",L"1",L"-f",L"null",L"-"},workspace,[&]{return cancelled()||pipeline_stop.stop_requested();},s.offer.resources,nullptr,UINT64_MAX,30000,&timing);}catch(const std::exception& e){retry_reason=e.what();throw;}
       const bool valid=input_dimensions&&adaptive::video_geometry_valid(read_file(workspace/"process.log"),filename=="optimized.mp4"?"hevc":"h264",input_dimensions->first,input_dimensions->second);
       if(!valid)retry_reason="GPU output geometry or codec validation failed";
       return valid;
@@ -595,8 +619,10 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    auto transfer_phase=[&](const std::string& name,std::uint64_t total){data->transfer_progress.begin(name,monotonic_ms(),total);safe_log("JOB "+id+" STAGE | "+name+" | run "+std::to_string(data->transfer_progress.snapshot(monotonic_ms()).run));};
    if(transfer_cancelled())throw std::runtime_error("Job cancelled before transfer");
    auto output=workspace/filename;auto bytes=std::filesystem::file_size(output);if(!bytes||bytes>s.output_max_bytes)throw std::runtime_error("Invalid output size");
-   auto label="verify "+filename+" SHA-256";transfer_phase(label,bytes);auto hash=sha256_file(output,transfer_bytes);
-   label="upload "+filename;transfer_phase(label,bytes);Http transfer_http;transfer_http.upload(url,output,mime,transfer_cancelled,transfer_bytes);
+   auto label="verify "+filename+" SHA-256";transfer_phase(label,bytes);std::string hash;
+   {StageTimer timing("output_hash",filename,timing_sink,timing_wall_us,thread_cpu_us);hash=sha256_file(output,transfer_bytes);}
+   label="upload "+filename;transfer_phase(label,bytes);Http transfer_http;
+   {StageTimer timing("upload",filename,timing_sink,timing_wall_us,thread_cpu_us);transfer_http.upload(url,output,mime,transfer_cancelled,transfer_bytes);}
    data->transfer_progress.finish(true,monotonic_ms());return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
   };
   if(!s.artifacts.empty()){
@@ -606,7 +632,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    const auto has_hardware=std::any_of(applicable_profiles.begin(),applicable_profiles.end(),[](const auto& p){return p.backend!=adaptive::Backend::cpu;});
    if(video&&has_hardware){
     std::optional<std::pair<std::uint32_t,std::uint32_t>> dimensions;
-    try{dimensions=inspect_video_dimensions(config_.ffmpeg,workspace/"source.bin",workspace,cancelled,Resources{s.offer.resources.ram_mb,0,s.offer.resources.scratch_mb,s.offer.resources.cpu_threads});}
+    try{StageTimer timing("input_inspection","source.bin",timing_sink,timing_wall_us,thread_cpu_us,true);dimensions=inspect_video_dimensions(config_.ffmpeg,workspace/"source.bin",workspace,cancelled,Resources{s.offer.resources.ram_mb,0,s.offer.resources.scratch_mb,s.offer.resources.cpu_threads},&timing);}
     catch(const std::exception&){dimensions.reset();}
     input_dimensions=dimensions;
     applicable_profiles.erase(std::remove_if(applicable_profiles.begin(),applicable_profiles.end(),[&](const auto& profile){
@@ -668,6 +694,8 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   }
  }catch(...){safe_log("Could not preserve child diagnostic log");}
  std::filesystem::remove_all(workspace,error);admission_.finish(id);data->progress.finish(result.at("status").as_string()=="succeeded",monotonic_ms());data->done=true;
+ const auto cpu_finished=thread_cpu_us();
+ try{log_.write("JOB "+id+" "+timings.record(timing_wall_us()-job_started,cpu_started&&cpu_finished?std::optional<std::uint64_t>{*cpu_finished-*cpu_started}:std::nullopt));}catch(...){}
  {std::lock_guard lock(report_mutex_);if(report_.finish(id,outcome,outcome_reason,utc_ms(),monotonic_ms())){safe_log(report_.completion());publish_report(config_.root/"worker-history.txt",status_frame(report_.history()));}}
  report_status();
 }

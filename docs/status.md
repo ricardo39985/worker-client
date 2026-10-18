@@ -1,5 +1,11 @@
 # Candidate status — 0.1.2
 
+The measured-optimization work is at its first, timing-only authoring gate. See
+[the GPU performance ledger](../verification/gpu-performance/REPORT.md): portable
+checks passed, Windows/native and real-source RTX 3050 measurements are pending
+explicit PC authorization. Hardware decode and shared decode are not implemented
+yet; the RTX 3070 failure investigation remains independent.
+
 Current worker-console reporting evidence: see
 [the log-content gate ledger](../verification/log-content/REPORT.md) and
 [the reporting contract](worker-console.md).

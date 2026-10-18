@@ -116,6 +116,17 @@ TEST("stopping a contained job terminates both root and descendant"){
  CHECK(WaitForSingleObject(leafHandle.get(),1000)==WAIT_OBJECT_0);
 }
 
+TEST("native timing retains process-tree CPU and root lifetime after drain"){
+ Temp t;Child child(executable_directory()/"ow_test_child.exe",{},t.path,{128,0,16,1},Priority::low);
+ wait_pid(t.path/"root.pid");wait_pid(t.path/"leaf.pid");
+ CHECK(child.timing());CHECK(!child.timing()->root_lifetime_us);
+ child.stop();auto measured=child.timing();CHECK(measured);CHECK(measured->launch_us>0);
+ CHECK(measured->root_lifetime_us);CHECK(*measured->root_lifetime_us>0);
+ child.stop();CHECK(child.timing()->cpu_us==measured->cpu_us);
+ CHECK(child.timing()->root_lifetime_us==measured->root_lifetime_us);
+ CHECK(thread_cpu_us());
+}
+
 TEST("adaptive capacity stays reserved until a cancelled native process tree drains"){
  Temp t;adaptive::Profile gpu{"synthetic-luid","driver","hash",adaptive::Backend::nvidia_nvenc,adaptive::Codec::h264,1,256,512,128,1,50,0,0,true};
  adaptive::Profile cpu{"cpu","","hash",adaptive::Backend::cpu,adaptive::Codec::h264,1,256,0,128,1,20,0,0,true};

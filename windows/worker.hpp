@@ -22,7 +22,8 @@ struct Config {
 Config load_config(const std::filesystem::path& root);
 struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;std::vector<std::string> fallback_notes;};
 using ProbePhase=std::function<void(std::string,unsigned,unsigned)>;
-Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={},const ProbePhase& phase={});
+using ProbeTiming=std::function<void(const std::string&)>;
+Probe probe_ffmpeg(const Config&,const std::function<bool()>& cancelled={},const ProbePhase& phase={},const ProbeTiming& timing={});
 class Worker {
  struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};std::optional<adaptive::Scheduler::Reservation> profile_reservation;std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;};
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};

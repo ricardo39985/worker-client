@@ -1,0 +1,8 @@
+PASS timing separates wall controller CPU child CPU launch and process lifetime
+PASS failed timed work retains its exception and reports incomplete work
+PASS missing child accounting never becomes a measured zero
+PASS timing observer failure cannot fail or replace conversion outcome
+PASS concurrent stage sums are explicitly distinct from job wall time
+PASS one unavailable CPU measurement makes aggregate CPU unavailable
+PASS job CPU includes main thread once plus background CPU and all child trees
+7 contracts, 0 failures

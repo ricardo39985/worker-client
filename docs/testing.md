@@ -1,5 +1,10 @@
 # Test policy and evidence
 
+Stage-timing optimization authoring evidence and the explicit PC approval gate:
+[verification/gpu-performance/REPORT.md](../verification/gpu-performance/REPORT.md).
+Seven timing contracts passed locally; native compilation and real-source GPU
+measurements remain pending. No performance gain is claimed.
+
 Current worker-console reporting evidence: see
 [the log-content gate ledger](../verification/log-content/REPORT.md) and
 [the reporting contract](worker-console.md).
