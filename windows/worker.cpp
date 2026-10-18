@@ -618,7 +618,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     const auto started=monotonic_ms();auto current=priority_.load();Child child(config_.ffmpeg,encoder_progress_arguments(selected),workspace,Resources{child_ram,0,s.offer.resources.scratch_mb,s.offer.resources.cpu_threads},current);
     ChildTimingCapture capture(child,&timing);
     std::string encoder_start;
-    {std::lock_guard lock(report_mutex_);encoder_start=report_.encoder_line(id,encoder_label,filename,gpu_device?gpu_device->physical_id:"cpu",child_ram,readings_,false);}
+    {std::lock_guard lock(report_mutex_);encoder_start=report_.encoder_line(id,encoder_label,filename,gpu_device?gpu_device->physical_id:"cpu",child_ram,readings_,false,gpu_device?gpu_device->name:"cpu");}
     safe_log(encoder_start+" decode="+(std::find(selected.begin(),selected.end(),L"-hwaccel_output_format")!=selected.end()?"cuda":"software")+" scale="+(filename=="poster.webp"?"software":"none")+" pid="+std::to_string(child.process_id())+" device_id="+(gpu_device?gpu_device->stable_id:"cpu")+" physical_id="+(gpu_device?gpu_device->physical_id:"cpu"));
     EncoderProgressFile encoder(workspace/"process.log");
     for(;;){check_gpu(child.process_id());if(cancelled()||pipeline_stop.stop_requested()||monotonic_ms()-started>=static_cast<Tick>(seconds)*1000)throw std::runtime_error("Job cancelled or conversion timed out");if(auto code=child.exit_code()){if(*code){
@@ -631,7 +631,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
     encoder.update(data->progress,monotonic_ms());
     child.stop();
     std::string encoder_done;
-    {std::lock_guard lock(report_mutex_);encoder_done=report_.encoder_line(id,encoder_label,filename,gpu_device?gpu_device->physical_id:"cpu",child_ram,readings_,true);}
+    {std::lock_guard lock(report_mutex_);encoder_done=report_.encoder_line(id,encoder_label,filename,gpu_device?gpu_device->physical_id:"cpu",child_ram,readings_,true,gpu_device?gpu_device->name:"cpu");}
     safe_log(encoder_done);
    };
    if(hardware){

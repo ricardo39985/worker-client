@@ -46,7 +46,7 @@ inline std::string status_frame(const std::vector<ConsoleLine>& lines){std::stri
 // Caller serializes mutation and frame publication. All elapsed values use the
 // supplied monotonic clock; wall clock is used solely for local timestamps.
 class WorkerStatus {
- struct Active {std::string subject,device;std::int64_t wall,mono;std::uint64_t child_budget_mb{};};
+ struct Active {std::string subject,device;std::int64_t wall,mono;std::uint64_t child_budget_mb{};std::string card;};
  struct Last {std::string id,subject,reason;JobOutcome outcome;std::int64_t wall,duration;};
  std::int64_t started_wall_,started_,since_wall_,idle_since_,next_live_{},next_durable_{};
  std::string state_{"paused"},reason_{"starting"},priority_{"unknown"};
@@ -64,14 +64,19 @@ public:
  bool accepting() const{return state_=="accepting";}
  std::string state_line() const{return state_+(reason_.empty()?"":": "+reason_)+" (since "+status_detail::time(since_wall_)+")";}
  void start(const std::string& id,std::string subject,std::int64_t wall,std::int64_t mono){active_.try_emplace(id,Active{std::move(subject),{},wall,mono});dirty_=true;}
- void placement(const std::string& id,std::string device,std::uint64_t budget_mb=0){if(auto it=active_.find(id);it!=active_.end()){it->second.device=std::move(device);it->second.child_budget_mb=budget_mb;dirty_=true;}}
+ void placement(const std::string& id,std::string device,std::uint64_t budget_mb=0){if(auto it=active_.find(id);it!=active_.end()){if(it->second.device!=device)it->second.card.clear();it->second.device=std::move(device);it->second.child_budget_mb=budget_mb;dirty_=true;}}
  // Completion describes the drained encoder, retaining its identity for stats.
  // The next actual encoder launch replaces this reporting-only placement.
  std::string encoder_line(const std::string& id,const std::string& encoder,const std::string& file,
-  const std::string& device,std::uint64_t budget_mb,const StatusReadings& readings,bool done){
+  const std::string& device,std::uint64_t budget_mb,const StatusReadings& readings,bool done,std::string actual_card={}){
   placement(id,device,budget_mb);
-  std::string card=device=="cpu"?"cpu":"unknown";
-  for(const auto& entry:status_detail::cards(readings))if(entry.id==device)card=entry.name;
+  std::string card=status_detail::card_name(std::move(actual_card));
+  if(card.empty())if(auto it=active_.find(id);it!=active_.end())card=it->second.card;
+  if(card.empty()){
+   card=device=="cpu"?"cpu":"unknown";
+   for(const auto& entry:status_detail::cards(readings))if(entry.id==device)card=entry.name;
+  }
+  if(auto it=active_.find(id);it!=active_.end())it->second.card=card;
   card=status_detail::safe(std::move(card));std::replace(card.begin(),card.end(),' ','_');
   return "JOB "+id+" ENCODER | "+encoder+(done?" done":"")+" | file="+file+" card="+card+
    (done?"":" child_budget_MiB="+std::to_string(budget_mb));
@@ -90,7 +95,7 @@ public:
  }
  std::string machine(const StatusReadings& r) const{
   std::string text="running "+std::to_string(active_.size());auto cards=status_detail::cards(r);
-  for(const auto& [id,a]:active_){std::string name=a.device.empty()?"unknown":a.device=="cpu"?"cpu":"unknown";for(const auto& c:cards)if(c.id==a.device)name=c.name;text+=" | job "+id+"="+status_detail::safe(name);if(a.child_budget_mb)text+=" child budget "+std::to_string(a.child_budget_mb)+" MiB";}
+  for(const auto& [id,a]:active_){std::string name=a.card.empty()?(a.device.empty()?"unknown":a.device=="cpu"?"cpu":"unknown"):a.card;if(a.card.empty())for(const auto& c:cards)if(c.id==a.device)name=c.name;text+=" | job "+id+"="+status_detail::safe(name);if(a.child_budget_mb)text+=" child budget "+std::to_string(a.child_budget_mb)+" MiB";}
   return text+" | ram free "+status_detail::gb(r.ram_bytes,true)+" | scratch free "+status_detail::gb(r.scratch_bytes,false);
  }
  std::vector<ConsoleLine> table(std::int64_t wall,std::int64_t mono,const StatusReadings& r) const{

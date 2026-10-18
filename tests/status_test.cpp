@@ -182,3 +182,12 @@ TEST("CPU encoder including a retry reports CPU at start completion and in stats
  CHECK(s.summary(wall+1000,1000,r).find("job retry-job=cpu child budget 512 MiB")!=std::string::npos);
  CHECK(s.summary(wall+1000,1000,r).find("job retry-job=3050")==std::string::npos);
 }
+
+TEST("encoder reporting retains actual child card when display inventory is unavailable"){
+ ow::WorkerStatus s(wall,0);s.start("actual-job","video renditions",wall,0);auto r=readings();r.cards.reset();
+ auto start=s.encoder_line("actual-job","nvenc/hevc GPU 1","optimized.mp4","pci-b",768,r,false,"NVIDIA GeForce RTX 3050");
+ CHECK(start.find("file=optimized.mp4 card=RTX_3050")!=std::string::npos);
+ auto done=s.encoder_line("actual-job","nvenc/hevc GPU 1","optimized.mp4","pci-b",768,r,true,"NVIDIA GeForce RTX 3050");
+ CHECK(done.find("file=optimized.mp4 card=RTX_3050")!=std::string::npos);
+ CHECK(s.summary(wall+1000,1000,r).find("job actual-job=RTX 3050 child budget 768 MiB")!=std::string::npos);
+}

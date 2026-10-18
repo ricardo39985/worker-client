@@ -1,0 +1,23 @@
+[ 16%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/status_test.cpp: In function ‘void test_186()’:
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/status_test.cpp:188:27: error: no matching function for call to ‘ow::WorkerStatus::encoder_line(const char [11], const char [17], const char [14], const char [6], int, ow::StatusReadings&, bool, const char [24])’
+  188 |  auto start=s.encoder_line("actual-job","nvenc/hevc GPU 1","optimized.mp4","pci-b",768,r,false,"NVIDIA GeForce RTX 3050");
+      |             ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/status_test.cpp:188:27: note: there is 1 candidate
+In file included from /home/rick/Downloads/worker-client-gpu-on-logs/tests/status_test.cpp:2:
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/worker_status.hpp:70:14: note: candidate 1: ‘std::string ow::WorkerStatus::encoder_line(const std::string&, const std::string&, const std::string&, const std::string&, uint64_t, const ow::StatusReadings&, bool)’
+   70 |  std::string encoder_line(const std::string& id,const std::string& encoder,const std::string& file,
+      |              ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/worker_status.hpp:70:14: note: candidate expects 7 arguments, 8 provided
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/status_test.cpp:190:26: error: no matching function for call to ‘ow::WorkerStatus::encoder_line(const char [11], const char [17], const char [14], const char [6], int, ow::StatusReadings&, bool, const char [24])’
+  190 |  auto done=s.encoder_line("actual-job","nvenc/hevc GPU 1","optimized.mp4","pci-b",768,r,true,"NVIDIA GeForce RTX 3050");
+      |            ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/tests/status_test.cpp:190:26: note: there is 1 candidate
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/worker_status.hpp:70:14: note: candidate 1: ‘std::string ow::WorkerStatus::encoder_line(const std::string&, const std::string&, const std::string&, const std::string&, uint64_t, const ow::StatusReadings&, bool)’
+   70 |  std::string encoder_line(const std::string& id,const std::string& encoder,const std::string& file,
+      |              ^~~~~~~~~~~~
+/home/rick/Downloads/worker-client-gpu-on-logs/include/ow/worker_status.hpp:70:14: note: candidate expects 7 arguments, 8 provided
+gmake[3]: *** [CMakeFiles/ow_progress_contract_tests.dir/build.make:121: CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o] Error 1
+gmake[2]: *** [CMakeFiles/Makefile2:1294: CMakeFiles/ow_progress_contract_tests.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:1301: CMakeFiles/ow_progress_contract_tests.dir/rule] Error 2
+gmake: *** [Makefile:602: ow_progress_contract_tests] Error 2
