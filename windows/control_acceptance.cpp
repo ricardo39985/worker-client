@@ -29,7 +29,7 @@ json::object OfflineMediaHarness::control_acceptance(Config config,bool restart)
  const auto source=config.root/"synthetic-source.mp4";
  fixture_child(config,config.root/"generate",{L"-nostdin",L"-v",L"error",L"-y",L"-f",L"lavfi",L"-i",L"testsrc2=size=1280x720:rate=30",L"-frames:v",L"3000",L"-c:v",L"libx264",L"-preset",L"ultrafast",L"-threads",L"1",source.wstring()});
  if(restart){
-  {Store journal(config.root/"journal.sqlite3");}(void)public_pairing_key(config.root/"pairing-key.dpapi");auto record=json::serialize(json::object{{"coordinator_url",config.coordinator},{"approval_code","fixture-not-an-account"}});auto protected_record=protect(record);atomic_write(config.root/"credential.dpapi",protected_record);validate_headless_identity(config.root);config.headless=true;
+  {Store journal(config.root/"journal.sqlite3");}(void)public_pairing_key(config.root/"pairing-key.dpapi");auto record=json::serialize(json::object{{"coordinator_url",config.coordinator},{"worker_id","fixture-worker"},{"token","fixture-not-an-account"}});auto protected_record=protect(record);atomic_write(config.root/"credential.dpapi",protected_record);validate_headless_identity(config.root);config.headless=true;
  }
  std::mutex children_mutex;std::map<std::string,Handle> children;
  config.observe_child=[&](const std::string& id,std::uint32_t pid){std::lock_guard lock(children_mutex);children.emplace(id,Handle(OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,pid)));};
