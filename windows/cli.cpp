@@ -9,13 +9,13 @@ void human(const ow::json::object& response){
 }
 }
 int wmain(int argc,wchar_t** argv){
- using namespace ow;using namespace ow::win;bool json_output=false,offline=false;
+ using namespace ow;using namespace ow::win;bool json_output=false,offline=false;const char* phase="arguments";
  try{
   std::filesystem::path selected_root;
   require(SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32|LOAD_LIBRARY_SEARCH_USER_DIRS),"Restrict DLL search");std::vector<std::string> args;
   for(int i=1;i<argc;++i){auto a=utf8(argv[i]);if(a=="--help"||a=="-h"){std::cout<<control_help();return 0;}if(a=="--json")json_output=true;else if(a=="--offline")offline=true;else if(a=="--data-root"){if(++i>=argc)throw std::runtime_error("Missing live target root");selected_root=argv[i];if(!selected_root.is_absolute()||selected_root.wstring().starts_with(L"\\\\"))throw std::runtime_error("Absolute local root required");}else args.push_back(std::move(a));}
-  std::string input;if(args==std::vector<std::string>{"config","set","--stdin"}){for(char c;std::cin.get(c);){if(input.size()>=64000)throw std::runtime_error("Configuration input exceeds limit");input+=c;}}
-  auto request=control_request(args,input);auto root=selected_root.empty()?data_directory():selected_root;if(offline&&!selected_root.empty())throw std::runtime_error("Offline writes only support the installed owner root");json::object result;
+  phase="stdin";std::string input;if(args==std::vector<std::string>{"config","set","--stdin"}){for(char c;std::cin.get(c);){if(input.size()>=64000)throw std::runtime_error("Configuration input exceeds limit");input+=c;}}
+  phase="request";auto request=control_request(args,input);auto root=selected_root.empty()?data_directory():selected_root;if(offline&&!selected_root.empty())throw std::runtime_error("Offline writes only support the installed owner root");json::object result;
   if(offline){
    if(elevated())throw ControlFailure(4,"Offline configuration requires the normal owner token");
    for(const auto& path:{root,root/"worker.json",root/"instance.lock",root/"journal.sqlite3",root/"journal.sqlite3-wal",root/"journal.sqlite3-shm"}){const auto attributes=GetFileAttributesW(path.c_str());if(attributes!=INVALID_FILE_ATTRIBUTES&&(attributes&FILE_ATTRIBUTE_REPARSE_POINT))throw ControlFailure(4,"Reparse-point state path denied");}
@@ -26,5 +26,5 @@ int wmain(int argc,wchar_t** argv){
   }
   if(json_output)std::cout<<json::serialize(result)<<'\n';else human(result);return static_cast<int>(number(result,"exit_code",5));
  }catch(const ControlFailure& e){json::object result{{"schema",1},{"ok",false},{"exit_code",e.exit_code},{"error","Owner access or atomic persistence failure"}};if(json_output)std::cout<<json::serialize(result)<<'\n';else human(result);return e.exit_code;
- }catch(const std::exception&){json::object result{{"schema",1},{"ok",false},{"exit_code",2},{"error","Command rejected. Use --help/config list; check configuration and permissions. No credentials are accepted."}};if(json_output)std::cout<<json::serialize(result)<<'\n';else human(result);return 2;}
+ }catch(const std::exception&){json::object result{{"schema",1},{"ok",false},{"exit_code",2},{"error","Command rejected. Use --help/config list; check configuration and permissions. No credentials are accepted."},{"phase",phase}};if(json_output)std::cout<<json::serialize(result)<<'\n';else human(result);return 2;}
 }

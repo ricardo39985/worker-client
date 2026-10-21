@@ -59,6 +59,11 @@ TEST("unsafe fields values endpoints and command arguments fail closed") {
  auto request=control_request({"status"});CHECK(validate_control_request(request)==request);request["path"]="../worker.json";THROWS(validate_control_request(request));
  THROWS(validate_control_request(json::object{{"schema",1},{"command","config"},{"action","get"},{"name","../credential.dpapi"}}));
 }
+TEST("PowerShell UTF8 BOM configuration input preserves atomic typed JSON") {
+ auto request=control_request({"config","set","--stdin"},std::string("\xef\xbb\xbf")+"{\"operator.priority\":\"low\",\"limits.cpu_threads\":4}");
+ CHECK(request.at("values").as_object().at("operator.priority")=="low");
+ THROWS(control_request({"config","set","--stdin"},std::string("\xff\xfe")+"{}"));
+}
 TEST("coordinator scope changes cannot bypass setup archival or partially change preferences") {
  auto doc=control_defaults();doc["coordinator_url"]="https://example.test";
  ControlSettings settings(doc,[](const json::object&){});

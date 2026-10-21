@@ -33,11 +33,28 @@ $ctl = Join-Path $current.directory 'OrganizerWorkerCtl.exe'
 & $ctl --json status
 ```
 
-From Linux, use an existing authorized SSH alias and PowerShell on the remote
-host; send the JSON through stdin rather than interpolating it into a remote
-command. For example, after assigning `$ctl` as above inside the remote session,
-`'{"operator.priority":"low"}' | & $ctl config set --stdin` needs no GUI.
-No SSH configuration, firewall, account or credential changes are required.
+From Linux, use your existing authorized SSH alias (replace `danny-worker`);
+the quoted heredoc prevents the local shell from expanding PowerShell variables.
+This is an example for a separately approved upgraded installation, not a command
+executed by this task:
+
+```sh
+ssh danny-worker powershell.exe -NoLogo -NoProfile -NonInteractive -Command - <<'POWERSHELL'
+$root = Join-Path $env:LOCALAPPDATA 'OrganizerWorker'
+$current = Get-Content -LiteralPath (Join-Path $root 'current.json') -Raw | ConvertFrom-Json
+$ctl = Join-Path $current.directory 'OrganizerWorkerCtl.exe'
+& $ctl --json status
+exit $LASTEXITCODE
+POWERSHELL
+```
+
+In that remote PowerShell script, an explicit configuration assignment can use
+`@{'operator.priority'='low'} | ConvertTo-Json -Compress | & $ctl config set --stdin`.
+The JSON reaches the native client on its own stdin, not as an interpolated
+command/credential argument. For non-ASCII JSON in Windows PowerShell 5.1, set
+`$OutputEncoding = New-Object System.Text.UTF8Encoding($false)` in that session
+(or use JSON Unicode escapes); the client consumes/emits UTF-8. No SSH
+configuration, firewall, account or credential changes are required.
 
 `--json` emits one JSON object with local-control `schema:1`, `ok`, `exit_code`
 and, for successful live operations, a fresh `observed_at_utc_ms` observation.

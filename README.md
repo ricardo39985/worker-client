@@ -132,8 +132,19 @@ from the same owner's PowerShell/SSH session without a GUI: `--json status`,
 all existing priority/preferences, limits, viewer/log/history and exit controls.
 Cold settings report restart required and never restart jobs automatically.
 See the [complete command/settings reference and SSH examples](docs/cli.md).
-Older installed workers have no control IPC; this source change does not install
-or resume either PC. Native verification gates are recorded in
+For an already-upgraded, running worker (same owner, including an SSH PowerShell
+session):
+
+```powershell
+$root = Join-Path $env:LOCALAPPDATA 'OrganizerWorker'
+$current = Get-Content -LiteralPath (Join-Path $root 'current.json') -Raw | ConvertFrom-Json
+$ctl = Join-Path $current.directory 'OrganizerWorkerCtl.exe'
+& $ctl --json status
+# Explicit operator controls: & $ctl pause ; & $ctl drain ; & $ctl resume
+```
+
+The reference also provides a quoted Linux SSH heredoc example. Older installed
+workers have no control IPC; this source change does not install or resume either PC. Native verification gates are recorded in
 [the CLI ledger](verification/cli/REPORT.md).
 
 ## Maintenance and limits

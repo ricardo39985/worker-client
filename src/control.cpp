@@ -48,7 +48,7 @@ json::object control_request(const std::vector<std::string>& a,const std::string
   r["action"]=a[1];
   if(a[1]=="list"&&a.size()==2)return r;
   if(a[1]=="get"&&a.size()==3){known(a[2]);r["name"]=a[2];return r;}
-  if(a[1]=="set"&&a.size()==3&&a[2]=="--stdin"){r["values"]=parse(input,64*1024).as_object();return r;}
+  if(a[1]=="set"&&a.size()==3&&a[2]=="--stdin"){std::string_view bytes=input;if(bytes.starts_with("\xef\xbb\xbf"))bytes.remove_prefix(3);r["values"]=parse(bytes,64*1024).as_object();return r;}
   if(a[1]=="reset"&&a.size()>2){json::array names;for(std::size_t i=2;i<a.size();++i){known(a[i]);names.emplace_back(a[i]);}r["names"]=std::move(names);return r;}
  }else if(a[0]=="exit"&&a.size()==2&&(a[1]=="drain"||a[1]=="stop")){r["mode"]=a[1];return r;}
  else if(a.size()==1&&(a[0]=="status"||a[0]=="pause"||a[0]=="drain"||a[0]=="resume"||a[0]=="console"||a[0]=="logs"||a[0]=="history"||a[0]=="auth"))return r;

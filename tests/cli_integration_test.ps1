@@ -34,7 +34,7 @@ try {
     if ((Call-Cli -Arguments @('resume')).paused) { throw 'Repeated resume toggled pause' }
     $inputJson='{"operator.priority":"low","limits.cpu_threads":4}'
     $changed=$inputJson | & $ctl --json --data-root $root config set --stdin
-    if ($LASTEXITCODE -ne 0) { throw 'Atomic config set failed' }
+    if ($LASTEXITCODE -ne 0) { $changed | Write-Output;throw 'Atomic config set failed' }
     $changed | Write-Output
     $setting=(Call-Cli -Arguments @('config','get','limits.cpu_threads')).settings[0]
     if ($setting.current -ne 4 -or $setting.effective -ne 2 -or -not $setting.restart_required) { throw 'Cold-setting semantics incorrect' }
