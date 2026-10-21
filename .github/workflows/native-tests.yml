@@ -40,11 +40,12 @@ jobs:
           if (-not (Get-Command ctest.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CTest' }
           Invoke-WebRequest -Uri $lock.boost.url -OutFile boost.tar.gz -UseBasicParsing
           if ((Get-FileHash boost.tar.gz -Algorithm SHA256).Hash -ine $lock.boost.sha256) { throw 'Dependency checksum mismatch' }
-          # Same reviewed archive/hash and production setup extraction policy;
-          # upstream human docs/tests are not worker headers or our CTest gates.
+          # Exact locked archive/hash; Boost.JSON is built from src.hpp. Extract
+          # ALL production headers +license, not upstream docs/tests/examples.
+          # Every worker CTest/security/media gate below remains unchanged.
           $tar=Join-Path $env:SystemRoot 'System32/tar.exe'
           if(-not (Test-Path $tar)){throw 'Hosted runner missing Windows archive tool'}
-          & $tar -xzf boost.tar.gz --exclude '*/doc/*' --exclude '*/doc' --exclude '*/test/*' --exclude '*/tests/*'
+          & $tar -xzf boost.tar.gz ($lock.boost.directory+'/boost') ($lock.boost.directory+'/LICENSE_1_0.txt')
           if ($LASTEXITCODE -ne 0) { throw 'Dependency extraction failed' }
           $boost=Join-Path $PWD $lock.boost.directory
           cmake -S . -B build-ci -G 'Visual Studio 17 2022' -A x64 "-DOW_BOOST_ROOT=$boost" "-DOW_SOURCE_REVISION=$env:GITHUB_SHA" -DBUILD_TESTING=ON
