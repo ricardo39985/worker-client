@@ -122,6 +122,9 @@ if(WIN32)
  endif()
  add_executable(OrganizerWorker WIN32 windows/tray.cpp)
  target_link_libraries(OrganizerWorker PRIVATE ow_windows)
+ add_custom_command(TARGET OrganizerWorker POST_BUILD
+   COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/docs/cli.md" "$<TARGET_FILE_DIR:OrganizerWorker>/cli.md"
+   COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${OW_LAUNCHER_OUTPUT}" "$<TARGET_FILE_DIR:OrganizerWorker>/start-headless.ps1")
  add_executable(OrganizerWorkerTray WIN32 windows/attached_tray.cpp)
  target_link_libraries(OrganizerWorkerTray PRIVATE ow_windows)
  add_executable(OrganizerWorkerConsole windows/console.cpp)

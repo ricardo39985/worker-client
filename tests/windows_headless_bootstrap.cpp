@@ -1,5 +1,6 @@
 #include "platform.hpp"
 #include "owner_state.hpp"
+#include "bootstrap_anchor.hpp"
 #include "control_pipe.hpp"
 #include "ow/control.hpp"
 #include "ow/protocol.hpp"
@@ -9,21 +10,24 @@ namespace ow::win {
 namespace {
 void check(bool v,const char* s){if(!v)throw std::runtime_error(s);}
 struct Engine {
- std::filesystem::path root;Handle process;
- Engine(const std::filesystem::path& exe,const std::filesystem::path& r,std::wstring args=L"--headless"):root(r){
-  auto line=quote_windows_argument(exe.wstring())+L" "+args;auto desktop=current_desktop_path();STARTUPINFOW si{};si.cb=sizeof(si);si.lpDesktop=desktop.data();PROCESS_INFORMATION pi{};require(CreateProcessW(exe.c_str(),line.data(),nullptr,nullptr,FALSE,CREATE_NO_WINDOW,nullptr,nullptr,&si,&pi),"Launch actual headless image");process.reset(pi.hProcess);CloseHandle(pi.hThread);
+ std::filesystem::path root,diagnostic;Handle process;
+ Engine(const std::filesystem::path& exe,const std::filesystem::path& r,std::wstring args=L"--headless",bool capture=false):root(r){
+  auto line=quote_windows_argument(exe.wstring())+L" "+args;auto desktop=current_desktop_path();STARTUPINFOEXW si{};si.StartupInfo.cb=sizeof(STARTUPINFOW);si.StartupInfo.lpDesktop=desktop.data();Handle output,input;std::vector<unsigned char> attributes;DWORD flags=CREATE_NO_WINDOW;
+  if(capture){diagnostic=root/"protected-bootstrap.log";SECURITY_ATTRIBUTES sa{sizeof(sa),nullptr,TRUE};output.reset(CreateFileW(diagnostic.c_str(),GENERIC_WRITE,FILE_SHARE_READ,&sa,CREATE_NEW,FILE_ATTRIBUTE_NORMAL,nullptr));input.reset(CreateFileW(L"NUL",GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,&sa,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr));check(output&&input,"Open OWNED synthetic bootstrap diagnostics");si.StartupInfo.cb=sizeof(si);si.StartupInfo.dwFlags=STARTF_USESTDHANDLES;si.StartupInfo.hStdInput=input.get();si.StartupInfo.hStdOutput=si.StartupInfo.hStdError=output.get();SIZE_T bytes{};InitializeProcThreadAttributeList(nullptr,1,0,&bytes);attributes.resize(bytes);si.lpAttributeList=reinterpret_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(attributes.data());require(InitializeProcThreadAttributeList(si.lpAttributeList,1,0,&bytes),"Initialize fixture safe handles");HANDLE handles[]={input.get(),output.get()};if(!UpdateProcThreadAttribute(si.lpAttributeList,0,PROC_THREAD_ATTRIBUTE_HANDLE_LIST,handles,sizeof(handles),nullptr,nullptr)){DeleteProcThreadAttributeList(si.lpAttributeList);fail("Restrict fixture diagnostic handles");}flags|=EXTENDED_STARTUPINFO_PRESENT;}
+  PROCESS_INFORMATION pi{};auto created=CreateProcessW(exe.c_str(),line.data(),nullptr,nullptr,capture,flags,nullptr,nullptr,&si.StartupInfo,&pi);auto error=GetLastError();if(si.lpAttributeList)DeleteProcThreadAttributeList(si.lpAttributeList);if(!created)fail("Launch actual headless image",error);process.reset(pi.hProcess);CloseHandle(pi.hThread);
   check(process_owner_sid(process.get())==process_owner_sid(GetCurrentProcess())&&!process_elevated(process.get()),"Actual bootstrap child must retain normal existing owner");
  }
  ~Engine(){if(process&&WaitForSingleObject(process.get(),0)==WAIT_TIMEOUT){try{control_call(root,control_request({"exit","drain"}));}catch(...){}WaitForSingleObject(process.get(),15000);}}
  DWORD outcome(){check(WaitForSingleObject(process.get(),30000)==WAIT_OBJECT_0,"Headless exit failed bounded no-UI check");DWORD c{};require(GetExitCodeProcess(process.get(),&c),"Read actual engine exit");return c;}
- json::object ready(){const auto end=monotonic_ms()+180000;json::object last;std::string error;for(;;){check(WaitForSingleObject(process.get(),0)==WAIT_TIMEOUT,"Actual headless bootstrap unexpectedly exited");try{last=control_call(root,control_request({"status"}));if(last.at("headless")==true&&last.at("identity_ready")==true&&last.at("token_elevated")==false&&last.at("processing_ready")==true)return last;}catch(const std::exception& e){error=e.what();}if((last.if_contains("processing_ready")&&last.at("processing_ready")==false)||monotonic_ms()>=end){std::string details="Actual headless CPU probe/readiness deadline; no fake fallback. LastControl="+json::serialize(last)+" LastError="+error;try{details+=" OWNED_SYNTHETIC_BOOTSTRAP_LOG="+read_file(root/"worker.log",65536);}catch(...){}throw std::runtime_error(details);}Sleep(100);}}
+ json::object ready(){const auto end=monotonic_ms()+180000;json::object last;std::string error;for(;;){if(WaitForSingleObject(process.get(),0)!=WAIT_TIMEOUT){std::string detail="Actual headless bootstrap unexpectedly exited";if(!diagnostic.empty())detail+=" OWNED_PROTECTED_BOOTSTRAP_LOG="+read_file(diagnostic,65536);throw std::runtime_error(detail);}try{last=control_call(root,control_request({"status"}));if(last.at("headless")==true&&last.at("identity_ready")==true&&last.at("token_elevated")==false&&last.at("processing_ready")==true)return last;}catch(const std::exception& e){error=e.what();}if((last.if_contains("processing_ready")&&last.at("processing_ready")==false)||monotonic_ms()>=end){std::string details="Actual headless CPU probe/readiness deadline; no fake fallback. LastControl="+json::serialize(last)+" LastError="+error;try{details+=" OWNED_SYNTHETIC_BOOTSTRAP_LOG="+read_file(root/"worker.log",65536);}catch(...){}throw std::runtime_error(details);}Sleep(100);}}
 };
 }
-void headless_bootstrap_acceptance(const std::filesystem::path& ffmpeg,const std::string& digest){
+void headless_bootstrap_acceptance(const std::filesystem::path& ffmpeg,const std::string& digest,const std::string& enrollment_id){
  require_normal_owner();const auto root=data_directory();check(!std::filesystem::exists(root),"Default owner root exists: bootstrap fixture NEVER changes an existing installation");
  const auto source=executable_directory()/"OrganizerWorker.exe";
  {Engine missing(source,root);check(missing.outcome()==4,"Missing owner state must reject without UI");check(!std::filesystem::exists(root),"Failed headless bootstrap created owner state");}
  auto sddl=L"D:P(A;OICI;FA;;;"+wide(process_owner_sid(GetCurrentProcess()))+L")(A;OICI;FA;;;SY)";PSECURITY_DESCRIPTOR sd{};require(ConvertStringSecurityDescriptorToSecurityDescriptorW(sddl.c_str(),SDDL_REVISION_1,&sd,nullptr),"Bootstrap fixture ACL");SECURITY_ATTRIBUTES sa{sizeof(sa),sd,FALSE};BOOL made=CreateDirectoryW(root.c_str(),&sa);LocalFree(sd);require(made,"Create new disposable profile root");
+ struct OwnedRoot {std::filesystem::path path;~OwnedRoot(){std::error_code error;std::filesystem::remove_all(path,error);}} owned_root{root};
  const auto version=root/"versions/bootstrap-fixture";std::filesystem::create_directories(version);const auto exe=version/"OrganizerWorker.exe";std::filesystem::copy_file(source,exe);atomic_write(root/"current.json",json::serialize(json::object{{"schema",1},{"directory",utf8(version.wstring())},{"sha256",sha256_file(exe)}}));
  auto doc=control_defaults();doc["coordinator_url"]="https://fixture.invalid";doc["storage_hosts"]=json::array{"fixture.invalid"};doc["ffmpeg_path"]=utf8(ffmpeg.wstring());doc["ffmpeg_sha256"]=digest;doc["limits"]=json::object{{"ram_mb",2048},{"reserve_ram_mb",0},{"scratch_mb",4096},{"cpu_threads",2},{"max_jobs",2},{"vram_mb",0}};atomic_write(root/"worker.json",json::serialize(doc));atomic_write(root/"instance.lock","");
  {Store journal(root/"journal.sqlite3");journal.set("coordinator_origin","https://fixture.invalid");}(void)public_pairing_key(root/"pairing-key.dpapi");const auto key=sha256_file(root/"pairing-key.dpapi");const auto record=protect(json::serialize(json::object{{"coordinator_url","https://fixture.invalid"},{"access_token","fixture-not-an-account"}}));atomic_write(root/"credential.dpapi","corrupt-fixture-dpapi");
@@ -39,6 +43,17 @@ void headless_bootstrap_acceptance(const std::filesystem::path& ffmpeg,const std
  {Engine replacement(exe,root);auto s=probe(replacement);expect(number(s,"pid",UINT32_MAX)!=first_pid&&!s.at("paused").as_bool(),"Actual replacement lost PID or durable admission intent");expect(sha256_file(root/"pairing-key.dpapi")==key,"Replacement rotated identity");control_call(root,control_request({"exit","drain"}));expect(replacement.outcome()==0,"Explicit drain exit must not schedule a restart");}
  try{Engine malformed(exe,root,L"--headless invalid-option");expect(malformed.outcome()==2,"Malformed headless launch must reject with2/no UI");}catch(const std::exception& e){failures.push_back(std::string("MALFORMED_HEADLESS_NO_UI_FAILED: ")+e.what());}
  if(!failures.empty()){std::string combined="BOOTSTRAP_GATES_FAILED (NONE waived): ";for(const auto& failure:failures)combined+=failure+" | ";throw std::runtime_error(combined);}
+ // Actual protected bootstrap entry, not just its parser/helpers: Windows still
+ // has NOT registered any Password task or performed a fresh logon/boot here.
+ std::filesystem::create_directory(root/"unattended");atomic_write(root/"unattended/enrollment.json",json::serialize(json::object{{"schema",1},{"state","enrolled"},{"owner_sid",process_owner_sid(GetCurrentProcess())},{"task_name","OrganizerWorker-Unattended-"+process_owner_sid(GetCurrentProcess())},{"enrollment_id",enrollment_id}}));
+ wchar_t system[32768]{};check(GetSystemDirectoryW(system,32768)!=0,"Native system task host missing");auto host=std::filesystem::path(system)/"WindowsPowerShell/v1.0/powershell.exe";
+ {Engine wrapper(host,root,L"-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "+quote_windows_argument(bootstrap_launcher_path().wstring()),true);
+  auto status=wrapper.ready();auto old_pid=static_cast<DWORD>(number(status,"pid",UINT32_MAX));Handle old(OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,old_pid));check(static_cast<bool>(old),"Pin actual protected worker");check(process_owner_sid(old.get())==process_owner_sid(GetCurrentProcess())&&!process_elevated(old.get()),"Protected worker changed identity/elevation");
+  control_call(root,control_request({"pause"}));control_call(root,control_request({"restart"})); // request socket/caller gone, parent wrapper must continue
+  const auto deadline=monotonic_ms()+180000;bool replaced=false;
+  while(monotonic_ms()<deadline){check(WaitForSingleObject(wrapper.process.get(),0)==WAIT_TIMEOUT,"Protected wrapper ended on intentional restart");try{auto current=control_call(root,control_request({"status"}));if(number(current,"pid",UINT32_MAX)!=old_pid){check(WaitForSingleObject(old.get(),0)==WAIT_OBJECT_0,"Replacement began before exact old process exited");replaced=true;break;}}catch(const ControlUnavailable&){}Sleep(100);}
+  check(replaced,"No caller-independent protected replacement");auto current=wrapper.ready();check(current.at("paused")==true&&sha256_file(root/"pairing-key.dpapi")==key,"Protected restart lost durable pause/identity");control_call(root,control_request({"exit","drain"}));check(wrapper.outcome()==0,"Protected drain must end wrapper, not restart it");
+ }
  // Current profile/cached-DPAPI synthetic acceptance, NOT fresh-boot enrollment.
 }
 }

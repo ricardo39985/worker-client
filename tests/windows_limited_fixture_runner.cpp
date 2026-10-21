@@ -1,5 +1,6 @@
 #include "platform.hpp"
 #include "control_pipe.hpp"
+#include "bootstrap_anchor.hpp"
 #include "ow/protocol.hpp"
 #include <sddl.h>
 #include <iostream>
@@ -9,6 +10,18 @@
 // original elevation flag. Verify actual TokenElevation; never mask/waive it.
 // https://learn.microsoft.com/windows/win32/api/securitybaseapi/nf-securitybaseapi-createrestrictedtoken
 namespace {
+// CI-only protected metadata, no credential/task/account or engine-as-admin.
+struct FixtureAnchor {
+ std::filesystem::path stage,base;std::string id;bool installed{};
+ FixtureAnchor(){using namespace ow;using namespace ow::win;
+  if(std::filesystem::exists(data_directory()))throw std::runtime_error("Existing default owner installation: fixture refuses all mutation");
+  base=bootstrap_anchor_directory();if(std::filesystem::exists(base))throw std::runtime_error("Existing protected enrollment: fixture refuses all mutation");id=random_hex(16);
+  stage=std::filesystem::temp_directory_path()/("ow-bootstrap-code-"+random_hex(12));auto sddl=L"D:P(A;OICI;FA;;;"+wide(process_owner_sid(GetCurrentProcess()))+L")(A;OICI;FA;;;SY)";PSECURITY_DESCRIPTOR sd{};require(ConvertStringSecurityDescriptorToSecurityDescriptorW(sddl.c_str(),SDDL_REVISION_1,&sd,nullptr),"Test-only code staging ACL");SECURITY_ATTRIBUTES attributes{sizeof(attributes),sd,FALSE};auto made=CreateDirectoryW(stage.c_str(),&attributes);LocalFree(sd);require(made,"Create NEW private code stage");
+  try{for(const auto* name:{"OrganizerWorker.exe","OrganizerWorkerConsole.exe","OrganizerWorkerDoctor.exe","OrganizerWorkerCtl.exe","OrganizerWorkerTray.exe","cli.md","start-headless.ps1"})std::filesystem::copy_file(executable_directory()/name,stage/name);install_bootstrap_anchor(stage,id);installed=true;}
+  catch(...){std::error_code error;std::filesystem::remove_all(stage,error);throw;}
+ }
+ ~FixtureAnchor(){using namespace ow;using namespace ow::win;std::error_code error;if(installed){try{auto policy=read_bootstrap_policy();if(text(policy,"enrollment_id",32)==id)std::filesystem::remove_all(base,error);}catch(...){}}std::filesystem::remove_all(stage,error);}
+};
 struct FixtureStation {
  HWINSTA original=GetProcessWindowStation(),station{};HDESK original_desktop=GetThreadDesktop(GetCurrentThreadId()),desktop{};std::wstring name,qualified;
  FixtureStation(){using namespace ow::win;name=L"OrganizerWorker-Fixture-"+wide(random_hex(12));qualified=name+L"\\Default";
@@ -34,7 +47,7 @@ int wmain(int argc,wchar_t** argv){using namespace ow;using namespace ow::win;tr
  if(*GetSidSubAuthority(integrity,*GetSidSubAuthorityCount(integrity)-1)>SECURITY_MANDATORY_MEDIUM_RID){PSID medium{};require(ConvertStringSidToSidW(L"S-1-16-8192",&medium),"Describe medium integrity");TOKEN_MANDATORY_LABEL label{{medium,SE_GROUP_INTEGRITY}};auto lowered=SetTokenInformation(token.get(),TokenIntegrityLevel,&label,sizeof(label)+GetLengthSid(medium));LocalFree(medium);require(lowered,"LOWER fixture integrity");}
  require(GetTokenInformation(token.get(),TokenIntegrityLevel,il_info.data(),static_cast<DWORD>(il_info.size()),&required),"Verify actual lowered fixture integrity");integrity=reinterpret_cast<TOKEN_MANDATORY_LABEL*>(il_info.data())->Label.Sid;auto actual_rid=*GetSidSubAuthority(integrity,*GetSidSubAuthorityCount(integrity)-1);if(actual_rid>SECURITY_MANDATORY_MEDIUM_RID)throw std::runtime_error("Actual test token remains above normal integrity");std::cout<<"TEST_ONLY_ACTUAL_LOWERED_INTEGRITY_RID="<<actual_rid<<"\n";
  // Never modify existing desktops. Explicit CI-only context, NOT a fresh logon.
- FixtureStation station;auto exe=executable_directory()/"ow_unattended_fixture.exe";std::wstring command=quote_windows_argument(exe.wstring());for(int i=1;i<argc;i++)command+=L" "+quote_windows_argument(argv[i]);STARTUPINFOW si{};si.cb=sizeof(si);si.lpDesktop=station.qualified.data();PROCESS_INFORMATION pi{};
+ FixtureAnchor anchor;FixtureStation station;auto exe=executable_directory()/"ow_unattended_fixture.exe";std::wstring command=quote_windows_argument(exe.wstring());for(int i=1;i<argc;i++)command+=L" "+quote_windows_argument(argv[i]);command+=L" "+quote_windows_argument(wide(anchor.id));STARTUPINFOW si{};si.cb=sizeof(si);si.lpDesktop=station.qualified.data();PROCESS_INFORMATION pi{};
  require(CreateProcessAsUserW(token.get(),exe.c_str(),command.data(),nullptr,nullptr,FALSE,0,nullptr,nullptr,&si,&pi),"Launch same-owner limited fixture");Handle process(pi.hProcess),thread(pi.hThread);if(process_owner_sid(process.get())!=process_owner_sid(GetCurrentProcess())||process_elevated(process.get()))throw std::runtime_error("Actual child owner/elevation mismatch");
  if(WaitForSingleObject(process.get(),600000)!=WAIT_OBJECT_0)throw std::runtime_error("Fixture still pending at acceptance deadline; no forced process termination");DWORD code{};require(GetExitCodeProcess(process.get(),&code),"Read fixture outcome");return static_cast<int>(code);
  }catch(const std::exception& e){std::cerr<<"LIMITED_FIXTURE_REJECTED: "<<e.what()<<"\n";return 1;}}
