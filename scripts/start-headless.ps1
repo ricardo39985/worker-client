@@ -32,6 +32,7 @@ namespace OrganizerWorker {
   [DllImport("kernel32.dll")]static extern IntPtr LocalFree(IntPtr memory);
   [DllImport("kernel32.dll",SetLastError=true)]static extern bool CloseHandle(IntPtr handle);
   static void Check(bool success){if(!success)throw new Win32Exception(Marshal.GetLastWin32Error());}
+  static void Check(bool success,string operation){if(!success)throw new Win32Exception(Marshal.GetLastWin32Error(),operation);}
   public BootstrapLease(string sid,string root,bool adminOnly){user=sid;scope=Path.GetFullPath(root).TrimEnd('\\');machine=adminOnly;}
   bool Trusted(string sid){return (!machine&&sid==user)||sid=="S-1-5-18"||sid=="S-1-5-32-544"||sid=="S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464";}
   void Permissions(SafeFileHandle file,bool ancestor,string path){
@@ -85,12 +86,12 @@ namespace OrganizerWorker {
   [DllImport("advapi32.dll",SetLastError=true)]static extern bool GetTokenInformation(IntPtr token,int kind,IntPtr buffer,uint bytes,out uint needed);
   public static bool WaitOwnedProcess(ulong inherited,uint expectedPid,ulong expectedStarted,string sid,string root,string[] approved){
    IntPtr process=new IntPtr(unchecked((long)inherited));if(inherited==0||expectedPid==0||expectedStarted==0||GetProcessId(process)!=expectedPid)throw new InvalidOperationException("Exact inherited process pin differs");
-   Time created,exited,kernel,userTime;Check(GetProcessTimes(process,out created,out exited,out kernel,out userTime));if((((ulong)created.high<<32)|created.low)!=expectedStarted)throw new InvalidOperationException("Pinned process creation differs");
-   IntPtr token;Check(OpenProcessToken(process,8,out token));
+   Time created,exited,kernel,userTime;Check(GetProcessTimes(process,out created,out exited,out kernel,out userTime),"Read pinned process creation time");if((((ulong)created.high<<32)|created.low)!=expectedStarted)throw new InvalidOperationException("Pinned process creation differs");
+   IntPtr token;Check(OpenProcessToken(process,8,out token),"Open pinned process token");
    try{uint needed;GetTokenInformation(token,1,IntPtr.Zero,0,out needed);if(needed==0||needed>8192)throw new InvalidOperationException("Owner token unavailable");IntPtr data=Marshal.AllocHGlobal((int)needed);
-    try{Check(GetTokenInformation(token,1,data,needed,out needed));if(new SecurityIdentifier(Marshal.ReadIntPtr(data)).Value!=sid)throw new InvalidOperationException("Pinned process owner differs");Check(GetTokenInformation(token,20,data,needed,out needed));if(Marshal.ReadInt32(data)!=0)throw new InvalidOperationException("No elevated legacy controller");}finally{Marshal.FreeHGlobal(data);}
+    try{Check(GetTokenInformation(token,1,data,needed,out needed),"Read pinned process owner token");if(new SecurityIdentifier(Marshal.ReadIntPtr(data)).Value!=sid)throw new InvalidOperationException("Pinned process owner differs");IntPtr elevation=Marshal.AllocHGlobal(4);try{uint returned;Check(GetTokenInformation(token,20,elevation,4,out returned),"Read pinned process elevation");if(returned!=4||Marshal.ReadInt32(elevation)!=0)throw new InvalidOperationException("No elevated legacy controller");}finally{Marshal.FreeHGlobal(elevation);}}finally{Marshal.FreeHGlobal(data);}
    }finally{CloseHandle(token);}
-   var image=new StringBuilder(32768);uint length=(uint)image.Capacity;Check(QueryFullProcessImageNameW(process,0,image,ref length));string path=Path.GetFullPath(image.ToString());string prefix=Path.GetFullPath(Path.Combine(root,"versions"))+"\\";
+   var image=new StringBuilder(32768);uint length=(uint)image.Capacity;Check(QueryFullProcessImageNameW(process,0,image,ref length),"Read pinned process image");string path=Path.GetFullPath(image.ToString());string prefix=Path.GetFullPath(Path.Combine(root,"versions"))+"\\";
    if(!path.StartsWith(prefix,StringComparison.OrdinalIgnoreCase)||!String.Equals(Path.GetFileName(path),"OrganizerWorker.exe",StringComparison.OrdinalIgnoreCase))throw new InvalidOperationException("Pinned process is not the installed worker");
    using(var lease=new BootstrapLease(sid,root,false)){string hash=Hash(lease.OpenFile(path));if(Array.IndexOf(approved,hash)<0)throw new InvalidOperationException("Pinned image not approved");uint result=WaitForSingleObject(process,1800000);if(result==0)return true;if(result==258)return false;throw new Win32Exception(Marshal.GetLastWin32Error());}
   }
