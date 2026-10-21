@@ -65,3 +65,19 @@ TEST("native idle control client times out without blocking later authenticated 
 TEST("native unavailable control is bounded and never creates worker state"){
  Workspace t;auto start=monotonic_ms();THROWS(control_call(t.root,control_request({"resume"})));CHECK(monotonic_ms()-start<4000);CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));
 }
+
+TEST("native restart fences admission but preserves durable desired pause across replacement"){
+ Workspace t;
+ {Worker worker(load_config(t.root));ControlPipe pipe(t.root,[&](const json::object& r){return worker.control(r);});
+  auto r=control_call(t.root,json::object{{"schema",1},{"command","restart"}});CHECK(r.at("ok")==true);CHECK(r.at("exiting")==true);CHECK(r.at("paused")==true);
+  auto doc=parse(read_file(t.root/"worker.json")).as_object();CHECK(doc.at("operator").as_object().at("paused")==false);
+  CHECK(control_call(t.root,json::object{{"schema",1},{"command","restart"}}).at("ok")==true);
+  CHECK(worker.ready_to_exit());
+ }
+ Worker replacement(load_config(t.root));CHECK(!replacement.paused());
+}
+TEST("native restart refuses to exit before matching durable result acknowledgment"){
+ Workspace t;Worker worker(load_config(t.root));Store journal(t.root/"journal.sqlite3");CHECK(journal.reserve("restart-attempt","restart-job","synthetic-fingerprint"));CHECK(journal.start("restart-attempt"));journal.result("restart-attempt","synthetic-result");
+ auto r=worker.control(json::object{{"schema",1},{"command","restart"}});CHECK(r.at("exiting")==true);CHECK(!worker.ready_to_exit());
+ auto p=journal.pending().front();CHECK(!journal.acknowledge(p.sequence,"wrong-attempt"));CHECK(!worker.ready_to_exit());CHECK(journal.acknowledge(p.sequence,p.attempt_id));CHECK(worker.ready_to_exit());
+}
