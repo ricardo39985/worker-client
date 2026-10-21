@@ -32,7 +32,7 @@ jobs:
           $ErrorActionPreference='Stop'
           if('${{ inputs.package_worker }}' -eq 'true'){throw 'Focused TDD cannot create release artifacts'}
           $failed=@()
-          foreach($script in @('bootstrap_preexec_test.ps1','launcher_lifetime_test.ps1','candidate_approval_test.ps1','continuation_policy_test.ps1','continuation_task_test.ps1')){
+          foreach($script in @('bootstrap_preexec_test.ps1','launcher_lifetime_test.ps1','candidate_approval_test.ps1','continuation_policy_test.ps1','continuation_task_test.ps1','enrolled_setup_test.ps1')){
             try{& (Join-Path './tests' $script) -SourceRoot $PWD}catch{Write-Output ($script+': '+$_.Exception.Message);$failed+=$script}
           }
           if($failed.Count){throw ('FOCUSED_POLICY_BEHAVIOR_FAILED: '+($failed -join ', '))}

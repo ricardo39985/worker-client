@@ -170,3 +170,8 @@ function Convert-WorkerToolchainInstances([string]$Json) {
         $instance
     }
 }
+
+function Assert-WorkerEnrolledSetupVersion {
+    param([string]$Root,[string]$Version)
+    # Baseline existing full setup publishes any compiled version.
+}
