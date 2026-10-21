@@ -32,7 +32,11 @@ Child::Child(const std::filesystem::path& exe,const std::vector<std::wstring>& a
  SECURITY_ATTRIBUTES sa{sizeof(sa),nullptr,TRUE};
  Handle output(CreateFileW((workspace/"process.log").c_str(),GENERIC_WRITE,FILE_SHARE_READ,nullptr,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr));if(!output)fail("Open job output");require(SetHandleInformation(output.get(),HANDLE_FLAG_INHERIT,HANDLE_FLAG_INHERIT),"Permit output inheritance");
  Handle input(CreateFileW(L"NUL",GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,&sa,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr));if(!input)fail("Open null input");
- STARTUPINFOEXW si{};si.StartupInfo.cb=sizeof(si);si.StartupInfo.dwFlags=STARTF_USESTDHANDLES;si.StartupInfo.hStdInput=input.get();si.StartupInfo.hStdOutput=si.StartupInfo.hStdError=output.get();
+ // The safe handle list intentionally excludes desktop handles. Without an
+ // explicit current desktop, USER32 falls back to the logon default station,
+ // which need not be accessible/appropriate for a LIMITED noninteractive job.
+ auto desktop=current_desktop_path();
+ STARTUPINFOEXW si{};si.StartupInfo.cb=sizeof(si);si.StartupInfo.lpDesktop=desktop.data();si.StartupInfo.dwFlags=STARTF_USESTDHANDLES;si.StartupInfo.hStdInput=input.get();si.StartupInfo.hStdOutput=si.StartupInfo.hStdError=output.get();
  SIZE_T n=0;InitializeProcThreadAttributeList(nullptr,1,0,&n);std::vector<unsigned char> buffer(n);si.lpAttributeList=reinterpret_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(buffer.data());require(InitializeProcThreadAttributeList(si.lpAttributeList,1,0,&n),"Initialize safe handle inheritance");
  HANDLE handles[]={input.get(),output.get()};
  try{require(UpdateProcThreadAttribute(si.lpAttributeList,0,PROC_THREAD_ATTRIBUTE_HANDLE_LIST,handles,sizeof(handles),nullptr,nullptr),"Restrict inherited handles");std::wstring command=quote_windows_argument(exe.wstring());for(const auto& arg:args)command+=L" "+quote_windows_argument(arg);if(command.size()>30000)throw std::runtime_error("Command line exceeds limit");PROCESS_INFORMATION pi{};

@@ -1,5 +1,13 @@
 # Organizer Windows worker — 0.1.2 source candidate
 
+Current unattended-owner implementation: [secure enrollment, architecture and
+separate acceptance gates](docs/unattended-owner.md). Existing-owner limited
+headless engine, optional attached tray and bounded `start/restart` are candidate
+source, NOT a verified before-login installation. No boot/logoff/lock or owner
+session disruption is authorized. The prior CLI was deployed on both PCs;
+see [exact prior release receipts](verification/cli/RELEASE.md). Historical
+module-specific snapshots below do not override those current ledgers.
+
 Worker-flex stage-concurrency checkpoint: [implementation, enforced/sampled limits and gates](verification/worker-flex-r2/REPORT.md).
 Linux Release and both-PC MSVC/native suites pass. Throughput, foreground impact,
 exact-asset replay and rollout acceptance remain separate open gates. The operator
@@ -124,7 +132,7 @@ live telemetry when available, otherwise a conservative declared-VRAM budget.
 Unproven mapping or no usable VRAM budget keeps that GPU profile disabled while
 measured CPU profiles remain available. There is no inference adapter.
 
-## Scriptable local control (source candidate)
+## Scriptable local control
 
 The new `OrganizerWorkerCtl.exe` controls the already-running updated controller
 from the same owner's PowerShell/SSH session without a GUI: `--json status`,
@@ -144,7 +152,9 @@ $ctl = Join-Path $current.directory 'OrganizerWorkerCtl.exe'
 ```
 
 The reference also provides a quoted Linux SSH heredoc example. Older installed
-workers have no control IPC; this source change does not install or resume either PC. Native verification gates are recorded in
+pre-CLI workers have no control IPC. The prior CLI release is installed on both
+PCs; the new unattended implementation does not change those live workers.
+Native verification gates are recorded in
 [the CLI ledger](verification/cli/REPORT.md).
 
 ## Maintenance and limits

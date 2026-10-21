@@ -1,5 +1,19 @@
 # Candidate status — 0.1.2
 
+## Current unattended-owner candidate
+
+[Architecture, local secure enrollment and acceptance](unattended-owner.md).
+Prior product529/CLI is installed on both PCs (see the final CLI release receipts),
+but new headless owner-task enrollment, new artifact installation and genuine
+before-owner-login hardware/DPAPI/TLS acceptance are NOT established. Owner-away:
+no reboot/logoff/lock/shutdown/suspend/session disconnect or production lifecycle
+experiment. Both existing sshd services independently verified Automatic/Running
+with the pinned key; no SSH configuration/restart was needed. SSH is not worker
+readiness. Read [current verification ledger](../verification/unattended/REPORT.md)
+for exact source/test gates; retain red runs, never treat a successful task submit
+or processing_ready=false as ready. Historical snapshots below are not current
+unattended or production-job claims.
+
 Local CLI candidate: [reference/parity matrix](cli.md),
 [gate ledger](../verification/cli/REPORT.md),
 [unverified acceptance](../verification/cli/acceptance.md).

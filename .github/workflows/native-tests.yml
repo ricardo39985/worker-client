@@ -6,6 +6,10 @@ on:
         description: "Run synthetic restart with the already reviewed GPL FFmpeg lock (no production accounts/jobs)"
         type: boolean
         default: false
+      package_worker:
+        description: "After ALL media/security gates, retain code-only exact-source artifact; NO install/release/deploy"
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -20,6 +24,7 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference='Stop'
+          if('${{ inputs.package_worker }}' -eq 'true' -and '${{ inputs.run_unattended_media }}' -ne 'true'){throw 'Artifact preparation requires the complete native media/security gates'}
           Get-ChildItem scripts,tests -Filter *.ps1 | ForEach-Object {
             $tokens=$null; $errors=$null
             [System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors) | Out-Null
@@ -38,7 +43,7 @@ jobs:
           cmake -E tar xzf boost.tar.gz
           if ($LASTEXITCODE -ne 0) { throw 'Dependency extraction failed' }
           $boost=Join-Path $PWD $lock.boost.directory
-          cmake -S . -B build-ci -G 'Visual Studio 17 2022' -A x64 "-DOW_BOOST_ROOT=$boost" -DBUILD_TESTING=ON
+          cmake -S . -B build-ci -G 'Visual Studio 17 2022' -A x64 "-DOW_BOOST_ROOT=$boost" "-DOW_SOURCE_REVISION=$env:GITHUB_SHA" -DBUILD_TESTING=ON
           if ($LASTEXITCODE -ne 0) { throw 'Native configure failed' }
           cmake --build build-ci --config Release --parallel 2
           if ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }
@@ -67,5 +72,61 @@ jobs:
           # compatibility from the subsequent actual LIMITED noninteractive test.
           & $converter -hide_banner -version | Select-Object -First 1
           if($LASTEXITCODE){throw 'Approved converter cannot initialize on this Windows baseline'}
-          & ./tests/unattended_media_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release') -ApprovedFFmpeg $converter -ApprovedSha256 $lock.ffmpeg.sha256
+          & ./tests/unattended_media_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release') -ApprovedFFmpeg $converter -ApprovedSha256 $lock.ffmpeg.sha256 -ReportPath (Join-Path $PWD 'build-ci/unattended-acceptance.json')
+      - name: Prepare exact-source code-only package (never install)
+        if: ${{ success() && inputs.package_worker && inputs.run_unattended_media }}
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          if((git rev-parse HEAD) -cne $env:GITHUB_SHA){throw 'Source revision mismatch'}
+          git diff --quiet; if($LASTEXITCODE){throw 'Tracked source changed during build'}
+          $tree=(git rev-parse 'HEAD^{tree}').Trim()
+          $proof=Get-Content build-ci/unattended-acceptance.json -Raw|ConvertFrom-Json
+          if($proof.build_revision -cne $env:GITHUB_SHA -or -not $proof.actual_bootstrap_verified -or -not $proof.noninteractive_window_station -or $proof.real_coordinator){throw 'Exact binary/context media proof missing'}
+          $installed=Join-Path $PWD 'build-ci/package-install'
+          cmake --install build-ci --config Release --prefix $installed
+          if($LASTEXITCODE){throw 'Verified install inventory failed'}
+          $upload=Join-Path $PWD 'build-ci/code-upload';New-Item $upload -ItemType Directory -ErrorAction Stop|Out-Null
+          $payload=Join-Path $upload 'payload'
+          $result=(& python scripts/package_worker.py --input $installed --output $payload --revision $env:GITHUB_SHA --tree $tree)-join "`n"
+          if($LASTEXITCODE){throw 'Code-only publication failed'}
+          $meta=$result|ConvertFrom-Json
+          . ./scripts/worker-package.ps1
+          Read-WorkerValidatedPackage $payload $meta.package_manifest_sha256|Out-Null
+          $lock=Get-Content config/dependencies.lock.json -Raw|ConvertFrom-Json
+          Copy-Item (Join-Path $lock.boost.directory 'LICENSE_1_0.txt') (Join-Path $upload 'Boost-LICENSE_1_0.txt')
+          Copy-Item THIRD_PARTY.md (Join-Path $upload 'THIRD_PARTY.md')
+          Copy-Item build-ci/unattended-acceptance.json (Join-Path $upload 'unattended-acceptance.json')
+          $archive=Join-Path $upload ('source-'+$env:GITHUB_SHA+'.zip')
+          git archive --format=zip --prefix=worker-client/ --output=$archive HEAD
+          if($LASTEXITCODE){throw 'Exact source archive failed'}
+          $receipt=[ordered]@{schema=1;revision=$env:GITHUB_SHA;source_tree=$tree;package_manifest_sha256=$meta.package_manifest_sha256;source_archive_sha256=(Get-FileHash $archive -Algorithm SHA256).Hash.ToLowerInvariant();files=$meta.files;native_contracts='all registered passed';foreign_owner='actual denial/forged zero-byte passed';synthetic_media='actual limited owner/noninteractive bootstrap and child/ACK passed';password_task_registration=$false;cold_boot_verified=$false;production_jobs_tested=$false;installed_on_pcs=$false}
+          $receipt|ConvertTo-Json -Depth 8|Set-Content (Join-Path $upload 'build-receipt.json') -Encoding UTF8
+          $receipt|ConvertTo-Json -Depth 8
+          if(@(Get-ChildItem -LiteralPath $upload -Recurse -Force|Where-Object {$_.Attributes -band [IO.FileAttributes]::ReparsePoint}).Count){throw 'No reparse object may enter code artifact'}
+      - name: Retain code-only verified artifact, no production or profile data
+        if: ${{ success() && inputs.package_worker && inputs.run_unattended_media }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2, reviewed immutable pin
+        with:
+          name: worker-owner-${{ github.sha }}-${{ github.run_id }}
+          path: |
+            build-ci/code-upload/payload/OrganizerWorker.exe
+            build-ci/code-upload/payload/OrganizerWorkerConsole.exe
+            build-ci/code-upload/payload/OrganizerWorkerDoctor.exe
+            build-ci/code-upload/payload/OrganizerWorkerCtl.exe
+            build-ci/code-upload/payload/OrganizerWorkerTray.exe
+            build-ci/code-upload/payload/cli.md
+            build-ci/code-upload/payload/start-headless.ps1
+            build-ci/code-upload/payload/package.json
+            build-ci/code-upload/payload/source-revision.txt
+            build-ci/code-upload/Boost-LICENSE_1_0.txt
+            build-ci/code-upload/THIRD_PARTY.md
+            build-ci/code-upload/unattended-acceptance.json
+            build-ci/code-upload/source-${{ github.sha }}.zip
+            build-ci/code-upload/build-receipt.json
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
 # Deliberately no push schedule, release, deployment, signing or production secrets.

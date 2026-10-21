@@ -7,6 +7,7 @@ import tempfile
 
 cmake, module, source = sys.argv[1:]
 canonical = pathlib.Path(source).read_bytes().replace(b"\r\n", b"\n")
+canonical += b"\n# literal ${UNMODIFIED} @UNMODIFIED@\n#cmakedefine UNMODIFIED\n"
 with tempfile.TemporaryDirectory(prefix="ow-launcher-package-") as tmp:
     root = pathlib.Path(tmp)
     outputs = []

@@ -27,6 +27,11 @@
     "Shell32",
     "User32"
   ],
+  "ci": {
+    "checkout": "11bd71901bbe5b1630ceea73d27597364c9af683",
+    "upload_artifact": "ea165f8d65b6e75b540449e92b4886f43607fa02",
+    "upload_artifact_review": "verification/unattended/CI-DEPENDENCIES.md"
+  },
   "models": [],
   "ffmpeg": {
     "version": "n9.0.2-22-g46d8f462ee",

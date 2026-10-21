@@ -19,6 +19,10 @@ std::int64_t utc_ms(){return std::chrono::duration_cast<std::chrono::millisecond
 std::filesystem::path data_directory(){PWSTR p=nullptr;HRESULT hr=SHGetKnownFolderPath(FOLDERID_LocalAppData,0,nullptr,&p);if(FAILED(hr))fail("Locate LocalAppData",static_cast<DWORD>(hr));std::filesystem::path out=std::filesystem::path(p)/"OrganizerWorker";CoTaskMemFree(p);return out;}
 std::filesystem::path executable_path(){std::wstring p(32768,0);DWORD n=GetModuleFileNameW(nullptr,p.data(),static_cast<DWORD>(p.size()));if(!n||n>=p.size())fail("Locate executable");p.resize(n);return std::filesystem::path(p);}
 std::filesystem::path executable_directory(){return executable_path().parent_path();}
+std::wstring current_desktop_path(){
+ auto name=[](HANDLE object){DWORD bytes{};GetUserObjectInformationW(object,UOI_NAME,nullptr,0,&bytes);if(!bytes||bytes>65536)throw std::runtime_error("Current process desktop is unavailable");std::wstring value(bytes/sizeof(wchar_t),0);require(GetUserObjectInformationW(object,UOI_NAME,value.data(),bytes,&bytes),"Read current desktop identity");value.resize(wcslen(value.c_str()));return value;};
+ return name(GetProcessWindowStation())+L"\\"+name(GetThreadDesktop(GetCurrentThreadId()));
+}
 std::string read_file(const std::filesystem::path& p,std::size_t limit){
  std::ifstream f(p,std::ios::binary);if(!f)throw std::runtime_error("Cannot read local file");f.seekg(0,std::ios::end);auto size=f.tellg();if(size<0||static_cast<std::uint64_t>(size)>limit)throw std::runtime_error("Local file exceeds size limit");f.seekg(0);std::string out(static_cast<std::size_t>(size),0);if(!out.empty()&&!f.read(out.data(),static_cast<std::streamsize>(out.size())))throw std::runtime_error("Local file read failed");return out;
 }
