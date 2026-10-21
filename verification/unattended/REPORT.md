@@ -30,14 +30,27 @@ commit that follows contains no product-code change, so rerun final-source gates
 and code-only artifact after this evidence-ledger edit before treating it as a
 release candidate. Fresh independent security review remains open.
 
+## Current code-only package gate
+
+Run `39693119523` at `bbeca99` again passed MSVC build, 24/24 CTest, foreign-owner
+security and actual synthetic media acceptance, but the exact-source package step
+failed because the acceptance receipt omitted the already runtime-checked
+`noninteractive_window_station` boolean. No artifact was produced. Log65 retains
+the real package-policy failure. Test fixture `63340ac` now records that property
+only after `windows_unattended_fixture.cpp` verifies the actual station flags.
+Workflow `39695571198` is the full native/media/package rerun at `63340ac`; wait
+for exact outcome before claiming an artifact. Linux Release/sanitizers are 8/8
+at `bbeca99`; only Windows test-fixture receipt code changed at `63340ac`.
+
 ## Owner-only / production gates remain closed
 
 No secure local owner password/task enrollment, fresh zero-interactive-user boot,
 physical GPU capability probe, real coordinator/TLS job, PC install, reboot or
-merge has occurred. No release artifact is currently claimed. Merge requires
-fresh independent review and all final-source gates; PC activity requires the
-owner present and separate explicit authorization. Do not infer successful
-production integration from this synthetic fixture or protocol documents.
+merge has occurred. No release artifact is currently claimed. Fresh independent
+security review is still open. Merge requires that review and all exact-final-source
+gates; PC activity requires the owner present and separate explicit authorization.
+Do not infer successful production integration from this synthetic fixture or
+protocol documents.
 
 ## Retained causal failures and actual greens
 

@@ -7,7 +7,13 @@ Prior product529/CLI is installed on both PCs (see the final CLI release receipt
 but new headless owner-task enrollment, new artifact installation and genuine
 before-owner-login hardware/DPAPI/TLS acceptance are NOT established. Owner-away:
 no reboot/logoff/lock/shutdown/suspend/session disconnect or production lifecycle
-experiment. Both existing sshd services independently verified Automatic/Running
+experiment. Exact source head `f9edbb0` passed Linux Release and full C++
+ASan/UBSan8/8 each, MSVC/24 native contracts, foreign-owner/forged-server zero-byte
+security, and actual restricted-owner current-profile DPAPI/headless restart and
+synthetic typed media/lease/ACK acceptance. This is not fresh boot, actual
+Password-task registration, TLS/coordinator or production-job proof. The code-only
+package step is being rerun after its metadata proof fix; no artifact is yet
+claimed. Both existing sshd services independently verified Automatic/Running
 with the pinned key; no SSH configuration/restart was needed. SSH is not worker
 readiness. Read [current verification ledger](../verification/unattended/REPORT.md)
 for exact source/test gates; retain red runs, never treat a successful task submit
