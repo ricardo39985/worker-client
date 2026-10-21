@@ -11,6 +11,10 @@ struct Host:LifecycleHost {
  Tick now() override{return clock;}void wait() override{clock+=10;}
 };
 }
+TEST("connected false-processing or wrong execution context is not unattended readiness") {
+ CHECK(!unattended_ready(true,false,true,true,true,true));CHECK(!unattended_ready(true,{},true,true,true,true));CHECK(!unattended_ready(false,true,true,true,true,true));
+ CHECK(!unattended_ready(true,true,false,true,true,true));CHECK(!unattended_ready(true,true,true,false,true,true));CHECK(!unattended_ready(true,true,true,true,false,true));CHECK(!unattended_ready(true,true,true,true,true,false));CHECK(unattended_ready(true,true,true,true,true,true));
+}
 TEST("start is idempotent and waits genuine readiness not task submission") {
  Host h;auto s=run_lifecycle(h,false,200);CHECK(h.starts==1);CHECK(s.pid==43);CHECK(s.ready);CHECK(h.clock>=40);
  auto again=run_lifecycle(h,false,200);CHECK(h.starts==1);CHECK(again.pid==43);

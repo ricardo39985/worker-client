@@ -2,6 +2,8 @@
 #include "worker.hpp"
 #include "control_pipe.hpp"
 #include "headless.hpp"
+#include "owner_state.hpp"
+#include <sddl.h>
 #include <future>
 using namespace ow;using namespace ow::win;
 namespace {
@@ -65,6 +67,10 @@ TEST("native idle control client times out without blocking later authenticated 
 }
 TEST("native headless bootstrap fails closed without owner identity and never creates pairing or journal"){
  Workspace t;const auto before=read_file(t.root/"worker.json");CHECK(run_headless(t.root)==4);CHECK(read_file(t.root/"worker.json")==before);CHECK(!std::filesystem::exists(t.root/"credential.dpapi"));CHECK(!std::filesystem::exists(t.root/"pairing-key.dpapi"));CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));
+}
+TEST("native unattended state refuses broad write grants and absent keys never create an identity"){
+ Workspace t;const auto key=t.root/"absent-key.dpapi";THROWS(existing_public_pairing_key(key));CHECK(!std::filesystem::exists(key));
+ auto sddl=L"D:P(A;OICI;FA;;;"+wide(process_owner_sid(GetCurrentProcess()))+L")(A;OICI;FA;;;WD)";PSECURITY_DESCRIPTOR sd{};require(ConvertStringSecurityDescriptorToSecurityDescriptorW(sddl.c_str(),SDDL_REVISION_1,&sd,nullptr),"Fixture DACL");BOOL ok=SetFileSecurityW(t.root.c_str(),DACL_SECURITY_INFORMATION|PROTECTED_DACL_SECURITY_INFORMATION,sd);LocalFree(sd);CHECK(ok);THROWS(verify_owner_state_path(t.root));
 }
 TEST("native unavailable control is bounded and never creates worker state"){
  Workspace t;auto start=monotonic_ms();THROWS(control_call(t.root,control_request({"resume"})));CHECK(monotonic_ms()-start<4000);CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));

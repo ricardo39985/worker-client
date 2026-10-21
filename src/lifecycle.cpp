@@ -1,6 +1,7 @@
 #include "ow/lifecycle.hpp"
 #include <stdexcept>
 namespace ow {
+bool unattended_ready(bool connected,std::optional<bool> processing,bool headless,bool identity,bool expected_owner,bool non_elevated){return connected&&processing.value_or(false)&&headless&&identity&&expected_owner&&non_elevated;}
 bool restart_quiescent(std::size_t running,std::size_t admitted,std::uint64_t outbox){return running==0&&admitted==0&&outbox==0;}
 LifecycleStatus run_lifecycle(LifecycleHost& h,bool restart,Tick timeout){
  if(timeout<1||timeout>1800000)throw std::runtime_error("Lifecycle wait must be bounded to 1..1800000 milliseconds");

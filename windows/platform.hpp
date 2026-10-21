@@ -37,10 +37,11 @@ void publish_runtime_ready(const std::filesystem::path&);
 void clear_runtime_ready(const std::filesystem::path&) noexcept;
 std::string sha256_file(const std::filesystem::path&,const std::function<void(std::uint64_t)>& progress={});
 std::string protect(const std::string&);std::string unprotect(const std::string&);
+std::string existing_public_pairing_key(const std::filesystem::path&);
 std::string public_pairing_key(const std::filesystem::path& private_file);
 std::string sign_pairing_challenge(const std::filesystem::path& private_file,const std::string& challenge);
 Resources available_resources(const std::filesystem::path&,std::uint64_t reserve_mb);
-bool elevated();
+bool elevated();bool process_elevated(HANDLE process);
 class Log {
  std::filesystem::path path_;std::mutex mutex_;Handle file_;
  void open();

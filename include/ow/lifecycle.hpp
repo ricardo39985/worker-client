@@ -15,6 +15,7 @@ struct LifecycleHost {
  virtual Tick now()=0;
  virtual void wait()=0;
 };
+bool unattended_ready(bool connected,std::optional<bool> processing,bool headless,bool identity,bool expected_owner,bool non_elevated);
 LifecycleStatus run_lifecycle(LifecycleHost&,bool restart,Tick timeout);
 bool restart_quiescent(std::size_t running,std::size_t admitted,std::uint64_t outbox);
 enum class TaskLogon {password,s4u,interactive,service};
