@@ -10,7 +10,7 @@ bool completed(HANDLE pipe,OVERLAPPED& ov,DWORD& bytes,const std::atomic_bool* s
  for(;;){if((stop&&*stop)||monotonic_ms()>=deadline){CancelIoEx(pipe,&ov);GetOverlappedResult(pipe,&ov,&bytes,TRUE);return false;}auto wait=WaitForSingleObject(ov.hEvent,50);if(wait==WAIT_OBJECT_0)return GetOverlappedResult(pipe,&ov,&bytes,FALSE)!=FALSE;if(wait!=WAIT_TIMEOUT)return false;}
 }
 std::string exchange(HANDLE pipe,const std::string* output,const std::atomic_bool* stop){
- Handle event(CreateEventW(nullptr,TRUE,FALSE,nullptr));if(!event)fail("Create control event");OVERLAPPED ov{};ov.hEvent=event.get();DWORD bytes{};std::array<char,65536> buffer{};
+ Handle event(CreateEventW(nullptr,TRUE,FALSE,nullptr));if(!event)fail("Create control event");OVERLAPPED ov{};ov.hEvent=event.get();DWORD bytes{};std::vector<char> buffer(output?0:control_frame_limit);
  BOOL ok=output?WriteFile(pipe,output->data(),static_cast<DWORD>(output->size()),&bytes,&ov):ReadFile(pipe,buffer.data(),static_cast<DWORD>(buffer.size()),&bytes,&ov);
  if(!ok&&(GetLastError()!=ERROR_IO_PENDING||!completed(pipe,ov,bytes,stop,monotonic_ms()+2000)))throw std::runtime_error("Control unavailable or timed out");
  if(output){if(bytes!=output->size())throw std::runtime_error("Short control write");return {};}
@@ -35,7 +35,7 @@ std::wstring control_pipe_name(const std::filesystem::path& root){
 }
 ControlPipe::ControlPipe(const std::filesystem::path& root,std::function<json::object(const json::object&)> handler){
  const auto owner=process_owner_sid(GetCurrentProcess());const auto sddl=L"D:P(A;;GA;;;"+wide(owner)+L")";PSECURITY_DESCRIPTOR sd{};require(ConvertStringSecurityDescriptorToSecurityDescriptorW(sddl.c_str(),SDDL_REVISION_1,&sd,nullptr),"Build owner-only pipe ACL");SECURITY_ATTRIBUTES sa{sizeof(sa),sd,FALSE};
- pipe_.reset(CreateNamedPipeW(control_pipe_name(root).c_str(),PIPE_ACCESS_DUPLEX|FILE_FLAG_OVERLAPPED|FILE_FLAG_FIRST_PIPE_INSTANCE,PIPE_TYPE_MESSAGE|PIPE_READMODE_MESSAGE|PIPE_WAIT|PIPE_REJECT_REMOTE_CLIENTS,1,65536,65536,2000,&sa));LocalFree(sd);if(!pipe_)fail("Create owner control pipe");
+ pipe_.reset(CreateNamedPipeW(control_pipe_name(root).c_str(),PIPE_ACCESS_DUPLEX|FILE_FLAG_OVERLAPPED|FILE_FLAG_FIRST_PIPE_INSTANCE,PIPE_TYPE_MESSAGE|PIPE_READMODE_MESSAGE|PIPE_WAIT|PIPE_REJECT_REMOTE_CLIENTS,1,static_cast<DWORD>(control_frame_limit),static_cast<DWORD>(control_frame_limit),2000,&sa));LocalFree(sd);if(!pipe_)fail("Create owner control pipe");
  thread_=std::jthread([this,owner,handler=std::move(handler)]{
   while(!stop_){
    Handle event(CreateEventW(nullptr,TRUE,FALSE,nullptr));if(!event)return;OVERLAPPED ov{};ov.hEvent=event.get();DWORD bytes{};bool connected=ConnectNamedPipe(pipe_.get(),&ov)!=FALSE;
@@ -44,10 +44,10 @@ ControlPipe::ControlPipe(const std::filesystem::path& root,std::function<json::o
    try{
     auto input=exchange(pipe_.get(),nullptr,nullptr);json::object response;
     if(!owner_client(pipe_.get(),owner))response={{"schema",1},{"ok",false},{"exit_code",4},{"error","Control owner denied"}};
-    else try{auto request=parse(input,65535).as_object();if(number(request,"schema",1)!=1)throw std::runtime_error("Unsupported control schema");response=handler(validate_control_request(request));}
+    else try{auto request=parse(input,control_frame_limit-1).as_object();if(number(request,"schema",1)!=1)throw std::runtime_error("Unsupported control schema");response=handler(validate_control_request(request));}
     catch(const ControlFailure& e){response={{"schema",1},{"ok",false},{"exit_code",e.exit_code},{"error","Control persistence or access failure; read back before retrying"}};}
     catch(const std::exception&){response={{"schema",1},{"ok",false},{"exit_code",2},{"error","Command rejected; check arguments, configuration and worker log"}};}
-    auto output=json::serialize(response);if(output.size()>=65536)output=json::serialize(json::object{{"schema",1},{"ok",false},{"exit_code",5},{"error","Control response exceeds limit"}});exchange(pipe_.get(),&output,nullptr);
+    auto output=json::serialize(response);if(output.size()>=control_frame_limit)output=json::serialize(json::object{{"schema",1},{"ok",false},{"exit_code",5},{"error","Control response exceeds limit"}});exchange(pipe_.get(),&output,nullptr);
     // Read receipt prevents DisconnectNamedPipe from discarding an unread reply.
     const auto receipt=exchange(pipe_.get(),nullptr,nullptr);if(receipt!="read")throw std::runtime_error("Invalid control receipt");
    }catch(...){/* Broken/oversized/idle clients cannot stop the controller. */}
@@ -60,6 +60,6 @@ json::object control_call(const std::filesystem::path& root,const json::object& 
  const auto name=control_pipe_name(root);if(!WaitNamedPipeW(name.c_str(),2000))throw std::runtime_error("Control unavailable: no current worker, old worker, busy or timeout");
  Handle pipe(CreateFileW(name.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_EXISTING,FILE_FLAG_OVERLAPPED|SECURITY_SQOS_PRESENT|SECURITY_IDENTIFICATION,nullptr));if(!pipe)fail("Open owner control pipe");
  ULONG pid{};require(GetNamedPipeServerProcessId(pipe.get(),&pid),"Identify control server");Handle process(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,FALSE,pid));if(!process||process_owner_sid(process.get())!=process_owner_sid(GetCurrentProcess()))throw std::runtime_error("Control server owner denied");
- DWORD mode=PIPE_READMODE_MESSAGE;require(SetNamedPipeHandleState(pipe.get(),&mode,nullptr,nullptr),"Set control framing");auto output=json::serialize(request);if(output.size()>=65536)throw std::runtime_error("Control request exceeds limit");exchange(pipe.get(),&output,nullptr);auto response=parse(exchange(pipe.get(),nullptr,nullptr),65535).as_object();const std::string receipt="read";exchange(pipe.get(),&receipt,nullptr);if(number(response,"schema",1)!=1||!response.at("ok").is_bool()||(number(response,"exit_code",5)==0)!=response.at("ok").as_bool())throw std::runtime_error("Invalid control response schema");return response;
+ DWORD mode=PIPE_READMODE_MESSAGE;require(SetNamedPipeHandleState(pipe.get(),&mode,nullptr,nullptr),"Set control framing");auto output=json::serialize(request);if(output.size()>=control_frame_limit)throw std::runtime_error("Control request exceeds limit");exchange(pipe.get(),&output,nullptr);auto response=parse(exchange(pipe.get(),nullptr,nullptr),control_frame_limit-1).as_object();const std::string receipt="read";exchange(pipe.get(),&receipt,nullptr);if(number(response,"schema",1)!=1||!response.at("ok").is_bool()||(number(response,"exit_code",5)==0)!=response.at("ok").as_bool())throw std::runtime_error("Invalid control response schema");return response;
 }
 }

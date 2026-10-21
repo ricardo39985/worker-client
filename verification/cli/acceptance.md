@@ -1,6 +1,6 @@
 # Remaining acceptance (do not substitute portable source checks)
 
-- Native MSVC clean build and all registered suites, including packaged real CLI/controller fixture: manual workflow in progress; see REPORT.md for final outcome.
+- Native MSVC clean build and all 12 registered suites, including packaged real CLI/controller fixture: PASSED on source b9366e5 in manual workflow 39533530400; see REPORT.md. This does not close the remaining gates below.
 - Actual same-owner SSH session 0 -> interactive controller session 1. The pipe namespace/auth is account-SID scoped and has no session ID; native same-process tests cannot prove the actual SSH/logon token/access policy.
 - Different real account and appropriately restricted/non-elevated owner caller. Anonymous kernel ACL denial is a useful native contract, not equivalent to every account/elevation combination.
 - Fake-coordinator job integration: admission/lease/drain contracts and native process-tree tests exist, but no full fake-coordinator job was sent through this candidate controller. The CLI fixture is real IPC/controller/config only, with no coordinator or converter.

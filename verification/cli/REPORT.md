@@ -8,7 +8,9 @@ Draft PR: https://github.com/ricardo39985/worker-client/pull/8 .
 The original worktree and every other agent branch are untouched.
 
 Source commits: `73a61ce`, `0bfb288`, `336c05c`, `e595a1c`, `66ec088`,
-`cb9e5452a4e033ab40889a7ce600b38aa60321e6` (current test candidate).
+`cb9e5452a4e033ab40889a7ce600b38aa60321e6`,
+`b9366e5c66f4d1c858a4705e59aef8a54b94a86f` (native verified source).
+Later ledger/documentation-only commits do not change the tested implementation.
 See [reference/parity matrix](../../docs/cli.md) for exact command/setting semantics.
 No inference or additional hardware-enable knob is invented.
 
@@ -27,11 +29,18 @@ cmake --build build-sanitize --parallel 2
 ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-sanitize -V
 ```
 
-Latest Release and ASan/UBSan gates each pass all **6 suites**: 100 core,
+Latest Release and ASan/UBSan gates each pass all **6 suites**: 101 core,
 84 adaptive, 64 progress/timing, 18 rendition, 13 pipeline C++ contracts and
-23 Python dependency tests (302 cases). Core and all standalone C++ suites are
+23 Python dependency tests (303 cases). Core and all standalone C++ suites are
 instrumented in the sanitizer build; Python is not sanitizer-instrumented.
-Logs `30-stdin-green-build.log` through `33-stdin-sanitize-tests.log` are current.
+Logs `45-size-green-build.log` through `48-size-sanitize-tests.log` are current.
+`39..42` also record the full prescribed Linux gate on b9366e5. A final boundary
+review found that a typed patch could grow a file past the loader's 256 KiB
+reopen limit; `43..44` records an actual behavior-red test. Validation now rejects
+that full document before persistence. Heap-backed local frames are bounded to
+1 MiB so full current/effective metadata for any valid document fits without
+Windows stack growth; a new native roundtrip/oversize-response contract covers it.
+This small source follow-up requires its own final native rerun.
 Earlier successful runs and all failed regression evidence are retained.
 
 - `01-red.log`: new control API initially missing (compile-red, not a Windows execution).
@@ -81,7 +90,18 @@ Earlier successful runs and all failed regression evidence are retained.
   The test now owns its live handle, still requires a known **zero** native exit
   code, and reports failures rather than treating null as success. Complete gate
   still FAILED, not relabelled green. `35-windows-cli-failure.log` preserves output.
-- Next native run will verify the owned-handle correction; not yet a complete pass.
+- [39533530400](https://github.com/ricardo39985/worker-client/actions/runs/39533530400),
+  **`b9366e5c66f4d1c858a4705e59aef8a54b94a86f`: PASS.** Fresh Windows-2022 MSVC
+  Release compilation, PowerShell syntax parsing, reviewed Boost checksum,
+  and **12/12 CTest suites passed**, gate exit 0. The packaged actual CLI fixture
+  now verifies a known native exit code 0 and stopped-worker status unavailable
+  (3), in addition to all help/status/config/resume/drain/auth/reset/exit checks.
+  No assertions, failures or suites were skipped/reclassified to obtain the pass.
+  Exact complete output: `37-windows-green.log`; run/source/job identity:
+  `38-windows-result.json`; `36-windows-watch.log` records the successful gate.
+  The retained handle fixed the fixture exit-code boundary; no native worker
+  stop/exit policy change was needed. This is an actual compiled/exercised CLI,
+  not a simulation of Windows, but the controller is intentionally idle/offline.
 
 ## Outstanding acceptance and limits
 

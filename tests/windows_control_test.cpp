@@ -52,6 +52,11 @@ TEST("native offline validation preserves legacy file and secrets are never retr
  THROWS(offline_control(t.root,control_request({"config","set","--stdin"},"{\"coordinator_url\":\"https://another.test\"}")));
  atomic_write(t.root/"credential.dpapi","SENTINEL_PRIVATE_TOKEN_NOT_TO_RETRIEVE");auto auth=offline_control(t.root,control_request({"auth"}));CHECK(auth.at("credential_present")==true);CHECK(json::serialize(auth).find("SENTINEL")==std::string::npos);
 }
+TEST("native bounded replies hold complete maximum-size configuration metadata"){
+ Workspace t;ControlPipe pipe(t.root,[](const json::object& r){return json::object{{"schema",1},{"ok",true},{"exit_code",0},{"padding",std::string(text(r,"command")=="status"?300*1024:control_frame_limit,'x')}};});
+ auto reply=control_call(t.root,control_request({"status"}));CHECK(reply.at("ok")==true);CHECK(reply.at("padding").as_string().size()==300*1024);
+ auto oversized=control_call(t.root,control_request({"auth"}));CHECK(oversized.at("ok")==false);CHECK(oversized.at("exit_code")==5);
+}
 TEST("native idle control client times out without blocking later authenticated callers"){
  Workspace t;ControlPipe pipe(t.root,[](const json::object&){return json::object{{"schema",1},{"ok",true},{"exit_code",0}};});
  const auto name=control_pipe_name(t.root);require(WaitNamedPipeW(name.c_str(),2000),"Wait for idle-client test");Handle idle(CreateFileW(name.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_EXISTING,0,nullptr));CHECK(idle);Sleep(2300);idle.reset();

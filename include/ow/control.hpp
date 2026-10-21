@@ -6,6 +6,9 @@
 namespace ow {
 // Local control protocol, deliberately separate from coordinator protocol v1.
 inline constexpr unsigned control_schema=1;
+inline constexpr std::size_t control_config_limit=256*1024;
+// Replies include current + effective values. Bound them above two full files.
+inline constexpr std::size_t control_frame_limit=1024*1024;
 json::object control_defaults();
 json::object validate_control_config(json::object);
 json::object control_request(const std::vector<std::string>& args,const std::string& input={});

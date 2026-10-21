@@ -10,8 +10,9 @@ this source change.
 ## SSH / PowerShell
 
 Run as the same Windows account that owns the signed-in worker. SSH session 0
-can contact that account's controller in interactive session 1: the named pipe
-is owner-scoped, not window/session-scoped. A different account, including a
+is intended to contact that account's controller in interactive session 1: the
+named pipe is owner-scoped, not window/session-scoped. Actual SSH/logon-token
+acceptance is still an open staging gate; do not read this as a Danny PC test. A different account, including a
 separate administrator account, is deliberately not an implicit delegate.
 Elevation is unnecessary. No password, token or signed URL belongs in arguments.
 
@@ -89,7 +90,9 @@ Exit codes: 0 success; 2 rejected arguments/schema/configuration; 3 unavailable,
 busy or timeout; 4 authenticated control denial when returned by the server;
 5 bounded response/I/O failure when returned by the server. Pre-connection
 Windows ACL denial is intentionally indistinguishable from unavailable (3).
-Transport requests/replies are bounded to <64 KiB, depth 32, with two-second
+Configuration stdin and persisted documents are bounded to 256 KiB. Local pipe
+requests/replies are bounded to <1 MiB (enough for both full current/effective
+metadata), depth 32, with two-second
 connect/read/write waits. A timeout after sending a mutation is an **unknown
 outcome**: reconnect and read back; repeating pause/resume/config assignment is
 safe. Requests are serialized; clients never perform blind toggles. General

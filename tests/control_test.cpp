@@ -59,6 +59,12 @@ TEST("unsafe fields values endpoints and command arguments fail closed") {
  auto request=control_request({"status"});CHECK(validate_control_request(request)==request);request["path"]="../worker.json";THROWS(validate_control_request(request));
  THROWS(validate_control_request(json::object{{"schema",1},{"command","config"},{"action","get"},{"name","../credential.dpapi"}}));
 }
+TEST("an atomic patch cannot persist a document too large to reopen") {
+ auto doc=control_defaults();doc["legacy_extension"]=std::string(245000,'x');int writes=0;
+ ControlSettings settings(doc,[&](const json::object&){++writes;});
+ THROWS(settings.patch({{"ffmpeg_path",std::string("C:\\")+std::string(25000,'a')},{"ffmpeg_sha256",std::string(64,'a')}}));
+ CHECK(writes==0);CHECK(settings.current()==doc);
+}
 TEST("PowerShell UTF8 BOM configuration input preserves atomic typed JSON") {
  auto request=control_request({"config","set","--stdin"},std::string("\xef\xbb\xbf")+"{\"operator.priority\":\"low\",\"limits.cpu_threads\":4}");
  CHECK(request.at("values").as_object().at("operator.priority")=="low");

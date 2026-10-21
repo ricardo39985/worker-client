@@ -14,7 +14,7 @@ int wmain(int argc,wchar_t** argv){
   std::filesystem::path selected_root;
   require(SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32|LOAD_LIBRARY_SEARCH_USER_DIRS),"Restrict DLL search");std::vector<std::string> args;
   for(int i=1;i<argc;++i){auto a=utf8(argv[i]);if(a=="--help"||a=="-h"){std::cout<<control_help();return 0;}if(a=="--json")json_output=true;else if(a=="--offline")offline=true;else if(a=="--data-root"){if(++i>=argc)throw std::runtime_error("Missing live target root");selected_root=argv[i];if(!selected_root.is_absolute()||selected_root.wstring().starts_with(L"\\\\"))throw std::runtime_error("Absolute local root required");}else args.push_back(std::move(a));}
-  phase="stdin";std::string input;if(args==std::vector<std::string>{"config","set","--stdin"}){for(char c;std::cin.get(c);){if(input.size()>=64000)throw std::runtime_error("Configuration input exceeds limit");input+=c;}}
+  phase="stdin";std::string input;if(args==std::vector<std::string>{"config","set","--stdin"}){for(char c;std::cin.get(c);){if(input.size()>=control_config_limit)throw std::runtime_error("Configuration input exceeds limit");input+=c;}}
   phase="request";auto request=control_request(args,input);auto root=selected_root.empty()?data_directory():selected_root;if(offline&&!selected_root.empty())throw std::runtime_error("Offline writes only support the installed owner root");json::object result;
   if(offline){
    if(elevated())throw ControlFailure(4,"Offline configuration requires the normal owner token");
