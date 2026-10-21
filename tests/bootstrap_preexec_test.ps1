@@ -20,7 +20,7 @@ function Assert-NeverLaunch($Case){
  if(Test-Path $Case.Marker){throw 'Untrusted payload reached the execution boundary'}
 }
 try{
- $c=New-Case 'valid';$result=Invoke-WorkerVerifiedImage -Root $c.Root -ApprovedHashes @($c.Hash) -OwnerSid $sid -Launch ({param($exe)if($exe -cne $c.Image){throw 'Wrong image'};'APPROVED_IMAGE'}.GetNewClosure())
+ $c=New-Case 'valid';$result=Invoke-WorkerVerifiedImage -Root $c.Root -ApprovedHashes @($c.Hash) -OwnerSid $sid -Launch ({param($exe)if([IO.Path]::GetFullPath($exe) -ine [IO.Path]::GetFullPath($c.Image)){throw 'Wrong image'};'APPROVED_IMAGE'}.GetNewClosure())
  if($result -cne 'APPROVED_IMAGE'){throw 'Valid installed owner image was not accepted'}
  foreach($name in @('writable-current','writable-ancestor','junction-ancestor','mutable-manifest','replacement-race')){
   try{

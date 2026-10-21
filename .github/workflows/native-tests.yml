@@ -6,6 +6,10 @@ on:
         description: "Run synthetic restart with the already reviewed GPL FFmpeg lock (no production accounts/jobs)"
         type: boolean
         default: false
+      focused_bootstrap_policy:
+        description: "Focused Windows filesystem/lifetime TDD ONLY: no native/media/release acceptance or artifact"
+        type: boolean
+        default: false
       package_worker:
         description: "After ALL media/security gates, retain code-only exact-source artifact; NO install/release/deploy"
         type: boolean
@@ -13,7 +17,25 @@ on:
 permissions:
   contents: read
 jobs:
+  policy-tdd:
+    if: ${{ inputs.focused_bootstrap_policy }}
+    name: Focused Windows policy TDD (NOT release acceptance)
+    runs-on: windows-2022
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Actual Windows filesystem and lifetime behavior, no engine/task/credential
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          if('${{ inputs.package_worker }}' -eq 'true'){throw 'Focused TDD cannot create release artifacts'}
+          & ./tests/bootstrap_preexec_test.ps1 -SourceRoot $PWD
+          & ./tests/launcher_lifetime_test.ps1 -SourceRoot $PWD
+          Write-Output 'FOCUSED_POLICY_ONLY_FULL_NATIVE_SECURITY_MEDIA_STILL_REQUIRED=True'
   windows:
+    if: ${{ !inputs.focused_bootstrap_policy }}
     runs-on: windows-2022
     timeout-minutes: 30
     steps:
