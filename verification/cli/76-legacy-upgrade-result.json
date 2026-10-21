@@ -1,0 +1,16 @@
+{
+    "fixture":  true,
+    "real_coordinator":  false,
+    "old_source":  "e4366c326c124acc46f63bd7251bd0cdf24f4331",
+    "new_source":  "dd08912e41c3acc97560651cadcf440a1a25c8df",
+    "old_pid":  22112,
+    "new_pid":  12872,
+    "session":  1,
+    "elevated":  false,
+    "protected_identity_unchanged":  true,
+    "existing_settings_retained":  true,
+    "legacy_preferences_migrated":  true,
+    "startup_unchanged":  true,
+    "old_binary_retained":  true,
+    "actual_shared_installer":  true
+}

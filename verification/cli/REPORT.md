@@ -1,6 +1,17 @@
-# Local CLI candidate — NOT COMPLETE / not release-ready
+# Local CLI implementation and release record
 
-## Scope and source
+**Current (2026-10-21):** all declared pre-merge source gates passed on
+`dd08912`; PR8 merged as `529ec104` with the identical tested tree. Exact
+merged-main shared artifact built and hash-verified. Both installed PCs remain
+unchanged: the canonical guard requires the owner to choose actual tray Exit /
+finish current jobs. Overall rollout remains **BLOCKED / NOT COMPLETE**.
+See [current authorized ledger](RELEASE.md) and [acceptance](acceptance.md).
+
+The report below is retained **historical evidence for source458c068**, including
+its then-unimplemented gaps and then-current authorization boundary. Those are
+not current gate claims; the later continuation implemented and executed them.
+
+## Historical scope and source
 
 Base `origin/main`: `e4366c326c124acc46f63bd7251bd0cdf24f4331` (fetched/verified).
 Worktree: `/home/rick/Downloads/worker-client-cli`, branch `feat/full-cli`.

@@ -1,0 +1,12 @@
+{
+    "ok":  true,
+    "revision":  "529ec104931a17ad4997771bb8bfad2eca5bcd2d",
+    "archive_sha256":  "6f1160c91d69b1f456b9b0e63ec446755c099717f97da649ef5ea7839fb2ecaa",
+    "legacy_archive_sha256":  "217982a6358a09bf53f3103bc73e69c163876fbb8635d2d618f692d358b3ee68",
+    "legacy_revision":  "e4366c326c124acc46f63bd7251bd0cdf24f4331",
+    "owner_sid":  "S-1-5-21-3947802441-3242602464-3093035390-1001",
+    "session":  1,
+    "elevated":  false,
+    "build":  "C:\\Users\\Danny\\AppData\\Local\\Temp\\ow-cli-merged-main-529ec104\\build",
+    "legacy_binary":  "C:\\Users\\Danny\\AppData\\Local\\Temp\\ow-cli-merged-main-529ec104\\legacy-build\\Release\\ow_legacy_actor.exe"
+}

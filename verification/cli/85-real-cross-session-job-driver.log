@@ -1,0 +1,13 @@
+CROSS_SESSION_STAGE=configure
+CROSS_SESSION_CONFIG_PASS all14 settings, invalid atomic rejection, defaults/reset, no restart
+
+CROSS_SESSION_STAGE=pause
+CROSS_SESSION_DRAIN_PASS actual converter survived pause; reserved BEGIN rejected
+
+CROSS_SESSION_STAGE=resume
+CROSS_SESSION_RESUME_PASS explicit idempotent resume
+
+CROSS_SESSION_STAGE=finish
+ACTIVE_JOB_COORDINATOR_PASS two real conversions, renewals, retransmission, wrong/matching ACK, natural drain and exit0
+
+NATIVE_CROSS_SESSION_JOB_ALL_PASS

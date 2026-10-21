@@ -1,0 +1,13 @@
+{
+    "ok":  true,
+    "revision":  "529ec104931a17ad4997771bb8bfad2eca5bcd2d",
+    "package":  "C:\\Users\\Danny\\AppData\\Local\\Temp\\ow-cli-merged-main-529ec104\\package",
+    "manifest_sha256":  "665652f2687f755994e038978f92a2c7f8862bad53b74b9b4285dce4f2b96702",
+    "files":  {
+                  "OrganizerWorker.exe":  "df8389fa247318e07754aaf271eb30965ea1b18c7a396f0c58a79e871e029aa1",
+                  "OrganizerWorkerConsole.exe":  "e1b7451560e47fa90324a754716cbf87e1501c02c6f2b758d03cc49c14533fc7",
+                  "OrganizerWorkerDoctor.exe":  "daafea1ed2cfdb1c5aa45bccc1f332a0ec9e1d99c9e42babb3d47769b832f7bd",
+                  "OrganizerWorkerCtl.exe":  "93e57196437c07d0a0ccd04ed9877e1beab24749b559cd41e5836c2e6b8c62bf",
+                  "cli.md":  "cd46052f6faf8f17aead817739d3d7bec42ab695ef84972130871c0c1d079ad7"
+              }
+}

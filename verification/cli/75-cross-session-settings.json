@@ -1,0 +1,10 @@
+{
+    "fixture":  true,
+    "server_pid":  15892,
+    "owner_sid":  "S-1-5-21-3947802441-3242602464-3093035390-1001",
+    "client_session":  0,
+    "server_session":  1,
+    "same_owner_cross_session":  true,
+    "all_settings_typed_atomic_reset_readback":  true,
+    "source":  "dd08912e41c3acc97560651cadcf440a1a25c8df"
+}
