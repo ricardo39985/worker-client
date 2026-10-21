@@ -47,6 +47,26 @@ Legacy schema1 includes four executables/reference; schema2 adds the fifth
 attached-tray executable and fixed headless launcher (seven files total); its hash is supplied separately from the transferred package.
 No downloads, dependency changes or first-time setup occur in this path.
 
+For an already enrolled worker, both the updater and full setup require the complete
+seven-file candidate to match an explicit package approval stored in the protected
+machine anchor. Full setup verifies that approval as data before probing/executing
+the candidate or changing pairing/config/current-version state. A source rebuild
+that differs from the approved hashes is rejected; it never launches the candidate
+or stops/replaces the current engine to establish trust. Independently review the
+code-only package and its full manifest SHA-256, then have the same owner perform
+explicit local elevated approval with the protected fixed launcher:
+
+```powershell
+& '<protected Program Files bootstrap launcher>' -Mode Approve `
+  -Package '<verified package directory>' `
+  -PackageManifestSha256 '<reviewed package.json SHA-256>'
+```
+
+Approval is metadata-only; it does not create a task, enroll a password, run
+candidate tools, or approve a changed bootstrap launcher. Launcher-policy changes
+need separate secure local migration review. If approval is unavailable, retain the
+current engine and use the approved existing package; do not bypass this gate.
+
 The updater stages and verifies a complete immutable version directory before
 stopping the idle controller. It flushes the previous manifest to a recovery
 file, then uses same-directory `File.Replace` with an explicit backup path.

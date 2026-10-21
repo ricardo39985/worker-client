@@ -1,0 +1,33 @@
+-- Configuring done (0.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-unattended/build-release-final
+[  7%] Built target ow_pipeline_contract_tests
+[ 12%] Built target ow_json
+[ 20%] Built target ow_rendition_contract_tests
+[ 25%] Built target ow_rendition_probe
+[ 40%] Built target ow_progress_contract_tests
+[ 62%] Built target ow_core
+[ 70%] Built target ow_adaptive_hardware_contract_tests
+[ 95%] Built target ow_contract_tests
+[100%] Built target ow_adaptive_evidence_probe
+Test project /home/rick/Downloads/worker-client-unattended/build-release-final
+    Start 1: ffmpeg_dependency_contracts
+1/8 Test #1: ffmpeg_dependency_contracts ......   Passed    0.17 sec
+    Start 2: launcher_package_contracts
+2/8 Test #2: launcher_package_contracts .......   Passed    0.05 sec
+    Start 3: code_package_contracts
+3/8 Test #3: code_package_contracts ...........   Passed    0.16 sec
+    Start 4: worker_contracts
+4/8 Test #4: worker_contracts .................   Passed    0.03 sec
+    Start 5: pipeline_contracts
+5/8 Test #5: pipeline_contracts ...............   Passed    0.01 sec
+    Start 6: rendition_contracts
+6/8 Test #6: rendition_contracts ..............   Passed    0.00 sec
+    Start 7: adaptive_hardware_contracts
+7/8 Test #7: adaptive_hardware_contracts ......   Passed    0.03 sec
+    Start 8: progress_contracts
+8/8 Test #8: progress_contracts ...............   Passed    0.02 sec
+
+100% tests passed, 0 tests failed out of 8
+
+Total Test time (real) =   0.48 sec

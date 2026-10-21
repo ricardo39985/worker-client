@@ -2,6 +2,19 @@
 
 ## Unattended-owner candidate gates
 
+Latest exact code head `f9edbb0` passed Release Linux and full C++ ASan/UBSan
+(8/8 each), actual MSVC Release and all24 CTest contracts, real foreign-owner
+deny/forged-server zero-byte test, and the actual restricted-owner/session2
+headless media fixture: current-profile DPAPI, protected bootstrap entry/restart,
+real typed child encode/decode/hash, restart admission fencing, 67 lease renewals,
+reserved-BEGIN veto/expiry, durable result retry, wrong-ACK blocking and matching
+ACK completion. The harness reported `real_coordinator=false`,
+`password_task_registration=false`, and `cold_boot_test=false`. This is synthetic
+and current-profile acceptance only—not a fresh boot, real coordinator job or
+installed-PC acceptance. See run39690433869 and retained receipt63 after it is
+committed. A final code-only package and fresh independent security review remain
+separate gates.
+
 [Current retained red/green ledger](../verification/unattended/REPORT.md) and
 [secure local owner enrollment/boot boundaries](unattended-owner.md). New source
 is not an installed or genuinely before-login-verified worker. The prior14-suite

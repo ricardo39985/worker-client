@@ -119,6 +119,18 @@ credential enrollment, desktop login or startup-policy fallback may be inferred.
 A failed or unavailable credential/profile/task is actionable failure, not a
 reason to create a SYSTEM service or reinstall/re-pair the owner.
 
+Enrolled full setup applies the same protected code-approval rule as the version
+updater: it hashes all seven staged files as data before executing the candidate,
+archiving pairing state, or publishing configuration/current version. A rebuild
+whose exact worker and companion hashes are not already in the external protected
+approval is refused with the current engine retained. The operator must first
+independently review the code-only artifact and manifest, then use the fixed
+protected launcher in an explicitly elevated SAME-owner local session with
+`-Mode Approve -Package <directory> -PackageManifestSha256 <reviewed hash>`.
+That operation only adds reviewed metadata to the admin-owned anchor; it is not a
+password task enrollment and never executes the package. Bootstrap launcher changes
+are not self-approved and require secure local migration review.
+
 If a lifecycle command times out: inspect `status`, journal/outbox counts and
 `enrollment`; do NOT kill encoders, delete locks, change coordinator, re-pair or
 blindly run another engine. Preserve pending-swap/task snapshots and old immutable

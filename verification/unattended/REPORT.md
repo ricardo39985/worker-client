@@ -1,11 +1,43 @@
-# Unattended owner lifecycle — in-progress gate ledger
+# Unattended owner lifecycle — current gate ledger
 
-NOT an enrolled/deployed/cold-boot-verified release. Branch
-`feat/unattended-owner`, draft PR9. Prior product529 / bookkeeping086 remains
+**Not merged, packaged, installed, enrolled, fresh-boot-verified or production-tested.**
+Draft PR9 branch `feat/unattended-owner`. Prior product529/bookkeeping086 remains
 unchanged on both PCs. Owner AWAY: no reboot/logoff/lock/shutdown/suspend/session
- disconnect or production lifecycle experiment. Do all independent preparation;
-Windows password enrollment is eventually LOCAL secure UI, never chat/scripts/
-argv/env/files. See [owner guide](../../docs/unattended-owner.md).
+disconnect or production lifecycle experiment. Windows password enrollment, when
+authorized, is LOCAL secure UI only—never chat/scripts/argv/env/files. See
+[owner guide](../../docs/unattended-owner.md).
+
+## Latest exact-code acceptance
+
+Code head `f9edbb0` was built by manual Windows run `39690433869`: MSVC Release
+succeeded; all24 registered native behavior suites passed; actual foreign-owner
+deny and forged-server zero-request-byte security gate passed; actual restricted
+same-owner/non-elevated/headless media fixture passed. The fixture exercised
+current-profile DPAPI, fixed protected bootstrap entry, restart continuation,
+actual typed FFmpeg child, hash/decode, admission fencing, desired pause
+preservation, 67 lease renewals, reserved BEGIN rejection/expiry, durable retry,
+wrong ACK exit blocking and matching ACK exit. Exact log is
+[63-native-media-green.log](63-native-media-green.log). Its receipt states
+`real_coordinator=false`, `password_task_registration=false`, `cold_boot_test=false`.
+It is not fresh-boot, Password-task-registration, actual TLS/coordinator or
+production-job proof.
+
+Exact code head `f9edbb0` also passed Linux Release CTest8/8 and full C++
+ASan/UBSan CTest8/8; logs50/51. Focused Windows filesystem/lifetime/package/task
+policy tests passed at `b8f17dd` (run39670908222, log54); they are not release
+acceptance. Full source build/media last succeeded at f9edbb0; this report/docs
+commit that follows contains no product-code change, so rerun final-source gates
+and code-only artifact after this evidence-ledger edit before treating it as a
+release candidate. Fresh independent security review remains open.
+
+## Owner-only / production gates remain closed
+
+No secure local owner password/task enrollment, fresh zero-interactive-user boot,
+physical GPU capability probe, real coordinator/TLS job, PC install, reboot or
+merge has occurred. No release artifact is currently claimed. Merge requires
+fresh independent review and all final-source gates; PC activity requires the
+owner present and separate explicit authorization. Do not infer successful
+production integration from this synthetic fixture or protocol documents.
 
 ## Retained causal failures and actual greens
 
