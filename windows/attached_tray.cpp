@@ -1,4 +1,6 @@
 #include "control_pipe.hpp"
+#include "ow/control.hpp"
+#include "ow/protocol.hpp"
 #include <shellapi.h>
 namespace {
 using namespace ow;using namespace ow::win;
@@ -26,7 +28,7 @@ void menu(){
  else if(id==Exit){if(MessageBoxW(window,L"Finish current jobs, then stop the controller? The tray is separate.",L"Exit worker",MB_YESNO|MB_ICONQUESTION)==IDYES)control_call(root,control_request({"exit","drain"}));}
  else if(id>=Priority&&id<Priority+4)patch("operator.priority",priorities[id-Priority]);else if(id>=Video&&id<Video+3)patch("operator.video_preference",prefs[id-Video]);else if(id>=Image&&id<Image+3)patch("operator.image_preference",prefs[id-Image]);
 }
-LRESULT CALLBACK proc(HWND h,UINT msg,WPARAM,LPARAM l){
+LRESULT CALLBACK proc(HWND h,UINT msg,WPARAM w,LPARAM l){
  try{
   if(msg==WM_TIMER){try{last=call("status");auto g=number(last,"viewer_generation",UINT64_MAX);if(g>generation){generation=g;console();}}catch(...){last.clear();}auto n=icon();Shell_NotifyIconW(NIM_MODIFY,&n);return 0;}
   if(msg==Tray){auto event=LOWORD(l);if(event==WM_CONTEXTMENU||event==WM_RBUTTONUP)menu();else if(event==NIN_SELECT||event==WM_LBUTTONDBLCLK)console();return 0;}
@@ -34,7 +36,7 @@ LRESULT CALLBACK proc(HWND h,UINT msg,WPARAM,LPARAM l){
   if(msg==WM_ENDSESSION||msg==WM_CLOSE){DestroyWindow(h);return 0;}
   if(msg==WM_DESTROY){auto n=icon();Shell_NotifyIconW(NIM_DELETE,&n);PostQuitMessage(0);return 0;}
  }catch(...){MessageBoxW(h,L"Controller is unavailable or rejected the operation. Use the installed CLI status/start.",L"Organizer Worker",MB_OK|MB_ICONWARNING);}
- return DefWindowProcW(h,msg,0,l);
+ return DefWindowProcW(h,msg,w,l);
 }
 }
 int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,PWSTR,int){

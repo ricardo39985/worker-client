@@ -10,7 +10,7 @@ $root=Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'Organize
 $enrollment=Join-Path $root 'unattended/enrollment.json'
 foreach($f in @($root,$enrollment,(Join-Path $root 'current.json'))){$item=Get-Item -LiteralPath $f;if($item.Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Reparse launch state refused'}}
 $e=Get-Content -LiteralPath $enrollment -Raw|ConvertFrom-Json
-if($e.schema -ne 1 -or $e.owner_sid -cne $i.User.Value -or $e.task_name -cne ('OrganizerWorker-Unattended-'+$i.User.Value)){throw 'Existing enrolled owner/profile required'}
+if($e.schema -ne 1 -or $e.state -cne 'enrolled' -or $e.owner_sid -cne $i.User.Value -or $e.task_name -cne ('OrganizerWorker-Unattended-'+$i.User.Value)){throw 'Existing enrolled owner/profile required'}
 $c=Get-Content -LiteralPath (Join-Path $root 'current.json') -Raw|ConvertFrom-Json
 $directory=[IO.Path]::GetFullPath([string]$c.directory);$allowed=[IO.Path]::GetFullPath((Join-Path $root 'versions'))+[IO.Path]::DirectorySeparatorChar
 if(-not $directory.StartsWith($allowed,[StringComparison]::OrdinalIgnoreCase)){throw 'Installed version escapes owner root'}

@@ -86,6 +86,9 @@ TEST("native restart fences admission but preserves durable desired pause across
  }
  Worker replacement(load_config(t.root));CHECK(!replacement.paused());
 }
+TEST("native restart waits journal reservations even between expiry and result publication"){
+ Workspace t;Worker worker(load_config(t.root));Store journal(t.root/"journal.sqlite3");CHECK(journal.reserve("inflight","job","fp"));worker.control(json::object{{"schema",1},{"command","restart"}});CHECK(!worker.ready_to_exit());CHECK(journal.decline_reserved("inflight","never_started"));CHECK(worker.ready_to_exit());
+}
 TEST("native restart refuses to exit before matching durable result acknowledgment"){
  Workspace t;Worker worker(load_config(t.root));Store journal(t.root/"journal.sqlite3");CHECK(journal.reserve("restart-attempt","restart-job","synthetic-fingerprint"));CHECK(journal.start("restart-attempt"));journal.result("restart-attempt","synthetic-result");
  auto r=worker.control(json::object{{"schema",1},{"command","restart"}});CHECK(r.at("exiting")==true);CHECK(!worker.ready_to_exit());

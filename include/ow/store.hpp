@@ -19,6 +19,7 @@ public:
  void result(const std::string& id,const std::string& body);
  std::vector<Pending> pending();
  std::uint64_t pending_count();
+ std::uint64_t unsettled_count(); // journaled reservation/work/result until terminal or matching ACK
  bool acknowledge(std::int64_t sequence,const std::string& id);
  std::vector<std::string> interrupted();
  void set(const std::string& key,const std::string& value);
