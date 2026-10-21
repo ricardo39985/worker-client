@@ -17,7 +17,8 @@ function Invoke-WorkerVerifiedImage {
 }
 function Invoke-WorkerHeadlessLifetime {
  param([scriptblock]$Launch)
- return (& $Launch)
+ do{$code=[int](& $Launch)}while($code -eq 75)
+ return $code
 }
 if($MyInvocation.InvocationName -eq '.'){return}
 if($args.Count){throw 'Headless launcher accepts no arguments'}

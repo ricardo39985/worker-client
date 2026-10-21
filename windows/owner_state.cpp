@@ -11,11 +11,11 @@ bool trusted(const std::string& sid,const std::string& user,bool ancestor){
  return sid==user||sid=="S-1-5-18"||sid=="S-1-5-32-544"||
   (ancestor&&sid=="S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464"); // Windows TrustedInstaller
 }
-void check_acl(const std::filesystem::path& p,const std::string& user,bool ancestor,bool secret){
+void check_acl(const std::filesystem::path& p,const std::string& user,bool ancestor,bool secret,bool machine=false){
  PSID owner{};PACL acl{};PSECURITY_DESCRIPTOR sd{};
  if(GetNamedSecurityInfoW(p.c_str(),SE_FILE_OBJECT,OWNER_SECURITY_INFORMATION|DACL_SECURITY_INFORMATION,&owner,nullptr,&acl,nullptr,&sd))throw ControlFailure(4,"Cannot inspect existing owner state permissions");
  try{
-  if(!owner||!trusted(sid_text(owner),user,ancestor)||!acl)throw ControlFailure(4,"State/ancestor ownership requires local owner review");
+  if(!owner||!trusted(sid_text(owner),user,ancestor||machine)||!acl)throw ControlFailure(4,"State/ancestor ownership requires local owner review");
   constexpr ACCESS_MASK replace=GENERIC_WRITE|GENERIC_ALL|FILE_WRITE_EA|FILE_WRITE_ATTRIBUTES|FILE_DELETE_CHILD|DELETE|WRITE_DAC|WRITE_OWNER;
   const ACCESS_MASK writes=ancestor?replace:replace|FILE_WRITE_DATA|FILE_APPEND_DATA;
   for(DWORD n=0;n<acl->AceCount;n++){
@@ -23,7 +23,7 @@ void check_acl(const std::filesystem::path& p,const std::string& user,bool ances
    if((h->AceFlags&INHERIT_ONLY_ACE)||h->AceType==ACCESS_DENIED_ACE_TYPE)continue;
    if(h->AceType!=ACCESS_ALLOWED_ACE_TYPE)throw ControlFailure(4,"Unexpected owner state ACE; local review required");
    auto* a=static_cast<ACCESS_ALLOWED_ACE*>(raw);
-   if(!trusted(sid_text(&a->SidStart),user,ancestor)&&(secret||(a->Mask&writes)))throw ControlFailure(4,"Another account can access private identity or replace state/ancestor");
+   if(!trusted(sid_text(&a->SidStart),user,ancestor||machine)&&(secret||(a->Mask&writes)))throw ControlFailure(4,"Another account can access private identity or replace state/ancestor");
   }
   LocalFree(sd);
  }catch(...){LocalFree(sd);throw;}
@@ -47,7 +47,10 @@ std::filesystem::path verified_owner_image(const std::filesystem::path& root,boo
 bool owner_bootstrap_enrolled(const std::filesystem::path& root){auto m=enrollment(root);return m&&text(*m,"state",16)=="enrolled";}
 void complete_owner_pairing(const std::filesystem::path& root){auto m=enrollment(root);if(m&&text(*m,"state",16)=="pairing_repair"){(*m)["state"]="enrolled";atomic_write(root/"unattended/enrollment.json",json::serialize(*m));}}
 void require_normal_owner(){auto sid=process_owner_sid(GetCurrentProcess());if(elevated()||sid=="S-1-5-18"||sid=="S-1-5-19"||sid=="S-1-5-20")throw ControlFailure(4,"Normal non-elevated owner token required; service/admin engine refused");}
-void verify_protected_bootstrap_path(const std::filesystem::path& path){verify_owner_state_path(path);}
+void verify_protected_bootstrap_path(const std::filesystem::path& path){
+ auto p=std::filesystem::absolute(path).lexically_normal();if(p.wstring().starts_with(L"\\\\"))throw ControlFailure(4,"Machine bootstrap must be local");bool ancestor=false;
+ for(auto q=p;;){auto a=GetFileAttributesW(q.c_str());if(a==INVALID_FILE_ATTRIBUTES||(a&FILE_ATTRIBUTE_REPARSE_POINT))throw ControlFailure(4,"Missing or reparse machine bootstrap");check_acl(q,"",ancestor,false,true);auto parent=q.parent_path();if(parent==q||parent.empty())break;q=std::move(parent);ancestor=true;}
+}
 void verify_owner_state_path(const std::filesystem::path& path,bool private_identity){
  auto p=std::filesystem::absolute(path).lexically_normal();if(p.wstring().starts_with(L"\\\\"))throw ControlFailure(4,"Owner state must be a local per-machine path");
  const auto user=process_owner_sid(GetCurrentProcess());bool ancestor=false;

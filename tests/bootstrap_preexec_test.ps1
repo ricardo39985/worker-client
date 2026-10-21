@@ -15,11 +15,12 @@ function New-Case([string]$Name){
  return @{Root=$root;Directory=$dir;Image=$exe;Hash=$hash;Marker=(Join-Path $root 'payload-ran')}
 }
 function Assert-NeverLaunch($Case){
- try{Invoke-WorkerVerifiedImage -Root $Case.Root -ApprovedHashes @($Case.Hash) -OwnerSid $sid -Launch {param($exe)[IO.File]::WriteAllText($Case.Marker,'UNSAFE PAYLOAD WOULD HAVE EXECUTED')}|Out-Null}catch{}
+ $launch={param($exe)[IO.File]::WriteAllText($Case.Marker,'UNSAFE PAYLOAD WOULD HAVE EXECUTED')}.GetNewClosure()
+ try{Invoke-WorkerVerifiedImage -Root $Case.Root -ApprovedHashes @($Case.Hash) -OwnerSid $sid -Launch $launch|Out-Null}catch{}
  if(Test-Path $Case.Marker){throw 'Untrusted payload reached the execution boundary'}
 }
 try{
- $c=New-Case 'valid';$result=Invoke-WorkerVerifiedImage -Root $c.Root -ApprovedHashes @($c.Hash) -OwnerSid $sid -Launch {param($exe)if($exe -cne $c.Image){throw 'Wrong image'};'APPROVED_IMAGE'}
+ $c=New-Case 'valid';$result=Invoke-WorkerVerifiedImage -Root $c.Root -ApprovedHashes @($c.Hash) -OwnerSid $sid -Launch ({param($exe)if($exe -cne $c.Image){throw 'Wrong image'};'APPROVED_IMAGE'}.GetNewClosure())
  if($result -cne 'APPROVED_IMAGE'){throw 'Valid installed owner image was not accepted'}
  foreach($name in @('writable-current','writable-ancestor','junction-ancestor','mutable-manifest','replacement-race')){
   try{
@@ -30,13 +31,13 @@ try{
     'junction-ancestor' {$external=Join-Path $base 'external';Move-Item (Join-Path $c.Root 'versions') $external;New-Item -ItemType Junction -Path (Join-Path $c.Root 'versions') -Target $external|Out-Null;Assert-NeverLaunch $c}
     'mutable-manifest' {[IO.File]::WriteAllText($c.Image,'foreign-payload');@{schema=1;directory=$c.Directory;sha256=(Get-FileHash $c.Image).Hash.ToLowerInvariant()}|ConvertTo-Json|Set-Content (Join-Path $c.Root 'current.json');Assert-NeverLaunch $c}
     'replacement-race' {
-     Invoke-WorkerVerifiedImage -Root $c.Root -ApprovedHashes @($c.Hash) -OwnerSid $sid -Launch {
+     Invoke-WorkerVerifiedImage -Root $c.Root -ApprovedHashes @($c.Hash) -OwnerSid $sid -Launch ({
       param($exe)
       $blocked=$false;try{[IO.File]::WriteAllText($exe,'foreign-swap-after-hash')}catch{$blocked=$true}
       if(-not $blocked){throw 'Validated image remains writable before execution'}
       $blocked=$false;try{Move-Item $c.Directory ($c.Directory+'-swapped') -ErrorAction Stop}catch{$blocked=$true}
       if(-not $blocked){throw 'Validated directory can be exchanged before execution'}
-     }|Out-Null
+     }.GetNewClosure())|Out-Null
     }
    }
   }catch{$errors.Add($name+': '+$_.Exception.Message)}
