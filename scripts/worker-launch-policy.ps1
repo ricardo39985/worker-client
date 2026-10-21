@@ -8,6 +8,11 @@ function Assert-WorkerLaunchTask {
         if(-not $Enrollment -or -not $Enrollment.ok -or -not $Enrollment.enrolled -or $Enrollment.owner_sid -cne $OwnerSid -or $Enrollment.task_name -cne $Task.TaskName){throw 'Native fixed-action/ACL/profile enrollment validation required'}
     } elseif([string]$Task.Principal.LogonType -notin @('Interactive','3')){throw 'Legacy startup must remain the existing interactive owner task'}
 }
+function Assert-WorkerApprovedCandidate {
+    param($Info,$Enrollment)
+    # Baseline old package-presence policy, pending genuine behavior TDD.
+    if('start-headless.ps1' -notin @(Get-WorkerPackageNames $Info)){throw 'Cannot downgrade enrolled owner'}
+}
 function Test-WorkerLaunchReady {
     param($Status,[bool]$Unattended)
     if(-not $Status.live -or -not $Status.connected -or $Status.exiting){return $false}

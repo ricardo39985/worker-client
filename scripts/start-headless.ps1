@@ -106,6 +106,10 @@ function Invoke-WorkerHeadlessLifetime {
  do{$code=[int](& $Launch)}while($code -eq 75)
  return $code
 }
+function Invoke-WorkerAfterExit {
+ param([scriptblock]$WaitForExit,[scriptblock]$Activate)
+ & $Activate
+}
 function Get-WorkerProtectedPolicy {
  param([string]$Sid)
  Initialize-WorkerBootstrapInterop

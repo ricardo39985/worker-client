@@ -31,8 +31,11 @@ jobs:
         run: |
           $ErrorActionPreference='Stop'
           if('${{ inputs.package_worker }}' -eq 'true'){throw 'Focused TDD cannot create release artifacts'}
-          & ./tests/bootstrap_preexec_test.ps1 -SourceRoot $PWD
-          & ./tests/launcher_lifetime_test.ps1 -SourceRoot $PWD
+          $failed=@()
+          foreach($script in @('bootstrap_preexec_test.ps1','launcher_lifetime_test.ps1','candidate_approval_test.ps1','continuation_policy_test.ps1')){
+            try{& (Join-Path './tests' $script) -SourceRoot $PWD}catch{Write-Output ($script+': '+$_.Exception.Message);$failed+=$script}
+          }
+          if($failed.Count){throw ('FOCUSED_POLICY_BEHAVIOR_FAILED: '+($failed -join ', '))}
           Write-Output 'FOCUSED_POLICY_ONLY_FULL_NATIVE_SECURITY_MEDIA_STILL_REQUIRED=True'
   windows:
     if: ${{ !inputs.focused_bootstrap_policy }}
