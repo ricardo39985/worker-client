@@ -72,6 +72,11 @@ TEST("native unattended state refuses broad write grants and absent keys never c
  Workspace t;const auto key=t.root/"absent-key.dpapi";THROWS(existing_public_pairing_key(key));CHECK(!std::filesystem::exists(key));
  auto sddl=L"D:P(A;OICI;FA;;;"+wide(process_owner_sid(GetCurrentProcess()))+L")(A;OICI;FA;;;WD)";PSECURITY_DESCRIPTOR sd{};require(ConvertStringSecurityDescriptorToSecurityDescriptorW(sddl.c_str(),SDDL_REVISION_1,&sd,nullptr),"Fixture DACL");BOOL ok=SetFileSecurityW(t.root.c_str(),DACL_SECURITY_INFORMATION|PROTECTED_DACL_SECURITY_INFORMATION,sd);LocalFree(sd);CHECK(ok);THROWS(verify_owner_state_path(t.root));
 }
+TEST("native selected image cannot escape versions or use a reparse manifest"){
+ Workspace t;auto dir=t.root/"versions/good";std::filesystem::create_directories(dir);atomic_write(dir/"OrganizerWorker.exe","fixture-image");auto current=json::object{{"schema",1},{"directory",utf8(dir.wstring())},{"sha256",sha256_file(dir/"OrganizerWorker.exe")}};atomic_write(t.root/"current.json",json::serialize(current));CHECK(verified_owner_image(t.root)==dir/"OrganizerWorker.exe");
+ auto outside=t.root/"outside";std::filesystem::create_directory(outside);atomic_write(outside/"OrganizerWorker.exe","fixture-image");current["directory"]=utf8((t.root/"versions/../outside").wstring());atomic_write(t.root/"current.json",json::serialize(current));THROWS(verified_owner_image(t.root));
+ current["directory"]=utf8(dir.wstring());atomic_write(t.root/"manifest-target.json",json::serialize(current));std::filesystem::remove(t.root/"current.json");require(CreateSymbolicLinkW((t.root/"current.json").c_str(),(t.root/"manifest-target.json").c_str(),0),"Native reparse manifest fixture requires symlink privilege");THROWS(verified_owner_image(t.root));
+}
 TEST("native unavailable control is bounded and never creates worker state"){
  Workspace t;auto start=monotonic_ms();THROWS(control_call(t.root,control_request({"resume"})));CHECK(monotonic_ms()-start<4000);CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));
 }

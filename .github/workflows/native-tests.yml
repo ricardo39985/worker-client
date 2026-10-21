@@ -26,6 +26,7 @@ jobs:
             if ($errors.Count -gt 0) { $errors | Out-String | Write-Error; throw 'PowerShell syntax check failed' }
           }
       - name: Verify pinned source and build
+        id: native_build
         shell: powershell
         run: |
           $ErrorActionPreference='Stop'
@@ -41,15 +42,20 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Native configure failed' }
           cmake --build build-ci --config Release --parallel 2
           if ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }
+      - name: Full registered native contracts
+        if: ${{ always() && steps.native_build.outcome == 'success' }}
+        shell: powershell
+        run: |
           ctest --test-dir build-ci -C Release --output-on-failure
           if ($LASTEXITCODE -ne 0) { throw 'Native behavior contracts failed' }
       - name: Real disallowed owner and forged-server authorization
+        if: ${{ always() && steps.native_build.outcome == 'success' }}
         shell: powershell
         run: |
           $ErrorActionPreference='Stop'
           & ./tests/owner_context_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release')
       - name: Actual limited-owner headless restart, DPAPI and admitted converter
-        if: ${{ inputs.run_unattended_media }}
+        if: ${{ always() && steps.native_build.outcome == 'success' && inputs.run_unattended_media }}
         shell: powershell
         run: |
           $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'

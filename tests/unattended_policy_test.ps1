@@ -24,12 +24,12 @@ New-Item $package -ItemType Directory -Force|Out-Null
 try{
  $files=[ordered]@{};foreach($name in $names){$path=Join-Path $package $name;[IO.File]::WriteAllText($path,('fixture-'+$name),(New-Object Text.UTF8Encoding($false)));$files[$name]=(Get-FileHash $path -Algorithm SHA256).Hash.ToLowerInvariant()}
  $manifest=[ordered]@{schema=2;revision=('a'*40);files=$files};[IO.File]::WriteAllText((Join-Path $package 'package.json'),($manifest|ConvertTo-Json -Depth 5));[IO.File]::WriteAllText((Join-Path $package 'source-revision.txt'),('a'*40))
- $info=Read-WorkerValidatedPackage $package ''
+ $manifestSha=(Get-FileHash (Join-Path $package 'package.json') -Algorithm SHA256).Hash.ToLowerInvariant();$info=Read-WorkerValidatedPackage $package $manifestSha
  Invoke-WorkerPackageUpdate -Root $installed -Package $package -Info $info -Verify {param($m)foreach($name in @('OrganizerWorkerTray.exe','start-headless.ps1')){if(-not (Test-Path (Join-Path $m.directory $name))){throw 'Headless file not published'}}}|Out-Null
  $current=Get-Content (Join-Path $installed 'current.json') -Raw|ConvertFrom-Json
  Check ((Get-FileHash (Join-Path $current.directory 'OrganizerWorkerTray.exe')).Hash -ieq $files['OrganizerWorkerTray.exe']) 'Published tray bytes changed'
- [IO.File]::AppendAllText((Join-Path $package 'OrganizerWorkerTray.exe'),'tamper');$threw=$false;try{Read-WorkerValidatedPackage $package ''|Out-Null}catch{$threw=$true};Check $threw 'Tampered headless tray accepted'
- Remove-Item (Join-Path $package 'start-headless.ps1');$threw=$false;try{Read-WorkerValidatedPackage $package ''|Out-Null}catch{$threw=$true};Check $threw 'Incomplete headless package accepted'
+ [IO.File]::AppendAllText((Join-Path $package 'OrganizerWorkerTray.exe'),'tamper');$threw=$false;try{Read-WorkerValidatedPackage $package $manifestSha|Out-Null}catch{$threw=$true};Check $threw 'Tampered headless tray accepted'
+ Remove-Item (Join-Path $package 'start-headless.ps1');$threw=$false;try{Read-WorkerValidatedPackage $package $manifestSha|Out-Null}catch{$threw=$true};Check $threw 'Incomplete headless package accepted'
  Check ((Get-FileHash (Join-Path $current.directory 'OrganizerWorkerTray.exe')).Hash -ieq $files['OrganizerWorkerTray.exe']) 'Candidate tampering changed immutable live version'
 }finally{Remove-Item -LiteralPath $temp -Recurse -Force}
 Write-Output 'UNATTENDED_POLICY_PASS strict readiness, same LIMITED password owner, preserved legacy package and fixed headless artifacts'

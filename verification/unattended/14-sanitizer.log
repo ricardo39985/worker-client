@@ -1,0 +1,85 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found SQLite3: /usr/lib/x86_64-linux-gnu/libsqlite3.so (found suitable version "3.46.1", minimum required is "3.22")
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-unattended/build-unattended-sanitize
+[  5%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[  5%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/main.cpp.o
+[  7%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/pipeline_test.cpp.o
+[ 10%] Linking CXX static library libow_json.a
+[ 10%] Built target ow_json
+[ 13%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/main.cpp.o
+[ 15%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 18%] Linking CXX executable ow_pipeline_contract_tests
+[ 18%] Built target ow_pipeline_contract_tests
+[ 21%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 23%] Linking CXX executable ow_rendition_contract_tests
+[ 23%] Built target ow_rendition_contract_tests
+[ 26%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/main.cpp.o
+[ 28%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 31%] Linking CXX executable ow_rendition_probe
+[ 31%] Built target ow_rendition_probe
+[ 34%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+/home/rick/Downloads/worker-client-unattended/src/admission.cpp: In member function ‘ow::Decision ow::Admission::offer(const ow::Offer&, ow::Tick, ow::Resources)’:
+/home/rick/Downloads/worker-client-unattended/src/admission.cpp:54:76: warning: missing initializer for member ‘ow::Active::stages’ [-Wmissing-field-initializers]
+   54 |  active_.emplace(o.attempt_id,Active{o,Phase::reserved,{},o.reserve_until,0});return {true,"ready"};
+      |                                                                            ^
+[ 36%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 39%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 42%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 44%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 47%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+/home/rick/Downloads/worker-client-unattended/src/adaptive_hardware.cpp: In constructor ‘ow::adaptive::Scheduler::Scheduler(ow::adaptive::Limits, std::vector<ow::adaptive::Profile>)’:
+/home/rick/Downloads/worker-client-unattended/src/adaptive_hardware.cpp:231:44: warning: missing initializer for member ‘ow::adaptive::Device::exclusion_reason’ [-Wmissing-field-initializers]
+  231 |   if(found==devices.end())devices.push_back({p.stable_id,p.backend,p.driver_version,0,true,p.adapter_index,p.device_name,p.backend_index,p.backend_identity_verified,p.physical_id});
+      |                           ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 50%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o
+[ 52%] Building CXX object CMakeFiles/ow_core.dir/src/control.cpp.o
+[ 55%] Building CXX object CMakeFiles/ow_core.dir/src/lifecycle.cpp.o
+[ 57%] Linking CXX static library libow_core.a
+[ 57%] Built target ow_core
+[ 60%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/stage_timing_test.cpp.o
+[ 63%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[ 65%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[ 68%] Linking CXX executable ow_progress_contract_tests
+[ 68%] Built target ow_progress_contract_tests
+[ 71%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[ 73%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[ 76%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/pairing_test.cpp.o
+[ 78%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/capacity_test.cpp.o
+[ 81%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/control_test.cpp.o
+[ 84%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/lifecycle_test.cpp.o
+[ 86%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/main.cpp.o
+[ 89%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 92%] Linking CXX executable ow_contract_tests
+[ 92%] Built target ow_contract_tests
+[ 94%] Building CXX object CMakeFiles/ow_adaptive_evidence_probe.dir/tests/adaptive_evidence_probe.cpp.o
+[ 97%] Linking CXX executable ow_adaptive_evidence_probe
+[ 97%] Built target ow_adaptive_evidence_probe
+[100%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[100%] Built target ow_adaptive_hardware_contract_tests
+Test project /home/rick/Downloads/worker-client-unattended/build-unattended-sanitize
+    Start 1: ffmpeg_dependency_contracts
+1/6 Test #1: ffmpeg_dependency_contracts ......   Passed    0.19 sec
+    Start 2: worker_contracts
+2/6 Test #2: worker_contracts .................   Passed    0.13 sec
+    Start 3: pipeline_contracts
+3/6 Test #3: pipeline_contracts ...............   Passed    0.02 sec
+    Start 4: rendition_contracts
+4/6 Test #4: rendition_contracts ..............   Passed    0.04 sec
+    Start 5: adaptive_hardware_contracts
+5/6 Test #5: adaptive_hardware_contracts ......   Passed    0.08 sec
+    Start 6: progress_contracts
+6/6 Test #6: progress_contracts ...............   Passed    0.50 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) =   0.97 sec
