@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$BinaryDirectory,[Parameter(Mandatory=$true)][string]$BuildDirectory,[string]$Configuration='Release')
+param([Parameter(Mandatory=$true)][string]$BinaryDirectory,[Parameter(Mandatory=$true)][string]$BuildDirectory,[string]$Configuration='Release',[Parameter(Mandatory=$true)][string]$CMakeExecutable)
 $ErrorActionPreference='Stop'
 $root=Join-Path ([IO.Path]::GetTempPath()) ('ow-cli-fixture-'+[guid]::NewGuid().ToString('N'))
 $ctl=Join-Path $BinaryDirectory 'OrganizerWorkerCtl.exe'
@@ -6,7 +6,7 @@ $fixture=Join-Path $BinaryDirectory 'ow_control_fixture.exe'
 $package=Join-Path ([IO.Path]::GetTempPath()) ('ow-cli-package-'+[guid]::NewGuid().ToString('N'))
 $p=$null
 try {
-    & cmake --install $BuildDirectory --config $Configuration --prefix $package
+    & $CMakeExecutable --install $BuildDirectory --config $Configuration --prefix $package
     if ($LASTEXITCODE -ne 0) { throw 'Candidate packaging failed' }
     foreach ($file in 'OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','cli.md') {
         if (-not (Test-Path -LiteralPath (Join-Path $package $file))) { throw ('Missing packaged file: '+$file) }

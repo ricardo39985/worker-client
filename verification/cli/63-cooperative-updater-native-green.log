@@ -1,0 +1,419 @@
+windows	Set up job	﻿2026-10-21T04:15:54.9738226Z Current runner version: '2.338.0'
+windows	Set up job	2026-10-21T04:15:54.9784085Z ##[group]Runner Image Provisioner
+windows	Set up job	2026-10-21T04:15:54.9784690Z Hosted Compute Agent
+windows	Set up job	2026-10-21T04:15:54.9785027Z Version: 20261012.601
+windows	Set up job	2026-10-21T04:15:54.9785854Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+windows	Set up job	2026-10-21T04:15:54.9786314Z Build Date: 2026-10-12T17:48:21Z
+windows	Set up job	2026-10-21T04:15:54.9786707Z Worker ID: {c21ac9f4-f048-4b30-88d8-922bef073395}
+windows	Set up job	2026-10-21T04:15:54.9787197Z Region: westus3
+windows	Set up job	2026-10-21T04:15:54.9787551Z Cloud: Azure
+windows	Set up job	2026-10-21T04:15:54.9787843Z ##[endgroup]
+windows	Set up job	2026-10-21T04:15:54.9788615Z ##[group]Operating System
+windows	Set up job	2026-10-21T04:15:54.9788995Z Microsoft Windows Server 2022
+windows	Set up job	2026-10-21T04:15:54.9789360Z 10.0.20348
+windows	Set up job	2026-10-21T04:15:54.9789690Z Datacenter
+windows	Set up job	2026-10-21T04:15:54.9790033Z ##[endgroup]
+windows	Set up job	2026-10-21T04:15:54.9790370Z ##[group]Runner Image
+windows	Set up job	2026-10-21T04:15:54.9790711Z Image: windows-2022
+windows	Set up job	2026-10-21T04:15:54.9791050Z Version: 20261012.333.1
+windows	Set up job	2026-10-21T04:15:54.9791660Z Included Software: https://github.com/actions/runner-images/blob/win22/20261012.333/images/windows/Windows2022-Readme.md
+windows	Set up job	2026-10-21T04:15:54.9792773Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261012.333
+windows	Set up job	2026-10-21T04:15:54.9793327Z ##[endgroup]
+windows	Set up job	2026-10-21T04:15:54.9794007Z ##[group]GITHUB_TOKEN Permissions
+windows	Set up job	2026-10-21T04:15:54.9795205Z Contents: read
+windows	Set up job	2026-10-21T04:15:54.9795550Z Metadata: read
+windows	Set up job	2026-10-21T04:15:54.9795877Z ##[endgroup]
+windows	Set up job	2026-10-21T04:15:54.9797265Z Secret source: Actions
+windows	Set up job	2026-10-21T04:15:54.9797754Z Cache mode: write
+windows	Set up job	2026-10-21T04:15:54.9798130Z Prepare workflow directory
+windows	Set up job	2026-10-21T04:15:55.0008933Z Prepare all required actions
+windows	Set up job	2026-10-21T04:15:55.0043179Z Getting action download info
+windows	Set up job	2026-10-21T04:15:55.3729786Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+windows	Set up job	2026-10-21T04:15:55.5664538Z Complete job name: windows
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	﻿2026-10-21T04:15:55.7246150Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7246985Z with:
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7247226Z   persist-credentials: false
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7247518Z   repository: ricardo39985/worker-client
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7249708Z   token: ***
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7249934Z   ssh-strict: true
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7250167Z   ssh-user: git
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7250387Z   clean: true
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7250624Z   sparse-checkout-cone-mode: true
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7250904Z   fetch-depth: 1
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7251130Z   fetch-tags: false
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7251362Z   show-progress: true
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7251593Z   lfs: false
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7251808Z   submodules: false
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7252045Z   set-safe-directory: true
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.7252392Z ##[endgroup]
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.8270420Z Syncing repository: ricardo39985/worker-client
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.8271539Z ##[group]Getting Git version info
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.8271908Z Working directory is 'D:\a\worker-client\worker-client'
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:55.8887568Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.3321521Z git version 2.56.0.windows.2
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.3350956Z ##[endgroup]
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.3363660Z Temporarily overriding HOME='D:\a\_temp\4750da7f-5129-4d2a-8416-85bc9cde8d34' before making global git config changes
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.3364417Z Adding repository directory to the temporary git global config as a safe directory
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.3371259Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\worker-client\worker-client
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.3956892Z Deleting the contents of 'D:\a\worker-client\worker-client'
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.3960153Z ##[group]Initializing the repository
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.3966687Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\worker-client\worker-client
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.4924997Z Initialized empty Git repository in D:/a/worker-client/worker-client/.git/
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.4950631Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/ricardo39985/worker-client
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.5591119Z ##[endgroup]
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.5591969Z ##[group]Disabling automatic garbage collection
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.5592795Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.5791730Z ##[endgroup]
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.5792894Z ##[group]Setting up auth
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.5800133Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:56.6015203Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:58.0855999Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:58.1077883Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:58.4629092Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:58.4855590Z ##[endgroup]
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:58.4856234Z ##[group]Fetching the repository
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:15:58.4865038Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +bf7b6142837f0422fa22ec288764c1167c438949:refs/remotes/origin/feat/full-cli
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.1816161Z From https://github.com/ricardo39985/worker-client
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.1816955Z  * [new ref]         bf7b6142837f0422fa22ec288764c1167c438949 -> origin/feat/full-cli
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.1840195Z ##[endgroup]
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.1840535Z ##[group]Determining the checkout info
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.1845612Z ##[endgroup]
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.1851529Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.2235536Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.2443635Z ##[group]Checking out the ref
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.2449807Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feat/full-cli refs/remotes/origin/feat/full-cli
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.3859852Z Switched to a new branch 'feat/full-cli'
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.3871301Z branch 'feat/full-cli' set up to track 'origin/feat/full-cli'.
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.3900043Z ##[endgroup]
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.4219703Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.4423420Z bf7b6142837f0422fa22ec288764c1167c438949
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.4450008Z ##[group]Removing auth
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.4456474Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.4666614Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.8371738Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.8553917Z http.https://github.com/.extraheader
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.8576286Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:00.8782921Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:16:01.2445983Z ##[endgroup]
+windows	Parse Windows PowerShell 5.1 scripts	﻿2026-10-21T04:16:01.2680377Z ##[group]Run $ErrorActionPreference='Stop'
+windows	Parse Windows PowerShell 5.1 scripts	2026-10-21T04:16:01.2680682Z ^[[36;1m$ErrorActionPreference='Stop'^[[0m
+windows	Parse Windows PowerShell 5.1 scripts	2026-10-21T04:16:01.2681414Z ^[[36;1mGet-ChildItem scripts,tests -Filter *.ps1 | ForEach-Object {^[[0m
+windows	Parse Windows PowerShell 5.1 scripts	2026-10-21T04:16:01.2681651Z ^[[36;1m  $tokens=$null; $errors=$null^[[0m
+windows	Parse Windows PowerShell 5.1 scripts	2026-10-21T04:16:01.2681958Z ^[[36;1m  [System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors) | Out-Null^[[0m
+windows	Parse Windows PowerShell 5.1 scripts	2026-10-21T04:16:01.2682386Z ^[[36;1m  if ($errors.Count -gt 0) { $errors | Out-String | Write-Error; throw 'PowerShell syntax check failed' }^[[0m
+windows	Parse Windows PowerShell 5.1 scripts	2026-10-21T04:16:01.2682655Z ^[[36;1m}^[[0m
+windows	Parse Windows PowerShell 5.1 scripts	2026-10-21T04:16:01.2739707Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+windows	Parse Windows PowerShell 5.1 scripts	2026-10-21T04:16:01.2739963Z ##[endgroup]
+windows	Verify pinned source and build	﻿2026-10-21T04:16:05.4418350Z ##[group]Run $ErrorActionPreference='Stop'
+windows	Verify pinned source and build	2026-10-21T04:16:05.4418644Z ^[[36;1m$ErrorActionPreference='Stop'^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4418915Z ^[[36;1m$lock=Get-Content config/dependencies.lock.json -Raw | ConvertFrom-Json^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4419286Z ^[[36;1mif (-not (Get-Command cmake.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CMake' }^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4419724Z ^[[36;1mif (-not (Get-Command ctest.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CTest' }^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4420096Z ^[[36;1mInvoke-WebRequest -Uri $lock.boost.url -OutFile boost.tar.gz -UseBasicParsing^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4420490Z ^[[36;1mif ((Get-FileHash boost.tar.gz -Algorithm SHA256).Hash -ine $lock.boost.sha256) { throw 'Dependency checksum mismatch' }^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4420801Z ^[[36;1mcmake -E tar xzf boost.tar.gz^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4421025Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Dependency extraction failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4421261Z ^[[36;1m$boost=Join-Path $PWD $lock.boost.directory^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4421571Z ^[[36;1mcmake -S . -B build-ci -G 'Visual Studio 17 2022' -A x64 "-DOW_BOOST_ROOT=$boost" -DBUILD_TESTING=ON^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4421878Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Native configure failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4422118Z ^[[36;1mcmake --build build-ci --config Release --parallel 2^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4422360Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4422606Z ^[[36;1mctest --test-dir build-ci -C Release --output-on-failure^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4422884Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Native behavior contracts failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T04:16:05.4449089Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+windows	Verify pinned source and build	2026-10-21T04:16:05.4449330Z ##[endgroup]
+windows	Verify pinned source and build	2026-10-21T04:18:59.8259722Z -- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.20348.
+windows	Verify pinned source and build	2026-10-21T04:19:11.6018763Z -- The CXX compiler identification is MSVC 19.44.35229.0
+windows	Verify pinned source and build	2026-10-21T04:19:11.7365149Z -- Detecting CXX compiler ABI info
+windows	Verify pinned source and build	2026-10-21T04:19:12.6616698Z -- Detecting CXX compiler ABI info - done
+windows	Verify pinned source and build	2026-10-21T04:19:12.6716551Z -- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+windows	Verify pinned source and build	2026-10-21T04:19:12.6725708Z -- Detecting CXX compile features
+windows	Verify pinned source and build	2026-10-21T04:19:12.6780007Z -- Detecting CXX compile features - done
+windows	Verify pinned source and build	2026-10-21T04:19:16.0925151Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+windows	Verify pinned source and build	2026-10-21T04:19:18.0222042Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+windows	Verify pinned source and build	2026-10-21T04:19:18.0222589Z -- Looking for pthread_create in pthreads
+windows	Verify pinned source and build	2026-10-21T04:19:18.4947016Z -- Looking for pthread_create in pthreads - not found
+windows	Verify pinned source and build	2026-10-21T04:19:18.4947447Z -- Looking for pthread_create in pthread
+windows	Verify pinned source and build	2026-10-21T04:19:18.8908601Z -- Looking for pthread_create in pthread - not found
+windows	Verify pinned source and build	2026-10-21T04:19:18.9040477Z -- Found Threads: TRUE
+windows	Verify pinned source and build	2026-10-21T04:19:20.3518091Z -- Configuring done (20.9s)
+windows	Verify pinned source and build	2026-10-21T04:19:20.4791482Z -- Generating done (0.1s)
+windows	Verify pinned source and build	2026-10-21T04:19:20.4796532Z -- Build files have been written to: D:/a/worker-client/worker-client/build-ci
+windows	Verify pinned source and build	2026-10-21T04:19:20.5567257Z MSBuild version 17.14.60+43b635718 for .NET Framework
+windows	Verify pinned source and build	2026-10-21T04:19:20.5775943Z 
+windows	Verify pinned source and build	2026-10-21T04:19:20.8296944Z   1>Checking Build System
+windows	Verify pinned source and build	2026-10-21T04:19:21.0114594Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:21.1224169Z   boost_json.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:21.3050295Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:21.3607138Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:21.4003233Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:22.1640207Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:22.6759296Z   progress_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:22.6759616Z   pipeline_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:24.4975743Z   encoder_run_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:26.7102887Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:26.7965362Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:27.3059364Z   media_rendition_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:27.6340690Z   status_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:29.0381652Z   stage_timing_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:30.6440420Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:19:30.6441038Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:19:30.6647892Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:19:30.6648492Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:19:33.8712834Z   All 3041 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:19:33.8713649Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:19:34.1400375Z   All 2222 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:19:34.1452275Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:19:34.2145549Z   ow_pipeline_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T04:19:34.2846663Z   ow_rendition_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T04:19:34.2967171Z   ow_json.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_json.lib
+windows	Verify pinned source and build	2026-10-21T04:19:34.3458199Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:34.4252104Z   admission.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:34.4313124Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:34.5122739Z   media_rendition_probe.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:34.6457953Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:19:34.7232266Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:19:35.6271793Z   store.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:39.8332479Z   protocol.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:41.6889991Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:19:41.6902356Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:19:42.9936427Z   All 5170 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:19:43.0852957Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:19:43.7715221Z   All 1980 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:19:43.7758413Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:19:43.8499490Z   ow_progress_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_progress_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T04:19:43.9121771Z   pairing.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:44.0053864Z   ow_rendition_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_probe.exe
+windows	Verify pinned source and build	2026-10-21T04:19:45.4373962Z   adaptive_hardware.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:46.6910212Z   control.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:48.5854686Z   ow_core.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_core.lib
+windows	Verify pinned source and build	2026-10-21T04:19:48.6395455Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:48.6396603Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:49.1880424Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:49.2321846Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:19:49.2900085Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:49.2921538Z   adaptive_evidence_probe.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:49.2921909Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:49.9089558Z   adaptive_hardware_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:49.9198399Z   admission_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:50.7237795Z   store_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:51.5099969Z   platform.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:52.5810846Z   protocol_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:19:53.5730327Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:19:53.5744460Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:19:55.7321603Z   pairing_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:00.6369538Z   capacity_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:00.9855863Z   All 5618 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:20:01.0039682Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:20:01.2914386Z   ow_adaptive_hardware_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_hardware_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T04:20:01.3803355Z   control_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:01.4802189Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:20:01.4848870Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:20:02.3418379Z   All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:20:02.3419351Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:20:02.5350168Z   ow_adaptive_evidence_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_evidence_probe.exe
+windows	Verify pinned source and build	2026-10-21T04:20:03.2067705Z   process.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:03.4959403Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:20:03.5037638Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:20:06.8908949Z   http.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:08.6818255Z   All 3764 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:20:08.7027583Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:20:08.9218183Z   ow_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T04:20:09.4563890Z   worker.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:11.4696141Z D:\a\worker-client\worker-client\windows\worker.cpp(860,289): warning C4456: declaration of 'cancelled' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+windows	Verify pinned source and build	2026-10-21T04:20:11.4717286Z       D:\a\worker-client\worker-client\windows\worker.cpp(657,7):
+windows	Verify pinned source and build	2026-10-21T04:20:11.4717635Z       see declaration of 'cancelled'
+windows	Verify pinned source and build	2026-10-21T04:20:11.4717929Z   
+windows	Verify pinned source and build	2026-10-21T04:20:12.8995078Z   probe_recovery.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:15.3110861Z   pairing_adapter.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:16.9724696Z   hardware.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:18.6350177Z   physical_adapters.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:20.3128027Z   capacity.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:21.6473274Z D:\a\worker-client\worker-client\windows\capacity.cpp(66,45): warning C4456: declaration of 'value' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+windows	Verify pinned source and build	2026-10-21T04:20:21.6473944Z       D:\a\worker-client\worker-client\windows\capacity.cpp(56,24):
+windows	Verify pinned source and build	2026-10-21T04:20:21.6474223Z       see declaration of 'value'
+windows	Verify pinned source and build	2026-10-21T04:20:21.6474412Z   
+windows	Verify pinned source and build	2026-10-21T04:20:22.2209198Z   control_pipe.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:23.8397279Z   worker_control.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:26.8094265Z   ow_windows.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_windows.lib
+windows	Verify pinned source and build	2026-10-21T04:20:26.8546574Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:26.8555066Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:26.9017336Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:26.9444861Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:26.9875178Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.0326935Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.0785510Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.1236909Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.1675528Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.2148319Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.4123290Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.4809632Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.5387480Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.5825337Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.6248275Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.6671101Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:20:27.7274919Z   tray.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:27.7278177Z   console.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:27.7304080Z   windows_job_control_fixture.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:30.4304832Z   control_acceptance.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:30.5081003Z   windows_gpu_measurements.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:30.8878711Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:20:30.9280390Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:20:33.8886010Z   All 1621 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:20:33.8886651Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:20:34.1964752Z   OrganizerWorkerConsole.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerConsole.exe
+windows	Verify pinned source and build	2026-10-21T04:20:34.6160480Z   windows_control_fixture.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:34.7933615Z   windows_foreground_probe.cpp
+windows	Verify pinned source and build	2026-10-21T04:20:34.7978395Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:20:34.8832048Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:20:45.8782884Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:20:45.9857611Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:20:46.2219167Z   All 11113 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:20:46.3358144Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:20:54.9366716Z   OrganizerWorker.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorker.exe
+windows	Verify pinned source and build	2026-10-21T04:20:55.2957479Z   All 11046 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:20:55.3243175Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:20:55.4369186Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:20:55.4764564Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:20:56.9783223Z   ow_control_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_control_fixture.exe
+windows	Verify pinned source and build	2026-10-21T04:21:02.9885801Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:03.2412513Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:05.8976267Z   All 986 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:05.8976724Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:05.9227018Z   All 11343 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:05.9564914Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:06.0488712Z   ow_foreground_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_foreground_probe.exe
+windows	Verify pinned source and build	2026-10-21T04:21:06.1373411Z   windows_pipeline_smoke.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:06.1506022Z   windows_gpu_budget_probe.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:06.4146181Z   ow_job_control_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_job_control_fixture.exe
+windows	Verify pinned source and build	2026-10-21T04:21:06.7619194Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:06.7748973Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:10.2707672Z   All 3105 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:10.2865038Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:10.4501569Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:10.4771854Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:12.5173758Z   ow_gpu_measurements.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_measurements.exe
+windows	Verify pinned source and build	2026-10-21T04:21:12.7062261Z   windows_gpu_baseline.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:12.7062981Z   windows_flex_benchmark.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:13.2131262Z   All 2924 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:13.2242041Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:13.4987093Z   ow_gpu_budget_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_budget_probe.exe
+windows	Verify pinned source and build	2026-10-21T04:21:13.6146562Z   doctor.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:15.7072918Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:15.7073394Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:16.0915081Z   offline_media.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:18.9133973Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:18.9656266Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:19.0381794Z   All 3009 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:19.0462914Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:22.8185626Z   ow_gpu_baseline.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_baseline.exe
+windows	Verify pinned source and build	2026-10-21T04:21:26.6282377Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:26.7976252Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:30.3608630Z   All 10827 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:30.3619748Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:37.2238250Z   ow_pipeline_smoke.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_smoke.exe
+windows	Verify pinned source and build	2026-10-21T04:21:37.2968954Z   windows_child.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:37.2969469Z   windows_resource_probe.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:38.0987407Z   All 10522 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:38.0999790Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:38.6624742Z   OrganizerWorkerDoctor.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerDoctor.exe
+windows	Verify pinned source and build	2026-10-21T04:21:39.3342907Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:39.4041799Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:39.5606414Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:39.6085919Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:41.5887614Z   All 2157 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:41.7506395Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:51.1185331Z   ow_resource_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_resource_probe.exe
+windows	Verify pinned source and build	2026-10-21T04:21:51.3244095Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:51.3310667Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:51.8781175Z   All 11515 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:51.9073192Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:51.9522351Z   All 760 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:51.9579433Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:52.1142564Z   ow_test_child.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_test_child.exe
+windows	Verify pinned source and build	2026-10-21T04:21:52.1918488Z   windows_legacy_actor.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:52.1918914Z   windows_owner_fixture.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:52.3722750Z   ow_flex_benchmark.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_flex_benchmark.exe
+windows	Verify pinned source and build	2026-10-21T04:21:52.4896168Z   cli.cpp
+windows	Verify pinned source and build	2026-10-21T04:21:54.9590383Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:54.9686417Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:56.4143833Z   All 1358 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:21:56.4300487Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:21:56.5964125Z   ow_owner_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_owner_fixture.exe
+windows	Verify pinned source and build	2026-10-21T04:21:56.6490465Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:56.7036329Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:21:57.2277632Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:21:57.4171114Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:22:14.0704146Z   All 10664 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:22:14.1487774Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:22:16.9575071Z   OrganizerWorkerCtl.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerCtl.exe
+windows	Verify pinned source and build	2026-10-21T04:22:17.5181013Z   All 11069 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:22:17.5505402Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:22:17.9021234Z   ow_upgrade_actor.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_upgrade_actor.exe
+windows	Verify pinned source and build	2026-10-21T04:22:17.9414232Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:22:18.0029454Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T04:22:18.4843819Z   windows_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:22:21.2172718Z   windows_control_test.cpp
+windows	Verify pinned source and build	2026-10-21T04:22:24.5402244Z   Generating code
+windows	Verify pinned source and build	2026-10-21T04:22:24.6242351Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T04:22:36.3742869Z   All 11861 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T04:22:36.4116943Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T04:22:36.7790211Z   ow_windows_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_windows_tests.exe
+windows	Verify pinned source and build	2026-10-21T04:22:36.8331391Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T04:22:37.4261075Z Internal ctest changing into directory: D:/a/worker-client/worker-client/build-ci
+windows	Verify pinned source and build	2026-10-21T04:22:37.5506276Z Test project D:/a/worker-client/worker-client/build-ci
+windows	Verify pinned source and build	2026-10-21T04:22:37.5828719Z       Start  1: ffmpeg_dependency_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:38.8100098Z  1/13 Test  #1: ffmpeg_dependency_contracts ......   Passed    1.23 sec
+windows	Verify pinned source and build	2026-10-21T04:22:38.8109593Z       Start  2: worker_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:39.4797114Z  2/13 Test  #2: worker_contracts .................   Passed    0.67 sec
+windows	Verify pinned source and build	2026-10-21T04:22:39.4799693Z       Start  3: pipeline_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:39.4876578Z  3/13 Test  #3: pipeline_contracts ...............   Passed    0.01 sec
+windows	Verify pinned source and build	2026-10-21T04:22:39.4879197Z       Start  4: rendition_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:39.4947391Z  4/13 Test  #4: rendition_contracts ..............   Passed    0.01 sec
+windows	Verify pinned source and build	2026-10-21T04:22:39.4949946Z       Start  5: adaptive_hardware_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:39.5381582Z  5/13 Test  #5: adaptive_hardware_contracts ......   Passed    0.04 sec
+windows	Verify pinned source and build	2026-10-21T04:22:39.5384276Z       Start  6: progress_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:39.5646255Z  6/13 Test  #6: progress_contracts ...............   Passed    0.03 sec
+windows	Verify pinned source and build	2026-10-21T04:22:39.5648603Z       Start  7: cli_integration_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:40.7434409Z  7/13 Test  #7: cli_integration_contracts ........   Passed    1.18 sec
+windows	Verify pinned source and build	2026-10-21T04:22:40.7437468Z       Start  8: windows_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:44.9002192Z  8/13 Test  #8: windows_contracts ................   Passed    4.16 sec
+windows	Verify pinned source and build	2026-10-21T04:22:44.9005204Z       Start  9: setup_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:46.1574380Z  9/13 Test  #9: setup_contracts ..................   Passed    1.26 sec
+windows	Verify pinned source and build	2026-10-21T04:22:46.1577857Z       Start 10: setup_progress_contracts
+windows	Verify pinned source and build	2026-10-21T04:22:55.3810959Z 10/13 Test #10: setup_progress_contracts .........   Passed    9.22 sec
+windows	Verify pinned source and build	2026-10-21T04:22:55.3814182Z       Start 11: setup_converter_contracts
+windows	Verify pinned source and build	2026-10-21T04:23:20.2545680Z 11/13 Test #11: setup_converter_contracts ........   Passed   24.87 sec
+windows	Verify pinned source and build	2026-10-21T04:23:20.2548767Z       Start 12: updater_control_contracts
+windows	Verify pinned source and build	2026-10-21T04:23:20.6335802Z 12/13 Test #12: updater_control_contracts ........   Passed    0.38 sec
+windows	Verify pinned source and build	2026-10-21T04:23:20.6338078Z       Start 13: setup_swap_contracts
+windows	Verify pinned source and build	2026-10-21T04:23:22.7685257Z 13/13 Test #13: setup_swap_contracts .............   Passed    2.13 sec
+windows	Verify pinned source and build	2026-10-21T04:23:22.7691047Z 
+windows	Verify pinned source and build	2026-10-21T04:23:22.7691385Z 100% tests passed, 0 tests failed out of 13
+windows	Verify pinned source and build	2026-10-21T04:23:22.7691644Z 
+windows	Verify pinned source and build	2026-10-21T04:23:22.7691771Z Total Test time (real) =  45.22 sec
+windows	Real disallowed owner and forged-server authorization	﻿2026-10-21T04:23:22.8158586Z ##[group]Run $ErrorActionPreference='Stop'
+windows	Real disallowed owner and forged-server authorization	2026-10-21T04:23:22.8158927Z ^[[36;1m$ErrorActionPreference='Stop'^[[0m
+windows	Real disallowed owner and forged-server authorization	2026-10-21T04:23:22.8159270Z ^[[36;1m& ./tests/owner_context_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release')^[[0m
+windows	Real disallowed owner and forged-server authorization	2026-10-21T04:23:22.8182788Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+windows	Real disallowed owner and forged-server authorization	2026-10-21T04:23:22.8183067Z ##[endgroup]
+windows	Real disallowed owner and forged-server authorization	2026-10-21T04:23:23.3108652Z {"rejected":false,"caller_sid":"S-1-5-21-3213014087-2684668049-2838998412-500"}
+windows	Real disallowed owner and forged-server authorization	2026-10-21T04:23:23.7894815Z {"denied":true,"error":5,"caller_sid":"S-1-5-19","owner_sid":"S-1-5-21-3213014087-2684668049-2838998412-500"}
+windows	Real disallowed owner and forged-server authorization	2026-10-21T04:23:23.8806356Z {"rejected":true,"caller_sid":"S-1-5-21-3213014087-2684668049-2838998412-500"}
+windows	Real disallowed owner and forged-server authorization	2026-10-21T04:23:23.9413647Z {"server_sid":"S-1-5-19","client_bytes":0,"connected":true}
+windows	Real disallowed owner and forged-server authorization	2026-10-21T04:23:23.9872893Z OWNER_CONTEXT_PASS real foreign SID denied; forged server received zero request bytes
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	﻿2026-10-21T04:23:24.7677803Z Post job cleanup.
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:23:24.8694316Z [command]"C:\Program Files\Git\bin\git.exe" version
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:23:24.8899441Z git version 2.56.0.windows.2
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:23:24.8937294Z Temporarily overriding HOME='D:\a\_temp\83eddf3f-22a7-47af-acde-647ad980dcfe' before making global git config changes
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:23:24.8937992Z Adding repository directory to the temporary git global config as a safe directory
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:23:24.8945300Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\worker-client\worker-client
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:23:24.9166212Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:23:24.9382426Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:23:25.3656898Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+windows	Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683	2026-10-21T04:23:25.3873271Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+windows	Complete job	﻿2026-10-21T04:23:25.8695707Z Cleaning up orphan processes
+windows	Complete job	2026-10-21T04:23:25.8843473Z Terminate orphan process: pid (5792) (vctip)
+windows	Complete job	2026-10-21T04:23:25.8867749Z Terminate orphan process: pid (1856) (MSBuild)
+windows	Complete job	2026-10-21T04:23:25.8948544Z Terminate orphan process: pid (5200) (conhost)
+windows	Complete job	2026-10-21T04:23:25.9118300Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
