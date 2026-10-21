@@ -1,0 +1,684 @@
+﻿2026-10-21T15:14:54.7409241Z Current runner version: '2.338.0'
+2026-10-21T15:14:54.7429672Z ##[group]Runner Image Provisioner
+2026-10-21T15:14:54.7430304Z Hosted Compute Agent
+2026-10-21T15:14:54.7430705Z Version: 20261012.601
+2026-10-21T15:14:54.7431191Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-21T15:14:54.7431711Z Build Date: 2026-10-12T17:48:21Z
+2026-10-21T15:14:54.7432333Z Worker ID: {638a0d39-3791-4ff7-b90f-f3e4111e5366}
+2026-10-21T15:14:54.7433078Z Region: westus3
+2026-10-21T15:14:54.7433451Z Cloud: Azure
+2026-10-21T15:14:54.7433849Z ##[endgroup]
+2026-10-21T15:14:54.7434908Z ##[group]Operating System
+2026-10-21T15:14:54.7435394Z Microsoft Windows Server 2022
+2026-10-21T15:14:54.7435827Z 10.0.20348
+2026-10-21T15:14:54.7436180Z Datacenter
+2026-10-21T15:14:54.7436572Z ##[endgroup]
+2026-10-21T15:14:54.7436959Z ##[group]Runner Image
+2026-10-21T15:14:54.7437351Z Image: windows-2022
+2026-10-21T15:14:54.7437749Z Version: 20261012.333.1
+2026-10-21T15:14:54.7438966Z Included Software: https://github.com/actions/runner-images/blob/win22/20261012.333/images/windows/Windows2022-Readme.md
+2026-10-21T15:14:54.7440156Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261012.333
+2026-10-21T15:14:54.7440823Z ##[endgroup]
+2026-10-21T15:14:54.7441631Z ##[group]GITHUB_TOKEN Permissions
+2026-10-21T15:14:54.7443155Z Contents: read
+2026-10-21T15:14:54.7443567Z Metadata: read
+2026-10-21T15:14:54.7443946Z ##[endgroup]
+2026-10-21T15:14:54.7445539Z Secret source: Actions
+2026-10-21T15:14:54.7446202Z Cache mode: write
+2026-10-21T15:14:54.7446708Z Prepare workflow directory
+2026-10-21T15:14:54.7735059Z Prepare all required actions
+2026-10-21T15:14:54.7790464Z Getting action download info
+2026-10-21T15:14:55.1280653Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+2026-10-21T15:14:55.4241828Z Complete job name: windows
+2026-10-21T15:14:55.6478971Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+2026-10-21T15:14:55.6480180Z with:
+2026-10-21T15:14:55.6480520Z   persist-credentials: false
+2026-10-21T15:14:55.6480958Z   repository: ricardo39985/worker-client
+2026-10-21T15:14:55.6484639Z   token: ***
+2026-10-21T15:14:55.6484977Z   ssh-strict: true
+2026-10-21T15:14:55.6485315Z   ssh-user: git
+2026-10-21T15:14:55.6485642Z   clean: true
+2026-10-21T15:14:55.6486006Z   sparse-checkout-cone-mode: true
+2026-10-21T15:14:55.6486432Z   fetch-depth: 1
+2026-10-21T15:14:55.6486767Z   fetch-tags: false
+2026-10-21T15:14:55.6487124Z   show-progress: true
+2026-10-21T15:14:55.6487474Z   lfs: false
+2026-10-21T15:14:55.6487796Z   submodules: false
+2026-10-21T15:14:55.6488156Z   set-safe-directory: true
+2026-10-21T15:14:55.6488749Z ##[endgroup]
+2026-10-21T15:14:55.8118523Z Syncing repository: ricardo39985/worker-client
+2026-10-21T15:14:55.8121957Z ##[group]Getting Git version info
+2026-10-21T15:14:55.8123523Z Working directory is 'D:\a\worker-client\worker-client'
+2026-10-21T15:14:55.8788301Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-21T15:14:56.1993407Z git version 2.56.0.windows.2
+2026-10-21T15:14:56.2029311Z ##[endgroup]
+2026-10-21T15:14:56.2043678Z Temporarily overriding HOME='D:\a\_temp\d5dcefc4-32b6-405e-86a7-1063ced8f90d' before making global git config changes
+2026-10-21T15:14:56.2044743Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T15:14:56.2051974Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\worker-client\worker-client
+2026-10-21T15:14:56.2530553Z Deleting the contents of 'D:\a\worker-client\worker-client'
+2026-10-21T15:14:56.2534340Z ##[group]Initializing the repository
+2026-10-21T15:14:56.2541905Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\worker-client\worker-client
+2026-10-21T15:14:56.4710696Z Initialized empty Git repository in D:/a/worker-client/worker-client/.git/
+2026-10-21T15:14:56.4754042Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/ricardo39985/worker-client
+2026-10-21T15:14:56.5313735Z ##[endgroup]
+2026-10-21T15:14:56.5314839Z ##[group]Disabling automatic garbage collection
+2026-10-21T15:14:56.5321683Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-21T15:14:56.5552617Z ##[endgroup]
+2026-10-21T15:14:56.5553342Z ##[group]Setting up auth
+2026-10-21T15:14:56.5561795Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T15:14:56.5786388Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-21T15:14:58.1666248Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T15:14:58.1897231Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-21T15:14:58.5719451Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-21T15:14:58.5945434Z ##[endgroup]
+2026-10-21T15:14:58.5945897Z ##[group]Fetching the repository
+2026-10-21T15:14:58.5954666Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +62ca7e585fa6f475d107e3e3c83d4171723f4241:refs/remotes/origin/feat/unattended-owner
+2026-10-21T15:15:00.4604071Z From https://github.com/ricardo39985/worker-client
+2026-10-21T15:15:00.4604946Z  * [new ref]         62ca7e585fa6f475d107e3e3c83d4171723f4241 -> origin/feat/unattended-owner
+2026-10-21T15:15:00.4629961Z ##[endgroup]
+2026-10-21T15:15:00.4632439Z ##[group]Determining the checkout info
+2026-10-21T15:15:00.4633037Z ##[endgroup]
+2026-10-21T15:15:00.4642525Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-21T15:15:00.4994194Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-21T15:15:00.5213507Z ##[group]Checking out the ref
+2026-10-21T15:15:00.5220193Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feat/unattended-owner refs/remotes/origin/feat/unattended-owner
+2026-10-21T15:15:00.7071361Z Switched to a new branch 'feat/unattended-owner'
+2026-10-21T15:15:00.7085042Z branch 'feat/unattended-owner' set up to track 'origin/feat/unattended-owner'.
+2026-10-21T15:15:00.7117587Z ##[endgroup]
+2026-10-21T15:15:00.7427436Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-21T15:15:00.7637326Z 62ca7e585fa6f475d107e3e3c83d4171723f4241
+2026-10-21T15:15:00.7661830Z ##[group]Removing auth
+2026-10-21T15:15:00.7668299Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T15:15:00.7889857Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-21T15:15:01.1808562Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T15:15:01.2017224Z http.https://github.com/.extraheader
+2026-10-21T15:15:01.2044366Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-21T15:15:01.2274716Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-21T15:15:01.6054070Z ##[endgroup]
+2026-10-21T15:15:01.6333529Z ##[group]Run $ErrorActionPreference='Stop'
+2026-10-21T15:15:01.6334507Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-10-21T15:15:01.6334888Z [36;1mGet-ChildItem scripts,tests -Filter *.ps1 | ForEach-Object {[0m
+2026-10-21T15:15:01.6335199Z [36;1m  $tokens=$null; $errors=$null[0m
+2026-10-21T15:15:01.6335618Z [36;1m  [System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors) | Out-Null[0m
+2026-10-21T15:15:01.6336205Z [36;1m  if ($errors.Count -gt 0) { $errors | Out-String | Write-Error; throw 'PowerShell syntax check failed' }[0m
+2026-10-21T15:15:01.6336559Z [36;1m}[0m
+2026-10-21T15:15:01.6397515Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T15:15:01.6397863Z ##[endgroup]
+2026-10-21T15:15:06.4011929Z ##[group]Run $ErrorActionPreference='Stop'
+2026-10-21T15:15:06.4012286Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-10-21T15:15:06.4012615Z [36;1m$lock=Get-Content config/dependencies.lock.json -Raw | ConvertFrom-Json[0m
+2026-10-21T15:15:06.4013107Z [36;1mif (-not (Get-Command cmake.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CMake' }[0m
+2026-10-21T15:15:06.4013693Z [36;1mif (-not (Get-Command ctest.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CTest' }[0m
+2026-10-21T15:15:06.4014183Z [36;1mInvoke-WebRequest -Uri $lock.boost.url -OutFile boost.tar.gz -UseBasicParsing[0m
+2026-10-21T15:15:06.4014704Z [36;1mif ((Get-FileHash boost.tar.gz -Algorithm SHA256).Hash -ine $lock.boost.sha256) { throw 'Dependency checksum mismatch' }[0m
+2026-10-21T15:15:06.4015116Z [36;1mcmake -E tar xzf boost.tar.gz[0m
+2026-10-21T15:15:06.4015385Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Dependency extraction failed' }[0m
+2026-10-21T15:15:06.4015716Z [36;1m$boost=Join-Path $PWD $lock.boost.directory[0m
+2026-10-21T15:15:06.4016091Z [36;1mcmake -S . -B build-ci -G 'Visual Studio 17 2022' -A x64 "-DOW_BOOST_ROOT=$boost" -DBUILD_TESTING=ON[0m
+2026-10-21T15:15:06.4016483Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Native configure failed' }[0m
+2026-10-21T15:15:06.4016807Z [36;1mcmake --build build-ci --config Release --parallel 2[0m
+2026-10-21T15:15:06.4017136Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }[0m
+2026-10-21T15:15:06.4044242Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T15:15:06.4044561Z ##[endgroup]
+2026-10-21T15:18:19.1043078Z -- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.20348.
+2026-10-21T15:18:34.1387392Z -- The CXX compiler identification is MSVC 19.44.35229.0
+2026-10-21T15:18:34.3063100Z -- Detecting CXX compiler ABI info
+2026-10-21T15:18:35.3344041Z -- Detecting CXX compiler ABI info - done
+2026-10-21T15:18:35.3458614Z -- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+2026-10-21T15:18:35.3467733Z -- Detecting CXX compile features
+2026-10-21T15:18:35.3516949Z -- Detecting CXX compile features - done
+2026-10-21T15:18:39.1585483Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-10-21T15:18:42.1455957Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+2026-10-21T15:18:42.1456635Z -- Looking for pthread_create in pthreads
+2026-10-21T15:18:42.6958328Z -- Looking for pthread_create in pthreads - not found
+2026-10-21T15:18:42.6958985Z -- Looking for pthread_create in pthread
+2026-10-21T15:18:43.1548232Z -- Looking for pthread_create in pthread - not found
+2026-10-21T15:18:43.1800975Z -- Found Threads: TRUE
+2026-10-21T15:18:45.1555770Z -- Configuring done (26.3s)
+2026-10-21T15:18:45.3118260Z -- Generating done (0.2s)
+2026-10-21T15:18:45.3123966Z -- Build files have been written to: D:/a/worker-client/worker-client/build-ci
+2026-10-21T15:18:45.3992888Z MSBuild version 17.14.60+43b635718 for .NET Framework
+2026-10-21T15:18:45.4231102Z 
+2026-10-21T15:18:45.7088980Z   1>Checking Build System
+2026-10-21T15:18:45.9093310Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:18:46.0221440Z   boost_json.cpp
+2026-10-21T15:18:46.3333944Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:18:46.3405993Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:18:46.3840306Z   main.cpp
+2026-10-21T15:18:46.4507279Z   main.cpp
+2026-10-21T15:18:47.9955565Z   pipeline_test.cpp
+2026-10-21T15:18:47.9993181Z   progress_test.cpp
+2026-10-21T15:18:50.1268603Z   encoder_run_test.cpp
+2026-10-21T15:18:52.7889790Z   ow_json.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_json.lib
+2026-10-21T15:18:52.8429238Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:18:52.9104814Z   admission.cpp
+2026-10-21T15:18:53.5308884Z   status_test.cpp
+2026-10-21T15:18:53.7912944Z   store.cpp
+2026-10-21T15:18:55.3164385Z   Generating code
+2026-10-21T15:18:55.3357174Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:18:55.3580772Z   protocol.cpp
+2026-10-21T15:18:55.3975926Z   stage_timing_test.cpp
+2026-10-21T15:18:58.3684807Z   All 3041 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:18:58.3793962Z   Finished generating code
+2026-10-21T15:18:58.6604683Z   ow_pipeline_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_contract_tests.exe
+2026-10-21T15:18:58.7516931Z   Generating code
+2026-10-21T15:18:58.7744168Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:19:00.2149977Z   pairing.cpp
+2026-10-21T15:19:04.1826957Z   adaptive_hardware.cpp
+2026-10-21T15:19:06.6712045Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:19:06.8547289Z   main.cpp
+2026-10-21T15:19:07.0511838Z   All 5170 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:19:07.0673193Z   Finished generating code
+2026-10-21T15:19:07.1347881Z   control.cpp
+2026-10-21T15:19:07.3295267Z   ow_progress_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_progress_contract_tests.exe
+2026-10-21T15:19:07.4110817Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:19:07.4748636Z   media_rendition_probe.cpp
+2026-10-21T15:19:07.6353277Z   media_rendition_test.cpp
+2026-10-21T15:19:09.6320585Z   lifecycle.cpp
+2026-10-21T15:19:09.8549718Z   Generating code
+2026-10-21T15:19:09.8625427Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:19:11.6995999Z   ow_core.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_core.lib
+2026-10-21T15:19:11.7587487Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:19:11.8150022Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:19:11.8270501Z   All 1980 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:19:11.8308761Z   Finished generating code
+2026-10-21T15:19:11.8712933Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:19:11.9343061Z   main.cpp
+2026-10-21T15:19:11.9410912Z   adaptive_evidence_probe.cpp
+2026-10-21T15:19:11.9596372Z   ow_rendition_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_probe.exe
+2026-10-21T15:19:12.0163167Z   platform.cpp
+2026-10-21T15:19:12.7122102Z   adaptive_hardware_test.cpp
+2026-10-21T15:19:14.7630313Z   Generating code
+2026-10-21T15:19:14.7719832Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:19:16.0124914Z   All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:19:16.0149090Z   Finished generating code
+2026-10-21T15:19:16.2114010Z   ow_adaptive_evidence_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_evidence_probe.exe
+2026-10-21T15:19:16.3422759Z   Generating code
+2026-10-21T15:19:16.3500877Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:19:18.5274294Z   process.cpp
+2026-10-21T15:19:18.7854576Z   Generating code
+2026-10-21T15:19:18.7920649Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:19:19.2395968Z   All 2222 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:19:19.2462280Z   Finished generating code
+2026-10-21T15:19:21.8746568Z   ow_rendition_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_contract_tests.exe
+2026-10-21T15:19:22.6682189Z   http.cpp
+2026-10-21T15:19:26.6494778Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:19:26.6806911Z   worker.cpp
+2026-10-21T15:19:27.6762515Z   main.cpp
+2026-10-21T15:19:27.8489618Z   All 5618 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:19:27.8691208Z   Finished generating code
+2026-10-21T15:19:28.1413861Z   ow_adaptive_hardware_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_hardware_contract_tests.exe
+2026-10-21T15:19:28.4317295Z   admission_test.cpp
+2026-10-21T15:19:29.3017062Z   store_test.cpp
+2026-10-21T15:19:30.0986408Z D:\a\worker-client\worker-client\windows\worker.cpp(864,289): warning C4456: declaration of 'cancelled' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+2026-10-21T15:19:30.1014313Z       D:\a\worker-client\worker-client\windows\worker.cpp(661,7):
+2026-10-21T15:19:30.1015059Z       see declaration of 'cancelled'
+2026-10-21T15:19:30.1015535Z   
+2026-10-21T15:19:31.2983072Z   protocol_test.cpp
+2026-10-21T15:19:31.9782936Z   probe_recovery.cpp
+2026-10-21T15:19:33.6194826Z   pairing_test.cpp
+2026-10-21T15:19:35.2461281Z   pairing_adapter.cpp
+2026-10-21T15:19:35.8001753Z   capacity_test.cpp
+2026-10-21T15:19:36.5855190Z   control_test.cpp
+2026-10-21T15:19:37.4084491Z   hardware.cpp
+2026-10-21T15:19:38.2784597Z   lifecycle_test.cpp
+2026-10-21T15:19:39.2988713Z   Generating code
+2026-10-21T15:19:39.3345024Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:19:39.8286304Z   physical_adapters.cpp
+2026-10-21T15:19:43.8302669Z   capacity.cpp
+2026-10-21T15:19:45.3011133Z   All 3936 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:19:45.3152451Z   Finished generating code
+2026-10-21T15:19:45.5243370Z   ow_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_contract_tests.exe
+2026-10-21T15:19:46.1441596Z D:\a\worker-client\worker-client\windows\capacity.cpp(66,45): warning C4456: declaration of 'value' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+2026-10-21T15:19:46.1442361Z       D:\a\worker-client\worker-client\windows\capacity.cpp(56,24):
+2026-10-21T15:19:46.1442669Z       see declaration of 'value'
+2026-10-21T15:19:46.1442850Z   
+2026-10-21T15:19:46.8458767Z   control_pipe.cpp
+2026-10-21T15:19:48.8965460Z   worker_control.cpp
+2026-10-21T15:19:51.6196849Z   headless.cpp
+2026-10-21T15:19:54.2428866Z   owner_task.cpp
+2026-10-21T15:19:56.9831596Z   owner_state.cpp
+2026-10-21T15:20:00.0496649Z   ow_windows.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_windows.lib
+2026-10-21T15:20:00.1058557Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.1061035Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.1583336Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.2044371Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.2503153Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.2983527Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.3468780Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.6684991Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.7171348Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.8086834Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.8559607Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.9026984Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.9487541Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:00.9971536Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:01.0438818Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:01.0919866Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:01.1415024Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:01.1881840Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:01.2338883Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:20:01.2946515Z   windows_limited_fixture_runner.cpp
+2026-10-21T15:20:01.2948884Z   tray.cpp
+2026-10-21T15:20:01.3019830Z   windows_job_control_fixture.cpp
+2026-10-21T15:20:03.8676283Z   windows_legacy_actor.cpp
+2026-10-21T15:20:04.6771877Z   control_acceptance.cpp
+2026-10-21T15:20:05.6621468Z   Generating code
+2026-10-21T15:20:05.7496155Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:20:11.3278168Z   Generating code
+2026-10-21T15:20:11.4103220Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:20:14.4264372Z   All 1083 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:20:14.4671149Z   Finished generating code
+2026-10-21T15:20:15.8820152Z   ow_limited_fixture_runner.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_limited_fixture_runner.exe
+2026-10-21T15:20:17.8382177Z   Generating code
+2026-10-21T15:20:18.0412857Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:20:20.4475338Z   All 11462 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:20:20.5916158Z   Finished generating code
+2026-10-21T15:20:22.1244608Z   OrganizerWorker.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorker.exe
+2026-10-21T15:20:24.1868010Z   Generating code
+2026-10-21T15:20:24.2374565Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:20:34.8374410Z   All 11422 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:20:34.9903719Z   Finished generating code
+2026-10-21T15:20:36.4958895Z   ow_job_control_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_job_control_fixture.exe
+2026-10-21T15:20:38.3087851Z   windows_gpu_baseline.cpp
+2026-10-21T15:20:39.9067133Z   windows_flex_benchmark.cpp
+2026-10-21T15:20:41.3213700Z   All 11099 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:20:41.3583542Z   Finished generating code
+2026-10-21T15:20:41.8301559Z   ow_upgrade_actor.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_upgrade_actor.exe
+2026-10-21T15:20:41.8840232Z   windows_unattended_fixture.cpp
+2026-10-21T15:20:42.3971037Z   windows_child.cpp
+2026-10-21T15:20:44.0092264Z   offline_media.cpp
+2026-10-21T15:20:45.3348197Z   windows_headless_bootstrap.cpp
+2026-10-21T15:20:45.3590566Z   Generating code
+2026-10-21T15:20:45.3699009Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:20:46.1467115Z   All 761 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:20:46.1513825Z   Finished generating code
+2026-10-21T15:20:46.2967899Z   ow_test_child.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_test_child.exe
+2026-10-21T15:20:46.3578089Z   windows_resource_probe.cpp
+2026-10-21T15:20:48.2654244Z   control_acceptance.cpp
+2026-10-21T15:20:48.2801768Z   windows_pipeline_smoke.cpp
+2026-10-21T15:20:49.3577011Z   Generating code
+2026-10-21T15:20:49.3790931Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:20:51.8338513Z   All 2157 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:20:51.8428259Z   Finished generating code
+2026-10-21T15:20:52.0394894Z   ow_resource_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_resource_probe.exe
+2026-10-21T15:20:52.0958746Z   windows_owner_fixture.cpp
+2026-10-21T15:20:53.6635990Z   Generating code
+2026-10-21T15:20:53.7580926Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:20:54.6448138Z   Generating code
+2026-10-21T15:20:54.9261705Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:14.7350903Z   All 11440 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:14.8384804Z   Finished generating code
+2026-10-21T15:21:15.3160820Z   ow_unattended_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_unattended_fixture.exe
+2026-10-21T15:21:15.5807268Z   Generating code
+2026-10-21T15:21:15.6016362Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:16.6981942Z   All 11538 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:16.7428989Z   Finished generating code
+2026-10-21T15:21:17.0454219Z   All 1362 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:17.0520138Z   Finished generating code
+2026-10-21T15:21:17.1366522Z   ow_flex_benchmark.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_flex_benchmark.exe
+2026-10-21T15:21:17.1871976Z   ow_owner_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_owner_fixture.exe
+2026-10-21T15:21:17.3752146Z   Generating code
+2026-10-21T15:21:17.4021508Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:18.0442255Z   Generating code
+2026-10-21T15:21:18.1582608Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:21.0696252Z   All 3009 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:21.1424287Z   Finished generating code
+2026-10-21T15:21:22.4773188Z   ow_gpu_baseline.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_baseline.exe
+2026-10-21T15:21:23.4934899Z   attached_tray.cpp
+2026-10-21T15:21:25.1983421Z   console.cpp
+2026-10-21T15:21:30.9991617Z   Generating code
+2026-10-21T15:21:31.1277393Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:32.5395839Z   All 1262 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:32.5471875Z   Finished generating code
+2026-10-21T15:21:32.6225398Z   All 10951 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:32.6613376Z   Finished generating code
+2026-10-21T15:21:32.6779198Z   OrganizerWorkerTray.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerTray.exe
+2026-10-21T15:21:32.8553981Z   Generating code
+2026-10-21T15:21:32.8665037Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:33.4075204Z   ow_pipeline_smoke.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_smoke.exe
+2026-10-21T15:21:34.1602496Z   windows_gpu_measurements.cpp
+2026-10-21T15:21:34.8825083Z   windows_gpu_budget_probe.cpp
+2026-10-21T15:21:35.6998101Z   All 1621 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:35.7053181Z   Finished generating code
+2026-10-21T15:21:35.8667263Z   OrganizerWorkerConsole.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerConsole.exe
+2026-10-21T15:21:35.9237533Z   windows_foreground_probe.cpp
+2026-10-21T15:21:38.0355983Z   Generating code
+2026-10-21T15:21:38.0746103Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:41.0524622Z   All 3105 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:41.0629608Z   Finished generating code
+2026-10-21T15:21:41.2148068Z   ow_gpu_measurements.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_measurements.exe
+2026-10-21T15:21:41.3366703Z   Generating code
+2026-10-21T15:21:41.3439833Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:42.0464574Z   All 986 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:42.0484368Z   Finished generating code
+2026-10-21T15:21:42.1816113Z   ow_foreground_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_foreground_probe.exe
+2026-10-21T15:21:42.3911410Z   Generating code
+2026-10-21T15:21:42.4156382Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:44.9310268Z   All 2924 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:44.9408719Z   Finished generating code
+2026-10-21T15:21:45.0942495Z   ow_gpu_budget_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_budget_probe.exe
+2026-10-21T15:21:45.1384213Z   windows_control_fixture.cpp
+2026-10-21T15:21:45.1432860Z   doctor.cpp
+2026-10-21T15:21:45.1521773Z   cli.cpp
+2026-10-21T15:21:48.9368151Z   Generating code
+2026-10-21T15:21:48.9943919Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:21:59.6316655Z   All 11077 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:21:59.6607348Z   Finished generating code
+2026-10-21T15:22:00.0002378Z   ow_control_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_control_fixture.exe
+2026-10-21T15:22:00.4784284Z   Generating code
+2026-10-21T15:22:00.5366342Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:22:11.3557649Z   All 10994 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:22:11.3864095Z   Finished generating code
+2026-10-21T15:22:11.8607473Z   OrganizerWorkerCtl.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerCtl.exe
+2026-10-21T15:22:12.2280280Z   Generating code
+2026-10-21T15:22:12.2845793Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:22:22.7634744Z   All 10647 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:22:22.7908363Z   Finished generating code
+2026-10-21T15:22:23.0864278Z   OrganizerWorkerDoctor.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerDoctor.exe
+2026-10-21T15:22:23.1210122Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:22:23.1750185Z   main.cpp
+2026-10-21T15:22:23.7332835Z   windows_test.cpp
+2026-10-21T15:22:26.8057856Z   windows_control_test.cpp
+2026-10-21T15:22:30.2317121Z   Generating code
+2026-10-21T15:22:30.2951497Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T15:22:42.2728363Z   All 11965 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T15:22:42.3054463Z   Finished generating code
+2026-10-21T15:22:42.6467208Z   ow_windows_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_windows_tests.exe
+2026-10-21T15:22:42.6991390Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T15:22:42.8091049Z ##[group]Run ctest --test-dir build-ci -C Release --output-on-failure
+2026-10-21T15:22:42.8091514Z [36;1mctest --test-dir build-ci -C Release --output-on-failure[0m
+2026-10-21T15:22:42.8091875Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Native behavior contracts failed' }[0m
+2026-10-21T15:22:42.8119951Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T15:22:42.8120282Z ##[endgroup]
+2026-10-21T15:22:43.4528967Z Internal ctest changing into directory: D:/a/worker-client/worker-client/build-ci
+2026-10-21T15:22:43.5565139Z Test project D:/a/worker-client/worker-client/build-ci
+2026-10-21T15:22:43.5827437Z       Start  1: ffmpeg_dependency_contracts
+2026-10-21T15:22:44.7661599Z  1/16 Test  #1: ffmpeg_dependency_contracts ......   Passed    1.18 sec
+2026-10-21T15:22:44.7670196Z       Start  2: worker_contracts
+2026-10-21T15:22:45.4487074Z  2/16 Test  #2: worker_contracts .................   Passed    0.68 sec
+2026-10-21T15:22:45.4489901Z       Start  3: pipeline_contracts
+2026-10-21T15:22:45.4562725Z  3/16 Test  #3: pipeline_contracts ...............   Passed    0.01 sec
+2026-10-21T15:22:45.4565041Z       Start  4: rendition_contracts
+2026-10-21T15:22:45.4626617Z  4/16 Test  #4: rendition_contracts ..............   Passed    0.01 sec
+2026-10-21T15:22:45.4629182Z       Start  5: adaptive_hardware_contracts
+2026-10-21T15:22:45.5083414Z  5/16 Test  #5: adaptive_hardware_contracts ......   Passed    0.05 sec
+2026-10-21T15:22:45.5085903Z       Start  6: progress_contracts
+2026-10-21T15:22:45.5402390Z  6/16 Test  #6: progress_contracts ...............   Passed    0.03 sec
+2026-10-21T15:22:45.5404926Z       Start  7: cli_integration_contracts
+2026-10-21T15:22:46.5862966Z  7/16 Test  #7: cli_integration_contracts ........   Passed    1.04 sec
+2026-10-21T15:22:46.5865405Z       Start  8: windows_contracts
+2026-10-21T15:22:51.6969578Z  8/16 Test  #8: windows_contracts ................   Passed    5.11 sec
+2026-10-21T15:22:51.6972241Z       Start  9: setup_contracts
+2026-10-21T15:22:52.9401311Z  9/16 Test  #9: setup_contracts ..................   Passed    1.24 sec
+2026-10-21T15:22:52.9403937Z       Start 10: setup_progress_contracts
+2026-10-21T15:23:03.1778698Z 10/16 Test #10: setup_progress_contracts .........   Passed   10.24 sec
+2026-10-21T15:23:03.1781155Z       Start 11: setup_converter_contracts
+2026-10-21T15:23:28.0744268Z 11/16 Test #11: setup_converter_contracts ........   Passed   24.90 sec
+2026-10-21T15:23:28.0746872Z       Start 12: owned_script_contracts
+2026-10-21T15:23:28.4943148Z 12/16 Test #12: owned_script_contracts ...........   Passed    0.42 sec
+2026-10-21T15:23:28.4945489Z       Start 13: startup_preservation_contracts
+2026-10-21T15:23:28.8061552Z 13/16 Test #13: startup_preservation_contracts ...   Passed    0.31 sec
+2026-10-21T15:23:28.8063773Z       Start 14: unattended_policy_contracts
+2026-10-21T15:23:29.5559392Z 14/16 Test #14: unattended_policy_contracts ......   Passed    0.75 sec
+2026-10-21T15:23:29.5562282Z       Start 15: updater_control_contracts
+2026-10-21T15:23:30.1278111Z 15/16 Test #15: updater_control_contracts ........   Passed    0.57 sec
+2026-10-21T15:23:30.1280298Z       Start 16: setup_swap_contracts
+2026-10-21T15:23:33.0318806Z 16/16 Test #16: setup_swap_contracts .............   Passed    2.90 sec
+2026-10-21T15:23:33.0324598Z 
+2026-10-21T15:23:33.0325009Z 100% tests passed, 0 tests failed out of 16
+2026-10-21T15:23:33.0325304Z 
+2026-10-21T15:23:33.0325477Z Total Test time (real) =  49.48 sec
+2026-10-21T15:23:33.2763862Z ##[group]Run $ErrorActionPreference='Stop'
+2026-10-21T15:23:33.2764272Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-10-21T15:23:33.2764714Z [36;1m& ./tests/owner_context_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release')[0m
+2026-10-21T15:23:33.2794947Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T15:23:33.2795346Z ##[endgroup]
+2026-10-21T15:23:33.8321871Z {"rejected":false,"caller_sid":"S-1-5-21-3213014087-2684668049-2838998412-500"}
+2026-10-21T15:23:34.3707577Z {"denied":true,"error":5,"caller_sid":"S-1-5-19","owner_sid":"S-1-5-21-3213014087-2684668049-2838998412-500"}
+2026-10-21T15:23:34.4770830Z {"rejected":true,"caller_sid":"S-1-5-21-3213014087-2684668049-2838998412-500"}
+2026-10-21T15:23:34.5380329Z {"server_sid":"S-1-5-19","client_bytes":0,"connected":true}
+2026-10-21T15:23:34.5841817Z OWNER_CONTEXT_PASS real foreign SID denied; forged server received zero request bytes
+2026-10-21T15:23:35.5185154Z ##[group]Run $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
+2026-10-21T15:23:35.5185770Z [36;1m$ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'[0m
+2026-10-21T15:23:35.5186243Z [36;1m$lock=Get-Content config/dependencies.lock.json -Raw|ConvertFrom-Json[0m
+2026-10-21T15:23:35.5186664Z [36;1m$converter=Join-Path $env:RUNNER_TEMP 'ow-approved-ffmpeg.exe'[0m
+2026-10-21T15:23:35.5187079Z [36;1mInvoke-WebRequest -Uri $lock.ffmpeg.url -OutFile $converter -UseBasicParsing[0m
+2026-10-21T15:23:35.5187755Z [36;1mif((Get-Item $converter).Length -ne $lock.ffmpeg.bytes -or (Get-FileHash $converter -Algorithm SHA256).Hash -ine $lock.ffmpeg.sha256){throw 'Approved converter integrity failure'}[0m
+2026-10-21T15:23:35.5188602Z [36;1m& ./tests/unattended_media_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release') -ApprovedFFmpeg $converter -ApprovedSha256 $lock.ffmpeg.sha256[0m
+2026-10-21T15:23:35.5216446Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T15:23:35.5216787Z ##[endgroup]
+2026-10-21T15:26:42.1665849Z UNATTENDED_FIXTURE_REJECTED: Actual headless CPU probe/readiness deadline; no fake fallback. LastControl={"schema":1,"ok":true,"exit_code":0,"observed_at_utc_ms":1792596401936,"live":true,"agent_version":"0.1.2","build_revision":"62ca7e585fa6","pid":576,"owner_sid":"S-1-5-21-3213014087-2684668049-2838998412-500","process_uptime_ms":180004,"connected":false,"paused":false,"draining":false,"exiting":false,"headless":true,"token_elevated":false,"process_session":2,"restart_requested":false,"viewer_generation":0,"identity_ready":true,"process_started_at_utc_ms":1792596221932,"last_coordinator_contact_at_utc_ms":null,"processing_ready":false,"profiles":[],"accepting":false,"admission_reason":"coordinator_offline","heartbeat":{"protocol":1,"type":"heartbeat","status":"ready","priority":"normal","active":[],"available":{"ram_mb":13242,"vram_mb":0,"scratch_mb":81547,"cpu_threads":4},"reserved":{"ram_mb":0,"scratch_mb":0,"cpu_threads":0},"capabilities":{"conversion.video.h264":{"verified":false,"preference":"allowed"},"conversion.image.jpeg":{"verified":false,"preference":"allowed"},"media.video.renditions.v1":{"verified":false,"preference":"allowed"},"media.image.renditions.v1":{"verified":false,"preference":"allowed"}}},"pending_results":0,"state":"offline"} LastError=Control absent or busy before connection OWNED_SYNTHETIC_BOOTSTRAP_LOG=2026-10-21 15:23:41.933Z WORKER STARTED | counts since this process; H for last 10 outcomes
+2026-10-21T15:26:42.1671982Z 
+2026-10-21T15:26:42.1672168Z 2026-10-21 15:23:42.129Z STATE PRIORITY normal
+2026-10-21T15:26:42.1672475Z 
+2026-10-21T15:26:42.1673189Z 2026-10-21 15:23:42.129Z 21/10 15:23:42 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:00 | running 0 | ram free 13.7 GB | scratch free 86 GB | priority normal | paused: starting (since 15:23:41)
+2026-10-21T15:26:42.1674072Z 
+2026-10-21T15:26:42.1674238Z 2026-10-21 15:23:42.141Z 21/10 15:23:42  status
+2026-10-21T15:26:42.1674485Z 
+2026-10-21T15:26:42.1674752Z 2026-10-21 15:23:42.141Z   state      paused                   since 15:23:41 (starting)
+2026-10-21T15:26:42.1675115Z 
+2026-10-21T15:26:42.1675275Z 2026-10-21 15:23:42.141Z   priority   normal
+2026-10-21T15:26:42.1675507Z 
+2026-10-21T15:26:42.1675706Z 2026-10-21 15:23:42.141Z   jobs       running 0   queue unknown
+2026-10-21T15:26:42.1676018Z 
+2026-10-21T15:26:42.1676202Z 2026-10-21 15:23:42.141Z   totals     0 ok    0 failed   0 cancelled
+2026-10-21T15:26:42.1676527Z 
+2026-10-21T15:26:42.1676662Z 2026-10-21 15:23:42.141Z   last job   unknown
+2026-10-21T15:26:42.1676931Z 
+2026-10-21T15:26:42.1677105Z 2026-10-21 15:23:42.143Z   cards      unknown               cpu idle
+2026-10-21T15:26:42.1677460Z 
+2026-10-21T15:26:42.1677970Z 2026-10-21 15:23:42.143Z   memory     ram free 13.7 GB   scratch free 86 GB
+2026-10-21T15:26:42.1678288Z 
+2026-10-21T15:26:42.1680124Z 2026-10-21 15:23:42.143Z   encoders   unknown
+2026-10-21T15:26:42.1680423Z 
+2026-10-21T15:26:42.1680591Z 2026-10-21 15:23:42.143Z   uptime     00:00:00
+2026-10-21T15:26:42.1680847Z 
+2026-10-21T15:26:42.1680988Z 2026-10-21 15:23:42.144Z PROBE START
+2026-10-21T15:26:42.1681201Z 
+2026-10-21T15:26:42.1681702Z 2026-10-21 15:23:42.954Z TIMING stage=startup_child artifact=none wall_us=535434 controller_cpu_us=0 child_cpu_us=0 launch_us=356910 root_lifetime_us=118849 completed=false
+2026-10-21T15:26:42.1682187Z 
+2026-10-21T15:26:42.1682744Z 2026-10-21 15:23:42.955Z STARTUP TIMING total job_wall_us=811185 stage_wall_sum_us=535434 cpu_us=0 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=171875 job_cpu_scope=main_thread_background_stages_and_child_trees
+2026-10-21T15:26:42.1683377Z 
+2026-10-21T15:26:42.1683614Z 2026-10-21 15:23:42.955Z PROBE RESULT app_video=0 app_image=0 video=0 image=0 encoders=none
+2026-10-21T15:26:42.1683900Z 
+2026-10-21T15:26:42.1684024Z 2026-10-21 15:23:42.955Z PROBE DEVICES schedulable GPUs=0
+2026-10-21T15:26:42.1684232Z 
+2026-10-21T15:26:42.1684390Z 2026-10-21 15:23:42.955Z PROBE SCOPE startup samples only; job support may vary
+2026-10-21T15:26:42.1684639Z 
+2026-10-21T15:26:42.1684857Z 2026-10-21 15:23:42.955Z PROBE DETAIL FFmpeg functional probe failed with exit code 3221225794
+2026-10-21T15:26:42.1685114Z 
+2026-10-21T15:26:42.1685413Z 2026-10-21 15:23:42.956Z acceptance: paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1685659Z 
+2026-10-21T15:26:42.1686354Z 2026-10-21 15:23:42.956Z 21/10 15:23:42 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:01 | running 0 | ram free 13.8 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1686939Z 
+2026-10-21T15:26:42.1687114Z 2026-10-21 15:23:42.989Z STATE OFFLINE missing/invalid string: token
+2026-10-21T15:26:42.1687356Z 
+2026-10-21T15:26:42.1687496Z 2026-10-21 15:23:43.257Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1687731Z 
+2026-10-21T15:26:42.1687856Z 2026-10-21 15:23:43.258Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1688073Z 
+2026-10-21T15:26:42.1688225Z 2026-10-21 15:23:43.258Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1688424Z 
+2026-10-21T15:26:42.1688570Z 2026-10-21 15:23:43.258Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1688784Z 
+2026-10-21T15:26:42.1688950Z 2026-10-21 15:23:43.258Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1689181Z 
+2026-10-21T15:26:42.1689345Z 2026-10-21 15:23:43.258Z CAPACITY | target 90% sustained; telemetry_unavailable
+2026-10-21T15:26:42.1689706Z 
+2026-10-21T15:26:42.1689898Z 2026-10-21 15:23:43.258Z CAPACITY | measured CPU unknown RAM 19% disk unknown
+2026-10-21T15:26:42.1690230Z 
+2026-10-21T15:26:42.1690424Z 2026-10-21 15:24:12.274Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1690741Z 
+2026-10-21T15:26:42.1690935Z 2026-10-21 15:24:12.274Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1691217Z 
+2026-10-21T15:26:42.1691433Z 2026-10-21 15:24:12.274Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1691850Z 
+2026-10-21T15:26:42.1692053Z 2026-10-21 15:24:12.274Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1692505Z 
+2026-10-21T15:26:42.1692728Z 2026-10-21 15:24:12.274Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1693026Z 
+2026-10-21T15:26:42.1693303Z 2026-10-21 15:24:12.274Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1693578Z 
+2026-10-21T15:26:42.1693729Z 2026-10-21 15:24:12.274Z CAPACITY | measured CPU 0% RAM 19% disk 2%
+2026-10-21T15:26:42.1693923Z 
+2026-10-21T15:26:42.1694440Z 2026-10-21 15:24:13.045Z 21/10 15:24:13 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:31 | running 0 | ram free 13.8 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1695635Z 
+2026-10-21T15:26:42.1695801Z 2026-10-21 15:24:42.707Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1696028Z 
+2026-10-21T15:26:42.1696154Z 2026-10-21 15:24:42.707Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1696373Z 
+2026-10-21T15:26:42.1696512Z 2026-10-21 15:24:42.707Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1696740Z 
+2026-10-21T15:26:42.1696910Z 2026-10-21 15:24:42.707Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1697125Z 
+2026-10-21T15:26:42.1697289Z 2026-10-21 15:24:42.707Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1697500Z 
+2026-10-21T15:26:42.1697683Z 2026-10-21 15:24:42.707Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1697919Z 
+2026-10-21T15:26:42.1698068Z 2026-10-21 15:24:42.707Z CAPACITY | measured CPU 0% RAM 19% disk 1%
+2026-10-21T15:26:42.1698278Z 
+2026-10-21T15:26:42.1698745Z 2026-10-21 15:24:43.140Z 21/10 15:24:43 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:01:01 | running 0 | ram free 13.9 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1699298Z 
+2026-10-21T15:26:42.1699774Z 2026-10-21 15:25:13.236Z 21/10 15:25:13 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:01:31 | running 0 | ram free 13.9 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1700718Z 
+2026-10-21T15:26:42.1700971Z 2026-10-21 15:25:13.373Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1701191Z 
+2026-10-21T15:26:42.1701347Z 2026-10-21 15:25:13.373Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1701565Z 
+2026-10-21T15:26:42.1701705Z 2026-10-21 15:25:13.373Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1701931Z 
+2026-10-21T15:26:42.1702082Z 2026-10-21 15:25:13.373Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1702317Z 
+2026-10-21T15:26:42.1702455Z 2026-10-21 15:25:13.373Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1702687Z 
+2026-10-21T15:26:42.1702868Z 2026-10-21 15:25:13.373Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1703095Z 
+2026-10-21T15:26:42.1703241Z 2026-10-21 15:25:13.373Z CAPACITY | measured CPU 0% RAM 19% disk 2%
+2026-10-21T15:26:42.1703435Z 
+2026-10-21T15:26:42.1703926Z 2026-10-21 15:25:43.316Z 21/10 15:25:43 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:01 | running 0 | ram free 13.9 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1704476Z 
+2026-10-21T15:26:42.1704605Z 2026-10-21 15:25:44.143Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1704824Z 
+2026-10-21T15:26:42.1704944Z 2026-10-21 15:25:44.143Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1705157Z 
+2026-10-21T15:26:42.1705307Z 2026-10-21 15:25:44.143Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1705507Z 
+2026-10-21T15:26:42.1705668Z 2026-10-21 15:25:44.143Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1705876Z 
+2026-10-21T15:26:42.1706009Z 2026-10-21 15:25:44.143Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1706212Z 
+2026-10-21T15:26:42.1706390Z 2026-10-21 15:25:44.143Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1706638Z 
+2026-10-21T15:26:42.1706757Z 2026-10-21 15:25:44.143Z CAPACITY | measured CPU 0% RAM 19% disk 7%
+2026-10-21T15:26:42.1706967Z 
+2026-10-21T15:26:42.1707421Z 2026-10-21 15:26:13.359Z 21/10 15:26:13 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:31 | running 0 | ram free 13.9 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1708059Z 
+2026-10-21T15:26:42.1708268Z 2026-10-21 15:26:14.484Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1708472Z 
+2026-10-21T15:26:42.1708622Z 2026-10-21 15:26:14.484Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1708815Z 
+2026-10-21T15:26:42.1708972Z 2026-10-21 15:26:14.484Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1709196Z 
+2026-10-21T15:26:42.1709340Z 2026-10-21 15:26:14.484Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1709578Z 
+2026-10-21T15:26:42.1709723Z 2026-10-21 15:26:14.484Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1709962Z 
+2026-10-21T15:26:42.1710124Z 2026-10-21 15:26:14.484Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1710375Z 
+2026-10-21T15:26:42.1710519Z 2026-10-21 15:26:14.484Z CAPACITY | measured CPU 0% RAM 19% disk 2%
+2026-10-21T15:26:42.1710718Z 
+2026-10-21T15:26:42.1710720Z 
+2026-10-21T15:26:42.1754600Z Actual headless CPU probe/readiness deadline; no fake fallback. LastControl={"schema":1,"ok":true,"exit_code":0,"observed_at_utc_ms":1792596401936,"live":true,"agent_version":"0.1.2","build_revision":"62ca7e585fa6","pid":576,"owner_sid":"S-1-5-21-3213014087-2684668049-2838998412-500","process_uptime_ms":180004,"connected":false,"paused":false,"draining":false,"exiting":false,"headless":true,"token_elevated":false,"process_session":2,"restart_requested":false,"viewer_generation":0,"identity_ready":true,"process_started_at_utc_ms":1792596221932,"last_coordinator_contact_at_utc_ms":null,"processing_ready":false,"profiles":[],"accepting":false,"admission_reason":"coordinator_offline","heartbeat":{"protocol":1,"type":"heartbeat","status":"ready","priority":"normal","active":[],"available":{"ram_mb":13242,"vram_mb":0,"scratch_mb":81547,"cpu_threads":4},"reserved":{"ram_mb":0,"scratch_mb":0,"cpu_threads":0},"capabilities":{"conversion.video.h264":{"verified":false,"preference":"allowed"},"conversion.image.jpeg":{"verified":false,"preference":"allowed"},"media.video.renditions.v1":{"verified":false,"preference":"allowed"},"media.image.renditions.v1":{"verified":false,"preference":"allowed"}}},"pending_results":0,"state":"offline"} LastError=Control absent or busy before connection OWNED_SYNTHETIC_BOOTSTRAP_LOG=2026-10-21 15:23:41.933Z WORKER STARTED | counts since this process; H for last 10 outcomes
+2026-10-21T15:26:42.1758337Z 2026-10-21 15:23:42.129Z STATE PRIORITY normal
+2026-10-21T15:26:42.1759059Z 2026-10-21 15:23:42.129Z 21/10 15:23:42 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:00 | running 0 | ram free 13.7 GB | scratch free 86 GB | priority normal | paused: starting (since 15:23:41)
+2026-10-21T15:26:42.1760144Z 2026-10-21 15:23:42.141Z 21/10 15:23:42  status
+2026-10-21T15:26:42.1760562Z 2026-10-21 15:23:42.141Z   state      paused                   since 15:23:41 (starting)
+2026-10-21T15:26:42.1760933Z 2026-10-21 15:23:42.141Z   priority   normal
+2026-10-21T15:26:42.1761231Z 2026-10-21 15:23:42.141Z   jobs       running 0   queue unknown
+2026-10-21T15:26:42.1761571Z 2026-10-21 15:23:42.141Z   totals     0 ok    0 failed   0 cancelled
+2026-10-21T15:26:42.1761873Z 2026-10-21 15:23:42.141Z   last job   unknown
+2026-10-21T15:26:42.1762169Z 2026-10-21 15:23:42.143Z   cards      unknown               cpu idle
+2026-10-21T15:26:42.1762574Z 2026-10-21 15:23:42.143Z   memory     ram free 13.7 GB   scratch free 86 GB
+2026-10-21T15:26:42.1763104Z 2026-10-21 15:23:42.143Z   encoders   unknown
+2026-10-21T15:26:42.1763494Z 2026-10-21 15:23:42.143Z   uptime     00:00:00
+2026-10-21T15:26:42.1763880Z 2026-10-21 15:23:42.144Z PROBE START
+2026-10-21T15:26:42.1764625Z 2026-10-21 15:23:42.954Z TIMING stage=startup_child artifact=none wall_us=535434 controller_cpu_us=0 child_cpu_us=0 launch_us=356910 root_lifetime_us=118849 completed=false
+2026-10-21T15:26:42.1765940Z 2026-10-21 15:23:42.955Z STARTUP TIMING total job_wall_us=811185 stage_wall_sum_us=535434 cpu_us=0 cpu_scope=timed_stages_and_child_trees stages=1 stages_may_overlap=true job_cpu_us=171875 job_cpu_scope=main_thread_background_stages_and_child_trees
+2026-10-21T15:26:42.1767067Z 2026-10-21 15:23:42.955Z PROBE RESULT app_video=0 app_image=0 video=0 image=0 encoders=none
+2026-10-21T15:26:42.1767464Z 2026-10-21 15:23:42.955Z PROBE DEVICES schedulable GPUs=0
+2026-10-21T15:26:42.1767825Z 2026-10-21 15:23:42.955Z PROBE SCOPE startup samples only; job support may vary
+2026-10-21T15:26:42.1768533Z 2026-10-21 15:23:42.955Z PROBE DETAIL FFmpeg functional probe failed with exit code 3221225794
+2026-10-21T15:26:42.1769323Z 2026-10-21 15:23:42.956Z acceptance: paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1770221Z 2026-10-21 15:23:42.956Z 21/10 15:23:42 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:01 | running 0 | ram free 13.8 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1771144Z 2026-10-21 15:23:42.989Z STATE OFFLINE missing/invalid string: token
+2026-10-21T15:26:42.1771586Z 2026-10-21 15:23:43.257Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1772877Z 2026-10-21 15:23:43.258Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1773830Z 2026-10-21 15:23:43.258Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1774636Z 2026-10-21 15:23:43.258Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1775481Z 2026-10-21 15:23:43.258Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1776265Z 2026-10-21 15:23:43.258Z CAPACITY | target 90% sustained; telemetry_unavailable
+2026-10-21T15:26:42.1777149Z 2026-10-21 15:23:43.258Z CAPACITY | measured CPU unknown RAM 19% disk unknown
+2026-10-21T15:26:42.1777885Z 2026-10-21 15:24:12.274Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1779084Z 2026-10-21 15:24:12.274Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1779953Z 2026-10-21 15:24:12.274Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1780662Z 2026-10-21 15:24:12.274Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1781524Z 2026-10-21 15:24:12.274Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1782271Z 2026-10-21 15:24:12.274Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1783099Z 2026-10-21 15:24:12.274Z CAPACITY | measured CPU 0% RAM 19% disk 2%
+2026-10-21T15:26:42.1784329Z 2026-10-21 15:24:13.045Z 21/10 15:24:13 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:00:31 | running 0 | ram free 13.8 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1785397Z 2026-10-21 15:24:42.707Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1785959Z 2026-10-21 15:24:42.707Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1786428Z 2026-10-21 15:24:42.707Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1787749Z 2026-10-21 15:24:42.707Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1788677Z 2026-10-21 15:24:42.707Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1789467Z 2026-10-21 15:24:42.707Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1790260Z 2026-10-21 15:24:42.707Z CAPACITY | measured CPU 0% RAM 19% disk 1%
+2026-10-21T15:26:42.1791554Z 2026-10-21 15:24:43.140Z 21/10 15:24:43 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:01:01 | running 0 | ram free 13.9 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1793020Z 2026-10-21 15:25:13.236Z 21/10 15:25:13 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:01:31 | running 0 | ram free 13.9 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1795115Z 2026-10-21 15:25:13.373Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1795520Z 2026-10-21 15:25:13.373Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1795895Z 2026-10-21 15:25:13.373Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1796415Z 2026-10-21 15:25:13.373Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1796967Z 2026-10-21 15:25:13.373Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1797691Z 2026-10-21 15:25:13.373Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1798328Z 2026-10-21 15:25:13.373Z CAPACITY | measured CPU 0% RAM 19% disk 2%
+2026-10-21T15:26:42.1799709Z 2026-10-21 15:25:43.316Z 21/10 15:25:43 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:01 | running 0 | ram free 13.9 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1800862Z 2026-10-21 15:25:44.143Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1801416Z 2026-10-21 15:25:44.143Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1801811Z 2026-10-21 15:25:44.143Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1803097Z 2026-10-21 15:25:44.143Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1803987Z 2026-10-21 15:25:44.143Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1804768Z 2026-10-21 15:25:44.143Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1805575Z 2026-10-21 15:25:44.143Z CAPACITY | measured CPU 0% RAM 19% disk 7%
+2026-10-21T15:26:42.1807098Z 2026-10-21 15:26:13.359Z 21/10 15:26:13 stats: 0 ok 0 failed 0 cancelled | last job unknown | queue unknown | idle 00:02:31 | running 0 | ram free 13.9 GB | scratch free 86 GB | priority normal | paused: coordinator offline (since 15:23:42)
+2026-10-21T15:26:42.1808276Z 2026-10-21 15:26:14.484Z CAPACITY | capacity CPU 0/2 reserved threads
+2026-10-21T15:26:42.1808828Z 2026-10-21 15:26:14.484Z CAPACITY | capacity RAM 0/2048 MiB reserved
+2026-10-21T15:26:42.1809224Z 2026-10-21 15:26:14.484Z CAPACITY | capacity scratch 0/4096 MiB reserved
+2026-10-21T15:26:42.1810491Z 2026-10-21 15:26:14.484Z CAPACITY | local stage queue 0; remote queue unknown
+2026-10-21T15:26:42.1811241Z 2026-10-21 15:26:14.484Z CAPACITY | capacity stages 0/1 trial; qualified 0
+2026-10-21T15:26:42.1812189Z 2026-10-21 15:26:14.484Z CAPACITY | target 90% sustained; tracking_90_percent_target
+2026-10-21T15:26:42.1812883Z 2026-10-21 15:26:14.484Z CAPACITY | measured CPU 0% RAM 19% disk 2%
+2026-10-21T15:26:42.2218669Z Actual limited-owner unattended fixture failed; no skipped context/DPAPI/child gates
+2026-10-21T15:26:42.2219402Z At D:\a\worker-client\worker-client\tests\unattended_media_test.ps1:6 char:134
+2026-10-21T15:26:42.2219904Z + ... ite-Output};throw 'Actual limited-owner unattended fixture failed; no ...
+2026-10-21T15:26:42.2220319Z +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-10-21T15:26:42.2220767Z     + CategoryInfo          : OperationStopped: (Actual limited-...API/child gates:String) [], RuntimeException
+2026-10-21T15:26:42.2221368Z     + FullyQualifiedErrorId : Actual limited-owner unattended fixture failed; no skipped context/DPAPI/child gates
+2026-10-21T15:26:42.2221824Z  
+2026-10-21T15:26:42.2386085Z ##[error]Process completed with exit code 1.
+2026-10-21T15:26:42.2565622Z Post job cleanup.
+2026-10-21T15:26:42.3787737Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-21T15:26:42.4003499Z git version 2.56.0.windows.2
+2026-10-21T15:26:42.4060621Z Temporarily overriding HOME='D:\a\_temp\63a79c9d-b37c-4e54-a916-3b3ca26b5685' before making global git config changes
+2026-10-21T15:26:42.4061880Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T15:26:42.4070341Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\worker-client\worker-client
+2026-10-21T15:26:42.4316394Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T15:26:42.4558138Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-21T15:26:42.8487474Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T15:26:42.8708234Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-21T15:26:43.2864111Z Cleaning up orphan processes
+2026-10-21T15:26:43.3070380Z Terminate orphan process: pid (3044) (vctip)
+2026-10-21T15:26:43.3114796Z Terminate orphan process: pid (2564) (MSBuild)
+2026-10-21T15:26:43.3248990Z Terminate orphan process: pid (2928) (conhost)
+2026-10-21T15:26:43.3255677Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

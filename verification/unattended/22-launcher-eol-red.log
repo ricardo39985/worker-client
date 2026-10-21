@@ -1,0 +1,41 @@
+-- Configuring done (1.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-unattended/build-tests
+[  7%] Built target ow_pipeline_contract_tests
+[ 13%] Built target ow_json
+[ 21%] Built target ow_rendition_contract_tests
+[ 26%] Built target ow_rendition_probe
+[ 42%] Built target ow_progress_contract_tests
+[ 63%] Built target ow_core
+[ 71%] Built target ow_adaptive_hardware_contract_tests
+[ 94%] Built target ow_contract_tests
+[100%] Built target ow_adaptive_evidence_probe
+Test project /home/rick/Downloads/worker-client-unattended/build-tests
+    Start 1: ffmpeg_dependency_contracts
+1/7 Test #1: ffmpeg_dependency_contracts ......   Passed    0.44 sec
+    Start 2: launcher_package_contracts
+2/7 Test #2: launcher_package_contracts .......***Failed    0.12 sec
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-unattended/tests/launcher_package_test.py", line 18, in <module>
+    assert outputs[0] == outputs[1] == canonical, "Same reviewed launcher differs by checkout/archive EOL; enrollment breaks on unchanged-source upgrades"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Same reviewed launcher differs by checkout/archive EOL; enrollment breaks on unchanged-source upgrades
+
+    Start 3: worker_contracts
+3/7 Test #3: worker_contracts .................   Passed    0.06 sec
+    Start 4: pipeline_contracts
+4/7 Test #4: pipeline_contracts ...............   Passed    0.01 sec
+    Start 5: rendition_contracts
+5/7 Test #5: rendition_contracts ..............   Passed    0.01 sec
+    Start 6: adaptive_hardware_contracts
+6/7 Test #6: adaptive_hardware_contracts ......   Passed    0.04 sec
+    Start 7: progress_contracts
+7/7 Test #7: progress_contracts ...............   Passed    0.03 sec
+
+86% tests passed, 1 tests failed out of 7
+
+Total Test time (real) =   0.72 sec
+
+The following tests FAILED:
+	  2 - launcher_package_contracts (Failed)
+Errors while running CTest

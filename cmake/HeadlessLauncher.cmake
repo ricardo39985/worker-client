@@ -1,0 +1,7 @@
+if(NOT OW_LAUNCHER_SOURCE OR NOT OW_LAUNCHER_OUTPUT)
+  message(FATAL_ERROR "Headless launcher input/output required")
+endif()
+file(READ "${OW_LAUNCHER_SOURCE}" launcher)
+string(REPLACE "\r\n" "\n" launcher "${launcher}")
+file(WRITE "${OW_LAUNCHER_OUTPUT}" "${launcher}")
+file(SHA256 "${OW_LAUNCHER_OUTPUT}" OW_HEADLESS_LAUNCHER_SHA256)

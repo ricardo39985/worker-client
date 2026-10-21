@@ -63,5 +63,9 @@ jobs:
           $converter=Join-Path $env:RUNNER_TEMP 'ow-approved-ffmpeg.exe'
           Invoke-WebRequest -Uri $lock.ffmpeg.url -OutFile $converter -UseBasicParsing
           if((Get-Item $converter).Length -ne $lock.ffmpeg.bytes -or (Get-FileHash $converter -Algorithm SHA256).Hash -ine $lock.ffmpeg.sha256){throw 'Approved converter integrity failure'}
+          # Metadata only, NOT an elevated encode/engine. Distinguish binary/OS
+          # compatibility from the subsequent actual LIMITED noninteractive test.
+          & $converter -hide_banner -version | Select-Object -First 1
+          if($LASTEXITCODE){throw 'Approved converter cannot initialize on this Windows baseline'}
           & ./tests/unattended_media_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release') -ApprovedFFmpeg $converter -ApprovedSha256 $lock.ffmpeg.sha256
 # Deliberately no push schedule, release, deployment, signing or production secrets.

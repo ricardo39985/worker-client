@@ -11,10 +11,11 @@ $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
 . (Join-Path $PSScriptRoot 'worker-update-policy.ps1')
 . (Join-Path $PSScriptRoot 'setup-policy.ps1')
 . (Join-Path $PSScriptRoot 'worker-launch-policy.ps1')
+. (Join-Path $PSScriptRoot 'setup-startup.ps1')
 $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
 $principal=New-Object Security.Principal.WindowsPrincipal($identity)
 if($principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'Updater requires existing LIMITED owner, not an Administrator token'}
-$unattended=Test-Path (Join-Path $Root 'unattended/enrollment.json');$enrollment=$null
+$unattended=(Get-WorkerStartupMode $Root $identity.User.Value) -eq 'unattended';$enrollment=$null
 if($unattended){
     $selected=Get-Content (Join-Path $Root 'current.json') -Raw|ConvertFrom-Json;Test-WorkerSwapManifest $Root $selected
     $currentCtl=Join-Path $selected.directory 'OrganizerWorkerCtl.exe'
@@ -42,6 +43,7 @@ function Invoke-WorkerJson([string]$Executable,[string[]]$Arguments) {
 if(-not $RecoverOnly){
     $info=Read-WorkerValidatedPackage $Package $PackageManifestSha256
     if($unattended -and 'start-headless.ps1' -notin @(Get-WorkerPackageNames $info)){throw 'Cannot downgrade an enrolled headless owner to a legacy interactive-only package'}
+    if($unattended){$raw=(& (Join-Path $Package 'OrganizerWorkerCtl.exe') --json enrollment)-join "`n";if($LASTEXITCODE){throw 'Candidate enrollment policy differs; current engine retained, secure LOCAL migration review required'}}
     # Whitelisted public preferences, read-only SQLite, no credentials/key reads.
     $inspection=Invoke-WorkerJson (Join-Path $Package 'OrganizerWorkerDoctor.exe') -Arguments @('--operator-settings','--data-root',$Root)
     $expectedOperator=$inspection.operator
