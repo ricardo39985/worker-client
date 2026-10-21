@@ -124,7 +124,8 @@ if(WIN32)
  target_link_libraries(OrganizerWorker PRIVATE ow_windows)
  add_custom_command(TARGET OrganizerWorker POST_BUILD
    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/docs/cli.md" "$<TARGET_FILE_DIR:OrganizerWorker>/cli.md"
-   COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${OW_LAUNCHER_OUTPUT}" "$<TARGET_FILE_DIR:OrganizerWorker>/start-headless.ps1")
+   COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${OW_LAUNCHER_OUTPUT}" "$<TARGET_FILE_DIR:OrganizerWorker>/start-headless.ps1"
+   COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/tests/continuation_wait_test.ps1" "$<TARGET_FILE_DIR:OrganizerWorker>/continuation_wait_test.ps1")
  add_executable(OrganizerWorkerTray WIN32 windows/attached_tray.cpp)
  target_link_libraries(OrganizerWorkerTray PRIVATE ow_windows)
  add_executable(OrganizerWorkerConsole windows/console.cpp)
@@ -185,6 +186,8 @@ if(WIN32)
    set_tests_properties(candidate_approval_contracts PROPERTIES TIMEOUT 15)
    add_test(NAME continuation_policy_contracts COMMAND powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_SOURCE_DIR}/tests/continuation_policy_test.ps1" -SourceRoot "${CMAKE_CURRENT_SOURCE_DIR}")
    set_tests_properties(continuation_policy_contracts PROPERTIES TIMEOUT 15)
+   add_test(NAME continuation_task_contracts COMMAND powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_SOURCE_DIR}/tests/continuation_task_test.ps1" -SourceRoot "${CMAKE_CURRENT_SOURCE_DIR}")
+   set_tests_properties(continuation_task_contracts PROPERTIES TIMEOUT 30)
    add_test(NAME startup_preservation_contracts COMMAND powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_SOURCE_DIR}/tests/startup_preservation_test.ps1")
    set_tests_properties(startup_preservation_contracts PROPERTIES TIMEOUT 30)
    add_test(NAME unattended_policy_contracts COMMAND powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_SOURCE_DIR}/tests/unattended_policy_test.ps1")
