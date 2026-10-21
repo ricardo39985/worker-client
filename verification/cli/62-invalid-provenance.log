@@ -1,0 +1,11 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Error at CMakeLists.txt:7 (message):
+  Archive provenance requires the complete lowercase source commit
+
+
+-- Configuring incomplete, errors occurred!
