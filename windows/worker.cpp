@@ -98,7 +98,7 @@ std::string processor_model(){
 }
 }
 Config load_config(const std::filesystem::path& root){
- Config c;c.root=root;auto obj=parse(read_file(root/"worker.json")).as_object();if(number(obj,"schema",1)!=1)throw std::runtime_error("Unsupported configuration version");c.coordinator=coordinator_origin(text(obj,"coordinator_url",1024));
+ Config c;c.root=root;auto obj=validate_control_config(parse(read_file(root/"worker.json")).as_object());c.coordinator=text(obj,"coordinator_url",1024);
  for(const auto& v:obj.at("storage_hosts").as_array()){auto s=std::string(v.as_string());std::transform(s.begin(),s.end(),s.begin(),[](unsigned char x){return static_cast<char>(std::tolower(x));});if(!allowed_url("https://"+s+"/",{s}))throw std::runtime_error("Invalid approved storage host");c.storage_hosts.push_back(s);}
  c.ffmpeg=wide(text(obj,"ffmpeg_path",32700));c.ffmpeg_sha256=text(obj,"ffmpeg_sha256",64);
  const auto& limits=obj.at("limits").as_object();const auto vram_override=limits.find("vram_mb");c.vram_override_set=vram_override!=limits.end();c.budget={number(limits,"ram_mb",1024*1024),vram_override==limits.end()?0:number(limits,"vram_mb",UINT64_MAX),number(limits,"scratch_mb",1024*1024),number(limits,"cpu_threads",64)};c.reserve_ram_mb=number(limits,"reserve_ram_mb",1024*1024);c.max_jobs=static_cast<std::size_t>(number(limits,"max_jobs",64));
@@ -375,11 +375,13 @@ Worker::Worker(Config config,bool isolated):config_(std::move(config)),store_(co
  if(auto credential=identity.read(SecretSlot::credential)) {
   proven_origin=text(parse(*credential).as_object(),"coordinator_url",1024);
  }
- bind_journal_origin(store_,config_.coordinator,proven_origin);
- if(auto p=store_.get("priority"))priority_=parse_priority(*p);
- if(auto p=store_.get("video_preference"))video_=parse_pref(*p);
- if(auto p=store_.get("image_preference"))image_=parse_pref(*p);
- paused_=store_.get("paused").value_or("false")=="true";admission_.pause(paused_);admission_.defer_new_starts("telemetry_unavailable");
+ if(!config_.coordinator.empty())bind_journal_origin(store_,config_.coordinator,proven_origin);
+ if(isolated_&&!std::filesystem::exists(config_.root/"worker.json")){
+  auto doc=control_defaults();doc["coordinator_url"]=config_.coordinator;doc["ffmpeg_path"]=utf8(config_.ffmpeg.wstring());doc["ffmpeg_sha256"]=config_.ffmpeg_sha256;doc["limits"]=json::object{{"ram_mb",config_.budget.ram_mb},{"reserve_ram_mb",config_.reserve_ram_mb},{"scratch_mb",config_.budget.scratch_mb},{"cpu_threads",config_.budget.cpu_threads},{"max_jobs",config_.max_jobs}};atomic_write(config_.root/"worker.json",json::serialize(doc));
+ }
+ effective_config_=load_control_document(config_.root,store_);
+ settings_=std::make_unique<ControlSettings>(effective_config_,[this](const json::object& doc){atomic_write(config_.root/"worker.json",json::serialize(doc));});
+ apply_operator_settings();admission_.defer_new_starts("telemetry_unavailable");
  for(const auto& id:store_.interrupted())store_.result(id,json::serialize(json::object{{"protocol",1},{"type","result"},{"attempt_id",id},{"status","abandoned"},{"reason","worker_restarted"}}));
  safe_log("WORKER STARTED | counts since this process; H for last 10 outcomes");
  {std::lock_guard lock(report_mutex_);report_.priority(priority_name(priority_));report_.state("paused",paused_?"operator":"starting",utc_ms(),monotonic_ms());publish_report(config_.root/"worker-status.txt","");publish_report(config_.root/"worker-history.txt","");}
@@ -422,8 +424,22 @@ void Worker::report_state(std::string name,std::string reason){
 void Worker::state(std::string s){auto shown=s.starts_with("STATE ")?s.substr(6):s;bool changed{};{std::lock_guard lock(mutex_);changed=status_!=shown;status_=shown;}if(changed)safe_log(s);}
 std::string Worker::status() const{std::lock_guard lock(mutex_);return status_;}
 std::size_t Worker::active_count() const{return admission_.active().size();}
-void Worker::pause(bool p){if(exit_requested_&&!p)throw std::runtime_error("Worker is exiting; restart it to resume");paused_=p;admission_.pause(p);store_.set("paused",p?"true":"false");state(p?"STATE PAUSED":"STATE RESUMED");report_state(p||!report_connected_?"paused":"accepting",p?"operator":report_connected_?"resumed":"coordinator offline");}
-void Worker::priority(Priority p){priority_=p;store_.set("priority",priority_name(p));state("STATE PRIORITY "+priority_name(p));{std::lock_guard lock(report_mutex_);report_.priority(priority_name(p));}report_status();}
+void Worker::apply_operator_settings(bool apply_pause){
+ const auto op=settings_?settings_->current().at("operator").as_object():effective_config_.at("operator").as_object();
+ priority_=parse_priority(text(op,"priority"));video_=parse_pref(text(op,"video_preference"));image_=parse_pref(text(op,"image_preference"));
+ if(apply_pause){paused_=op.at("paused").as_bool();admission_.pause(paused_);}apply_preferences();
+ {std::lock_guard lock(report_mutex_);report_.priority(priority_name(priority_));}
+}
+void Worker::update_settings(const json::object& values){
+ std::lock_guard lock(control_mutex_);
+ if(auto* paused=values.if_contains("operator.paused");paused&&paused->is_bool()&&!paused->as_bool()&&exit_requested_)throw std::runtime_error("Worker is exiting; restart it to resume");
+ // Coordinator scope migration must archive through the existing setup policy.
+ if(auto* endpoint=values.if_contains("coordinator_url");endpoint&&*endpoint!=settings_->current().at("coordinator_url"))throw std::runtime_error("Endpoint migration requires stopped-worker setup.cmd -RePair");
+ settings_->patch(values);apply_operator_settings(values.contains("operator.paused"));
+ state(paused_?"STATE PAUSED":"STATE RESUMED");report_state(paused_||!report_connected_?"paused":"accepting",paused_?"operator":report_connected_?"resumed":"coordinator offline");
+}
+void Worker::pause(bool p){update_settings({{"operator.paused",p}});}
+void Worker::priority(Priority p){update_settings({{"operator.priority",priority_name(p)}});}
 void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);}
 adaptive::Scheduler::Reservation Worker::reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,Resources& cost,const std::string& attempt,const std::string& stage,bool cpu_only,std::uint32_t width,std::uint32_t height,std::uint64_t minimum_ram){
  std::lock_guard lock(mutex_);if(!adaptive_scheduler_)return {};
@@ -471,8 +487,8 @@ void Worker::wait_stage(const std::string& attempt,const std::string& stage,Reso
   Sleep(100);
  }
 }
-void Worker::preference(bool video,Preference value){if(video)video_=value;else image_=value;store_.set(video?"video_preference":"image_preference",pref_name(value));apply_preferences();state(std::string("STATE PREFERENCE ")+(video?"video=":"image=")+pref_name(value));}
-void Worker::exit(bool kill){pause(true);exit_requested_=true;{std::lock_guard lock(mutex_);if(kill)for(auto& [_,r]:running_)r->data->cancel=true;}state(kill?"STATE STOPPING":"STATE DRAINING");report_state("stopping",kill?"operator stop":"operator drain");}
+void Worker::preference(bool video,Preference value){update_settings({{video?"operator.video_preference":"operator.image_preference",pref_name(value)}});}
+void Worker::exit(bool kill){std::lock_guard control_lock(control_mutex_);pause(true);exit_requested_=true;{std::lock_guard lock(mutex_);if(kill)for(auto& [_,r]:running_)r->data->cancel=true;}state(kill?"STATE STOPPING":"STATE DRAINING");report_state("stopping",kill?"operator stop":"operator drain");}
 bool Worker::ready_to_exit() const{if(!exit_requested_)return false;std::lock_guard lock(mutex_);return running_.empty();}
 json::object Worker::heartbeat(){
  auto free=available_resources(config_.root,config_.reserve_ram_mb);auto used=admission_.used();json::array active;

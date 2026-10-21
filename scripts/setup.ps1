@@ -364,7 +364,7 @@ try {
     $buildId=(Get-WorkerFileSha256 $built).Substring(0,16).ToLowerInvariant()
     $version=Join-Path $Root ('versions\0.1.2-'+$buildId)
     Native $CMake @('--install',$build,'--config','Release','--prefix',$version) -Name 'Install verified native binaries' -TimeoutSeconds 120
-    foreach ($binary in 'OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe') { if (-not (Test-Path -LiteralPath (Join-Path $version $binary))) { throw "Installed binary missing: $binary" } }
+    foreach ($binary in 'OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe') { if (-not (Test-Path -LiteralPath (Join-Path $version $binary))) { throw "Installed binary missing: $binary" } }
     # Validate candidate configuration without publishing over the installed one.
     $doctor=Join-Path $version 'OrganizerWorkerDoctor.exe'
     $stage=Join-Path $Root ('install-check-'+[guid]::NewGuid().ToString('N'))

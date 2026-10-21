@@ -9,6 +9,7 @@
 #include "ow/capability_report.hpp"
 #include "ow/worker_status.hpp"
 #include "capacity.hpp"
+#include "ow/control.hpp"
 #include <array>
 #include <thread>
 #include <atomic>
@@ -24,6 +25,8 @@ struct Config {
  std::function<bool()> capacity_foreground; // local measurement port; never parsed from config/network
 };
 Config load_config(const std::filesystem::path& root);
+json::object load_control_document(const std::filesystem::path& root,Store& store);
+json::object offline_control(const std::filesystem::path& root,const json::object& request);
 struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;std::vector<std::string> fallback_notes;std::vector<ProbeFailure> gpu_failures;bool complete{};};
 using ProbePhase=std::function<void(std::string,unsigned,unsigned)>;
 using ProbeTiming=std::function<void(const std::string&)>;
@@ -36,6 +39,11 @@ class Worker {
  struct TaskData {JobSpec spec;std::string token;Tick hard_deadline{};bool compute_handoff{};std::atomic_bool cancel{},done{};ProgressCounter progress,transfer_progress;std::array<ProgressCounter,3> rendition_progress;};
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
  Config config_;Store store_;Log log_;Admission admission_;CapacityControl capacity_;
+ const Tick process_started_{monotonic_ms()};
+ std::recursive_mutex control_mutex_;
+ std::unique_ptr<ControlSettings> settings_;json::object effective_config_;
+ void update_settings(const json::object&);
+ void apply_operator_settings(bool apply_pause=true);
  RuntimePressure pressure_; // guarded by mutex_
  std::map<std::string,std::unique_ptr<CapacityControl>> gpu_capacity_;
  Tick cached_capacity_until_{}; // device live-budget refresh, not capability proof
@@ -80,6 +88,7 @@ public:
  void priority(Priority);Priority priority() const{return priority_;}
  void preference(bool video,Preference);Preference preference(bool video) const{return video?video_.load():image_.load();}
  void exit(bool stop_jobs);bool ready_to_exit() const;
+ json::object control(const json::object& request);
  std::string status() const;std::size_t active_count() const;
 };
 }
