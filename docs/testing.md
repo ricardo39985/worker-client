@@ -1,5 +1,12 @@
 # Test policy and evidence
 
+Local CLI candidate gates are in [verification/cli/REPORT.md](../verification/cli/REPORT.md).
+The new native contracts exercise the owner pipe, anonymous denial, typed/atomic
+configuration, tray roundtrip, legacy migration and a packaged real CLI with an
+isolated headless controller. That fixture has no coordinator, credentials or
+jobs; it is not a fake-coordinator job test or an installed-worker acceptance.
+See [remaining acceptance](../verification/cli/acceptance.md).
+
 Worker-flex stage-concurrency checkpoint: [implementation, enforced/sampled limits and gates](../verification/worker-flex-r2/REPORT.md).
 Linux/sanitizer and clean both-PC MSVC/native gates pass. Identical-quality
 Windows throughput measured 4.78x on Danny and 1.28x on Rick; the exact refused

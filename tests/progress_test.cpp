@@ -21,6 +21,9 @@ std::int64_t epoch_ms(int year,unsigned month,unsigned day,int hour,int minute,i
 }
 struct TzGuard {
  std::optional<std::string> old;
+#ifdef _WIN32
+ long old_daylight_bias{};
+#endif
  static void set(const char* value) {
 #ifdef _WIN32
   _putenv_s("TZ",value?value:"");_tzset();
@@ -29,12 +32,24 @@ struct TzGuard {
   tzset();
 #endif
  }
- explicit TzGuard(const char* value) {
+ explicit TzGuard(const char* value,[[maybe_unused]] std::optional<long> daylight_bias={}) {
   if(const char* current=std::getenv("TZ"))old=current;
+#ifdef _WIN32
+  _get_dstbias(&old_daylight_bias);
+#endif
   set(value);
+#ifdef _WIN32
+  // UCRT's TZ-environment path changes zone/DST names but deliberately leaves
+  // _dstbias inherited from the machine. A UTC host supplies zero. Define the
+  // complete injected zone here, without changing the OS or any assertions.
+  if(daylight_bias)_dstbias=*daylight_bias;
+#endif
  }
  ~TzGuard(){
   set(old?old->c_str():nullptr);
+#ifdef _WIN32
+  _dstbias=old_daylight_bias;
+#endif
  }
 };
 void check_frame(const std::string& frame) {
@@ -168,8 +183,9 @@ TEST("local timestamp format is exact through midnight month and zone changes") 
  }
  {
 #ifdef _WIN32
-  // The CRT uses US transition rules for this TZ spelling.
-  TzGuard zone{"EST5EDT"};
+  // US transition rules plus the explicit one-hour daylight bias. UCRT does
+  // not derive that bias from TZ when the host's own zone has no DST.
+  TzGuard zone{"EST5EDT",-3600};
 #else
   TzGuard zone{"EST5EDT,M3.2.0/2,M11.1.0/2"};
 #endif

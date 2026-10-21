@@ -1,0 +1,491 @@
+windows	Verify pinned source and build	﻿2026-10-21T01:52:17.6715491Z ##[group]Run $ErrorActionPreference='Stop'
+windows	Verify pinned source and build	2026-10-21T01:52:17.6715974Z ^[[36;1m$ErrorActionPreference='Stop'^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6716475Z ^[[36;1m$lock=Get-Content config/dependencies.lock.json -Raw | ConvertFrom-Json^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6717146Z ^[[36;1mif (-not (Get-Command cmake.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CMake' }^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6717921Z ^[[36;1mif (-not (Get-Command ctest.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CTest' }^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6718566Z ^[[36;1mInvoke-WebRequest -Uri $lock.boost.url -OutFile boost.tar.gz -UseBasicParsing^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6719251Z ^[[36;1mif ((Get-FileHash boost.tar.gz -Algorithm SHA256).Hash -ine $lock.boost.sha256) { throw 'Dependency checksum mismatch' }^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6719799Z ^[[36;1mcmake -E tar xzf boost.tar.gz^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6720156Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Dependency extraction failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6720557Z ^[[36;1m$boost=Join-Path $PWD $lock.boost.directory^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6721068Z ^[[36;1mcmake -S . -B build-ci -G 'Visual Studio 17 2022' -A x64 "-DOW_BOOST_ROOT=$boost" -DBUILD_TESTING=ON^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6721595Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Native configure failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6721995Z ^[[36;1mcmake --build build-ci --config Release --parallel 2^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6722412Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6722840Z ^[[36;1mctest --test-dir build-ci -C Release --output-on-failure^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6723281Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Native behavior contracts failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T01:52:17.6764179Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+windows	Verify pinned source and build	2026-10-21T01:52:17.6764614Z ##[endgroup]
+windows	Verify pinned source and build	2026-10-21T01:56:30.3794998Z -- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.20348.
+windows	Verify pinned source and build	2026-10-21T01:56:42.1529688Z -- The CXX compiler identification is MSVC 19.44.35229.0
+windows	Verify pinned source and build	2026-10-21T01:56:42.3008812Z -- Detecting CXX compiler ABI info
+windows	Verify pinned source and build	2026-10-21T01:56:43.1769149Z -- Detecting CXX compiler ABI info - done
+windows	Verify pinned source and build	2026-10-21T01:56:43.1905611Z -- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+windows	Verify pinned source and build	2026-10-21T01:56:43.1921446Z -- Detecting CXX compile features
+windows	Verify pinned source and build	2026-10-21T01:56:43.1987648Z -- Detecting CXX compile features - done
+windows	Verify pinned source and build	2026-10-21T01:56:47.0154757Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+windows	Verify pinned source and build	2026-10-21T01:56:48.9572800Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+windows	Verify pinned source and build	2026-10-21T01:56:48.9577756Z -- Looking for pthread_create in pthreads
+windows	Verify pinned source and build	2026-10-21T01:56:49.5577046Z -- Looking for pthread_create in pthreads - not found
+windows	Verify pinned source and build	2026-10-21T01:56:49.5577946Z -- Looking for pthread_create in pthread
+windows	Verify pinned source and build	2026-10-21T01:56:50.1164783Z -- Looking for pthread_create in pthread - not found
+windows	Verify pinned source and build	2026-10-21T01:56:50.1279228Z -- Found Threads: TRUE
+windows	Verify pinned source and build	2026-10-21T01:56:51.6748309Z -- Configuring done (21.6s)
+windows	Verify pinned source and build	2026-10-21T01:56:51.8626775Z -- Generating done (0.2s)
+windows	Verify pinned source and build	2026-10-21T01:56:51.8719847Z -- Build files have been written to: D:/a/worker-client/worker-client/build-ci
+windows	Verify pinned source and build	2026-10-21T01:56:51.9704267Z MSBuild version 17.14.60+43b635718 for .NET Framework
+windows	Verify pinned source and build	2026-10-21T01:56:52.0000362Z 
+windows	Verify pinned source and build	2026-10-21T01:56:52.3399718Z   1>Checking Build System
+windows	Verify pinned source and build	2026-10-21T01:56:52.6132626Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:56:52.7512826Z   boost_json.cpp
+windows	Verify pinned source and build	2026-10-21T01:56:53.0272376Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:56:53.1220775Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T01:56:53.1863039Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:56:53.3263333Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T01:56:54.6868721Z   progress_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:56:54.6893918Z   pipeline_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:56:57.6598915Z   encoder_run_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:01.1699942Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:57:01.2491865Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:02.1836825Z   media_rendition_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:02.6744293Z   status_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:03.8332566Z   Generating code
+windows	Verify pinned source and build	2026-10-21T01:57:03.8508270Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T01:57:06.6966286Z   stage_timing_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:07.6850489Z   Generating code
+windows	Verify pinned source and build	2026-10-21T01:57:07.6960118Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T01:57:07.7735311Z   All 3041 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T01:57:07.8174871Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T01:57:09.9888668Z   ow_pipeline_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T01:57:10.7088262Z   ow_json.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_json.lib
+windows	Verify pinned source and build	2026-10-21T01:57:10.7872772Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:57:11.0304854Z   admission.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:11.0461778Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:57:11.1354702Z   media_rendition_probe.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:11.2270082Z   All 2222 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T01:57:11.2356568Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T01:57:11.4336464Z   ow_rendition_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T01:57:11.9889506Z   Generating code
+windows	Verify pinned source and build	2026-10-21T01:57:12.0097373Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T01:57:12.6175291Z   store.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:16.8562736Z   protocol.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:20.2807446Z   Generating code
+windows	Verify pinned source and build	2026-10-21T01:57:20.4854052Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T01:57:23.0783751Z   pairing.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:24.5671376Z   All 5162 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T01:57:24.7702366Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T01:57:25.9067025Z   ow_progress_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_progress_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T01:57:26.2400741Z   All 1980 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T01:57:26.2447794Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T01:57:26.4055686Z   ow_rendition_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_probe.exe
+windows	Verify pinned source and build	2026-10-21T01:57:27.4360005Z   adaptive_hardware.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:29.6545077Z   control.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:32.6103398Z   ow_core.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_core.lib
+windows	Verify pinned source and build	2026-10-21T01:57:32.6728153Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:57:32.6780618Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:57:32.7424797Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:57:32.7458561Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T01:57:32.8263704Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:32.8294630Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:32.8434943Z   platform.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:33.8655046Z   adaptive_hardware_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:33.9318915Z   admission_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:35.3660204Z   store_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:38.5635068Z   protocol_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:38.9854997Z   process.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:39.7928958Z   Generating code
+windows	Verify pinned source and build	2026-10-21T01:57:39.8227517Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T01:57:44.5356614Z   pairing_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:45.1930840Z   http.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:50.5616529Z   capacity_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:52.2293242Z   worker.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:53.2146232Z   control_test.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:53.8908047Z   All 5618 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T01:57:53.9103300Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T01:57:54.2234871Z   ow_adaptive_hardware_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_hardware_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T01:57:54.3007412Z   adaptive_evidence_probe.cpp
+windows	Verify pinned source and build	2026-10-21T01:57:56.7070032Z   Generating code
+windows	Verify pinned source and build	2026-10-21T01:57:56.7496888Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T01:57:59.0930908Z D:\a\worker-client\worker-client\windows\worker.cpp(855,289): warning C4456: declaration of 'cancelled' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+windows	Verify pinned source and build	2026-10-21T01:57:59.1558518Z       D:\a\worker-client\worker-client\windows\worker.cpp(653,7):
+windows	Verify pinned source and build	2026-10-21T01:57:59.3123979Z       see declaration of 'cancelled'
+windows	Verify pinned source and build	2026-10-21T01:57:59.4849326Z   
+windows	Verify pinned source and build	2026-10-21T01:58:03.5921136Z   probe_recovery.cpp
+windows	Verify pinned source and build	2026-10-21T01:58:04.0216753Z   All 3625 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T01:58:04.0413862Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T01:58:04.2774401Z   ow_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T01:58:04.4604015Z   Generating code
+windows	Verify pinned source and build	2026-10-21T01:58:04.4659472Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T01:58:05.7354885Z   All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T01:58:05.7396523Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T01:58:05.8865349Z   ow_adaptive_evidence_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_evidence_probe.exe
+windows	Verify pinned source and build	2026-10-21T01:58:08.4819842Z   pairing_adapter.cpp
+windows	Verify pinned source and build	2026-10-21T01:58:11.2266869Z   hardware.cpp
+windows	Verify pinned source and build	2026-10-21T01:58:13.8538175Z   physical_adapters.cpp
+windows	Verify pinned source and build	2026-10-21T01:58:16.6734299Z   capacity.cpp
+windows	Verify pinned source and build	2026-10-21T01:58:19.0074629Z D:\a\worker-client\worker-client\windows\capacity.cpp(66,45): warning C4456: declaration of 'value' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+windows	Verify pinned source and build	2026-10-21T01:58:19.0077021Z       D:\a\worker-client\worker-client\windows\capacity.cpp(56,24):
+windows	Verify pinned source and build	2026-10-21T01:58:19.0077635Z       see declaration of 'value'
+windows	Verify pinned source and build	2026-10-21T01:58:19.0077961Z   
+windows	Verify pinned source and build	2026-10-21T01:58:19.9659009Z   control_pipe.cpp
+windows	Verify pinned source and build	2026-10-21T01:58:22.7667096Z   worker_control.cpp
+windows	Verify pinned source and build	2026-10-21T01:58:25.4175339Z D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134): error C2678: binary '==': no operator found which takes a left-hand operand of type 'std::string' (or there is no acceptable conversion) [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+windows	Verify pinned source and build	2026-10-21T01:58:25.4177670Z       C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\guiddef.h(192,15):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4178642Z       could be 'bool operator ==(const GUID &,const GUID &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4179491Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4180739Z           'bool operator ==(const GUID &,const GUID &)': cannot convert argument 1 from 'boost::json::value' to 'const GUID &'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4181793Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4182668Z               Reason: cannot convert from 'boost::json::value' to 'const GUID'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4184744Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4186055Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4187351Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\thread(267,36):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4188455Z       or       'bool std::operator ==(std::thread::id,std::thread::id) noexcept' [found using argument-dependent lookup]
+windows	Verify pinned source and build	2026-10-21T01:58:25.4189361Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4190654Z           'bool std::operator ==(std::thread::id,std::thread::id) noexcept': cannot convert argument 1 from 'boost::json::value' to 'std::thread::id'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4191686Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4192705Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4193713Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\storage_ptr.hpp(441,1):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4194952Z       or       'bool boost::json::operator ==(const boost::json::storage_ptr &,const boost::json::storage_ptr &) noexcept' [found using argument-dependent lookup]
+windows	Verify pinned source and build	2026-10-21T01:58:25.4196032Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4197390Z           'bool boost::json::operator ==(const boost::json::storage_ptr &,const boost::json::storage_ptr &) noexcept': cannot convert argument 1 from 'boost::json::value' to 'const boost::json::storage_ptr &'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4198771Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4199566Z               Reason: cannot convert from 'boost::json::value' to 'const boost::json::storage_ptr'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4200429Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4201432Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4202468Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(3053,5):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4203626Z       or       'bool boost::json::operator ==(const boost::json::value &,const boost::json::value &) noexcept' [found using argument-dependent lookup]
+windows	Verify pinned source and build	2026-10-21T01:58:25.4204698Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4205896Z           'bool boost::json::operator ==(const boost::json::value &,const boost::json::value &) noexcept': cannot convert argument 2 from 'std::string' to 'const boost::json::value &'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4207142Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4207927Z               Reason: cannot convert from 'std::string' to 'const boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4208766Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4209772Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4210923Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\variant(1650,39):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4212069Z       or       'bool std::operator ==(std::monostate,std::monostate) noexcept' [found using argument-dependent lookup]
+windows	Verify pinned source and build	2026-10-21T01:58:25.4213005Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4214162Z           'bool std::operator ==(std::monostate,std::monostate) noexcept': cannot convert argument 1 from 'boost::json::value' to 'std::monostate'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4215224Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4216359Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4217424Z       C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\guiddef.h(192,15):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4218224Z       or 'bool operator ==(const GUID &,const GUID &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4219057Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4219962Z           'bool operator ==(const GUID &,const GUID &)': cannot convert argument 1 from 'std::string' to 'const GUID &'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4221041Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4221748Z               Reason: cannot convert from 'std::string' to 'const GUID'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4222436Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4223449Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4224589Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\thread(267,36):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4225651Z       or 'bool std::operator ==(std::thread::id,std::thread::id) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4226492Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4227539Z           'bool std::operator ==(std::thread::id,std::thread::id) noexcept': cannot convert argument 1 from 'std::string' to 'std::thread::id'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4228581Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4229580Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4230656Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\storage_ptr.hpp(441,1):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4231806Z       or 'bool boost::json::operator ==(const boost::json::storage_ptr &,const boost::json::storage_ptr &) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4232912Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4234260Z           'bool boost::json::operator ==(const boost::json::storage_ptr &,const boost::json::storage_ptr &) noexcept': cannot convert argument 1 from 'std::string' to 'const boost::json::storage_ptr &'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4235560Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4236377Z               Reason: cannot convert from 'std::string' to 'const boost::json::storage_ptr'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4237125Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4238188Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4239163Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(3053,5):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4240221Z       or 'bool boost::json::operator ==(const boost::json::value &,const boost::json::value &) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4241188Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4242406Z           'bool boost::json::operator ==(const boost::json::value &,const boost::json::value &) noexcept': cannot convert argument 1 from 'std::string' to 'const boost::json::value &'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4243676Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4244440Z               Reason: cannot convert from 'std::string' to 'const boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4245225Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4246346Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4247511Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\variant(1650,39):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4248614Z       or 'bool std::operator ==(std::monostate,std::monostate) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4249456Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4250532Z           'bool std::operator ==(std::monostate,std::monostate) noexcept': cannot convert argument 1 from 'std::string' to 'std::monostate'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4252448Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,144):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4253446Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T01:58:25.4254625Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\utility(503,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4255701Z       or       'bool std::operator ==(const std::pair<_Ty1,_Ty2> &,const std::pair<_Uty1,_Uty2> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4256515Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4257855Z           'bool std::operator ==(const std::pair<_Ty1,_Ty2> &,const std::pair<_Uty1,_Uty2> &)': could not deduce template argument for 'const std::pair<_Ty1,_Ty2> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4259356Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xutility(1896,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4260477Z       or       'bool std::operator ==(const std::reverse_iterator<_BidIt> &,const std::reverse_iterator<_BidIt2> &) noexcept(<expr>)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4261425Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4262962Z           'bool std::operator ==(const std::reverse_iterator<_BidIt> &,const std::reverse_iterator<_BidIt2> &) noexcept(<expr>)': could not deduce template argument for 'const std::reverse_iterator<_BidIt> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4264725Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xutility(4458,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4265941Z       or       'bool std::operator ==(const std::move_iterator<_Iter> &,const std::move_iterator<_Iter2> &) noexcept(<expr>)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4266867Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4268299Z           'bool std::operator ==(const std::move_iterator<_Iter> &,const std::move_iterator<_Iter2> &) noexcept(<expr>)': could not deduce template argument for 'const std::move_iterator<_Iter> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4269997Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\__msvc_string_view.hpp(1823,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4271427Z       or       'bool std::operator ==(const std::basic_string_view<_Elem,_Traits>,const type_identity<std::basic_string_view<_Elem,_Traits>>::type) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4272600Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4274294Z           'bool std::operator ==(const std::basic_string_view<_Elem,_Traits>,const type_identity<std::basic_string_view<_Elem,_Traits>>::type) noexcept': could not deduce template argument for 'const std::basic_string_view<_Elem,_Traits>' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4276149Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\tuple(844,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4277158Z       or       'bool std::operator ==(const std::tuple<_Types...> &,const std::tuple<_Types...> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4277960Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4279410Z           'bool std::operator ==(const std::tuple<_Types...> &,const std::tuple<_Types...> &)': could not deduce template argument for 'const std::tuple<_Types...> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4280906Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xmemory(1050,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4281949Z       or       'bool std::operator ==(const std::allocator<_Ty> &,const std::allocator<_Other> &) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4282802Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4284165Z           'bool std::operator ==(const std::allocator<_Ty> &,const std::allocator<_Other> &) noexcept': could not deduce template argument for 'const std::allocator<_Ty> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4285881Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xstring(3257,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4287161Z       or       'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4288180Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4289806Z           'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &) noexcept': could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4291627Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xstring(3263,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4292773Z       or       'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *const ) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4293733Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4295237Z           'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *const ) noexcept': could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4296966Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\iterator(304,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4298280Z       or       'bool std::operator ==(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4299414Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4301194Z           'bool std::operator ==(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &) noexcept': could not deduce template argument for 'const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4303173Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\iterator(486,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4304404Z       or       'bool std::operator ==(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4305418Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4307051Z           'bool std::operator ==(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)': could not deduce template argument for 'const std::istreambuf_iterator<_Elem,_Traits> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4308897Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(1880,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4309988Z       or       'bool std::operator ==(const std::shared_ptr<_Ty> &,const std::shared_ptr<_Ty0> &) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4310821Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4312183Z           'bool std::operator ==(const std::shared_ptr<_Ty> &,const std::shared_ptr<_Ty0> &) noexcept': could not deduce template argument for 'const std::shared_ptr<_Ty> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4314474Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(1917,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4315510Z       or       'bool std::operator ==(const std::shared_ptr<_Ty> &,std::nullptr_t) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4316287Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4317602Z           'bool std::operator ==(const std::shared_ptr<_Ty> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::shared_ptr<_Ty> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4319240Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(3666,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4320218Z       or       'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,const std::unique_ptr<_Ty2,_Dx2> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4321077Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4322442Z           'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,const std::unique_ptr<_Ty2,_Dx2> &)': could not deduce template argument for 'const std::unique_ptr<_Ty,_Dx> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4323992Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(3712,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4324985Z       or       'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,std::nullptr_t) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4325834Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4327164Z           'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::unique_ptr<_Ty,_Dx> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4328693Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\forward_list(1589,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4329732Z       or       'bool std::operator ==(const std::forward_list<_Ty,_Alloc> &,const std::forward_list<_Ty,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4330633Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4332034Z           'bool std::operator ==(const std::forward_list<_Ty,_Alloc> &,const std::forward_list<_Ty,_Alloc> &)': could not deduce template argument for 'const std::forward_list<_Ty,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4333644Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(647,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4334775Z       or       'bool std::operator ==(const std::optional<_Ty> &,const std::optional<_Ty2> &) noexcept(<expr>)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4335648Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4337004Z           'bool std::operator ==(const std::optional<_Ty> &,const std::optional<_Ty2> &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4338553Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(763,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4339595Z       or       'bool std::operator ==(const std::optional<_Ty> &,std::nullopt_t) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4340372Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4341955Z           'bool std::operator ==(const std::optional<_Ty> &,std::nullopt_t) noexcept': could not deduce template argument for 'const std::optional<_Ty> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4343544Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(852,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4344922Z       or       'bool std::operator ==(const std::optional<_Ty> &,const _Ty2 &) noexcept(<expr>)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4345926Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4347247Z           'bool std::operator ==(const std::optional<_Ty> &,const _Ty2 &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4348770Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(861,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4349824Z       or       'bool std::operator ==(const _Ty1 &,const std::optional<_Ty2> &) noexcept(<expr>)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4350647Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4352056Z           'bool std::operator ==(const _Ty1 &,const std::optional<_Ty2> &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty2> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4353520Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\vector(2266,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4354669Z       or       'bool std::operator ==(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4355489Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4356819Z           'bool std::operator ==(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)': could not deduce template argument for 'const std::vector<_Ty,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4358349Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\list(1890,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4359413Z       or       'bool std::operator ==(const std::list<_Ty,_Alloc> &,const std::list<_Ty,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4360234Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4361559Z           'bool std::operator ==(const std::list<_Ty,_Alloc> &,const std::list<_Ty,_Alloc> &)': could not deduce template argument for 'const std::list<_Ty,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4363088Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\unordered_map(536,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4364490Z       or       'bool std::operator ==(const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4365661Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4367405Z           'bool std::operator ==(const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)': could not deduce template argument for 'const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4369401Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\unordered_map(908,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4370829Z       or       'bool std::operator ==(const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4372057Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4373933Z           'bool std::operator ==(const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)': could not deduce template argument for 'const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4376065Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\functional(1284,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4377122Z       or       'bool std::operator ==(const std::function<_Fty> &,std::nullptr_t) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4377981Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4379448Z           'bool std::operator ==(const std::function<_Fty> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::function<_Fty> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4380771Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\string.hpp(2081,1):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4382065Z       or       'std::enable_if<string_and_stringlike<T,U>::value||string_and_stringlike<U,T>::value,bool>::type boost::json::operator ==(const T &,const U &) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4383342Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4384683Z           Failed to specialize function template 'std::enable_if<string_and_stringlike<T,U>::value||string_and_stringlike<U,T>::value,bool>::type boost::json::operator ==(const T &,const U &) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4386981Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4387683Z               With the following template arguments:
+windows	Verify pinned source and build	2026-10-21T01:58:25.4388339Z                   D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4389015Z                   'T=boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4389602Z                   D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4390232Z                   'U=std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4390826Z               D:\a\worker-client\worker-client\boost_1_89_0\boost\json\string.hpp(2080,9):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4391812Z               'boost::json::detail::string_comp_op_requirement' : Failed to specialize alias template
+windows	Verify pinned source and build	2026-10-21T01:58:25.4392841Z                   D:\a\worker-client\worker-client\boost_1_89_0\boost\json\detail\string_impl.hpp(379,16):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4393829Z                   'type': is not a member of any direct or indirect base class of 'std::enable_if<false,bool>'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4394879Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\array(777,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4395937Z       or       'bool std::operator ==(const std::array<_Ty,_Size> &,const std::array<_Ty,_Size> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4396894Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4398310Z           'bool std::operator ==(const std::array<_Ty,_Size> &,const std::array<_Ty,_Size> &)': could not deduce template argument for 'const std::array<_Ty,_Size> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4399889Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\variant(1300,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4401123Z       or       'bool std::operator ==(const std::variant<_Types...> &,const std::variant<_Types...> &) noexcept(<expr>)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4402099Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4403575Z           'bool std::operator ==(const std::variant<_Types...> &,const std::variant<_Types...> &) noexcept(<expr>)': could not deduce template argument for 'const std::variant<_Types...> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4405333Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\map(400,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4406526Z       or       'bool std::operator ==(const std::map<_Kty,_Ty,_Pr,_Alloc> &,const std::map<_Kty,_Ty,_Pr,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4407408Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4409041Z           'bool std::operator ==(const std::map<_Kty,_Ty,_Pr,_Alloc> &,const std::map<_Kty,_Ty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::map<_Kty,_Ty,_Pr,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4410688Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\map(631,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4411919Z       or       'bool std::operator ==(const std::multimap<_Kty,_Ty,_Pr,_Alloc> &,const std::multimap<_Kty,_Ty,_Pr,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4413157Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4414737Z           'bool std::operator ==(const std::multimap<_Kty,_Ty,_Pr,_Alloc> &,const std::multimap<_Kty,_Ty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::multimap<_Kty,_Ty,_Pr,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4416585Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\set(209,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4417693Z       or       'bool std::operator ==(const std::set<_Kty,_Pr,_Alloc> &,const std::set<_Kty,_Pr,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4418763Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4420191Z           'bool std::operator ==(const std::set<_Kty,_Pr,_Alloc> &,const std::set<_Kty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::set<_Kty,_Pr,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4421832Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\set(424,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4423030Z       or       'bool std::operator ==(const std::multiset<_Kty,_Pr,_Alloc> &,const std::multiset<_Kty,_Pr,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4424107Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4425766Z           'bool std::operator ==(const std::multiset<_Kty,_Pr,_Alloc> &,const std::multiset<_Kty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::multiset<_Kty,_Pr,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4427702Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\deque(1793,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4428943Z       or       'bool std::operator ==(const std::deque<_Ty,_Alloc> &,const std::deque<_Ty,_Alloc> &)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4429846Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4431545Z           'bool std::operator ==(const std::deque<_Ty,_Alloc> &,const std::deque<_Ty,_Alloc> &)': could not deduce template argument for 'const std::deque<_Ty,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4433565Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\utility(503,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4434902Z       or 'bool std::operator ==(const std::pair<_Ty1,_Ty2> &,const std::pair<_Uty1,_Uty2> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4435968Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4437471Z           'bool std::operator ==(const std::pair<_Ty1,_Ty2> &,const std::pair<_Uty1,_Uty2> &)': could not deduce template argument for 'const std::pair<_Ty1,_Ty2> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4439089Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xutility(1896,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4440706Z       or 'bool std::operator ==(const std::reverse_iterator<_BidIt> &,const std::reverse_iterator<_BidIt2> &) noexcept(<expr>)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4442048Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4443748Z           'bool std::operator ==(const std::reverse_iterator<_BidIt> &,const std::reverse_iterator<_BidIt2> &) noexcept(<expr>)': could not deduce template argument for 'const std::reverse_iterator<_BidIt> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4445602Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xutility(4458,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4447063Z       or 'bool std::operator ==(const std::move_iterator<_Iter> &,const std::move_iterator<_Iter2> &) noexcept(<expr>)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4448400Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4450235Z           'bool std::operator ==(const std::move_iterator<_Iter> &,const std::move_iterator<_Iter2> &) noexcept(<expr>)': could not deduce template argument for 'const std::move_iterator<_Iter> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4452168Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\__msvc_string_view.hpp(1823,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4453916Z       or 'bool std::operator ==(const std::basic_string_view<_Elem,_Traits>,const type_identity<std::basic_string_view<_Elem,_Traits>>::type) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4455410Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4457420Z           'bool std::operator ==(const std::basic_string_view<_Elem,_Traits>,const type_identity<std::basic_string_view<_Elem,_Traits>>::type) noexcept': could not deduce template argument for 'const std::basic_string_view<_Elem,_Traits>' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4459505Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\tuple(844,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4460847Z       or 'bool std::operator ==(const std::tuple<_Types...> &,const std::tuple<_Types...> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4461889Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4463273Z           'bool std::operator ==(const std::tuple<_Types...> &,const std::tuple<_Types...> &)': could not deduce template argument for 'const std::tuple<_Types...> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4464867Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xmemory(1050,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4466246Z       or 'bool std::operator ==(const std::allocator<_Ty> &,const std::allocator<_Other> &) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4467399Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4468919Z           'bool std::operator ==(const std::allocator<_Ty> &,const std::allocator<_Other> &) noexcept': could not deduce template argument for 'const std::allocator<_Ty> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4470605Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xstring(3257,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4472175Z       or 'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4473444Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4475270Z           'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &) noexcept': could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4477287Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xstring(3263,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4478741Z       or 'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *const ) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4479942Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4481486Z           'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *const ) noexcept': could not deduce template argument for 'const _Elem *const ' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4483286Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\iterator(304,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4485019Z       or 'bool std::operator ==(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4486519Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4488694Z           'bool std::operator ==(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &) noexcept': could not deduce template argument for 'const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4490903Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\iterator(486,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4492524Z       or 'bool std::operator ==(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4494100Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4495930Z           'bool std::operator ==(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)': could not deduce template argument for 'const std::istreambuf_iterator<_Elem,_Traits> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4498223Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(1880,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4499681Z       or 'bool std::operator ==(const std::shared_ptr<_Ty> &,const std::shared_ptr<_Ty0> &) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4500883Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4502425Z           'bool std::operator ==(const std::shared_ptr<_Ty> &,const std::shared_ptr<_Ty0> &) noexcept': could not deduce template argument for 'const std::shared_ptr<_Ty> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4504183Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(1917,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4505490Z       or 'bool std::operator ==(const std::shared_ptr<_Ty> &,std::nullptr_t) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4506510Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4507862Z           'bool std::operator ==(const std::shared_ptr<_Ty> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::shared_ptr<_Ty> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4509526Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(3666,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4510849Z       or 'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,const std::unique_ptr<_Ty2,_Dx2> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4511945Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4513377Z           'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,const std::unique_ptr<_Ty2,_Dx2> &)': could not deduce template argument for 'const std::unique_ptr<_Ty,_Dx> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4515007Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(3712,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4516289Z       or 'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,std::nullptr_t) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4517328Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4518732Z           'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::unique_ptr<_Ty,_Dx> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4520399Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\forward_list(1589,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4521848Z       or 'bool std::operator ==(const std::forward_list<_Ty,_Alloc> &,const std::forward_list<_Ty,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4523017Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4524562Z           'bool std::operator ==(const std::forward_list<_Ty,_Alloc> &,const std::forward_list<_Ty,_Alloc> &)': could not deduce template argument for 'const std::forward_list<_Ty,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4526509Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(647,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4527888Z       or 'bool std::operator ==(const std::optional<_Ty> &,const std::optional<_Ty2> &) noexcept(<expr>)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4529024Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4530478Z           'bool std::operator ==(const std::optional<_Ty> &,const std::optional<_Ty2> &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4532309Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(763,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4533569Z       or 'bool std::operator ==(const std::optional<_Ty> &,std::nullopt_t) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4534588Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4535966Z           'bool std::operator ==(const std::optional<_Ty> &,std::nullopt_t) noexcept': could not deduce template argument for 'const std::optional<_Ty> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4537537Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(852,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4538812Z       or 'bool std::operator ==(const std::optional<_Ty> &,const _Ty2 &) noexcept(<expr>)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4539878Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4541244Z           'bool std::operator ==(const std::optional<_Ty> &,const _Ty2 &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4542836Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(861,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4544131Z       or 'bool std::operator ==(const _Ty1 &,const std::optional<_Ty2> &) noexcept(<expr>)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4545205Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4546630Z           'bool std::operator ==(const _Ty1 &,const std::optional<_Ty2> &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty2> &' from 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4548267Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\vector(2266,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4549596Z       or 'bool std::operator ==(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4550686Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4552114Z           'bool std::operator ==(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)': could not deduce template argument for 'const std::vector<_Ty,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4553738Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\list(1890,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4555028Z       or 'bool std::operator ==(const std::list<_Ty,_Alloc> &,const std::list<_Ty,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4556084Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4557475Z           'bool std::operator ==(const std::list<_Ty,_Alloc> &,const std::list<_Ty,_Alloc> &)': could not deduce template argument for 'const std::list<_Ty,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4559114Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\unordered_map(536,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4560953Z       or 'bool std::operator ==(const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4562288Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4564197Z           'bool std::operator ==(const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)': could not deduce template argument for 'const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4566405Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\unordered_map(908,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4568313Z       or 'bool std::operator ==(const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4569820Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4571841Z           'bool std::operator ==(const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)': could not deduce template argument for 'const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4574094Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\functional(1284,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4575376Z       or 'bool std::operator ==(const std::function<_Fty> &,std::nullptr_t) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4576420Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4577785Z           'bool std::operator ==(const std::function<_Fty> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::function<_Fty> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4579183Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\string.hpp(2081,1):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4580666Z       or 'std::enable_if<string_and_stringlike<T,U>::value||string_and_stringlike<U,T>::value,bool>::type boost::json::operator ==(const T &,const U &) noexcept' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4582125Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4583653Z           Failed to specialize function template 'std::enable_if<string_and_stringlike<T,U>::value||string_and_stringlike<U,T>::value,bool>::type boost::json::operator ==(const T &,const U &) noexcept'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4585196Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4585883Z               With the following template arguments:
+windows	Verify pinned source and build	2026-10-21T01:58:25.4586557Z                   D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4587212Z                   'T=std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4587796Z                   D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4588443Z                   'U=boost::json::value'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4589092Z               D:\a\worker-client\worker-client\boost_1_89_0\boost\json\string.hpp(2080,9):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4590085Z               'boost::json::detail::string_comp_op_requirement' : Failed to specialize alias template
+windows	Verify pinned source and build	2026-10-21T01:58:25.4591158Z                   D:\a\worker-client\worker-client\boost_1_89_0\boost\json\detail\string_impl.hpp(379,16):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4592373Z                   'type': is not a member of any direct or indirect base class of 'std::enable_if<false,bool>'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4593617Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\array(777,30):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4595031Z       or 'bool std::operator ==(const std::array<_Ty,_Size> &,const std::array<_Ty,_Size> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4597038Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4598469Z           'bool std::operator ==(const std::array<_Ty,_Size> &,const std::array<_Ty,_Size> &)': could not deduce template argument for 'const std::array<_Ty,_Size> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4600119Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\variant(1300,27):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4601599Z       or 'bool std::operator ==(const std::variant<_Types...> &,const std::variant<_Types...> &) noexcept(<expr>)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4603021Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4604603Z           'bool std::operator ==(const std::variant<_Types...> &,const std::variant<_Types...> &) noexcept(<expr>)': could not deduce template argument for 'const std::variant<_Types...> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4606377Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\map(400,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4607795Z       or 'bool std::operator ==(const std::map<_Kty,_Ty,_Pr,_Alloc> &,const std::map<_Kty,_Ty,_Pr,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4609080Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4610621Z           'bool std::operator ==(const std::map<_Kty,_Ty,_Pr,_Alloc> &,const std::map<_Kty,_Ty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::map<_Kty,_Ty,_Pr,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4612399Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\map(631,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4613868Z       or 'bool std::operator ==(const std::multimap<_Kty,_Ty,_Pr,_Alloc> &,const std::multimap<_Kty,_Ty,_Pr,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4615104Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4616761Z           'bool std::operator ==(const std::multimap<_Kty,_Ty,_Pr,_Alloc> &,const std::multimap<_Kty,_Ty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::multimap<_Kty,_Ty,_Pr,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4618588Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\set(209,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4619871Z       or 'bool std::operator ==(const std::set<_Kty,_Pr,_Alloc> &,const std::set<_Kty,_Pr,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4620958Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4622481Z           'bool std::operator ==(const std::set<_Kty,_Pr,_Alloc> &,const std::set<_Kty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::set<_Kty,_Pr,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4624199Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\set(424,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4625650Z       or 'bool std::operator ==(const std::multiset<_Kty,_Pr,_Alloc> &,const std::multiset<_Kty,_Pr,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4626914Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4628490Z           'bool std::operator ==(const std::multiset<_Kty,_Pr,_Alloc> &,const std::multiset<_Kty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::multiset<_Kty,_Pr,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4630275Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\deque(1793,17):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4631600Z       or 'bool std::operator ==(const std::deque<_Ty,_Alloc> &,const std::deque<_Ty,_Alloc> &)' [synthesized expression 'y == x']
+windows	Verify pinned source and build	2026-10-21T01:58:25.4632725Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4634301Z           'bool std::operator ==(const std::deque<_Ty,_Alloc> &,const std::deque<_Ty,_Alloc> &)': could not deduce template argument for 'const std::deque<_Ty,_Alloc> &' from 'std::string'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4635757Z       D:\a\worker-client\worker-client\windows\worker_control.cpp(10,134):
+windows	Verify pinned source and build	2026-10-21T01:58:25.4636641Z       while trying to match the argument list '(boost::json::value, std::string)'
+windows	Verify pinned source and build	2026-10-21T01:58:25.4637331Z   
+windows	Verify pinned source and build	2026-10-21T01:58:25.9098638Z Native compilation failed
+windows	Verify pinned source and build	2026-10-21T01:58:25.9099451Z At D:\a\_temp\c68a5b5c-9dac-449c-b3fb-ed2c7a6eb8dc.ps1:14 char:28
+windows	Verify pinned source and build	2026-10-21T01:58:25.9100642Z + if ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }
+windows	Verify pinned source and build	2026-10-21T01:58:25.9101765Z +                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+windows	Verify pinned source and build	2026-10-21T01:58:25.9102501Z     + CategoryInfo          : OperationStopped: (Native compilation failed:String) [], RuntimeException
+windows	Verify pinned source and build	2026-10-21T01:58:25.9103464Z     + FullyQualifiedErrorId : Native compilation failed
+windows	Verify pinned source and build	2026-10-21T01:58:25.9103916Z  
+windows	Verify pinned source and build	2026-10-21T01:58:25.9286524Z ##[error]Process completed with exit code 1.

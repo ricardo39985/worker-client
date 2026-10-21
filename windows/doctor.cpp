@@ -6,7 +6,14 @@ using namespace ow;using namespace ow::win;
 int wmain(int argc,wchar_t** argv){
  json::object report{{"agent_version","0.1.2"},{"runtime_healthy",false},{"processing_ready",nullptr},{"probe_evidence","not_run"}};
  try{
-  bool probe=false,network=false,bind_journal=false;auto root=data_directory();for(int i=1;i<argc;++i){std::wstring a=argv[i];if(a==L"--json")continue;else if(a==L"--probe-ffmpeg")probe=true;else if(a==L"--check-coordinator")network=true;else if(a==L"--bind-journal")bind_journal=true;else if(a==L"--data-root"&&i+1<argc)root=argv[++i];else throw std::runtime_error("Unknown doctor argument");}
+  bool probe=false,network=false,bind_journal=false,operator_settings=false;auto root=data_directory();for(int i=1;i<argc;++i){std::wstring a=argv[i];if(a==L"--json")continue;else if(a==L"--operator-settings")operator_settings=true;else if(a==L"--probe-ffmpeg")probe=true;else if(a==L"--check-coordinator")network=true;else if(a==L"--bind-journal")bind_journal=true;else if(a==L"--data-root"&&i+1<argc)root=argv[++i];else throw std::runtime_error("Unknown doctor argument");}
+  if(operator_settings){
+   if(probe||network||bind_journal)throw std::runtime_error("Preference inspection cannot combine with mutating/probe modes");
+   auto doc=validate_control_config(parse(read_file(root/"worker.json")).as_object());
+   if(std::filesystem::exists(root/"journal.sqlite3")){Store journal(root/"journal.sqlite3",true);doc=load_control_document(root,journal,false);}
+   const auto& op=doc.at("operator").as_object();json::object visible;for(const auto& name:{"priority","video_preference","image_preference","paused"})visible[name]=op.at(name);
+   std::cout<<json::serialize(json::object{{"schema",1},{"operator",std::move(visible)},{"read_only",true}})<<'\n';return 0;
+  }
   std::filesystem::create_directories(root);auto free=available_resources(root,0);report["available_ram_mb"]=free.ram_mb;report["free_disk_mb"]=free.scratch_mb;report["logical_cpus"]=free.cpu_threads;report["elevated"]=elevated();
   if(!free.cpu_threads||free.ram_mb<256||free.scratch_mb<128)throw std::runtime_error("Insufficient detected resources");
   auto sample=random_hex(32);if(unprotect(protect(sample))!=sample)throw std::runtime_error("Credential protection round-trip failed");report["dpapi"]=true;

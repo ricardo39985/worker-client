@@ -1,0 +1,307 @@
+windows	Verify pinned source and build	﻿2026-10-21T02:00:40.1356982Z ##[group]Run $ErrorActionPreference='Stop'
+windows	Verify pinned source and build	2026-10-21T02:00:40.1357434Z ^[[36;1m$ErrorActionPreference='Stop'^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1357891Z ^[[36;1m$lock=Get-Content config/dependencies.lock.json -Raw | ConvertFrom-Json^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1358579Z ^[[36;1mif (-not (Get-Command cmake.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CMake' }^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1359384Z ^[[36;1mif (-not (Get-Command ctest.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CTest' }^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1360038Z ^[[36;1mInvoke-WebRequest -Uri $lock.boost.url -OutFile boost.tar.gz -UseBasicParsing^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1360750Z ^[[36;1mif ((Get-FileHash boost.tar.gz -Algorithm SHA256).Hash -ine $lock.boost.sha256) { throw 'Dependency checksum mismatch' }^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1361338Z ^[[36;1mcmake -E tar xzf boost.tar.gz^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1361698Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Dependency extraction failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1362108Z ^[[36;1m$boost=Join-Path $PWD $lock.boost.directory^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1362644Z ^[[36;1mcmake -S . -B build-ci -G 'Visual Studio 17 2022' -A x64 "-DOW_BOOST_ROOT=$boost" -DBUILD_TESTING=ON^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1363180Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Native configure failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1363589Z ^[[36;1mcmake --build build-ci --config Release --parallel 2^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1364034Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1364464Z ^[[36;1mctest --test-dir build-ci -C Release --output-on-failure^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1364936Z ^[[36;1mif ($LASTEXITCODE -ne 0) { throw 'Native behavior contracts failed' }^[[0m
+windows	Verify pinned source and build	2026-10-21T02:00:40.1404501Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+windows	Verify pinned source and build	2026-10-21T02:00:40.1404955Z ##[endgroup]
+windows	Verify pinned source and build	2026-10-21T02:04:54.0398578Z -- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.20348.
+windows	Verify pinned source and build	2026-10-21T02:05:04.4188037Z -- The CXX compiler identification is MSVC 19.44.35229.0
+windows	Verify pinned source and build	2026-10-21T02:05:04.5674448Z -- Detecting CXX compiler ABI info
+windows	Verify pinned source and build	2026-10-21T02:05:05.4649398Z -- Detecting CXX compiler ABI info - done
+windows	Verify pinned source and build	2026-10-21T02:05:05.4785030Z -- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+windows	Verify pinned source and build	2026-10-21T02:05:05.4799031Z -- Detecting CXX compile features
+windows	Verify pinned source and build	2026-10-21T02:05:05.4855840Z -- Detecting CXX compile features - done
+windows	Verify pinned source and build	2026-10-21T02:05:08.8642199Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+windows	Verify pinned source and build	2026-10-21T02:05:10.6292845Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+windows	Verify pinned source and build	2026-10-21T02:05:10.6293680Z -- Looking for pthread_create in pthreads
+windows	Verify pinned source and build	2026-10-21T02:05:11.2423694Z -- Looking for pthread_create in pthreads - not found
+windows	Verify pinned source and build	2026-10-21T02:05:11.2425221Z -- Looking for pthread_create in pthread
+windows	Verify pinned source and build	2026-10-21T02:05:11.8067672Z -- Looking for pthread_create in pthread - not found
+windows	Verify pinned source and build	2026-10-21T02:05:11.8171409Z -- Found Threads: TRUE
+windows	Verify pinned source and build	2026-10-21T02:05:13.2542371Z -- Configuring done (19.5s)
+windows	Verify pinned source and build	2026-10-21T02:05:13.4253459Z -- Generating done (0.2s)
+windows	Verify pinned source and build	2026-10-21T02:05:13.4261205Z -- Build files have been written to: D:/a/worker-client/worker-client/build-ci
+windows	Verify pinned source and build	2026-10-21T02:05:13.5425254Z MSBuild version 17.14.60+43b635718 for .NET Framework
+windows	Verify pinned source and build	2026-10-21T02:05:13.5717744Z 
+windows	Verify pinned source and build	2026-10-21T02:05:13.8976873Z   1>Checking Build System
+windows	Verify pinned source and build	2026-10-21T02:05:14.1750328Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:14.3243034Z   boost_json.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:14.6042703Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:14.6752672Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:15.7034548Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:15.8744645Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:16.0115473Z   pipeline_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:16.9735378Z   progress_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:20.9410286Z   encoder_run_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:22.2755931Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:22.3506577Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:23.2905221Z   media_rendition_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:24.4586619Z   Generating code
+windows	Verify pinned source and build	2026-10-21T02:05:24.4753126Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T02:05:25.3470946Z   status_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:28.3190656Z   All 3041 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T02:05:28.3270939Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T02:05:28.3424741Z   Generating code
+windows	Verify pinned source and build	2026-10-21T02:05:28.3537730Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T02:05:29.6008957Z   ow_pipeline_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T02:05:30.1346607Z   stage_timing_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:31.2215954Z   ow_json.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_json.lib
+windows	Verify pinned source and build	2026-10-21T02:05:31.3209176Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:31.5254903Z   admission.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:31.9804383Z   All 2222 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T02:05:31.9921137Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T02:05:32.2569860Z   ow_rendition_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T02:05:32.3813318Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:32.4610687Z   media_rendition_probe.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:33.0044936Z   store.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:33.7946219Z   Generating code
+windows	Verify pinned source and build	2026-10-21T02:05:33.8228243Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T02:05:36.3761577Z   protocol.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:42.9589779Z   pairing.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:45.8520342Z   All 5162 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T02:05:45.8688506Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T02:05:46.1402843Z   ow_progress_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_progress_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T02:05:46.3067539Z   Generating code
+windows	Verify pinned source and build	2026-10-21T02:05:46.3164252Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T02:05:48.0299859Z   adaptive_hardware.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:49.1562839Z   All 1980 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T02:05:49.1609381Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T02:05:49.4193268Z   ow_rendition_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_probe.exe
+windows	Verify pinned source and build	2026-10-21T02:05:50.9385931Z   control.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:54.4179328Z   ow_core.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_core.lib
+windows	Verify pinned source and build	2026-10-21T02:05:54.4805204Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:54.4853355Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:54.5512105Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:54.5562198Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+windows	Verify pinned source and build	2026-10-21T02:05:54.6475148Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:54.6551843Z   main.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:54.6588550Z   adaptive_evidence_probe.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:55.8257992Z   adaptive_hardware_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:55.8425428Z   admission_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:57.3895279Z   store_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:05:58.6319863Z   platform.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:00.7777506Z   protocol_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:02.0212267Z   Generating code
+windows	Verify pinned source and build	2026-10-21T02:06:02.0279464Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T02:06:03.6112052Z   All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T02:06:03.6153597Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T02:06:03.7756820Z   ow_adaptive_evidence_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_evidence_probe.exe
+windows	Verify pinned source and build	2026-10-21T02:06:04.0376960Z   Generating code
+windows	Verify pinned source and build	2026-10-21T02:06:04.0609144Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T02:06:05.6400852Z   process.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:05.7161063Z   pairing_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:12.2377669Z   capacity_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:12.3940030Z   http.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:14.6780216Z   control_test.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:17.8565740Z   All 5618 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T02:06:17.8751007Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T02:06:18.1380199Z   ow_adaptive_hardware_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_hardware_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T02:06:18.4246398Z   worker.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:19.0485110Z   Generating code
+windows	Verify pinned source and build	2026-10-21T02:06:19.0788828Z   Previous IPDB not found, fall back to full compilation.
+windows	Verify pinned source and build	2026-10-21T02:06:25.6118329Z D:\a\worker-client\worker-client\windows\worker.cpp(858,289): warning C4456: declaration of 'cancelled' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+windows	Verify pinned source and build	2026-10-21T02:06:25.6245002Z       D:\a\worker-client\worker-client\windows\worker.cpp(656,7):
+windows	Verify pinned source and build	2026-10-21T02:06:25.6702785Z       see declaration of 'cancelled'
+windows	Verify pinned source and build	2026-10-21T02:06:25.6704253Z   
+windows	Verify pinned source and build	2026-10-21T02:06:26.2507553Z   All 3652 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+windows	Verify pinned source and build	2026-10-21T02:06:26.2656026Z   Finished generating code
+windows	Verify pinned source and build	2026-10-21T02:06:26.4906755Z   ow_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_contract_tests.exe
+windows	Verify pinned source and build	2026-10-21T02:06:27.9711878Z   probe_recovery.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:31.9216286Z   pairing_adapter.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:34.6215925Z   hardware.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:37.1992719Z   physical_adapters.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:39.9606098Z   capacity.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:42.2601393Z D:\a\worker-client\worker-client\windows\capacity.cpp(66,45): warning C4456: declaration of 'value' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+windows	Verify pinned source and build	2026-10-21T02:06:42.2602743Z       D:\a\worker-client\worker-client\windows\capacity.cpp(56,24):
+windows	Verify pinned source and build	2026-10-21T02:06:42.2603228Z       see declaration of 'value'
+windows	Verify pinned source and build	2026-10-21T02:06:42.2603560Z   
+windows	Verify pinned source and build	2026-10-21T02:06:43.1920599Z   control_pipe.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:45.9599414Z   worker_control.cpp
+windows	Verify pinned source and build	2026-10-21T02:06:48.5777027Z D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81): error C2679: binary '=': no operator found which takes a right-hand operand of type 'std::optional<bool>' (or there is no acceptable conversion) [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+windows	Verify pinned source and build	2026-10-21T02:06:48.5779544Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(930,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5780624Z       could be 'boost::json::value &boost::json::value::operator =(boost::json::object &&)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5781595Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5783057Z           'boost::json::value &boost::json::value::operator =(boost::json::object &&)': cannot convert argument 2 from 'std::optional<bool>' to 'boost::json::object &&'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5784503Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5786908Z               Reason: cannot convert from 'std::optional<bool>' to 'boost::json::object'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5787858Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5788947Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5790060Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(902,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5791051Z       or       'boost::json::value &boost::json::value::operator =(const boost::json::object &)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5792035Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5793739Z           'boost::json::value &boost::json::value::operator =(const boost::json::object &)': cannot convert argument 2 from 'std::optional<bool>' to 'const boost::json::object &'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5795096Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5796014Z               Reason: cannot convert from 'std::optional<bool>' to 'const boost::json::object'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5796859Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5797923Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5799012Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(886,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5799808Z       or       'boost::json::value &boost::json::value::operator =(boost::json::array &&)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5800557Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5801730Z           'boost::json::value &boost::json::value::operator =(boost::json::array &&)': cannot convert argument 2 from 'std::optional<bool>' to 'boost::json::array &&'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5802862Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5803611Z               Reason: cannot convert from 'std::optional<bool>' to 'boost::json::array'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5804374Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5805339Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5806384Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(858,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5807173Z       or       'boost::json::value &boost::json::value::operator =(const boost::json::array &)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5808004Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5809156Z           'boost::json::value &boost::json::value::operator =(const boost::json::array &)': cannot convert argument 2 from 'std::optional<bool>' to 'const boost::json::array &'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5810300Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5811130Z               Reason: cannot convert from 'std::optional<bool>' to 'const boost::json::array'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5811950Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5812984Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5814073Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(842,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5815006Z       or       'boost::json::value &boost::json::value::operator =(boost::json::string &&)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5815746Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5816923Z           'boost::json::value &boost::json::value::operator =(boost::json::string &&)': cannot convert argument 2 from 'std::optional<bool>' to 'boost::json::string &&'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5818259Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5819047Z               Reason: cannot convert from 'std::optional<bool>' to 'boost::json::string'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5819867Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5820832Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5821871Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(821,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5822654Z       or       'boost::json::value &boost::json::value::operator =(const boost::json::string &)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5823588Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5824782Z           'boost::json::value &boost::json::value::operator =(const boost::json::string &)': cannot convert argument 2 from 'std::optional<bool>' to 'const boost::json::string &'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5825999Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5826821Z               Reason: cannot convert from 'std::optional<bool>' to 'const boost::json::string'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5827565Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5828566Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5829572Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(817,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5830357Z       or       'boost::json::value &boost::json::value::operator =(const char *)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5831086Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5832143Z           'boost::json::value &boost::json::value::operator =(const char *)': cannot convert argument 2 from 'std::optional<bool>' to 'const char *'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5833251Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5834239Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5835283Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(813,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5836096Z       or       'boost::json::value &boost::json::value::operator =(boost::json::string_view)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5836852Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5838090Z           'boost::json::value &boost::json::value::operator =(boost::json::string_view)': cannot convert argument 2 from 'std::optional<bool>' to 'boost::json::string_view'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5839306Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5840344Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5841359Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(793,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5842124Z       or       'boost::json::value &boost::json::value::operator =(double) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5842852Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5843942Z           'boost::json::value &boost::json::value::operator =(double) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'double'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5845006Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5846006Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5847065Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(774,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5848010Z       or       'boost::json::value &boost::json::value::operator =(unsigned __int64) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5848797Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5850085Z           'boost::json::value &boost::json::value::operator =(unsigned __int64) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'unsigned __int64'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5851301Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5852318Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5854192Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(767,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5854977Z       or       'boost::json::value &boost::json::value::operator =(unsigned long) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5855742Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5856908Z           'boost::json::value &boost::json::value::operator =(unsigned long) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'unsigned long'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5858060Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5859098Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5860124Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(760,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5860954Z       or       'boost::json::value &boost::json::value::operator =(unsigned int) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5861716Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5862826Z           'boost::json::value &boost::json::value::operator =(unsigned int) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'unsigned int'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5863953Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5864932Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5865936Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(753,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5866709Z       or       'boost::json::value &boost::json::value::operator =(unsigned short) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5867431Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5868507Z           'boost::json::value &boost::json::value::operator =(unsigned short) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'unsigned short'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5869632Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5870677Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5871637Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(746,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5872347Z       or       'boost::json::value &boost::json::value::operator =(unsigned char) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5873097Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5874161Z           'boost::json::value &boost::json::value::operator =(unsigned char) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'unsigned char'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5875266Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5876279Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5877396Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(727,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5878173Z       or       'boost::json::value &boost::json::value::operator =(__int64) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5879027Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5880119Z           'boost::json::value &boost::json::value::operator =(__int64) noexcept': cannot convert argument 2 from 'std::optional<bool>' to '__int64'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5881214Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5882279Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5883310Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(720,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5884132Z       or       'boost::json::value &boost::json::value::operator =(long) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5884823Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5885846Z           'boost::json::value &boost::json::value::operator =(long) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'long'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5886883Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5887890Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5888942Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(713,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5889718Z       or       'boost::json::value &boost::json::value::operator =(int) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5890483Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5891553Z           'boost::json::value &boost::json::value::operator =(int) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'int'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5892646Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5893674Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5894796Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(706,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5895610Z       or       'boost::json::value &boost::json::value::operator =(short) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5896339Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5897381Z           'boost::json::value &boost::json::value::operator =(short) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'short'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5898455Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5899445Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5900496Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(699,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5901281Z       or       'boost::json::value &boost::json::value::operator =(signed char) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5902003Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5903177Z           'boost::json::value &boost::json::value::operator =(signed char) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'signed char'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5904743Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5905909Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5906643Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(654,5):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5907235Z       or       'boost::json::value &boost::json::value::operator =(std::nullptr_t) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5907768Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5908521Z           'boost::json::value &boost::json::value::operator =(std::nullptr_t) noexcept': cannot convert argument 2 from 'std::optional<bool>' to 'std::nullptr_t'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5909967Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5910660Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5911352Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(649,5):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5911970Z       or       'boost::json::value &boost::json::value::operator =(std::initializer_list<boost::json::value_ref>)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5912601Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5913619Z           'boost::json::value &boost::json::value::operator =(std::initializer_list<boost::json::value_ref>)': cannot convert argument 2 from 'std::optional<bool>' to 'std::initializer_list<boost::json::value_ref>'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5914552Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5915228Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5915914Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(641,5):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5916458Z       or       'boost::json::value &boost::json::value::operator =(boost::json::value &&)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5917000Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5917761Z           'boost::json::value &boost::json::value::operator =(boost::json::value &&)': cannot convert argument 2 from 'std::optional<bool>' to 'boost::json::value &&'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5918529Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5919059Z               Reason: cannot convert from 'std::optional<bool>' to 'boost::json::value'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5919584Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5920254Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5920963Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(620,5):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5921516Z       or       'boost::json::value &boost::json::value::operator =(const boost::json::value &)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5922059Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5922857Z           'boost::json::value &boost::json::value::operator =(const boost::json::value &)': cannot convert argument 2 from 'std::optional<bool>' to 'const boost::json::value &'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5923654Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5924206Z               Reason: cannot convert from 'std::optional<bool>' to 'const boost::json::value'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5924779Z               D:\a\worker-client\worker-client\windows\worker_control.cpp(36,118):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5925452Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+windows	Verify pinned source and build	2026-10-21T02:06:48.5926144Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(679,12):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5926665Z       or       'boost::json::value &boost::json::value::operator =(T) noexcept'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5927145Z           D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5927810Z           'boost::json::value &boost::json::value::operator =(T) noexcept': could not deduce template argument for '<unnamed-symbol>'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5928509Z               D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(677,44):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5929038Z               'type': is not a member of 'std::enable_if<false,void>'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5929742Z               C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xtr1common(48,8):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5930338Z               see declaration of 'std::enable_if<false,void>'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5930806Z               D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(677,44):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5931293Z               syntax error: missing '>' before identifier 'type'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5931747Z       D:\a\worker-client\worker-client\windows\worker_control.cpp(36,81):
+windows	Verify pinned source and build	2026-10-21T02:06:48.5932298Z       while trying to match the argument list '(boost::json::value, std::optional<bool>)'
+windows	Verify pinned source and build	2026-10-21T02:06:48.5932832Z   
+windows	Verify pinned source and build	2026-10-21T02:06:49.0437831Z Native compilation failed
+windows	Verify pinned source and build	2026-10-21T02:06:49.0438635Z At D:\a\_temp\82ec45f1-9be3-4e41-81d3-2a1188fa12ff.ps1:14 char:28
+windows	Verify pinned source and build	2026-10-21T02:06:49.0440479Z + if ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }
+windows	Verify pinned source and build	2026-10-21T02:06:49.0441528Z +                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+windows	Verify pinned source and build	2026-10-21T02:06:49.0442619Z     + CategoryInfo          : OperationStopped: (Native compilation failed:String) [], RuntimeException
+windows	Verify pinned source and build	2026-10-21T02:06:49.0443335Z     + FullyQualifiedErrorId : Native compilation failed
+windows	Verify pinned source and build	2026-10-21T02:06:49.0443738Z  
+windows	Verify pinned source and build	2026-10-21T02:06:49.0621804Z ##[error]Process completed with exit code 1.

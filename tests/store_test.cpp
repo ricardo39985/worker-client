@@ -8,6 +8,12 @@ struct Temp {
  Temp(){std::filesystem::create_directory(path);}
  ~Temp(){std::error_code e;std::filesystem::remove_all(path,e);}
 };
+TEST("read-only preference inspection cannot create or mutate a journal"){
+ Temp t;const auto file=t.path/"journal.db";THROWS(Store(file,true));CHECK(!std::filesystem::exists(file));
+ {Store s(file);s.set("paused","true");s.set("priority","backup");CHECK(s.reserve("a","j","manifest"));s.result("a","pending");}
+ {Store s(file,true);CHECK(s.get("paused")=="true");CHECK(s.get("priority")=="backup");THROWS(s.set("paused","false"));THROWS(s.result("a","changed"));CHECK(s.pending_count()==1);}
+ {Store s(file);CHECK(s.get("paused")=="true");CHECK(s.pending_count()==1);}
+}
 TEST("accepted attempt and pending result survive journal reopen"){
  Temp t;{Store s(t.path/"journal.db");CHECK(s.reserve("a","job-a","payload"));CHECK(s.start("a"));s.result("a","result");}
  Store s(t.path/"journal.db");auto p=s.pending();CHECK(p.size()==1);CHECK(p[0].body=="result");CHECK(!s.reserve("a","job-a","payload"));

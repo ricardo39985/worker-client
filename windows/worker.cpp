@@ -98,7 +98,7 @@ std::string processor_model(){
 }
 }
 Config load_config(const std::filesystem::path& root){
- Config c;c.root=root;auto obj=parse(read_file(root/"worker.json")).as_object();if(number(obj,"schema",1)!=1)throw std::runtime_error("Unsupported configuration version");c.coordinator=coordinator_origin(text(obj,"coordinator_url",1024));
+ Config c;c.root=root;auto obj=validate_control_config(parse(read_file(root/"worker.json")).as_object());c.coordinator=text(obj,"coordinator_url",1024);
  for(const auto& v:obj.at("storage_hosts").as_array()){auto s=std::string(v.as_string());std::transform(s.begin(),s.end(),s.begin(),[](unsigned char x){return static_cast<char>(std::tolower(x));});if(!allowed_url("https://"+s+"/",{s}))throw std::runtime_error("Invalid approved storage host");c.storage_hosts.push_back(s);}
  c.ffmpeg=wide(text(obj,"ffmpeg_path",32700));c.ffmpeg_sha256=text(obj,"ffmpeg_sha256",64);
  const auto& limits=obj.at("limits").as_object();const auto vram_override=limits.find("vram_mb");c.vram_override_set=vram_override!=limits.end();c.budget={number(limits,"ram_mb",1024*1024),vram_override==limits.end()?0:number(limits,"vram_mb",UINT64_MAX),number(limits,"scratch_mb",1024*1024),number(limits,"cpu_threads",64)};c.reserve_ram_mb=number(limits,"reserve_ram_mb",1024*1024);c.max_jobs=static_cast<std::size_t>(number(limits,"max_jobs",64));
@@ -375,11 +375,13 @@ Worker::Worker(Config config,bool isolated):config_(std::move(config)),store_(co
  if(auto credential=identity.read(SecretSlot::credential)) {
   proven_origin=text(parse(*credential).as_object(),"coordinator_url",1024);
  }
- bind_journal_origin(store_,config_.coordinator,proven_origin);
- if(auto p=store_.get("priority"))priority_=parse_priority(*p);
- if(auto p=store_.get("video_preference"))video_=parse_pref(*p);
- if(auto p=store_.get("image_preference"))image_=parse_pref(*p);
- paused_=store_.get("paused").value_or("false")=="true";admission_.pause(paused_);admission_.defer_new_starts("telemetry_unavailable");
+ if(!config_.coordinator.empty())bind_journal_origin(store_,config_.coordinator,proven_origin);
+ if(isolated_&&!std::filesystem::exists(config_.root/"worker.json")){
+  auto doc=control_defaults();doc["coordinator_url"]=config_.coordinator;doc["ffmpeg_path"]=utf8(config_.ffmpeg.wstring());doc["ffmpeg_sha256"]=config_.ffmpeg_sha256;doc["limits"]=json::object{{"ram_mb",config_.budget.ram_mb},{"reserve_ram_mb",config_.reserve_ram_mb},{"scratch_mb",config_.budget.scratch_mb},{"cpu_threads",config_.budget.cpu_threads},{"max_jobs",config_.max_jobs}};atomic_write(config_.root/"worker.json",json::serialize(doc));
+ }
+ effective_config_=load_control_document(config_.root,store_);
+ settings_=std::make_unique<ControlSettings>(effective_config_,[this](const json::object& doc){try{atomic_write(config_.root/"worker.json",json::serialize(doc));}catch(...){throw ControlFailure(5,"Atomic settings persistence failed");}});
+ apply_operator_settings();admission_.defer_new_starts("telemetry_unavailable");
  for(const auto& id:store_.interrupted())store_.result(id,json::serialize(json::object{{"protocol",1},{"type","result"},{"attempt_id",id},{"status","abandoned"},{"reason","worker_restarted"}}));
  safe_log("WORKER STARTED | counts since this process; H for last 10 outcomes");
  {std::lock_guard lock(report_mutex_);report_.priority(priority_name(priority_));report_.state("paused",paused_?"operator":"starting",utc_ms(),monotonic_ms());publish_report(config_.root/"worker-status.txt","");publish_report(config_.root/"worker-history.txt","");}
@@ -422,8 +424,20 @@ void Worker::report_state(std::string name,std::string reason){
 void Worker::state(std::string s){auto shown=s.starts_with("STATE ")?s.substr(6):s;bool changed{};{std::lock_guard lock(mutex_);changed=status_!=shown;status_=shown;}if(changed)safe_log(s);}
 std::string Worker::status() const{std::lock_guard lock(mutex_);return status_;}
 std::size_t Worker::active_count() const{return admission_.active().size();}
-void Worker::pause(bool p){if(exit_requested_&&!p)throw std::runtime_error("Worker is exiting; restart it to resume");paused_=p;admission_.pause(p);store_.set("paused",p?"true":"false");state(p?"STATE PAUSED":"STATE RESUMED");report_state(p||!report_connected_?"paused":"accepting",p?"operator":report_connected_?"resumed":"coordinator offline");}
-void Worker::priority(Priority p){priority_=p;store_.set("priority",priority_name(p));state("STATE PRIORITY "+priority_name(p));{std::lock_guard lock(report_mutex_);report_.priority(priority_name(p));}report_status();}
+void Worker::apply_operator_settings(bool apply_pause){
+ const auto op=settings_?settings_->current().at("operator").as_object():effective_config_.at("operator").as_object();
+ priority_=parse_priority(text(op,"priority"));video_=parse_pref(text(op,"video_preference"));image_=parse_pref(text(op,"image_preference"));
+ if(apply_pause){paused_=op.at("paused").as_bool();admission_.pause(paused_);}apply_preferences();
+ {std::lock_guard lock(report_mutex_);report_.priority(priority_name(priority_));}
+}
+void Worker::update_settings(const json::object& values){
+ std::lock_guard lock(control_mutex_);
+ if(auto* paused=values.if_contains("operator.paused");paused&&paused->is_bool()&&!paused->as_bool()&&exit_requested_)throw std::runtime_error("Worker is exiting; restart it to resume");
+ settings_->patch(values);apply_operator_settings(values.contains("operator.paused"));
+ state(paused_?"STATE PAUSED":"STATE RESUMED");report_state(paused_||!report_connected_?"paused":"accepting",paused_?"operator":report_connected_?"resumed":"coordinator offline");
+}
+void Worker::pause(bool p){update_settings({{"operator.paused",p}});}
+void Worker::priority(Priority p){update_settings({{"operator.priority",priority_name(p)}});}
 void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);}
 adaptive::Scheduler::Reservation Worker::reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,Resources& cost,const std::string& attempt,const std::string& stage,bool cpu_only,std::uint32_t width,std::uint32_t height,std::uint64_t minimum_ram){
  std::lock_guard lock(mutex_);if(!adaptive_scheduler_)return {};
@@ -471,8 +485,8 @@ void Worker::wait_stage(const std::string& attempt,const std::string& stage,Reso
   Sleep(100);
  }
 }
-void Worker::preference(bool video,Preference value){if(video)video_=value;else image_=value;store_.set(video?"video_preference":"image_preference",pref_name(value));apply_preferences();state(std::string("STATE PREFERENCE ")+(video?"video=":"image=")+pref_name(value));}
-void Worker::exit(bool kill){pause(true);exit_requested_=true;{std::lock_guard lock(mutex_);if(kill)for(auto& [_,r]:running_)r->data->cancel=true;}state(kill?"STATE STOPPING":"STATE DRAINING");report_state("stopping",kill?"operator stop":"operator drain");}
+void Worker::preference(bool video,Preference value){update_settings({{video?"operator.video_preference":"operator.image_preference",pref_name(value)}});}
+void Worker::exit(bool kill){std::lock_guard control_lock(control_mutex_);pause(true);exit_requested_=true;{std::lock_guard lock(mutex_);if(kill)for(auto& [_,r]:running_)r->data->cancel=true;}state(kill?"STATE STOPPING":"STATE DRAINING");report_state("stopping",kill?"operator stop":"operator drain");}
 bool Worker::ready_to_exit() const{if(!exit_requested_)return false;std::lock_guard lock(mutex_);return running_.empty();}
 json::object Worker::heartbeat(){
  auto free=available_resources(config_.root,config_.reserve_ram_mb);auto used=admission_.used();json::array active;
@@ -497,8 +511,10 @@ std::string Worker::paired_token(){
    },
    [this]{return stop_.load()||exit_requested_.load();},
    [this](const std::string& code,unsigned seconds){
+    {std::lock_guard lock(mutex_);pairing_user_code_=code;pairing_expires_utc_=utc_ms()+static_cast<std::int64_t>(seconds)*1000;}
     if(!paused_)report_state("paused","pairing required");state("PAIRING CODE "+code+" "+std::to_string(seconds));
    }});
+ {std::lock_guard lock(mutex_);pairing_user_code_.clear();pairing_expires_utc_=0;}
  if(!already_paired)safe_log("PAIRING APPROVED");
  return token;
 }
@@ -541,49 +557,50 @@ void Worker::network(){
  try{
   auto token=paired_token();if(stop_||exit_requested_)return;Http http;check_protocol(http.request("GET",config_.coordinator+"/v1/worker/protocol"));WebSocket socket(config_.coordinator+"/v1/worker/connect",token);SecureZeroMemory(token.data(),token.size());
   socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.2"},{"state",heartbeat()}}));
-  state(connected_once_?"STATE RECONNECTED":"STATE CONNECTED");report_connected_=true;if(!paused_&&!exit_requested_)report_state("accepting","connected");connected_once_=true;backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;
+  state(connected_once_?"STATE RECONNECTED":"STATE CONNECTED");report_connected_=true;last_contact_utc_=utc_ms();if(!paused_&&!exit_requested_)report_state("accepting","connected");connected_once_=true;backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;
   while(!stop_){
    auto now=monotonic_ms();if(now>=next_heartbeat){
     // Specs for expired unstarted offers are not an unbounded in-memory queue.
     for(auto it=offered_.begin();it!=offered_.end();){if(it->second.offer.reserve_until<=now)it=offered_.erase(it);else ++it;}
     socket.send(json::serialize(heartbeat()));next_heartbeat=now+5000;
    }
-   if(now>=next_results){for(const auto& p:store_.pending()){auto body=parse(p.body).as_object();body["outbox_sequence"]=p.sequence;socket.send(json::serialize(body));}next_results=now+2000;}
+   if(now>=next_results){send_pending([&](const std::string& body){socket.send(body);});next_results=now+2000;}
    if(now>=next_status){
     const auto active=active_count(),pending=store_.pending_count();auto record=connectionActivityRecord(active,pending);
     if(record!=last_activity_){if(active||pending||!last_activity_.empty())safe_log(record);last_activity_=record;}
     next_status=now+10000;
    }
-   if(auto incoming=socket.receive()){auto value=parse(*incoming);message(socket,value.as_object());}
+   if(auto incoming=socket.receive()){auto value=parse(*incoming);message([&](const std::string& body){socket.send(body);},value.as_object());}
   }
  }catch(const PairingActionRequired& e){
-  report_connected_=false;pause(true);report_state("paused","pairing required");state(std::string("STATE ACTION ")+e.what());
+  {std::lock_guard lock(mutex_);pairing_user_code_.clear();pairing_expires_utc_=0;}
+  report_connected_=false;paused_=true;admission_.pause(true);try{pause(true);}catch(...){safe_log("STATE PAUSE_PERSISTENCE_FAILURE");}report_state("paused","pairing required");state(std::string("STATE ACTION ")+e.what());
   while(!stop_&&!exit_requested_)sleep_until_stop(stop_,500);
   return;
  }catch(const std::exception& e){
   report_connected_=false;if(!paused_)report_state("paused","coordinator offline");state(std::string("STATE OFFLINE ")+e.what());
   // Never bypass an explicit revocation by silently starting a new pairing.
-  auto reason=std::string(e.what());if(reason.find("HTTP 401")!=std::string::npos||reason.find("HTTP 403")!=std::string::npos){pause(true);report_state("paused","access revoked");state("STATE REVOKED");while(!stop_)sleep_until_stop(stop_,500);return;}
+  auto reason=std::string(e.what());if(reason.find("HTTP 401")!=std::string::npos||reason.find("HTTP 403")!=std::string::npos){paused_=true;admission_.pause(true);try{pause(true);}catch(...){safe_log("STATE PAUSE_PERSISTENCE_FAILURE");}report_state("paused","access revoked");state("STATE REVOKED");while(!stop_)sleep_until_stop(stop_,500);return;}
   sleep_until_stop(stop_,backoff+static_cast<unsigned>(GetTickCount64()%997));backoff=std::min(30000u,backoff*2);
  }
  }
 }
-void Worker::message(WebSocket& socket,const json::object& m){
- if(number(m,"protocol",1)!=1)throw std::runtime_error("Unsupported coordinator protocol");auto type=text(m,"type",32);
- if(type=="ping"){socket.send(json::serialize(heartbeat()));return;}
+void Worker::message(const Send& send,const json::object& m){
+ if(number(m,"protocol",1)!=1)throw std::runtime_error("Unsupported coordinator protocol");auto type=text(m,"type",32);last_contact_utc_=utc_ms();
+ if(type=="ping"){send(json::serialize(heartbeat()));return;}
  if(type=="offer"||type=="begin"){const auto pressure=capacity_.admit_offer(monotonic_ms());admission_.defer_new_starts(pressure.accepted?std::string{}:pressure.reason);}
  if(type=="result_ack"){auto id=text(m,"attempt_id",128);auto seq=number(m,"outbox_sequence",INT64_MAX);if(store_.acknowledge(static_cast<std::int64_t>(seq),id))safe_log("RESULT ACKNOWLEDGED "+id);return;}
  if(type=="offer"){
   std::string id;try{id=text(m,"attempt_id",128);auto spec=decode_offer(m,monotonic_ms(),config_.storage_hosts);
    if(store_.pending_count()>=512)throw std::runtime_error("Unacknowledged result backlog is full");
-   if(auto s=store_.state(id);s&&*s!="reserved"&&*s!="running"){socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","attempt_already_recorded"}}));return;}
+   if(auto s=store_.state(id);s&&*s!="reserved"&&*s!="running"){send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","attempt_already_recorded"}}));return;}
    auto decision=admission_.offer(spec.offer,monotonic_ms(),available_resources(config_.root,config_.reserve_ram_mb));
    if(decision.accepted&&decision.reason!="duplicate"){
     try{if(!store_.reserve(id,spec.offer.job_id,spec.offer.fingerprint))throw std::runtime_error("journal attempt conflict");offered_.insert_or_assign(id,spec);}catch(...){admission_.cancel(id);throw;}
    }
    if(!decision.accepted)safe_log("JOB "+id+" DECLINED | "+decision.reason);
-   socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",decision.accepted},{"reason",decision.reason}}));
-  }catch(const std::exception&){if(safe_id(id)){socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","invalid_or_unavailable"}}));safe_log("JOB "+id+" DECLINED | validation, dependency, capacity, or journal check failed");}else safe_log("OFFER DECLINED | invalid identity");}return;
+   send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",decision.accepted},{"reason",decision.reason}}));
+  }catch(const std::exception&){if(safe_id(id)){send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","invalid_or_unavailable"}}));safe_log("JOB "+id+" DECLINED | validation, dependency, capacity, or journal check failed");}else safe_log("OFFER DECLINED | invalid identity");}return;
  }
  auto id=text(m,"attempt_id",128);if(!safe_id(id))throw std::runtime_error("Invalid attempt identity");
  if(type=="begin"||type=="renew"){
@@ -603,13 +620,16 @@ void Worker::message(WebSocket& socket,const json::object& m){
     report_status();
    }
   }
-  socket.send(json::serialize(json::object{{"protocol",1},{"type","begin_reply"},{"attempt_id",id},{"accepted",started!=Start::declined}}));return;
+  send(json::serialize(json::object{{"protocol",1},{"type","begin_reply"},{"attempt_id",id},{"accepted",started!=Start::declined}}));return;
  }
  if(type=="cancel"){
   auto token=text(m,"lease_token",512);for(const auto& a:admission_.active())if(a.offer.attempt_id==id&&a.lease_token==token){admission_.cancel(id);std::lock_guard lock(mutex_);if(auto i=running_.find(id);i!=running_.end())i->second->data->cancel=true;}
   return;
  }
  throw std::runtime_error("Unknown coordinator message type");
+}
+void Worker::send_pending(const Send& send){
+ for(const auto& p:store_.pending()){auto body=parse(p.body).as_object();body["outbox_sequence"]=p.sequence;send(json::serialize(body));}
 }
 void Worker::report_encoder_failure(const adaptive::Profile& profile){
  std::lock_guard lock(mutex_);
@@ -711,6 +731,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
      StageTimer timing(filename=="poster.webp"?"poster":"transcode",filename,timing_sink,timing_wall_us,thread_cpu_us,true);
      const auto started=monotonic_ms();auto current=desktop_priority(priority_.load());
      Child child(config_.ffmpeg,encoder_progress_arguments(selected_args),child_workspace,cost,current);ChildTimingCapture capture(child,&timing);
+     if(config_.observe_child)try{config_.observe_child(id,child.process_id());}catch(...){/* observational port cannot affect work */}
      {std::lock_guard lock(report_mutex_);safe_log(report_.encoder_line(id,encoder,filename,device?device->physical_id:"cpu",cost.ram_mb,readings_,false,device?device->name:"cpu"));}
      EncoderProgressFile encoder_progress(child_workspace/"process.log");
      for(;;){

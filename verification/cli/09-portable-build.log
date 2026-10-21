@@ -1,0 +1,23 @@
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-cli/build-tests
+[ 13%] Built target ow_pipeline_contract_tests
+[ 13%] Built target ow_json
+[ 27%] Built target ow_rendition_probe
+[ 27%] Built target ow_rendition_contract_tests
+[ 44%] Built target ow_progress_contract_tests
+[ 47%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 50%] Building CXX object CMakeFiles/ow_core.dir/src/control.cpp.o
+/home/rick/Downloads/worker-client-cli/src/admission.cpp: In member function ‘ow::Decision ow::Admission::offer(const ow::Offer&, ow::Tick, ow::Resources)’:
+/home/rick/Downloads/worker-client-cli/src/admission.cpp:54:76: warning: missing initializer for member ‘ow::Active::stages’ [-Wmissing-field-initializers]
+   54 |  active_.emplace(o.attempt_id,Active{o,Phase::reserved,{},o.reserve_until,0});return {true,"ready"};
+      |                                                                            ^
+[ 52%] Linking CXX static library libow_core.a
+[ 63%] Built target ow_core
+[ 66%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 69%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/control_test.cpp.o
+[ 72%] Linking CXX executable ow_contract_tests
+[ 88%] Built target ow_contract_tests
+[ 91%] Linking CXX executable ow_adaptive_evidence_probe
+[ 94%] Built target ow_adaptive_evidence_probe
+[100%] Built target ow_adaptive_hardware_contract_tests

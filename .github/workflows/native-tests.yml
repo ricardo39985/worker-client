@@ -38,4 +38,9 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }
           ctest --test-dir build-ci -C Release --output-on-failure
           if ($LASTEXITCODE -ne 0) { throw 'Native behavior contracts failed' }
+      - name: Real disallowed owner and forged-server authorization
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop'
+          & ./tests/owner_context_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release')
 # Deliberately no push schedule, release, deployment, signing or production secrets.

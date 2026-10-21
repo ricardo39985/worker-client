@@ -1,98 +1,113 @@
 #requires -Version 5.1
 [CmdletBinding()]
 param([string]$Root=(Join-Path $env:LOCALAPPDATA 'OrganizerWorker'),[string]$Package,
-      [string]$PackageManifestSha256,[switch]$RecoverOnly)
+      [string]$PackageManifestSha256,[switch]$RecoverOnly,
+      [ValidateSet('preserve','resume','paused')][string]$AdmissionIntent='preserve',
+      [string]$StartupTaskName='')
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
 . (Join-Path $PSScriptRoot 'worker-swap.ps1')
+. (Join-Path $PSScriptRoot 'worker-package.ps1')
+. (Join-Path $PSScriptRoot 'worker-update-policy.ps1')
 . (Join-Path $PSScriptRoot 'setup-policy.ps1')
-$rootPath=[IO.Path]::GetFullPath($Root)
 $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
-$taskName='OrganizerWorker-'+$identity.User.Value
-$task=Get-ScheduledTask -TaskName $taskName -ErrorAction Stop
+$principal=New-Object Security.Principal.WindowsPrincipal($identity)
+if($principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'Updater requires existing LIMITED owner, not an Administrator token'}
+if(-not $StartupTaskName){$StartupTaskName='OrganizerWorker-'+$identity.User.Value}
+$task=Get-ScheduledTask -TaskName $StartupTaskName -ErrorAction Stop
 if([string]$task.Principal.RunLevel -notin @('Limited','0') -or [string]$task.Principal.LogonType -notin @('Interactive','3') -or
    -not (Test-WorkerAccountSid -Account $task.Principal.UserId -ExpectedSid $identity.User.Value)){throw 'Existing startup task must belong to this user and be limited/interactive'}
-$hashes=@{}
-foreach($name in 'credential.dpapi','pairing-key.dpapi','worker.json'){$hashes[$name]=(Get-FileHash (Join-Path $Root $name)).Hash}
-$checkIdentity={foreach($name in $hashes.Keys){if($hashes[$name] -cne (Get-FileHash (Join-Path $Root $name)).Hash){throw 'Identity/configuration changed'}}}
+$allowed=[IO.Path]::GetFullPath((Join-Path $Root 'versions'))+[IO.Path]::DirectorySeparatorChar
+$findWorkers={@(Get-Process OrganizerWorker -ErrorAction SilentlyContinue|Where-Object {$_.Path -and $_.Path.StartsWith($allowed,[StringComparison]::OrdinalIgnoreCase)})}
+# Reject unsupported old trays before staging/publishing anything. The owner must
+# choose the real tray Exit/finish action; window injection/force-kill is not used.
+Assert-WorkerCooperativeExitAvailable -Root $Root -Workers @(& $findWorkers)
+if(Get-Process ffmpeg -ErrorAction SilentlyContinue){throw 'Encoder active; defer update without stopping any process'}
+$hashes=@{};foreach($name in 'credential.dpapi','pairing-key.dpapi'){$hashes[$name]=(Get-FileHash (Join-Path $Root $name)).Hash}
+$beforeConfig=Get-Content (Join-Path $Root 'worker.json') -Raw|ConvertFrom-Json
+$expectedOperator=$null
+function Invoke-WorkerJson([string]$Executable,[string[]]$Arguments) {
+    $raw=(& $Executable --json @Arguments) -join "`n";$code=$LASTEXITCODE
+    if($code){throw ('Worker control/inspection failed, exit='+$code)}
+    return $raw|ConvertFrom-Json
+}
+if(-not $RecoverOnly){
+    $info=Read-WorkerValidatedPackage $Package $PackageManifestSha256
+    # Whitelisted public preferences, read-only SQLite, no credentials/key reads.
+    $inspection=Invoke-WorkerJson (Join-Path $Package 'OrganizerWorkerDoctor.exe') -Arguments @('--operator-settings','--data-root',$Root)
+    $expectedOperator=$inspection.operator
+    if($AdmissionIntent -ne 'preserve'){$expectedOperator.paused=($AdmissionIntent -eq 'paused')}
+}
+$retention=[pscustomobject]@{operator=$expectedOperator;paused=$(if($expectedOperator){[bool]$expectedOperator.paused}else{$null})}
+$checkIdentity={
+    foreach($name in $hashes.Keys){if($hashes[$name] -cne (Get-FileHash (Join-Path $Root $name)).Hash){throw 'Protected identity bytes changed'}}
+    $after=Get-Content (Join-Path $Root 'worker.json') -Raw|ConvertFrom-Json
+    $op=if($after.PSObject.Properties['operator']){$retention.operator}else{$null}
+    Test-WorkerRetainedConfiguration $beforeConfig $after $op
+}
 $stop={
-    $status=Get-Content (Join-Path $Root 'worker-status.txt') -Raw
-    if($status -notmatch 'jobs\s+running 0' -or (Get-Process ffmpeg -ErrorAction SilentlyContinue)){throw 'Worker/encoder is busy; defer update'}
-    $allowed=[IO.Path]::GetFullPath((Join-Path $Root 'versions'))+[IO.Path]::DirectorySeparatorChar
-    foreach($p in @(Get-Process OrganizerWorker -ErrorAction SilentlyContinue)) {
-        if(-not $p.Path.StartsWith($allowed,[StringComparison]::OrdinalIgnoreCase)){throw 'Unexpected worker process path'}
-        $null=$p.Handle
-        Stop-Process -Id $p.Id -ErrorAction Stop
-        if(-not $p.WaitForExit(10000)){throw 'Worker did not terminate within 10 seconds'}
-        $p.Dispose()
+    Invoke-WorkerCooperativeStop -Root $Root -FindWorkers $findWorkers -RequestDrain {
+        param($ctl)
+        $null=Invoke-WorkerJson $ctl -Arguments @('--data-root',$Root,'exit','drain')
+    } -WaitSeconds 600
+    if(Get-Process ffmpeg -ErrorAction SilentlyContinue){throw 'Encoder active; defer update without terminating it'}
+    $guard=[IO.File]::Open((Join-Path $Root 'instance.lock'),[IO.FileMode]::OpenOrCreate,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None);$guard.Dispose()
+    if($retention.operator -and -not $RecoverOnly){
+        $latest=Invoke-WorkerJson (Join-Path $Package 'OrganizerWorkerDoctor.exe') -Arguments @('--operator-settings','--data-root',$Root)
+        $latest.operator.paused=$retention.paused;$retention.operator=$latest.operator
     }
-    Write-Output 'WORKER_STOPPED_IDLE=True'
+    Write-Output 'WORKER_STOPPED_COOPERATIVELY=True'
 }
 $start={
-    & $checkIdentity
-    & schtasks.exe /Run /TN $taskName | Out-Null
-    $code=$LASTEXITCODE;Write-Output "START_TASK_EXIT=$code"
-    if($code){throw ('Scheduled worker start failed, exit='+$code)}
+    foreach($name in $hashes.Keys){if($hashes[$name] -cne (Get-FileHash (Join-Path $Root $name)).Hash){throw 'Protected identity bytes changed'}}
+    $currentConfig=Get-Content (Join-Path $Root 'worker.json') -Raw|ConvertFrom-Json
+    Test-WorkerRetainedConfiguration $beforeConfig $currentConfig $null $true
+    & schtasks.exe /Run /TN $StartupTaskName | Out-Null
+    $code=$LASTEXITCODE;Write-Output "START_TASK_EXIT=$code";if($code){throw ('Existing startup task failed, exit='+$code)}
 }
 $verify={
     $c=Get-Content (Join-Path $Root 'current.json') -Raw|ConvertFrom-Json
     Test-WorkerSwapManifest $Root $c
-    $exe=Join-Path $c.directory 'OrganizerWorker.exe'
-    $until=[datetime]::UtcNow.AddSeconds(300)
+    $exe=Join-Path $c.directory 'OrganizerWorker.exe';$ctl=Join-Path $c.directory 'OrganizerWorkerCtl.exe'
+    $until=[DateTime]::UtcNow.AddSeconds(600);$intentApplied=$false
     do {
-        if(Test-WorkerRuntime -Root $Root -ExpectedExecutable $exe) {
+        if(Test-WorkerRuntime -Root $Root -ExpectedExecutable $exe){
             $runtime=Get-Content (Join-Path $Root 'runtime.json') -Raw|ConvertFrom-Json
             $p=Get-Process -Id $runtime.process_id -ErrorAction Stop
-            $statusFile=Get-Item (Join-Path $Root 'worker-status.txt') -ErrorAction SilentlyContinue
-            if($p.SessionId -ne 0 -and $statusFile -and $statusFile.LastWriteTimeUtc -ge $p.StartTime.ToUniversalTime()) {
-                $status=Get-Content $statusFile.FullName -Raw
-                $lines=@(Get-Content (Join-Path $Root 'worker.log'))
-                $begin=-1
-                for($i=$lines.Count-1;$i -ge 0;$i--){if($lines[$i] -match 'WORKER STARTED \| counts since this process'){$begin=$i;break}}
-                $epoch=@()
-                if($begin -ge 0){$epoch=@($lines[$begin..($lines.Count-1)] | Where-Object {$_ -match 'STATE (CONNECTED|DISCONNECTED)'})}
-                if($epoch.Count -gt 0 -and $epoch[-1] -match 'STATE CONNECTED' -and $status -match 'state\s+accepting') {
-                    & $checkIdentity
-                    Write-Output ('VERIFIED_SHA256='+$c.sha256+' PROCESS_PID='+$p.Id+' SESSION='+$p.SessionId)
-                    return
+            if($p.SessionId -eq 0){throw 'Worker is not in the owner interactive session'}
+            if(Test-Path $ctl){
+                try {
+                    if(-not $intentApplied -and $retention.operator){
+                        $action=if($retention.operator.paused){'pause'}else{'resume'}
+                        $null=Invoke-WorkerJson $ctl -Arguments @('--data-root',$Root,$action);$intentApplied=$true
+                    }
+                    $status=Invoke-WorkerJson $ctl -Arguments @('--data-root',$Root,'status')
+                    $wantPaused=if($retention.operator){[bool]$retention.operator.paused}else{[bool]$status.paused}
+                    if($status.pid -eq $p.Id -and $status.owner_sid -eq $identity.User.Value -and $status.connected -and $status.paused -eq $wantPaused -and ($wantPaused -or $status.accepting)){
+                        & $checkIdentity
+                        if($retention.operator){$after=Get-Content (Join-Path $Root 'worker.json') -Raw|ConvertFrom-Json;Test-WorkerRetainedConfiguration $beforeConfig $after $retention.operator}
+                        Write-Output ('VERIFIED_SHA256='+$c.sha256+' PROCESS_PID='+$p.Id+' SESSION='+$p.SessionId+' CONNECTED=True PAUSED='+$status.paused)
+                        return
+                    }
+                } catch {if([DateTime]::UtcNow -ge $until){throw}}
+            } else {
+                # Legacy rollback can be healthy but has no remote control. Never
+                # pretend it is the candidate or fabricate a resume of that tray.
+                $statusFile=Get-Item (Join-Path $Root 'worker-status.txt') -ErrorAction SilentlyContinue
+                if($statusFile -and $statusFile.LastWriteTimeUtc -ge $p.StartTime.ToUniversalTime()){
+                    $lines=@(Get-Content (Join-Path $Root 'worker.log') -Tail 3000);$begin=-1
+                    for($n=$lines.Count-1;$n -ge 0;$n--){if($lines[$n] -match 'WORKER STARTED \| counts since this process'){$begin=$n;break}}
+                    if($begin -ge 0){
+                        $epoch=@($lines[$begin..($lines.Count-1)]|Where-Object {$_ -match 'STATE (CONNECTED|RECONNECTED|DISCONNECTED|OFFLINE|REVOKED|ACTION)'})
+                        if($epoch.Count -and $epoch[-1] -match 'STATE (CONNECTED|RECONNECTED)') {& $checkIdentity;Write-Output 'LEGACY_ROLLBACK_RUNNING=True';return}
+                    }
                 }
             }
         }
         Start-Sleep -Milliseconds 500
-    } while([datetime]::UtcNow -lt $until)
-    throw ('Installed worker did not become connected/accepting: '+$exe)
+    } while([DateTime]::UtcNow -lt $until)
+    throw 'Installed worker did not become connected with preserved admission intent within ten minutes'
 }
-if($RecoverOnly) {
-    Restore-WorkerVersion -Root $Root -StopWorker $stop -StartWorker $start -VerifyWorker $verify
-    exit 0
-}
-if([IO.File]::Exists((Join-Path $Root 'current.rollback.json'))){throw 'Interrupted update pending; run -RecoverOnly before installing'}
-if($PackageManifestSha256 -notmatch '\A[a-fA-F0-9]{64}\z' -or
-   (Get-FileHash (Join-Path $Package 'package.json')).Hash -ine $PackageManifestSha256){throw 'Verified package manifest SHA256 is required'}
-$packageInfo=Get-Content (Join-Path $Package 'package.json') -Raw|ConvertFrom-Json
-if($packageInfo.revision -notmatch '\A[a-f0-9]{40}\z'){throw 'Full source revision required'}
-$names=@('OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe')
-foreach($name in $names){
-    $expected=[string]$packageInfo.files.$name
-    if($expected -notmatch '\A[a-fA-F0-9]{64}\z' -or (Get-FileHash (Join-Path $Package $name)).Hash -ine $expected){throw ('Package SHA256 mismatch: '+$name)}
-}
-$sha=([string]$packageInfo.files.'OrganizerWorker.exe').ToLowerInvariant()
-$version=Join-Path $Root ('versions\0.1.2-'+$sha.Substring(0,16))
-if(Test-Path $version){throw ('Candidate version already exists; refusing to overwrite: '+$version)}
-$staging=$version+'.staging-'+[guid]::NewGuid().ToString('N')
-New-Item -ItemType Directory -Path $staging | Out-Null
-try {
-    foreach($name in $names){
-        Copy-Item (Join-Path $Package $name) (Join-Path $staging $name)
-        if((Get-FileHash (Join-Path $staging $name)).Hash -ine [string]$packageInfo.files.$name){throw ('Staged SHA256 mismatch: '+$name)}
-    }
-    [IO.File]::WriteAllText((Join-Path $staging 'source-revision.txt'),$packageInfo.revision)
-    [IO.Directory]::Move($staging,$version)
-} finally {if(Test-Path $staging){Remove-Item $staging -Recurse -Force}}
-Invoke-WorkerVersionSwap -Root $Root -Manifest ([ordered]@{schema=1;directory=$version;sha256=$sha}) -StopWorker $stop -StartWorker $start -VerifyWorker $verify
-$readback=Get-Content (Join-Path $Root 'current.json') -Raw|ConvertFrom-Json
-if($readback.directory -cne $version -or $readback.sha256 -cne $sha){throw 'Published manifest differs from the verified package'}
-Write-Output ('INSTALLED_VERSION='+[IO.Path]::GetFileName($version))
-Write-Output ('INSTALLED_SHA256='+(Get-FileHash (Join-Path $readback.directory 'OrganizerWorker.exe')).Hash.ToLowerInvariant())
-Write-Output ('INSTALLED_REVISION='+(Get-Content (Join-Path $readback.directory 'source-revision.txt') -Raw))
-Write-Output 'IDENTITY_AND_CONFIGURATION_UNCHANGED=True'
+if($RecoverOnly){Restore-WorkerVersion -Root $Root -StopWorker $stop -StartWorker $start -VerifyWorker $verify;exit 0}
+Invoke-WorkerPackageUpdate -Root $Root -Package $Package -PackageManifestSha256 $PackageManifestSha256 -StopWorker $stop -StartWorker $start -VerifyWorker $verify
+Write-Output 'PROTECTED_IDENTITY_AND_EXISTING_SETTINGS_RETAINED=True'

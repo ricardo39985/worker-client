@@ -1,5 +1,14 @@
 # Candidate status — 0.1.2
 
+Local CLI candidate: [reference/parity matrix](cli.md),
+[gate ledger](../verification/cli/REPORT.md),
+[unverified acceptance](../verification/cli/acceptance.md).
+Portable Release and full C++ ASan/UBSan suites pass. MSVC compilation and all
+12 native suites pass at 458c068 (manual CI 39534777104). Do not infer real
+cross-session SSH, active-job/coordinator, installed-upgrade or release readiness
+from the new idle-controller fixture.
+Neither installed PC worker has been changed.
+
 Worker-flex stage-concurrency checkpoint: [implementation, enforced/sampled limits and gates](../verification/worker-flex-r2/REPORT.md).
 Linux/sanitizer and clean both-PC MSVC/native gates pass. Identical-quality
 Windows throughput measured 4.78x on Danny and 1.28x on Rick; the exact refused

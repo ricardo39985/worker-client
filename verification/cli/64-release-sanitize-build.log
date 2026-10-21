@@ -1,0 +1,19 @@
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-cli/build-sanitize
+[  8%] Built target ow_pipeline_contract_tests
+[ 13%] Built target ow_json
+[ 27%] Built target ow_rendition_probe
+[ 27%] Built target ow_rendition_contract_tests
+[ 44%] Built target ow_progress_contract_tests
+[ 47%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 50%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 52%] Linking CXX static library libow_core.a
+[ 63%] Built target ow_core
+[ 66%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 69%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[ 75%] Built target ow_adaptive_hardware_contract_tests
+[ 77%] Linking CXX executable ow_adaptive_evidence_probe
+[ 80%] Built target ow_adaptive_evidence_probe
+[ 83%] Linking CXX executable ow_contract_tests
+[100%] Built target ow_contract_tests

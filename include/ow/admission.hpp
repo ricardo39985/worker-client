@@ -40,6 +40,7 @@ public:
     void capability(std::string name, bool verified, Preference preference);
     void pause(bool value);
     void defer_new_starts(std::string reason);
+    Decision start_gate() const; // fresh local admission gate, not a promise for any particular offer
     // Atomically excludes offers while all job reservations are drained.
     bool begin_probe();
     void end_probe();
