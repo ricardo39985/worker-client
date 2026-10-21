@@ -23,6 +23,7 @@ struct Config {
  bool vram_override_set{};
  std::uint64_t reserve_ram_mb{0};std::size_t max_jobs{4};
  std::function<bool()> capacity_foreground; // local measurement port; never parsed from config/network
+ std::function<void(const std::string&,std::uint32_t)> observe_child; // local test/measurement observer, never config/network
 };
 Config load_config(const std::filesystem::path& root);
 json::object load_control_document(const std::filesystem::path& root,Store& store,bool persist_migration=true);
@@ -74,7 +75,9 @@ class Worker {
  std::atomic<Preference> video_{Preference::allowed},image_{Preference::allowed};
  void recover_gpus();
  void network();void watchdog();void execute(std::shared_ptr<TaskData>);
- void message(WebSocket&,const json::object&);
+ using Send=std::function<void(const std::string&)>;
+ void message(const Send&,const json::object&);
+ void send_pending(const Send&);
  std::string paired_token();
  void state(std::string text);
  json::object heartbeat();

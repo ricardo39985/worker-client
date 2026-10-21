@@ -564,13 +564,13 @@ void Worker::network(){
     for(auto it=offered_.begin();it!=offered_.end();){if(it->second.offer.reserve_until<=now)it=offered_.erase(it);else ++it;}
     socket.send(json::serialize(heartbeat()));next_heartbeat=now+5000;
    }
-   if(now>=next_results){for(const auto& p:store_.pending()){auto body=parse(p.body).as_object();body["outbox_sequence"]=p.sequence;socket.send(json::serialize(body));}next_results=now+2000;}
+   if(now>=next_results){send_pending([&](const std::string& body){socket.send(body);});next_results=now+2000;}
    if(now>=next_status){
     const auto active=active_count(),pending=store_.pending_count();auto record=connectionActivityRecord(active,pending);
     if(record!=last_activity_){if(active||pending||!last_activity_.empty())safe_log(record);last_activity_=record;}
     next_status=now+10000;
    }
-   if(auto incoming=socket.receive()){auto value=parse(*incoming);message(socket,value.as_object());}
+   if(auto incoming=socket.receive()){auto value=parse(*incoming);message([&](const std::string& body){socket.send(body);},value.as_object());}
   }
  }catch(const PairingActionRequired& e){
   {std::lock_guard lock(mutex_);pairing_user_code_.clear();pairing_expires_utc_=0;}
@@ -585,22 +585,22 @@ void Worker::network(){
  }
  }
 }
-void Worker::message(WebSocket& socket,const json::object& m){
+void Worker::message(const Send& send,const json::object& m){
  if(number(m,"protocol",1)!=1)throw std::runtime_error("Unsupported coordinator protocol");auto type=text(m,"type",32);last_contact_utc_=utc_ms();
- if(type=="ping"){socket.send(json::serialize(heartbeat()));return;}
+ if(type=="ping"){send(json::serialize(heartbeat()));return;}
  if(type=="offer"||type=="begin"){const auto pressure=capacity_.admit_offer(monotonic_ms());admission_.defer_new_starts(pressure.accepted?std::string{}:pressure.reason);}
  if(type=="result_ack"){auto id=text(m,"attempt_id",128);auto seq=number(m,"outbox_sequence",INT64_MAX);if(store_.acknowledge(static_cast<std::int64_t>(seq),id))safe_log("RESULT ACKNOWLEDGED "+id);return;}
  if(type=="offer"){
   std::string id;try{id=text(m,"attempt_id",128);auto spec=decode_offer(m,monotonic_ms(),config_.storage_hosts);
    if(store_.pending_count()>=512)throw std::runtime_error("Unacknowledged result backlog is full");
-   if(auto s=store_.state(id);s&&*s!="reserved"&&*s!="running"){socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","attempt_already_recorded"}}));return;}
+   if(auto s=store_.state(id);s&&*s!="reserved"&&*s!="running"){send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","attempt_already_recorded"}}));return;}
    auto decision=admission_.offer(spec.offer,monotonic_ms(),available_resources(config_.root,config_.reserve_ram_mb));
    if(decision.accepted&&decision.reason!="duplicate"){
     try{if(!store_.reserve(id,spec.offer.job_id,spec.offer.fingerprint))throw std::runtime_error("journal attempt conflict");offered_.insert_or_assign(id,spec);}catch(...){admission_.cancel(id);throw;}
    }
    if(!decision.accepted)safe_log("JOB "+id+" DECLINED | "+decision.reason);
-   socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",decision.accepted},{"reason",decision.reason}}));
-  }catch(const std::exception&){if(safe_id(id)){socket.send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","invalid_or_unavailable"}}));safe_log("JOB "+id+" DECLINED | validation, dependency, capacity, or journal check failed");}else safe_log("OFFER DECLINED | invalid identity");}return;
+   send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",decision.accepted},{"reason",decision.reason}}));
+  }catch(const std::exception&){if(safe_id(id)){send(json::serialize(json::object{{"protocol",1},{"type","offer_reply"},{"attempt_id",id},{"accepted",false},{"reason","invalid_or_unavailable"}}));safe_log("JOB "+id+" DECLINED | validation, dependency, capacity, or journal check failed");}else safe_log("OFFER DECLINED | invalid identity");}return;
  }
  auto id=text(m,"attempt_id",128);if(!safe_id(id))throw std::runtime_error("Invalid attempt identity");
  if(type=="begin"||type=="renew"){
@@ -620,13 +620,16 @@ void Worker::message(WebSocket& socket,const json::object& m){
     report_status();
    }
   }
-  socket.send(json::serialize(json::object{{"protocol",1},{"type","begin_reply"},{"attempt_id",id},{"accepted",started!=Start::declined}}));return;
+  send(json::serialize(json::object{{"protocol",1},{"type","begin_reply"},{"attempt_id",id},{"accepted",started!=Start::declined}}));return;
  }
  if(type=="cancel"){
   auto token=text(m,"lease_token",512);for(const auto& a:admission_.active())if(a.offer.attempt_id==id&&a.lease_token==token){admission_.cancel(id);std::lock_guard lock(mutex_);if(auto i=running_.find(id);i!=running_.end())i->second->data->cancel=true;}
   return;
  }
  throw std::runtime_error("Unknown coordinator message type");
+}
+void Worker::send_pending(const Send& send){
+ for(const auto& p:store_.pending()){auto body=parse(p.body).as_object();body["outbox_sequence"]=p.sequence;send(json::serialize(body));}
 }
 void Worker::report_encoder_failure(const adaptive::Profile& profile){
  std::lock_guard lock(mutex_);
@@ -728,6 +731,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
      StageTimer timing(filename=="poster.webp"?"poster":"transcode",filename,timing_sink,timing_wall_us,thread_cpu_us,true);
      const auto started=monotonic_ms();auto current=desktop_priority(priority_.load());
      Child child(config_.ffmpeg,encoder_progress_arguments(selected_args),child_workspace,cost,current);ChildTimingCapture capture(child,&timing);
+     if(config_.observe_child)try{config_.observe_child(id,child.process_id());}catch(...){/* observational port cannot affect work */}
      {std::lock_guard lock(report_mutex_);safe_log(report_.encoder_line(id,encoder,filename,device?device->physical_id:"cpu",cost.ram_mb,readings_,false,device?device->name:"cpu"));}
      EncoderProgressFile encoder_progress(child_workspace/"process.log");
      for(;;){
