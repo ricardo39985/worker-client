@@ -10,7 +10,7 @@ namespace ow {
 struct Pending {std::int64_t sequence;std::string attempt_id,body;};
 class Store {
 public:
- explicit Store(const std::filesystem::path& path);
+ explicit Store(const std::filesystem::path& path,bool read_only=false);
  ~Store();Store(const Store&)=delete;Store& operator=(const Store&)=delete;
  bool reserve(const std::string& id,const std::string& job,const std::string& payload);
  bool start(const std::string& id);

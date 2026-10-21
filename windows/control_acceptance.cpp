@@ -55,11 +55,12 @@ json::object OfflineMediaHarness::control_acceptance(Config config){
  json::array outcomes;
  for(const auto& id:{"active-a","reserved-b"}){
   auto result=results.at(id);require_fixture(text(result,"status",32)=="succeeded","Actual admitted conversion failed");const auto output=config.root/"delivered"/id/"result.mp4";const auto& metadata=result.at("output").as_object();require_fixture(sha256_file(output)==text(metadata,"sha256",64)&&std::filesystem::file_size(output)==number(metadata,"bytes",UINT64_MAX),"Fake coordinator output validation failed");
+  fixture_child(config,config.root/(std::string("coordinator-decode-")+id),{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",output.wstring(),L"-f",L"null",L"-"});
   const auto sequence=number(result,"outbox_sequence",INT64_MAX);const auto before=worker->store_.pending_count();deliver({{"protocol",1},{"type","result_ack"},{"attempt_id",id},{"outbox_sequence",sequence+1000}});require_fixture(worker->store_.pending_count()==before,"Wrong ACK removed durable result");
   deliver({{"protocol",1},{"type","result_ack"},{"attempt_id",id},{"outbox_sequence",sequence}});outcomes.emplace_back(json::object{{"attempt_id",id},{"status","succeeded"},{"matching_ack",true},{"transmissions",transmissions[id]},{"bytes",metadata.at("bytes")},{"sha256",metadata.at("sha256")}});
  }
  require_fixture(worker->store_.pending_count()==0,"Matching coordinator ACK did not empty outbox");while(worker->active_count())tick();
- json::object report{{"fixture",true},{"real_coordinator",false},{"network_tls_interop",false},{"actual_typed_children",true},{"typed_probe_encode_decode_passed",true},{"paused_child_survived",true},{"reserved_begin_rejected_while_paused",true},{"reserved_begin_accepted_after_resume",true},{"outbox_acknowledged",true},{"jobs",std::move(outcomes)},{"build_revision",OW_BUILD_REVISION}};
+ json::object report{{"fixture",true},{"real_coordinator",false},{"network_tls_interop",false},{"actual_typed_children",true},{"typed_probe_encode_decode_passed",true},{"paused_child_survived",true},{"reserved_begin_rejected_while_paused",true},{"reserved_begin_accepted_after_resume",true},{"outbox_acknowledged",true},{"coordinator_decode_validated",true},{"jobs",std::move(outcomes)},{"build_revision",OW_BUILD_REVISION}};
  atomic_write(config.root/"acceptance-result.json",json::serialize(report));state("complete");while(!worker->ready_to_exit())tick();return report;
 }
 }

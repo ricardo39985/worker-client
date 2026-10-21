@@ -24,12 +24,14 @@ public:
 };
 }
 void Store::exec(const char* sql){char* err=nullptr;if(sqlite3_exec(db_,sql,nullptr,nullptr,&err)!=SQLITE_OK){std::string message=err?err:"SQLite failure";sqlite3_free(err);throw std::runtime_error(message);}}
-Store::Store(const std::filesystem::path& path){
- auto u=path.u8string();if(sqlite3_open_v2(reinterpret_cast<const char*>(u.c_str()),&db_,SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE|SQLITE_OPEN_FULLMUTEX,nullptr)!=SQLITE_OK){if(db_)sqlite3_close(db_);db_=nullptr;throw std::runtime_error("Cannot open local journal; check permissions and disk");}
+Store::Store(const std::filesystem::path& path,bool read_only){
+ const auto flags=(read_only?SQLITE_OPEN_READONLY:SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE)|SQLITE_OPEN_FULLMUTEX;
+ auto u=path.u8string();if(sqlite3_open_v2(reinterpret_cast<const char*>(u.c_str()),&db_,flags,nullptr)!=SQLITE_OK){if(db_)sqlite3_close(db_);db_=nullptr;throw std::runtime_error("Cannot open local journal; check permissions and disk");}
  try{
  sqlite3_busy_timeout(db_,5000);
- exec("PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON;");
+ if(!read_only)exec("PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA foreign_keys=ON;");
  Statement version(db_,"PRAGMA user_version");version.step();if(version.integer(0)>1)throw std::runtime_error("Journal was created by a newer worker; refusing downgrade");
+ if(read_only)return;
  exec("CREATE TABLE IF NOT EXISTS attempts(id TEXT PRIMARY KEY,job TEXT NOT NULL,payload TEXT NOT NULL,state TEXT NOT NULL,result TEXT);"
       "CREATE TABLE IF NOT EXISTS outbox(sequence INTEGER PRIMARY KEY AUTOINCREMENT,attempt_id TEXT NOT NULL UNIQUE REFERENCES attempts(id),body TEXT NOT NULL);"
       "CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT NOT NULL); PRAGMA user_version=1;");
