@@ -513,8 +513,10 @@ std::string Worker::paired_token(){
    },
    [this]{return stop_.load()||exit_requested_.load();},
    [this](const std::string& code,unsigned seconds){
+    {std::lock_guard lock(mutex_);pairing_user_code_=code;pairing_expires_utc_=utc_ms()+static_cast<std::int64_t>(seconds)*1000;}
     if(!paused_)report_state("paused","pairing required");state("PAIRING CODE "+code+" "+std::to_string(seconds));
    }});
+ {std::lock_guard lock(mutex_);pairing_user_code_.clear();pairing_expires_utc_=0;}
  if(!already_paired)safe_log("PAIRING APPROVED");
  return token;
 }
@@ -573,6 +575,7 @@ void Worker::network(){
    if(auto incoming=socket.receive()){auto value=parse(*incoming);message(socket,value.as_object());}
   }
  }catch(const PairingActionRequired& e){
+  {std::lock_guard lock(mutex_);pairing_user_code_.clear();pairing_expires_utc_=0;}
   report_connected_=false;paused_=true;admission_.pause(true);try{pause(true);}catch(...){safe_log("STATE PAUSE_PERSISTENCE_FAILURE");}report_state("paused","pairing required");state(std::string("STATE ACTION ")+e.what());
   while(!stop_&&!exit_requested_)sleep_until_stop(stop_,500);
   return;

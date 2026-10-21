@@ -7,7 +7,7 @@ namespace {
 json::object response(){return {{"schema",control_schema},{"ok",true},{"exit_code",0},{"observed_at_utc_ms",utc_ms()}};}
 json::object config_result(ControlSettings& settings,const json::object& request,const json::object& effective,bool live){
  auto out=response();out["live"]=live;auto rows=settings.describe(effective,live);
- if(text(request,"action",16)=="get"){auto name=text(request,"name",64);json::array selected;for(auto& row:rows)if(row.as_object().at("name")==name)selected.emplace_back(row);if(selected.empty())throw std::runtime_error("Unknown setting");rows=std::move(selected);}
+ if(text(request,"action",16)=="get"){auto name=text(request,"name",64);json::array selected;for(auto& row:rows)if(text(row.as_object(),"name",64)==name)selected.emplace_back(row);if(selected.empty())throw std::runtime_error("Unknown setting");rows=std::move(selected);}
  out["settings"]=std::move(rows);return out;
 }
 json::object reset_values(const json::object& request){auto defaults=control_defaults();ControlSettings temporary(defaults,[](const json::object&){});std::vector<std::string> names;for(const auto& name:request.at("names").as_array())names.emplace_back(name.as_string());temporary.reset(names);json::object values;for(const auto& row:temporary.describe(defaults,false)){const auto& r=row.as_object();auto name=text(r,"name",64);if(std::find(names.begin(),names.end(),name)!=names.end())values[name]=r.at("current");}return values;}
@@ -26,7 +26,7 @@ json::object Worker::control(const json::object& request){
   auto action=text(request,"action",16);if(action=="set")update_settings(request.at("values").as_object());else if(action=="reset")update_settings(reset_values(request));else if(action!="list"&&action!="get")throw std::runtime_error("Unknown config operation");
   auto effective=effective_config_;effective["operator"]=json::object{{"priority",priority_==Priority::maximum?"maximum":priority_==Priority::normal?"normal":priority_==Priority::low?"low":"backup"},{"video_preference",video_==Preference::preferred?"preferred":video_==Preference::allowed?"allowed":"disabled"},{"image_preference",image_==Preference::preferred?"preferred":image_==Preference::allowed?"allowed":"disabled"},{"paused",paused_.load()}};
   return config_result(*settings_,request,effective,true);
- }else if(command=="auth")return auth_status(config_.root);
+ }else if(command=="auth"){auto out=auth_status(config_.root);std::lock_guard state_lock(mutex_);const bool pending=!pairing_user_code_.empty()&&utc_ms()<pairing_expires_utc_;out["pairing_user_code"]=pending?json::value(pairing_user_code_):json::value(nullptr);out["pairing_expires_at_utc_ms"]=pending?json::value(pairing_expires_utc_):json::value(nullptr);return out;}
  else if(command=="logs"){auto out=response();out["directory"]=utf8(config_.root.wstring());out["log"]=utf8((config_.root/"worker.log").wstring());return out;}
  else if(command=="history"){auto out=response();out["history"]=read_file(config_.root/"worker-history.txt",32768);return out;}
  else if(command!="status")throw std::runtime_error("Unknown control command");

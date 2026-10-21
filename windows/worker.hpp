@@ -64,6 +64,7 @@ class Worker {
  ProbeRecovery gpu_recovery_;
  ProbeStatus probe_status_;CapabilityReport capability_report_;
  std::string last_activity_;bool connected_once_{};
+ std::string pairing_user_code_;std::int64_t pairing_expires_utc_{}; // public approval label only; guarded by mutex_
  std::atomic<Priority> priority_{Priority::normal};
  std::atomic_bool verified_video_{},verified_image_{},verified_media_video_{},verified_media_image_{};std::string status_{"STARTING"};
  std::atomic_bool ffmpeg_hash_changed_{};
