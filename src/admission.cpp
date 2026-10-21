@@ -22,8 +22,10 @@ void Admission::capability(std::string name,bool verified,Preference preference)
 void Admission::defer_new_starts(std::string reason){std::lock_guard lock(mutex_);deferred_reason_=std::move(reason);}
 Decision Admission::start_gate() const{
  std::lock_guard lock(mutex_);
- if(paused_)return {false,"paused"};if(probing_)return {false,"gpu_probe"};if(!deferred_reason_.empty())return {false,deferred_reason_};
- if(active_.size()>=max_jobs_)return {false,"busy"};
+ if(paused_)return {false,"paused"};
+ if(probing_)return {false,"gpu_probe"};
+ if(!deferred_reason_.empty())return {false,deferred_reason_};
+ if(active_.size()>=max_jobs_||used_.ram_mb>=budget_.ram_mb||used_.cpu_threads>=budget_.cpu_threads||used_.scratch_mb>=budget_.scratch_mb)return {false,"busy"};
  if(std::none_of(capabilities_.begin(),capabilities_.end(),[](const auto& entry){return entry.second.verified&&entry.second.preference!=Preference::disabled;}))return {false,"unsupported_or_disabled"};
  return {true,"ready_subject_to_offer_resources"};
 }

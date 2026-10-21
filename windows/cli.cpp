@@ -17,11 +17,14 @@ int wmain(int argc,wchar_t** argv){
   std::string input;if(args==std::vector<std::string>{"config","set","--stdin"}){for(char c;std::cin.get(c);){if(input.size()>=64000)throw std::runtime_error("Configuration input exceeds limit");input+=c;}}
   auto request=control_request(args,input);auto root=selected_root.empty()?data_directory():selected_root;if(offline&&!selected_root.empty())throw std::runtime_error("Offline writes only support the installed owner root");json::object result;
   if(offline){
+   if(elevated())throw ControlFailure(4,"Offline configuration requires the normal owner token");
+   for(const auto& path:{root,root/"worker.json",root/"instance.lock",root/"journal.sqlite3",root/"journal.sqlite3-wal",root/"journal.sqlite3-shm"}){const auto attributes=GetFileAttributesW(path.c_str());if(attributes!=INVALID_FILE_ATTRIBUTES&&(attributes&FILE_ATTRIBUTE_REPARSE_POINT))throw ControlFailure(4,"Reparse-point state path denied");}
    if(!std::filesystem::is_regular_file(root/"worker.json"))throw std::runtime_error("No installed configuration");
    Handle lock(CreateFileW((root/"instance.lock").c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr));if(!lock){result={{"schema",1},{"ok",false},{"exit_code",3},{"error","Worker/setup owns the state; omit --offline for live IPC"}};}else result=offline_control(root,request);
   }else{
    try{result=control_call(root,request);}catch(const std::exception&){result={{"schema",1},{"ok",false},{"exit_code",3},{"error","Owner control unavailable/timeout: worker stopped, old version, access denied or busy. No offline fallback was attempted."}};}
   }
   if(json_output)std::cout<<json::serialize(result)<<'\n';else human(result);return static_cast<int>(number(result,"exit_code",5));
+ }catch(const ControlFailure& e){json::object result{{"schema",1},{"ok",false},{"exit_code",e.exit_code},{"error","Owner access or atomic persistence failure"}};if(json_output)std::cout<<json::serialize(result)<<'\n';else human(result);return e.exit_code;
  }catch(const std::exception&){json::object result{{"schema",1},{"ok",false},{"exit_code",2},{"error","Command rejected. Use --help/config list; check configuration and permissions. No credentials are accepted."}};if(json_output)std::cout<<json::serialize(result)<<'\n';else human(result);return 2;}
 }

@@ -9,6 +9,8 @@ inline constexpr unsigned control_schema=1;
 json::object control_defaults();
 json::object validate_control_config(json::object);
 json::object control_request(const std::vector<std::string>& args,const std::string& input={});
+json::object validate_control_request(const json::object&);
+struct ControlFailure : std::runtime_error {int exit_code;ControlFailure(int code,const char* message):std::runtime_error(message),exit_code(code){}};
 std::string control_help();
 class ControlSettings {
  mutable std::mutex mutex_;

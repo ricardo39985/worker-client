@@ -380,7 +380,7 @@ Worker::Worker(Config config,bool isolated):config_(std::move(config)),store_(co
   auto doc=control_defaults();doc["coordinator_url"]=config_.coordinator;doc["ffmpeg_path"]=utf8(config_.ffmpeg.wstring());doc["ffmpeg_sha256"]=config_.ffmpeg_sha256;doc["limits"]=json::object{{"ram_mb",config_.budget.ram_mb},{"reserve_ram_mb",config_.reserve_ram_mb},{"scratch_mb",config_.budget.scratch_mb},{"cpu_threads",config_.budget.cpu_threads},{"max_jobs",config_.max_jobs}};atomic_write(config_.root/"worker.json",json::serialize(doc));
  }
  effective_config_=load_control_document(config_.root,store_);
- settings_=std::make_unique<ControlSettings>(effective_config_,[this](const json::object& doc){atomic_write(config_.root/"worker.json",json::serialize(doc));});
+ settings_=std::make_unique<ControlSettings>(effective_config_,[this](const json::object& doc){try{atomic_write(config_.root/"worker.json",json::serialize(doc));}catch(...){throw ControlFailure(5,"Atomic settings persistence failed");}});
  apply_operator_settings();admission_.defer_new_starts("telemetry_unavailable");
  for(const auto& id:store_.interrupted())store_.result(id,json::serialize(json::object{{"protocol",1},{"type","result"},{"attempt_id",id},{"status","abandoned"},{"reason","worker_restarted"}}));
  safe_log("WORKER STARTED | counts since this process; H for last 10 outcomes");
@@ -557,7 +557,7 @@ void Worker::network(){
  try{
   auto token=paired_token();if(stop_||exit_requested_)return;Http http;check_protocol(http.request("GET",config_.coordinator+"/v1/worker/protocol"));WebSocket socket(config_.coordinator+"/v1/worker/connect",token);SecureZeroMemory(token.data(),token.size());
   socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.2"},{"state",heartbeat()}}));
-  state(connected_once_?"STATE RECONNECTED":"STATE CONNECTED");report_connected_=true;if(!paused_&&!exit_requested_)report_state("accepting","connected");connected_once_=true;backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;
+  state(connected_once_?"STATE RECONNECTED":"STATE CONNECTED");report_connected_=true;last_contact_utc_=utc_ms();if(!paused_&&!exit_requested_)report_state("accepting","connected");connected_once_=true;backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;
   while(!stop_){
    auto now=monotonic_ms();if(now>=next_heartbeat){
     // Specs for expired unstarted offers are not an unbounded in-memory queue.
@@ -573,19 +573,19 @@ void Worker::network(){
    if(auto incoming=socket.receive()){auto value=parse(*incoming);message(socket,value.as_object());}
   }
  }catch(const PairingActionRequired& e){
-  report_connected_=false;pause(true);report_state("paused","pairing required");state(std::string("STATE ACTION ")+e.what());
+  report_connected_=false;paused_=true;admission_.pause(true);try{pause(true);}catch(...){safe_log("STATE PAUSE_PERSISTENCE_FAILURE");}report_state("paused","pairing required");state(std::string("STATE ACTION ")+e.what());
   while(!stop_&&!exit_requested_)sleep_until_stop(stop_,500);
   return;
  }catch(const std::exception& e){
   report_connected_=false;if(!paused_)report_state("paused","coordinator offline");state(std::string("STATE OFFLINE ")+e.what());
   // Never bypass an explicit revocation by silently starting a new pairing.
-  auto reason=std::string(e.what());if(reason.find("HTTP 401")!=std::string::npos||reason.find("HTTP 403")!=std::string::npos){pause(true);report_state("paused","access revoked");state("STATE REVOKED");while(!stop_)sleep_until_stop(stop_,500);return;}
+  auto reason=std::string(e.what());if(reason.find("HTTP 401")!=std::string::npos||reason.find("HTTP 403")!=std::string::npos){paused_=true;admission_.pause(true);try{pause(true);}catch(...){safe_log("STATE PAUSE_PERSISTENCE_FAILURE");}report_state("paused","access revoked");state("STATE REVOKED");while(!stop_)sleep_until_stop(stop_,500);return;}
   sleep_until_stop(stop_,backoff+static_cast<unsigned>(GetTickCount64()%997));backoff=std::min(30000u,backoff*2);
  }
  }
 }
 void Worker::message(WebSocket& socket,const json::object& m){
- if(number(m,"protocol",1)!=1)throw std::runtime_error("Unsupported coordinator protocol");auto type=text(m,"type",32);
+ if(number(m,"protocol",1)!=1)throw std::runtime_error("Unsupported coordinator protocol");auto type=text(m,"type",32);last_contact_utc_=utc_ms();
  if(type=="ping"){socket.send(json::serialize(heartbeat()));return;}
  if(type=="offer"||type=="begin"){const auto pressure=capacity_.admit_offer(monotonic_ms());admission_.defer_new_starts(pressure.accepted?std::string{}:pressure.reason);}
  if(type=="result_ack"){auto id=text(m,"attempt_id",128);auto seq=number(m,"outbox_sequence",INT64_MAX);if(store_.acknowledge(static_cast<std::int64_t>(seq),id))safe_log("RESULT ACKNOWLEDGED "+id);return;}

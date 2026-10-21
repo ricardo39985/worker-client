@@ -27,7 +27,7 @@ bool owner_client(HANDLE pipe,const std::string& owner){
 std::string process_owner_sid(HANDLE process){HANDLE token{};require(OpenProcessToken(process,TOKEN_QUERY,&token),"Open control process token");Handle owned(token);return token_sid(token);}
 std::wstring control_pipe_name(const std::filesystem::path& root){
  // Root-derived name isolates native fixtures. No supplied root ever travels over IPC.
- auto name=std::filesystem::absolute(root).lexically_normal().wstring();for(auto& c:name)c=static_cast<wchar_t>(towlower(c));
+ auto name=std::filesystem::absolute(root).lexically_normal().wstring();while(name.size()>3&&(name.back()==L'\\'||name.back()==L'/'))name.pop_back();for(auto& c:name)c=static_cast<wchar_t>(towlower(c));
  BCRYPT_ALG_HANDLE alg{};if(BCryptOpenAlgorithmProvider(&alg,BCRYPT_SHA256_ALGORITHM,nullptr,0)<0)throw std::runtime_error("Control namespace hash failed");std::array<unsigned char,32> hash{};
  const auto result=BCryptHash(alg,nullptr,0,reinterpret_cast<PUCHAR>(name.data()),static_cast<ULONG>(name.size()*sizeof(wchar_t)),hash.data(),static_cast<ULONG>(hash.size()));BCryptCloseAlgorithmProvider(alg,0);if(result<0)throw std::runtime_error("Control namespace hash failed");
  std::wstring hex;for(auto b:hash){hex+=L"0123456789abcdef"[b>>4];hex+=L"0123456789abcdef"[b&15];}
@@ -42,19 +42,20 @@ ControlPipe::ControlPipe(const std::filesystem::path& root,std::function<json::o
    if(!connected){const auto error=GetLastError();connected=error==ERROR_PIPE_CONNECTED||(error==ERROR_IO_PENDING&&completed(pipe_.get(),ov,bytes,&stop_,monotonic_ms()+1000));}
    if(!connected){DisconnectNamedPipe(pipe_.get());continue;}
    try{
-    auto input=exchange(pipe_.get(),nullptr,&stop_);json::object response;
+    auto input=exchange(pipe_.get(),nullptr,nullptr);json::object response;
     if(!owner_client(pipe_.get(),owner))response={{"schema",1},{"ok",false},{"exit_code",4},{"error","Control owner denied"}};
-    else try{auto request=parse(input,65535).as_object();if(number(request,"schema",1)!=1)throw std::runtime_error("Unsupported control schema");response=handler(request);}
+    else try{auto request=parse(input,65535).as_object();if(number(request,"schema",1)!=1)throw std::runtime_error("Unsupported control schema");response=handler(validate_control_request(request));}
+    catch(const ControlFailure& e){response={{"schema",1},{"ok",false},{"exit_code",e.exit_code},{"error","Control persistence or access failure; read back before retrying"}};}
     catch(const std::exception&){response={{"schema",1},{"ok",false},{"exit_code",2},{"error","Command rejected; check arguments, configuration and worker log"}};}
-    auto output=json::serialize(response);if(output.size()>=65536)output=json::serialize(json::object{{"schema",1},{"ok",false},{"exit_code",5},{"error","Control response exceeds limit"}});exchange(pipe_.get(),&output,&stop_);
+    auto output=json::serialize(response);if(output.size()>=65536)output=json::serialize(json::object{{"schema",1},{"ok",false},{"exit_code",5},{"error","Control response exceeds limit"}});exchange(pipe_.get(),&output,nullptr);
     // Read receipt prevents DisconnectNamedPipe from discarding an unread reply.
-    const auto receipt=exchange(pipe_.get(),nullptr,&stop_);if(receipt!="read")throw std::runtime_error("Invalid control receipt");
+    const auto receipt=exchange(pipe_.get(),nullptr,nullptr);if(receipt!="read")throw std::runtime_error("Invalid control receipt");
    }catch(...){/* Broken/oversized/idle clients cannot stop the controller. */}
    DisconnectNamedPipe(pipe_.get());
   }
  });
 }
-ControlPipe::~ControlPipe(){stop_=true;CancelIoEx(pipe_.get(),nullptr);if(thread_.joinable())thread_.join();}
+ControlPipe::~ControlPipe(){stop_=true;if(thread_.joinable())thread_.join();}
 json::object control_call(const std::filesystem::path& root,const json::object& request){
  const auto name=control_pipe_name(root);if(!WaitNamedPipeW(name.c_str(),2000))throw std::runtime_error("Control unavailable: no current worker, old worker, busy or timeout");
  Handle pipe(CreateFileW(name.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_EXISTING,FILE_FLAG_OVERLAPPED|SECURITY_SQOS_PRESENT|SECURITY_IDENTIFICATION,nullptr));if(!pipe)fail("Open owner control pipe");

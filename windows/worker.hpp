@@ -25,7 +25,7 @@ struct Config {
  std::function<bool()> capacity_foreground; // local measurement port; never parsed from config/network
 };
 Config load_config(const std::filesystem::path& root);
-json::object load_control_document(const std::filesystem::path& root,Store& store);
+json::object load_control_document(const std::filesystem::path& root,Store& store,bool persist_migration=true);
 json::object offline_control(const std::filesystem::path& root,const json::object& request);
 struct Probe {bool video{},image{};std::string reason;bool media_video{},media_image{};std::vector<adaptive::Profile> profiles;std::vector<std::string> fallback_notes;std::vector<ProbeFailure> gpu_failures;bool complete{};};
 using ProbePhase=std::function<void(std::string,unsigned,unsigned)>;
@@ -40,6 +40,7 @@ class Worker {
  struct Running {std::shared_ptr<TaskData> data;std::jthread thread;};
  Config config_;Store store_;Log log_;Admission admission_;CapacityControl capacity_;
  const Tick process_started_{monotonic_ms()};
+ const std::int64_t process_started_utc_{utc_ms()};std::atomic<std::int64_t> last_contact_utc_{};
  std::recursive_mutex control_mutex_;
  std::unique_ptr<ControlSettings> settings_;json::object effective_config_;
  void update_settings(const json::object&);

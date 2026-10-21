@@ -54,8 +54,21 @@ json::object control_request(const std::vector<std::string>& a,const std::string
  else if(a.size()==1&&(a[0]=="status"||a[0]=="pause"||a[0]=="drain"||a[0]=="resume"||a[0]=="console"||a[0]=="logs"||a[0]=="history"||a[0]=="auth"))return r;
  throw std::runtime_error("Unknown command/arguments; use --help");
 }
+json::object validate_control_request(const json::object& r){
+ if(number(r,"schema",1)!=1)throw std::runtime_error("Unsupported control schema");
+ const auto cmd=text(r,"command",16);std::vector<std::string> args{cmd};
+ if(cmd=="config"){
+  auto action=text(r,"action",16);args.push_back(action);
+  if(action=="get")args.push_back(text(r,"name",64));
+  else if(action=="set")args.push_back("--stdin");
+  else if(action=="reset")for(const auto& name:r.at("names").as_array()){if(!name.is_string())throw std::runtime_error("Invalid setting name");args.emplace_back(name.as_string());}
+ }else if(cmd=="exit")args.push_back(text(r,"mode",8));
+ const auto expected=control_request(args,cmd=="config"&&r.at("action")=="set"?json::serialize(r.at("values")):std::string{});
+ if(expected!=r)throw std::runtime_error("Unknown control request fields");
+ return expected;
+}
 std::string control_help(){return
- "OrganizerWorkerCtl [--json] [--offline] COMMAND\n"
+ "OrganizerWorkerCtl [--json] [--offline] [--data-root LIVE_ROOT] COMMAND\n"
  "  status                     Fresh live state, jobs, connection and version\n"
  "  pause | drain | resume     Explicit idempotent admission controls\n"
  "  config list | get NAME     Types, defaults, current/effective/restart flags\n"

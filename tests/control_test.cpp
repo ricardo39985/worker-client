@@ -15,6 +15,19 @@ TEST("explicit remote resume opens admission without toggling and pause blocks r
  CHECK(!settings.current().at("operator").as_object().at("paused").as_bool());
  CHECK(parse(durable).as_object()==settings.current());
  CHECK(text(control_request({"drain"}),"command")=="drain");
+ Offer a{"job-a","attempt-a","conversion.video.h264","fp-a",{512,0,128,1},10000};
+ Offer b{"job-b","attempt-b","conversion.video.h264","fp-b",{512,0,128,1},10000};
+ CHECK(admission.offer(a,0,{2048,0,8192,2}).accepted);CHECK(admission.begin(a.attempt_id,"lease-a",9000,1)==Start::started);
+ CHECK(admission.offer(b,0,{2048,0,8192,2}).accepted);
+ settings.patch({{"operator.paused",true}});admission.pause(true);CHECK(!admission.start_gate().accepted);
+ CHECK(admission.begin(b.attempt_id,"lease-b",9000,1)==Start::declined);
+ CHECK(admission.active().front().phase!=Phase::cancelling);CHECK(admission.used().ram_mb==1024);
+ CHECK(admission.begin(a.attempt_id,"lease-a",9000,1)==Start::already_running);
+ CHECK(admission.renew(a.attempt_id,"lease-a",1,9500,2));
+ settings.patch({{"operator.paused",false}});admission.pause(false);
+ CHECK(admission.begin(b.attempt_id,"lease-b",9000,3)==Start::started);
+ CHECK(admission.cancel(a.attempt_id));CHECK(admission.used().ram_mb==1024);
+ CHECK(admission.finish(a.attempt_id));CHECK(admission.used().ram_mb==512);
 }
 TEST("multi setting validation and failed persistence never partially publish") {
  auto original=control_defaults();int writes=0;
@@ -43,6 +56,8 @@ TEST("unsafe fields values endpoints and command arguments fail closed") {
  THROWS(settings.patch({{"ffmpeg_path","..\\evil.exe"},{"ffmpeg_sha256",std::string(64,'a')}}));
  THROWS(control_request({"toggle"}));THROWS(control_request({"resume","extra"}));THROWS(control_request({"config","set","token=secret"}));
  THROWS(control_request({"exit"}));THROWS(control_request({"exit","anything"}));
+ auto request=control_request({"status"});CHECK(validate_control_request(request)==request);request["path"]="../worker.json";THROWS(validate_control_request(request));
+ THROWS(validate_control_request(json::object{{"schema",1},{"command","config"},{"action","get"},{"name","../credential.dpapi"}}));
 }
 TEST("metadata separates desired effective and restart without claiming offline state") {
  auto original=control_defaults();ControlSettings settings(original,[](const json::object&){});
