@@ -1,5 +1,6 @@
 #include <cctype>
 #include "worker.hpp"
+#include "owner_state.hpp"
 #include "ow/lifecycle.hpp"
 #include "ow/media_renditions.hpp"
 #include "ow/adaptive_evidence.hpp"
@@ -517,6 +518,7 @@ std::string Worker::paired_token(){
     if(!paused_)report_state("paused","pairing required");state("PAIRING CODE "+code+" "+std::to_string(seconds));
    }});
  {std::lock_guard lock(mutex_);pairing_user_code_.clear();pairing_expires_utc_=0;}
+ complete_owner_pairing(config_.root); // only explicit pairing_repair can change the public startup state
  if(!already_paired)safe_log("PAIRING APPROVED");
  return token;
 }

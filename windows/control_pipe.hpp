@@ -3,6 +3,9 @@
 #include <thread>
 namespace ow::win {
 // Owner-only; no target SID, arbitrary file path, commands or credentials on the wire.
+// Pre-connection absence/busy only. Authentication/protocol/post-write failures
+// are NOT absence and must never activate an alternate controller.
+struct ControlUnavailable:std::runtime_error {using std::runtime_error::runtime_error;};
 std::wstring control_pipe_name(const std::filesystem::path& root);
 std::string process_owner_sid(HANDLE process);
 class ControlPipe {

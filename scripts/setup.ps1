@@ -27,6 +27,7 @@ $ProgressPreference = 'SilentlyContinue'
 . (Join-Path $PSScriptRoot 'setup-converter.ps1')
 . (Join-Path $PSScriptRoot 'setup-startup.ps1')
 . (Join-Path $PSScriptRoot 'setup-identity.ps1')
+. (Join-Path $PSScriptRoot 'worker-owned-files.ps1')
 $Source = Split-Path -Parent $PSScriptRoot
 $Checks = New-Object System.Collections.Generic.List[object]
 $Root = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'OrganizerWorker'
@@ -150,6 +151,7 @@ function Configure-WorkerConverter([switch]$Force) {
 try {
     if ($env:OS -ne 'Windows_NT') { throw 'This setup script targets Windows. Linux can run the portable contract tests via scripts/test.sh.' }
     if ($env:PROCESSOR_ARCHITECTURE -ne 'AMD64' -or -not [Environment]::Is64BitOperatingSystem -or -not [Environment]::Is64BitProcess) { throw 'This package supports x64 Windows 10 build 19041 or later. ARM64 and 32-bit Windows need a separate native package; setup will not install incompatible binaries.' }
+    foreach($path in @($Root,(Join-Path $Root 'worker.json'),(Join-Path $Root 'current.json'),(Join-Path $Root 'instance.lock'),(Join-Path $Root 'credential.dpapi'),(Join-Path $Root 'pairing-key.dpapi'),(Join-Path $Root 'journal.sqlite3'))){Assert-WorkerPlainPath $path}
     Add-Check 'PowerShell / architecture' 'pass' ('PowerShell {0}, x64' -f $PSVersionTable.PSVersion)
     $required = 'Get-CimInstance','Get-FileHash','Get-AuthenticodeSignature','Invoke-WebRequest','ConvertFrom-Json'
     foreach ($command in $required) {
@@ -363,8 +365,16 @@ try {
     if (-not (Test-Path -LiteralPath $built)) { throw 'Build reported success but no native worker executable exists.' }
     $buildId=(Get-WorkerFileSha256 $built).Substring(0,16).ToLowerInvariant()
     $version=Join-Path $Root ('versions\0.1.2-'+$buildId)
-    Native $CMake @('--install',$build,'--config','Release','--prefix',$version) -Name 'Install verified native binaries' -TimeoutSeconds 120
-    foreach ($binary in 'OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe') { if (-not (Test-Path -LiteralPath (Join-Path $version $binary))) { throw "Installed binary missing: $binary" } }
+    $candidate=$version+'.staging-'+[guid]::NewGuid().ToString('N')
+    New-Item -ItemType Directory -Path $candidate -ErrorAction Stop|Out-Null
+    try {
+        Native $CMake @('--install',$build,'--config','Release','--prefix',$candidate) -Name 'Stage verified native binaries' -TimeoutSeconds 120
+        foreach($name in @('OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','OrganizerWorkerTray.exe','cli.md','start-headless.ps1')){
+            if(-not (Test-Path -LiteralPath (Join-Path $candidate $name) -PathType Leaf)){throw ('Staged companion missing: '+$name)}
+            if(Test-Path -LiteralPath $version){if((Get-WorkerFileSha256 (Join-Path $candidate $name)) -cne (Get-WorkerFileSha256 (Join-Path $version $name))){throw 'Existing immutable version differs; preserved without overwrite'}}
+        }
+        if(-not (Test-Path -LiteralPath $version)){[IO.Directory]::Move($candidate,$version)}
+    } finally {if(Test-Path -LiteralPath $candidate){Remove-WorkerGeneratedTree $candidate}}
     # Validate candidate configuration without publishing over the installed one.
     $doctor=Join-Path $version 'OrganizerWorkerDoctor.exe'
     $stage=Join-Path $Root ('install-check-'+[guid]::NewGuid().ToString('N'))
@@ -387,7 +397,9 @@ try {
     if ($health.processing_ready) { Add-Check 'Conversion adapters' 'pass' 'Approved FFmpeg passed real sample conversions.' }
     elseif ($NoConversion) { Add-Check 'Conversion adapters' 'disabled' 'Pairing-only mode was explicitly selected.' }
     else { throw ('Configured converter failed a real functional probe: '+$health.capabilities.reason+'. Conversion setup is incomplete; no new configuration was published.') }
+    foreach($name in @('setup-progress.ps1','setup-policy.ps1','start-worker.ps1')){Install-WorkerOwnedScript -Source (Join-Path $PSScriptRoot $name) -Destination (Join-Path $Root $name)}
     if ($RePair) {
+        $wasEnrolled=(Get-WorkerStartupMode $Root $sid) -eq 'unattended'
         $wholeCoordinator=$true
         try { $wholeCoordinator=$script:WholeCoordinatorRepair -or ((ConvertTo-WorkerOrigin $previousOrigin) -ne $config.coordinator_url) } catch { }
         if (-not $wholeCoordinator -and (Test-Path -LiteralPath (Join-Path $Root 'journal.sqlite3'))) {
@@ -401,11 +413,13 @@ try {
         New-Item -ItemType Directory -Force -Path (Join-Path $Root 'logs') | Out-Null
         $script:WorkerSetupProgressLog=Join-Path $Root 'logs\setup-progress.log'
         if ($archived) { Add-Check 'Pairing' 'info' 'Previous state archived locally; revoke the old credential on its coordinator. Endpoint changes also isolate the old journal, keys and media.' }
+        if($wasEnrolled){
+            $enrollmentPath=Join-Path $Root 'unattended/enrollment.json';$enrollment=Get-Content -LiteralPath $enrollmentPath -Raw|ConvertFrom-Json
+            $enrollment.state='pairing_repair';Atomic-Json $enrollmentPath $enrollment
+            Add-Check 'Pairing maintenance' 'info' 'Boot registration/Windows credential retained; explicit local pairing UI until approval, then safe restart to headless.'
+        }
     }
     Atomic-Json $configPath $config
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'setup-progress.ps1') -Destination (Join-Path $Root 'setup-progress.ps1') -Force
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'setup-policy.ps1') -Destination (Join-Path $Root 'setup-policy.ps1') -Force
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'start-worker.ps1') -Destination (Join-Path $Root 'start-worker.ps1') -Force
     $current=[ordered]@{ schema=1; directory=$version; sha256=(Get-WorkerFileSha256 (Join-Path $version 'OrganizerWorker.exe')).ToLowerInvariant() }
     Atomic-Json (Join-Path $Root 'current.json') $current
     $complete=Complete-WorkerSetup -NoStartup:$NoStartup -NoLaunch:$NoLaunch -RegisterStartup {
@@ -416,7 +430,7 @@ try {
         $script:InstallGuard.Dispose();$script:InstallGuard=$null
         & (Join-Path $Root 'start-worker.ps1')
     }
-    if ($complete.startup_registered) { Add-Check 'Startup' 'pass' 'Verified normal-user startup at Windows sign-in (Task Scheduler or per-user Startup shortcut).' }
+    if ($complete.startup_registered) { Add-Check 'Startup' 'pass' 'Verified existing owner startup mode; unattended registration, when present, was retained and natively inspected. This is not cold-boot acceptance.' }
     if ($complete.started) { Add-Check 'Launch' 'pass' 'Worker process and readiness marker verified. Pairing/processing readiness is reported separately.' }
     Add-Check 'Installed' 'pass' $version
     if (-not $config.coordinator_url) { Add-Check 'Lightsail' 'not-configured' 'Controller can run offline. Configure a coordinator only after its worker protocol and pairing endpoints exist.' }

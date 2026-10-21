@@ -7,6 +7,7 @@ LifecycleStatus run_lifecycle(LifecycleHost& h,bool restart,Tick timeout){
  if(timeout<1||timeout>1800000)throw std::runtime_error("Lifecycle wait must be bounded to 1..1800000 milliseconds");
  const auto began=h.now();const auto expired=[&]{return h.now()-began>=timeout;};
  auto current=h.observe();
+ while(current&&!current->pid){if(expired())throw std::runtime_error("Owner instance busy; no unverified process was targeted");h.wait();current=h.observe();}
  if(current&&(restart||current->exiting)){
   const auto old=*current;if(!old.exiting)h.request_restart(old);
   while(h.alive(old)){if(expired())throw std::runtime_error("Drain pending; no process was cancelled or replaced");h.wait();}

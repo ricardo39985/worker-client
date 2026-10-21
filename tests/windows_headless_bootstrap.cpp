@@ -16,7 +16,7 @@ struct Engine {
  }
  ~Engine(){if(process&&WaitForSingleObject(process.get(),0)==WAIT_TIMEOUT){try{control_call(root,control_request({"exit","drain"}));}catch(...){}WaitForSingleObject(process.get(),15000);}}
  DWORD outcome(){check(WaitForSingleObject(process.get(),30000)==WAIT_OBJECT_0,"Headless exit failed bounded no-UI check");DWORD c{};require(GetExitCodeProcess(process.get(),&c),"Read actual engine exit");return c;}
- json::object ready(){const auto end=monotonic_ms()+180000;for(;;){check(WaitForSingleObject(process.get(),0)==WAIT_TIMEOUT,"Actual headless bootstrap unexpectedly exited");try{auto s=control_call(root,control_request({"status"}));if(s.at("headless")==true&&s.at("identity_ready")==true&&s.at("token_elevated")==false&&s.at("processing_ready")==true)return s;}catch(...){}check(monotonic_ms()<end,"Actual headless CPU probe/readiness deadline; no fake fallback");Sleep(100);}}
+ json::object ready(){const auto end=monotonic_ms()+180000;json::object last;std::string error;for(;;){check(WaitForSingleObject(process.get(),0)==WAIT_TIMEOUT,"Actual headless bootstrap unexpectedly exited");try{last=control_call(root,control_request({"status"}));if(last.at("headless")==true&&last.at("identity_ready")==true&&last.at("token_elevated")==false&&last.at("processing_ready")==true)return last;}catch(const std::exception& e){error=e.what();}if(monotonic_ms()>=end){std::string details="Actual headless CPU probe/readiness deadline; no fake fallback. LastControl="+json::serialize(last)+" LastError="+error;try{details+=" OWNED_SYNTHETIC_BOOTSTRAP_LOG="+read_file(root/"worker.log",65536);}catch(...){}throw std::runtime_error(details);}Sleep(100);}}
 };
 }
 void headless_bootstrap_acceptance(const std::filesystem::path& ffmpeg,const std::string& digest){

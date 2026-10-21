@@ -22,6 +22,10 @@ TEST("start is idempotent and waits genuine readiness not task submission") {
 TEST("restart waits old process termination before one task activation and new readiness") {
  Host h;h.exists=true;h.ready=true;auto s=run_lifecycle(h,true,200);CHECK(h.restarts==1);CHECK(h.starts==1);CHECK(s.pid==43);CHECK(s.ready);CHECK(h.clock>=90);
 }
+TEST("restart waits a busy owner instance to expose a verified PID before requesting drain") {
+ struct Unobserved:Host {std::optional<LifecycleStatus> observe()override{if(clock<50)return LifecycleStatus{0,false,false};return Host::observe();}void request_restart(const LifecycleStatus& s)override{if(!s.pid)throw std::runtime_error("Unverified PID must never be targeted");Host::request_restart(s);}} h;
+ h.exists=true;h.ready=true;auto s=run_lifecycle(h,true,300);CHECK(s.pid==43);CHECK(h.restarts==1);CHECK(h.starts==1);CHECK(h.clock>=140);
+}
 TEST("restart timeout does not cancel work force stop or start another engine") {
  struct Busy:Host {void request_restart(const LifecycleStatus&)override{++restarts;exiting=true;gone_at=10000;}} h;
  h.exists=true;h.ready=true;THROWS(run_lifecycle(h,true,100));CHECK(h.restarts==1);CHECK(h.starts==0);CHECK(h.exists);
