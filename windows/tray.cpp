@@ -49,6 +49,7 @@ LRESULT CALLBACK procedure(HWND h,UINT message,WPARAM w,LPARAM l){
 }
 }
 int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,PWSTR command,int){
+ if(*command&&std::wstring_view(command)!=L"--headless")return 2; // reject before UI/state access
  if(std::wstring_view(command)==L"--headless"){
   try{require(SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32|LOAD_LIBRARY_SEARCH_USER_DIRS),"Restrict DLL search");return run_headless(data_directory());}catch(...){return 4;}
  }

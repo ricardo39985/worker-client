@@ -12,10 +12,10 @@ public:
  void erase(SecretSlot) override;
 };
 class NativePairingKey final : public PairingKey {
- std::filesystem::path path_;
+ std::filesystem::path path_;bool existing_only_{};
 public:
- explicit NativePairingKey(std::filesystem::path root):path_(std::move(root)/"pairing-key.dpapi"){}
- std::string public_key() override {return public_pairing_key(path_);}
+ explicit NativePairingKey(std::filesystem::path root,bool existing_only=false):path_(std::move(root)/"pairing-key.dpapi"),existing_only_(existing_only){}
+ std::string public_key() override {return existing_only_?existing_public_pairing_key(path_):public_pairing_key(path_);}
  std::string sign(const std::string& message) override {return sign_pairing_challenge(path_,message);}
  std::string request_id() override {return random_hex(16);}
 };

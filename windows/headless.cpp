@@ -22,7 +22,7 @@ int run_headless(const std::filesystem::path& root) noexcept {
   auto exe=verified_owner_image(root);if(_wcsicmp(exe.c_str(),executable_path().c_str())!=0)throw std::runtime_error("Actual running headless image differs from selected owner version");
   auto cfg=load_config(root);cfg.headless=true;Worker worker(std::move(cfg));
   ControlPipe pipe(root,[&](const json::object& request){return worker.control(request);});
-  publish_runtime_ready(root);while(!worker.ready_to_exit())Sleep(50);clear_runtime_ready(root);return 0;
+  publish_runtime_ready(root);while(!worker.ready_to_exit())Sleep(50);clear_runtime_ready(root);return worker.restart_requested()?75:0;
  }catch(...){clear_runtime_ready(root);return 4;} // never a MessageBox or secret-bearing error on a noninteractive desktop
 }
 }

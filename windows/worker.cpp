@@ -504,7 +504,7 @@ json::object Worker::heartbeat(){
 std::string Worker::paired_token(){
  ProtectedPairingSecrets secrets(config_.root);
  NativePairingTransport transport;
- NativePairingKey key(config_.root);
+ NativePairingKey key(config_.root,config_.headless);
  wchar_t name[256]{};DWORD length=256;
  require(GetComputerNameW(name,&length),"Read worker display name");
  auto already_paired=secrets.read(SecretSlot::credential).has_value();

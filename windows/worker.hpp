@@ -95,6 +95,7 @@ public:
  void priority(Priority);Priority priority() const{return priority_;}
  void preference(bool video,Preference);Preference preference(bool video) const{return video?video_.load():image_.load();}
  void exit(bool stop_jobs);void restart();bool ready_to_exit();
+ bool restart_requested() const noexcept{return restart_requested_;}
  json::object control(const json::object& request);
  std::string status() const;std::size_t active_count() const;
 };

@@ -70,7 +70,7 @@ public:
 std::string existing_public_pairing_key(const std::filesystem::path& p){Key k(p,false);return base64(k.export_blob(BCRYPT_ECCPUBLIC_BLOB));}
 std::string public_pairing_key(const std::filesystem::path& p){Key k(p);return base64(k.export_blob(BCRYPT_ECCPUBLIC_BLOB));}
 std::string sign_pairing_challenge(const std::filesystem::path& p,const std::string& challenge){
- Key key(p);BCRYPT_ALG_HANDLE algorithm{};BCRYPT_HASH_HANDLE hash{};crypto(BCryptOpenAlgorithmProvider(&algorithm,BCRYPT_SHA256_ALGORITHM,nullptr,0),"Open challenge hash");
+ Key key(p,false);BCRYPT_ALG_HANDLE algorithm{};BCRYPT_HASH_HANDLE hash{};crypto(BCryptOpenAlgorithmProvider(&algorithm,BCRYPT_SHA256_ALGORITHM,nullptr,0),"Open challenge hash");
  try{crypto(BCryptCreateHash(algorithm,&hash,nullptr,0,nullptr,0,0),"Create challenge hash");crypto(BCryptHashData(hash,reinterpret_cast<PUCHAR>(const_cast<char*>(challenge.data())),static_cast<ULONG>(challenge.size()),0),"Hash challenge");std::array<unsigned char,32> digest{};crypto(BCryptFinishHash(hash,digest.data(),32,0),"Finish challenge hash");BCryptDestroyHash(hash);hash=nullptr;BCryptCloseAlgorithmProvider(algorithm,0);algorithm=nullptr;ULONG n=0;crypto(BCryptSignHash(key.key,nullptr,digest.data(),32,nullptr,0,&n,0),"Signature length");std::string signature(n,0);crypto(BCryptSignHash(key.key,nullptr,digest.data(),32,reinterpret_cast<PUCHAR>(signature.data()),n,&n,0),"Sign pairing challenge");signature.resize(n);return base64(signature);}
  catch(...){if(hash)BCryptDestroyHash(hash);if(algorithm)BCryptCloseAlgorithmProvider(algorithm,0);throw;}
 }
