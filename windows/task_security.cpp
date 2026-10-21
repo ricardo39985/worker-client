@@ -1,5 +1,6 @@
 #include "owner_task.hpp"
 #include "control_pipe.hpp"
+#include "ow/control.hpp"
 #include <sddl.h>
 namespace ow::win {
 void validate_owner_task_security(const std::wstring& s){PSECURITY_DESCRIPTOR sd{};require(ConvertStringSecurityDescriptorToSecurityDescriptorW(s.c_str(),SDDL_REVISION_1,&sd,nullptr),"Read owner task ACL");

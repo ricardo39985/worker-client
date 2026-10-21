@@ -15,6 +15,10 @@ function Invoke-WorkerVerifiedImage {
  if((Get-FileHash -LiteralPath $exe).Hash -ine $c.sha256){throw 'Image hash differs'}
  & $Launch $exe
 }
+function Invoke-WorkerHeadlessLifetime {
+ param([scriptblock]$Launch)
+ return (& $Launch)
+}
 if($MyInvocation.InvocationName -eq '.'){return}
 if($args.Count){throw 'Headless launcher accepts no arguments'}
 $i=[Security.Principal.WindowsIdentity]::GetCurrent();$p=New-Object Security.Principal.WindowsPrincipal($i)

@@ -11,7 +11,7 @@ function New-Case([string]$Name){
  [IO.Directory]::CreateDirectory($dir)|Out-Null
  $exe=Join-Path $dir 'OrganizerWorker.exe';[IO.File]::WriteAllText($exe,'safe-public-fixture-no-credentials')
  $hash=(Get-FileHash $exe).Hash.ToLowerInvariant()
- @{directory=$dir;sha256=$hash}|ConvertTo-Json|Set-Content (Join-Path $root 'current.json')
+ @{schema=1;directory=$dir;sha256=$hash}|ConvertTo-Json|Set-Content (Join-Path $root 'current.json')
  return @{Root=$root;Directory=$dir;Image=$exe;Hash=$hash;Marker=(Join-Path $root 'payload-ran')}
 }
 function Assert-NeverLaunch($Case){
@@ -28,7 +28,7 @@ try{
     'writable-current' {$p=Join-Path $c.Root 'current.json';$acl=Get-Acl $p;$acl.AddAccessRule((New-Object Security.AccessControl.FileSystemAccessRule($everyone,'Write','Allow')));Set-Acl $p $acl;Assert-NeverLaunch $c}
     'writable-ancestor' {$p=Join-Path $c.Root 'versions';$acl=Get-Acl $p;$acl.AddAccessRule((New-Object Security.AccessControl.FileSystemAccessRule($everyone,'DeleteSubdirectoriesAndFiles','Allow')));Set-Acl $p $acl;Assert-NeverLaunch $c}
     'junction-ancestor' {$external=Join-Path $base 'external';Move-Item (Join-Path $c.Root 'versions') $external;New-Item -ItemType Junction -Path (Join-Path $c.Root 'versions') -Target $external|Out-Null;Assert-NeverLaunch $c}
-    'mutable-manifest' {[IO.File]::WriteAllText($c.Image,'foreign-payload');@{directory=$c.Directory;sha256=(Get-FileHash $c.Image).Hash.ToLowerInvariant()}|ConvertTo-Json|Set-Content (Join-Path $c.Root 'current.json');Assert-NeverLaunch $c}
+    'mutable-manifest' {[IO.File]::WriteAllText($c.Image,'foreign-payload');@{schema=1;directory=$c.Directory;sha256=(Get-FileHash $c.Image).Hash.ToLowerInvariant()}|ConvertTo-Json|Set-Content (Join-Path $c.Root 'current.json');Assert-NeverLaunch $c}
     'replacement-race' {
      Invoke-WorkerVerifiedImage -Root $c.Root -ApprovedHashes @($c.Hash) -OwnerSid $sid -Launch {
       param($exe)

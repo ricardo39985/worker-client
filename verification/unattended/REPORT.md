@@ -30,7 +30,11 @@ argv/env/files. See [owner guide](../../docs/unattended-owner.md).
 |22/23|Genuine LF/CRLF artifact identity red ->portable7/7 green; Windows check remained required|
 |28 /39626684788 /e841843|16/17: canonical EOL still differs on Windows file(WRITE); fixed via literal configure template with explicit UNIX newline (preserves variable-like text). Private fixture station ALONE did not fix descendants' FFmpeg init0xc0000142. No claimed pass|
 |25/26|Genuine artifact producer leaking synthetic extra credential/replacing output/missing-companion/symlink red ->4 behavior cases green; code-only fixed inventory/new output/rehash|
-|27|Portable Release8/8 green after package contracts (Python checks not sanitizer instrumentation)|
+|27/29/30|Portable Release8/8; full C++ ASan/UBSan configuration8/8 at73fbde3. Three Python checks not instrumented|
+|31 /39631239554 /73fbde3|17/18: standalone CMake script policyCMP0053 expanded literal template early on Windows; explicit NEW policy correction follows. New noninteractive CLI also exits0xc0000142; no backend success|
+|33 /39633410360 /5127a79|Windows canonical launcher EOL GREEN. Genuine signer-missing-key creates identity red. Independent bootstrap gates run despite backend failure: actual restart_exit0 (expected75), malformed headless hidden-UI timeout, CLI0xc0000142, CPU0xc0000142. NONE waived. Actual reduced token still HIGH integrity12288 and default object DACL onlyBA/SY write +logonSID read|
+|37 /39637183196 /747b5a0|Actual MSVC+18/18 registered suites GREEN; actual foreign denial/forged0byte GREEN. Media stops before fixture: adjusting own test token defaultDACL error5, source handle lackedTOKEN_ADJUST_DEFAULT. Source20e77da requests that right, no privilege/SID/session/logon changes; normal test context still pending|
+|34/35/36|Three genuine secret-erasure/exception/exhaustion behavior reds ->Release8/8 and full C++ ASan/UBSan configuration8/8 green. Native integration pending|
 
 The native diagnostic was not hidden with CPU fallback, a longer arbitrary timeout
 or disabled readiness. It observed headless=true, identity=true, token_elevated=false,
@@ -42,15 +46,29 @@ explicit lpDesktop, USER32 falls back to the interactive logon's station. The sa
 child handle list intentionally excludes desktops. New source explicitly names
 the ACTUAL parent's station/desktop for both bootstrap fixture and contained
 children, keeping handle containment and exact owner/limited checks unchanged.
-This causally motivated correction still needs the next native run, not a pass
-claim. Primary process/thread-connection docs were retrieved/read and retained.
+That correction ALONE did not solve console descendants'0xc0000142. Primary process/thread-connection docs were read/retained. Later actual token metadata revealed inherited HIGH IL/admin-only default object DACL surviving LUA reduction. Fixture now LOWERS integrity and gives only the unchanged user/SYSTEM default object access, no added privileges/credentials/session changes; actual native result still pending.
 
-Pending native behavior: successful real CPU initialization, actual restart exit75
-(Windows-managed retry even after CLI departure), replacement PID/pause retention,
-normal drain exit0 and malformed headless no-UI exit2, then real admitted converter
-restart/lease/output/decode/retry/wrong/matchingACK. The CPU gate has so far prevented
-those later cases from executing; they are NOT claimed tested. Restart/invalid-mode
-source still needs its genuine-red correction once that path executes.
+Source747b5a0 implements actual33 behavior-red corrections: restart exit75, malformed headless early2/no UI, signing existing-only, runtime headless key provider existing-only. Later normal drain/replacement/pause/identity checks executed independently but whole bootstrap gate remained FAILED; no partial backend pass. Current fixture token-normalization gate must pass before actual CPU/CLI/restart greens and admitted converter/lease/hash/decode/ACK can be claimed. Intentional restart must be handled by the wrapper beyond the three bounded crash retries; separate new lifetime behavior test is pending.
+
+## Independent security review — NOT closed
+
+Immutable-f531dd5 independent review found a HIGH pre-execution trust gap still
+applicable: checking native image/root ACLs AFTER current.json selects code cannot
+protect the first execution. A self-hash in the mutable manifest is no independent
+trust anchor. New native TDD19 tests broad manifest/ancestor ACL, ancestor junction,
+mutable manifest+image despite external approval, and replacement after validation.
+A new machine-anchor test rejects owner-writable bootstrap code. Their initial
+baseline is intentionally not fixed before genuine Windows red. Planned correction
+uses an admin-owned/owner-read-only protected bootstrap OUTSIDE mutable owner
+state, external approved image hashes and held handle/ancestor checks before any
+selected code executes. No installation, task or credential action has occurred.
+
+Medium task-DACL full rights were added earlier, but INHERIT_ONLY flags remain a
+real gap; new actual security-descriptor TDD rejects zero/read/inherit-only rights.
+Low bearer heap-copy finding: bounded secret-origin parser now binds BOTH temporary
+and result storage to caller-owned non-fallback arena and wipes input/workspace on
+success/exception/exhaustion, actual portable red->green34/35 and sanitizer36.
+Native integration and independent recheck remain. No final release/merge claim.
 
 ## Implementation/security being gated
 
