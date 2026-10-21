@@ -47,7 +47,9 @@ void status(const PairingResponse& r,unsigned expected) {
  if(r.status!=expected)throw std::runtime_error("Worker coordinator returned HTTP "+std::to_string(r.status));
 }
 std::string credential_token(const json::object& value) {
- validate_worker_credential(value);return text(value,"token",4096);
+ auto token=text(value,"token",4096);
+ if(!safe_id(text(value,"worker_id",128)))throw PairingActionRequired("Invalid worker identity in approval.");
+ printable(token,1,"Invalid worker credential in approval.");return token;
 }
 std::int64_t deadline(const json::object& pending) {
  return static_cast<std::int64_t>(number(pending,"expires_at_ms",INT64_MAX));
