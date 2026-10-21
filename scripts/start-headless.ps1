@@ -108,6 +108,8 @@ function Invoke-WorkerHeadlessLifetime {
 }
 function Invoke-WorkerAfterExit {
  param([scriptblock]$WaitForExit,[scriptblock]$Activate)
+ $terminated=& $WaitForExit
+ if($terminated -isnot [bool] -or -not $terminated){throw 'Exact old-process termination not established; no replacement'}
  & $Activate
 }
 function Get-WorkerProtectedPolicy {

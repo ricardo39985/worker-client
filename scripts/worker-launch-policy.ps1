@@ -10,8 +10,16 @@ function Assert-WorkerLaunchTask {
 }
 function Assert-WorkerApprovedCandidate {
     param($Info,$Enrollment)
-    # Baseline old package-presence policy, pending genuine behavior TDD.
-    if('start-headless.ps1' -notin @(Get-WorkerPackageNames $Info)){throw 'Cannot downgrade enrolled owner'}
+    if(-not $Enrollment -or $Enrollment.ok -ne $true -or $Enrollment.enrolled -ne $true -or -not $Info.PSObject.Properties['schema'] -or $Info.schema -ne 2){throw 'Native protected enrollment and schema2 package required; current engine retained'}
+    $names=@(Get-WorkerPackageNames $Info)
+    if(@($Info.files.PSObject.Properties).Count -ne $names.Count -or $Info.files.'start-headless.ps1' -cne $Enrollment.launcher_sha256){throw 'Bootstrap policy migration requires secure LOCAL review before stop'}
+    $worker=[string]$Info.files.'OrganizerWorker.exe'
+    $approved=$Enrollment.approved_packages.PSObject.Properties[$worker]
+    if(-not $approved){throw 'Explicit protected package approval required before any candidate execution/current-engine stop'}
+    foreach($name in $names){
+        $digest=$Info.files.$name
+        if($digest -isnot [string] -or $digest -cnotmatch '\A[a-f0-9]{64}\z' -or $name -cnotin @($approved.Value.files.PSObject.Properties.Name) -or $digest -cne $approved.Value.files.$name){throw 'Candidate companion was not explicitly approved; current engine retained'}
+    }
 }
 function Test-WorkerLaunchReady {
     param($Status,[bool]$Unattended)

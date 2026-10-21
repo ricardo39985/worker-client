@@ -43,9 +43,10 @@ function Invoke-WorkerJson([string]$Executable,[string[]]$Arguments) {
 if(-not $RecoverOnly){
     $info=Read-WorkerValidatedPackage $Package $PackageManifestSha256
     if($unattended -and 'start-headless.ps1' -notin @(Get-WorkerPackageNames $info)){throw 'Cannot downgrade an enrolled headless owner to a legacy interactive-only package'}
-    if($unattended){$raw=(& (Join-Path $Package 'OrganizerWorkerCtl.exe') --json enrollment)-join "`n";if($LASTEXITCODE){throw 'Candidate enrollment policy differs; current engine retained, secure LOCAL migration review required'}}
+    if($unattended){Assert-WorkerApprovedCandidate -Info $info -Enrollment $enrollment} # DATA only; never run candidateCtl to establish its own authority
     # Whitelisted public preferences, read-only SQLite, no credentials/key reads.
-    $inspection=Invoke-WorkerJson (Join-Path $Package 'OrganizerWorkerDoctor.exe') -Arguments @('--operator-settings','--data-root',$Root)
+    $inspectionDoctor=if($unattended){Join-Path $selected.directory 'OrganizerWorkerDoctor.exe'}else{Join-Path $Package 'OrganizerWorkerDoctor.exe'}
+    $inspection=Invoke-WorkerJson $inspectionDoctor -Arguments @('--operator-settings','--data-root',$Root)
     $expectedOperator=$inspection.operator
     if($AdmissionIntent -ne 'preserve'){$expectedOperator.paused=($AdmissionIntent -eq 'paused')}
 }
@@ -64,7 +65,7 @@ $stop={
     if(Get-Process ffmpeg -ErrorAction SilentlyContinue){throw 'Encoder active; defer update without terminating it'}
     $guard=[IO.File]::Open((Join-Path $Root 'instance.lock'),[IO.FileMode]::OpenOrCreate,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None);$guard.Dispose()
     if($retention.operator -and -not $RecoverOnly){
-        $latest=Invoke-WorkerJson (Join-Path $Package 'OrganizerWorkerDoctor.exe') -Arguments @('--operator-settings','--data-root',$Root)
+        $latest=Invoke-WorkerJson $inspectionDoctor -Arguments @('--operator-settings','--data-root',$Root)
         $latest.operator.paused=$retention.paused;$retention.operator=$latest.operator
     }
     Write-Output 'WORKER_STOPPED_COOPERATIVELY=True'
