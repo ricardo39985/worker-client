@@ -4,7 +4,7 @@ Local CLI candidate: [reference/parity matrix](cli.md),
 [gate ledger](../verification/cli/REPORT.md),
 [unverified acceptance](../verification/cli/acceptance.md).
 Portable Release and full C++ ASan/UBSan suites pass. MSVC compilation and all
-12 native suites pass at b9366e5 (manual CI 39533530400). Do not infer real
+12 native suites pass at 458c068 (manual CI 39534777104). Do not infer real
 cross-session SSH, active-job/coordinator, installed-upgrade or release readiness
 from the new idle-controller fixture.
 Neither installed PC worker has been changed.

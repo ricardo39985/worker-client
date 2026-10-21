@@ -9,7 +9,8 @@ The original worktree and every other agent branch are untouched.
 
 Source commits: `73a61ce`, `0bfb288`, `336c05c`, `e595a1c`, `66ec088`,
 `cb9e5452a4e033ab40889a7ce600b38aa60321e6`,
-`b9366e5c66f4d1c858a4705e59aef8a54b94a86f` (native verified source).
+`b9366e5c66f4d1c858a4705e59aef8a54b94a86f` (first native green),
+**`458c068352db59e2a0c2455896be68cac2c6caec` (final verified implementation)**.
 Later ledger/documentation-only commits do not change the tested implementation.
 See [reference/parity matrix](../../docs/cli.md) for exact command/setting semantics.
 No inference or additional hardware-enable knob is invented.
@@ -33,14 +34,16 @@ Latest Release and ASan/UBSan gates each pass all **6 suites**: 101 core,
 84 adaptive, 64 progress/timing, 18 rendition, 13 pipeline C++ contracts and
 23 Python dependency tests (303 cases). Core and all standalone C++ suites are
 instrumented in the sanitizer build; Python is not sanitizer-instrumented.
-Logs `45-size-green-build.log` through `48-size-sanitize-tests.log` are current.
+Final prescribed Release gate: `52-linux-final-gate.log`; final full sanitizer
+suite output: `53-sanitize-final-gate.log` (both exit 0, source 458c068).
+Logs `45-size-green-build.log` through `48-size-sanitize-tests.log` also pass.
 `39..42` also record the full prescribed Linux gate on b9366e5. A final boundary
 review found that a typed patch could grow a file past the loader's 256 KiB
 reopen limit; `43..44` records an actual behavior-red test. Validation now rejects
 that full document before persistence. Heap-backed local frames are bounded to
 1 MiB so full current/effective metadata for any valid document fits without
 Windows stack growth; a new native roundtrip/oversize-response contract covers it.
-This small source follow-up requires its own final native rerun.
+That follow-up is covered by the final native gate below.
 Earlier successful runs and all failed regression evidence are retained.
 
 - `01-red.log`: new control API initially missing (compile-red, not a Windows execution).
@@ -102,6 +105,19 @@ Earlier successful runs and all failed regression evidence are retained.
   The retained handle fixed the fixture exit-code boundary; no native worker
   stop/exit policy change was needed. This is an actual compiled/exercised CLI,
   not a simulation of Windows, but the controller is intentionally idle/offline.
+
+### Final exact-source Windows result
+
+[39534777104](https://github.com/ricardo39985/worker-client/actions/runs/39534777104),
+**458c068352db59e2a0c2455896be68cac2c6caec: PASS**. Fresh MSVC Release build and
+**12/12 suites, 0 failures**, including the added large-frame/reply-limit kernel
+IPC contract, packaged CLI fixture, all native contracts and all setup suites.
+`50-windows-final-green.log` contains complete output;
+`51-windows-final-result.json` records exact source/run/job identity;
+`49-windows-final-watch.log` records successful completion. The fixture is an
+actual console CLI controlling a different live controller process, not another
+worker spawned by a control/config command. No released binary or user-PC install
+is claimed; hosted build binaries were exercised but not published as a release.
 
 ## Outstanding acceptance and limits
 

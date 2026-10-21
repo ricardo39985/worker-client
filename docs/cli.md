@@ -1,6 +1,10 @@
 # Local worker CLI (source candidate, not installed)
 
-`OrganizerWorkerCtl.exe` is a console client, not another worker. Closing it
+`OrganizerWorkerCtl.exe` is a console client, not another worker. Its installed
+reference is `cli.md` beside the executable; `docs/...` references in help/text
+refer to the source checkout. You can read the installed reference over SSH with
+`Get-Content -LiteralPath (Join-Path $current.directory 'cli.md')` after resolving
+`$current` as below. Closing it
 cannot terminate the controller or jobs. It requires the **updated controller**;
 older installations have no control pipe. Installing this candidate requires
 separate operator permission. It cannot resume Danny's currently installed old
