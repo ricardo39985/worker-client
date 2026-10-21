@@ -1,0 +1,35 @@
+73fbde3a7009246d043aa8070645c76c979b5ce1
+85af34a7c809de4284d38383db526421c8d5c71e
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-unattended/build-unattended-sanitize
+[ 10%] Built target ow_json
+[ 13%] Built target ow_pipeline_contract_tests
+[ 23%] Built target ow_rendition_probe
+[ 26%] Built target ow_rendition_contract_tests
+[ 42%] Built target ow_progress_contract_tests
+[ 63%] Built target ow_core
+[ 71%] Built target ow_adaptive_hardware_contract_tests
+[ 94%] Built target ow_contract_tests
+[100%] Built target ow_adaptive_evidence_probe
+Test project /home/rick/Downloads/worker-client-unattended/build-unattended-sanitize
+    Start 1: ffmpeg_dependency_contracts
+1/8 Test #1: ffmpeg_dependency_contracts ......   Passed    0.15 sec
+    Start 2: launcher_package_contracts
+2/8 Test #2: launcher_package_contracts .......   Passed    0.04 sec
+    Start 3: code_package_contracts
+3/8 Test #3: code_package_contracts ...........   Passed    0.15 sec
+    Start 4: worker_contracts
+4/8 Test #4: worker_contracts .................   Passed    0.15 sec
+    Start 5: pipeline_contracts
+5/8 Test #5: pipeline_contracts ...............   Passed    0.04 sec
+    Start 6: rendition_contracts
+6/8 Test #6: rendition_contracts ..............   Passed    0.06 sec
+    Start 7: adaptive_hardware_contracts
+7/8 Test #7: adaptive_hardware_contracts ......   Passed    0.12 sec
+    Start 8: progress_contracts
+8/8 Test #8: progress_contracts ...............   Passed    0.53 sec
+
+100% tests passed, 0 tests failed out of 8
+
+Total Test time (real) =   1.26 sec
