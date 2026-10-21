@@ -1,0 +1,100 @@
+PASS explicit remote resume opens admission without toggling and pause blocks reserved starts
+PASS multi setting validation and failed persistence never partially publish
+PASS every configurable setting validates typed values and defaults are resettable
+PASS unsafe fields values endpoints and command arguments fail closed
+FAIL coordinator scope changes cannot bypass setup archival or partially change preferences: check failed at /home/rick/Downloads/worker-client-cli/tests/control_test.cpp:66: caught
+PASS all documented local commands survive JSON wire roundtrip with strict schema
+PASS metadata separates desired effective and restart without claiming offline state
+PASS serialized independent writers preserve unrelated settings and hot roundtrip
+PASS capacity grows only after a sustained measured window with validated completions
+PASS binding CPU or disk pressure backs off without releasing running reservations
+PASS foreground use defers new jobs while running work can drain at conservative concurrency
+PASS missing stale and malformed telemetry cannot manufacture measured capacity
+PASS capacity ceiling remains binding even on an otherwise idle host
+PASS endpoint supplied by operator has a stable HTTPS origin
+PASS missing unsafe or ambiguous endpoints cannot become network destinations
+PASS an absent endpoint fails before enrollment or key disclosure
+PASS credential reopen reconnects without a new enrollment
+PASS credential canonicalization allows same origin but never a different server
+PASS corrupt saved credential never triggers silent reenrollment
+PASS successful pairing persists identity before returning and removes pending secret
+PASS incompatible coordinator receives no public key or enrollment request
+PASS lost initial response reuses durable request id rather than inventing another enrollment
+PASS lost approval response resumes same enrollment with its private key proof
+PASS pending enrollment is never sent to a different endpoint
+PASS failed credential persistence preserves resumable approval and returns no success
+PASS pending cleanup failure cannot discard an already durable credential
+PASS late approval after cancellation does not publish credentials
+PASS denial is explicit and cannot erase an existing pending record
+PASS server revocation does not silently start another pairing
+PASS rate limited polling waits and remains bounded by pairing expiry
+PASS invalid permanent tokens and worker ids never reach credential storage
+PASS media transfer requires exact approved HTTPS host
+PASS well formed offer translates to validated typed job
+PASS wire requests cannot smuggle arbitrary commands as capabilities
+PASS negative or floating resource values are rejected
+PASS unverified GPU is never requested by the CPU converter
+PASS download digest is mandatory and strictly encoded
+PASS input and output must fit declared temporary storage
+PASS control message size and parser nesting are bounded
+PASS null bytes cannot reach Win32 URL or process APIs
+PASS Windows argument quoting preserves spaces quotes and trailing slashes
+PASS converter receives local files not remote URLs or shell commands
+PASS leases use the shorter of local and server remaining time
+PASS expired and unsigned-underflow lease cases fail closed
+PASS lease duration and monotonic addition cannot overflow
+PASS app rendition contract requires every fixed output and budgets all simultaneous files
+PASS app jobs refuse arbitrary output roles and mixed media type declarations
+PASS accepted attempt and pending result survive journal reopen
+PASS outbox cannot be acknowledged with wrong attempt or sequence
+PASS repeated result does not create duplicate outbox entry
+PASS attempt collision cannot change persisted payload
+PASS restart exposes interrupted work without automatically rerunning it
+PASS denied BEGIN capacity is terminally never-started across journal restart
+PASS priority settings survive restart
+PASS result without accepted job fails instead of making orphan output
+PASS pending counter follows durable results and acknowledgements
+PASS journal coordinator binding survives reopen and rejects a different server
+PASS legacy pending results cannot be adopted without endpoint provenance
+PASS legacy interrupted attempt needs the same protected coordinator origin
+PASS pressure defers reserved BEGIN as well as new offers without cancelling running work
+PASS verified capabilities accept independent jobs concurrently
+PASS four single-CPU app jobs reserve and begin independently within configured limits
+PASS drained input resources hand off to atomic concurrent stage claims
+PASS cancellation keeps stage claims until contained children drain
+PASS stage retries cannot double charge or silently change a resource promise
+PASS stage costs compete atomically across independent jobs without altering offer identity
+PASS live stage RAM headroom is not charged twice against already allocated children
+PASS freed source and uploaded output scratch can be reclaimed before the remaining job completes
+PASS missing capability fails closed
+PASS installed but unverified does not mean capable
+PASS local disabled vetoes a preferred server offer
+PASS reservation consumes capacity before execution
+PASS dynamic low memory rejects despite configured budget
+PASS duplicate offer is idempotent
+PASS changed duplicate payload is rejected
+PASS same content job cannot run in two attempts on one host
+PASS job guardrail is independent of resource budget
+PASS oversized resource numbers cannot overflow accounting
+PASS zero CPU or memory declaration is rejected
+PASS invalid IDs cannot become filesystem paths
+PASS expired reservation cannot be started
+PASS start without lease is rejected
+PASS replayed begin does not start a second process
+PASS pause refuses new work but preserves active execution
+PASS pause prevents an unstarted reservation from beginning
+PASS only a valid fresh renewal extends the lease
+PASS expired running lease cannot be revived by late renewal
+PASS expiry returns unused reservations to the budget
+PASS expired running job retains resources until child shutdown
+PASS cancelling one job preserves the other
+PASS duplicate finish cannot release resources twice
+PASS simultaneous offers never oversubscribe
+PASS two outstanding offers cannot both reserve the same live free memory
+PASS disabling a capability prevents a reserved job from starting
+PASS a duplicate offer cannot extend a reservation indefinitely
+PASS a recovery probe cannot overlap reserved running or cancelling work
+PASS concurrent probe and offer admission have exactly one owner
+PASS local child RAM topups are atomic preserve offer identity and last through cancellation
+PASS competing local RAM increases cannot oversubscribe host capacity
+99 contracts, 1 failures

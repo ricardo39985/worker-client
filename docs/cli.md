@@ -63,7 +63,7 @@ A versioned source archive without Git metadata reports `source-archive`.
 | `config reset NAME...` | Explicit named defaults; no destructive reset-all |
 | `exit drain` | Pause and finish existing jobs, then exit |
 | `exit stop` | Explicit cancellation; capacity stays held until process-tree termination |
-| `auth` | Protected credential-file presence only, not authentication validity or token retrieval |
+| `auth` | Credential-file presence plus the live public, expiring approval label when pending; never private enrollment material/token retrieval |
 | `console` | Ask the interactive controller to open its independent viewer |
 | `logs` | Return the existing log/data path, without shell execution |
 | `history` | Read existing last-outcome report, separate from live jobs |
@@ -126,7 +126,10 @@ see [setup](setup.md) for their exact switches and noninteractive use.
 `OrganizerWorkerDoctor.exe --json --check-coordinator` and
 `--json --probe-ffmpeg --data-root PATH` retain existing diagnostics; do not run
 expensive Doctor probes alongside active jobs without separate approval.
-Pairing approval remains on the coordinator, not a local privilege escalation.
+`auth` can show the existing live `pairing_user_code` and its expiry for approval
+on the coordinator; it never decrypts/exposes a device code, challenge, signature,
+private key or bearer. Offline auth reports presence only. Pairing approval remains
+on the coordinator, not a local privilege escalation.
 No token input/output command is added; DPAPI stores and journal scope fencing
 are unchanged. Endpoint changes must drain/stop, then use the existing explicit
 archival/re-pair journey. These maintenance operations do not become hot settings.

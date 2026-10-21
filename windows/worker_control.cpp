@@ -46,7 +46,6 @@ json::object offline_control(const std::filesystem::path& root,const json::objec
  Store store(root/"journal.sqlite3");auto doc=load_control_document(root,store,false);ControlSettings settings(doc,[&](const json::object& next){try{atomic_write(root/"worker.json",json::serialize(next));}catch(...){throw ControlFailure(5,"Atomic settings persistence failed");}});
  auto action=text(request,"action",16);if(action=="set"||action=="reset"){
   auto values=action=="set"?request.at("values").as_object():reset_values(request);
-  if(auto* endpoint=values.if_contains("coordinator_url");endpoint&&*endpoint!=doc.at("coordinator_url"))throw std::runtime_error("Use setup.cmd -RePair for coordinator scope migration");
   settings.patch(values);
  }else if(action!="list"&&action!="get")throw std::runtime_error("Unknown config operation");return config_result(settings,request,doc,false);
 }

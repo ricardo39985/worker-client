@@ -37,7 +37,7 @@ json::object validate_control_config(json::object doc){
 }
 ControlSettings::ControlSettings(json::object doc,std::function<void(const json::object&)> persist):current_(validate_control_config(std::move(doc))),persist_(std::move(persist)){}
 json::object ControlSettings::current() const{std::lock_guard lock(mutex_);return current_;}
-json::object ControlSettings::patch(const json::object& values){std::lock_guard lock(mutex_);auto next=current_;if(values.empty())throw std::runtime_error("Empty update");for(const auto& [key,v]:values)put(next,std::string(key),v);next=validate_control_config(std::move(next));persist_(next);current_=next;return current_;}
+json::object ControlSettings::patch(const json::object& values){std::lock_guard lock(mutex_);auto next=current_;if(values.empty())throw std::runtime_error("Empty update");for(const auto& [key,v]:values)put(next,std::string(key),v);next=validate_control_config(std::move(next));if(next.at("coordinator_url")!=current_.at("coordinator_url"))throw std::runtime_error("Coordinator scope migration requires setup.cmd -RePair");persist_(next);current_=next;return current_;}
 json::object ControlSettings::reset(const std::vector<std::string>& names){if(names.empty())throw std::runtime_error("Name settings explicitly to reset");json::object values;auto defaults=control_defaults();for(const auto& n:names){known(n);values[n]=get(defaults,n);}return patch(values);}
 json::array ControlSettings::describe(const json::object& effective,bool live) const{std::lock_guard lock(mutex_);json::array rows;const auto defaults=control_defaults();for(const auto& s:settings){auto value=get(current_,s.name);rows.emplace_back(json::object{{"name",s.name},{"type",s.type},{"default",get(defaults,s.name)},{"current",value},{"effective",live?get(effective,s.name):json::value(nullptr)},{"live",s.hot},{"restart_required",live&&!s.hot&&value!=get(effective,s.name)}});}return rows;}
 json::object control_request(const std::vector<std::string>& a,const std::string& input){
@@ -75,7 +75,7 @@ std::string control_help(){return
  "  config set --stdin         Atomic flat-name JSON object from stdin\n"
  "  config reset NAME...       Reset only explicitly named settings\n"
  "  exit drain | exit stop     Finish jobs or explicitly cancel then exit\n"
- "  auth                       Pairing presence only; never retrieve secrets\n"
+ "  auth                       Pairing presence/public approval code; never secrets\n"
  "  console | logs | history   Open viewer, locate logs, recent outcomes\n"
  "  --offline                  Config/auth/logs only; requires stopped worker\n"
  "Exit codes: 0 success, 2 usage/validation, 3 unavailable/timeout, 4 denied, 5 I/O.\n"

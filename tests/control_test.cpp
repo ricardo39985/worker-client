@@ -38,7 +38,7 @@ TEST("multi setting validation and failed persistence never partially publish") 
  THROWS(failing.patch({{"operator.priority","low"},{"limits.cpu_threads",4}}));CHECK(failing.current()==original);
 }
 TEST("every configurable setting validates typed values and defaults are resettable") {
- auto doc=control_defaults();ControlSettings settings(doc,[](const json::object&){});
+ auto doc=control_defaults();doc["coordinator_url"]="https://example.test";ControlSettings settings(doc,[](const json::object&){});
  settings.patch({{"coordinator_url","https://example.test/"},{"storage_hosts",json::array{"storage.example.test"}},{"ffmpeg_path","C:\\approved\\ffmpeg.exe"},{"ffmpeg_sha256",std::string(64,'a')},{"limits.ram_mb",4096},{"limits.reserve_ram_mb",512},{"limits.scratch_mb",16384},{"limits.cpu_threads",4},{"limits.max_jobs",8},{"limits.vram_mb",0},{"operator.priority","backup"},{"operator.video_preference","preferred"},{"operator.image_preference","disabled"},{"operator.paused",true}});
  CHECK(text(settings.current(),"coordinator_url")=="https://example.test");
  CHECK(settings.describe(doc,true).size()==14);
@@ -58,6 +58,18 @@ TEST("unsafe fields values endpoints and command arguments fail closed") {
  THROWS(control_request({"exit"}));THROWS(control_request({"exit","anything"}));
  auto request=control_request({"status"});CHECK(validate_control_request(request)==request);request["path"]="../worker.json";THROWS(validate_control_request(request));
  THROWS(validate_control_request(json::object{{"schema",1},{"command","config"},{"action","get"},{"name","../credential.dpapi"}}));
+}
+TEST("coordinator scope changes cannot bypass setup archival or partially change preferences") {
+ auto doc=control_defaults();doc["coordinator_url"]="https://example.test";
+ ControlSettings settings(doc,[](const json::object&){});
+ settings.patch({{"coordinator_url","https://EXAMPLE.test:443/"}});CHECK(settings.current()==doc);
+ THROWS(settings.patch({{"coordinator_url","https://another.test"},{"operator.priority","low"}}));CHECK(settings.current()==doc);
+ THROWS(settings.reset({"coordinator_url","operator.priority"}));CHECK(settings.current()==doc);
+}
+TEST("all documented local commands survive JSON wire roundtrip with strict schema") {
+ const std::vector<std::vector<std::string>> commands{{"status"},{"pause"},{"drain"},{"resume"},{"auth"},{"console"},{"logs"},{"history"},{"exit","drain"},{"exit","stop"},{"config","list"},{"config","get","limits.vram_mb"},{"config","reset","operator.priority","limits.vram_mb"},{"config","set","--stdin"}};
+ for(const auto& args:commands){auto request=control_request(args,"{\"operator.priority\":\"low\"}");auto wire=parse(json::serialize(request)).as_object();CHECK(validate_control_request(wire)==request);}
+ CHECK(control_help().find("resume")!=std::string::npos);CHECK(control_help().find("--stdin")!=std::string::npos);
 }
 TEST("metadata separates desired effective and restart without claiming offline state") {
  auto original=control_defaults();ControlSettings settings(original,[](const json::object&){});

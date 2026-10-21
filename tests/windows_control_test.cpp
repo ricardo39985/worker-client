@@ -39,6 +39,24 @@ TEST("native pipe rejects anonymous caller duplicate server bad schema and unsaf
  const auto name=control_pipe_name(t.root);require(WaitNamedPipeW(name.c_str(),2000),"Wait for anonymous caller test");require(ImpersonateAnonymousToken(GetCurrentThread()),"Impersonate anonymous test client");HANDLE raw=CreateFileW(name.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_EXISTING,0,nullptr);const auto error=GetLastError();require(RevertToSelf(),"Restore test identity");Handle attempted(raw);CHECK(!attempted);CHECK(error==ERROR_ACCESS_DENIED);
  CHECK(control_call(t.root,control_request({"status"})).at("ok")==true);
 }
+TEST("native offline validation preserves legacy file and secrets are never retrieved"){
+ Workspace t;auto doc=control_defaults();doc.erase("operator");atomic_write(t.root/"worker.json",json::serialize(doc));
+ {Store store(t.root/"journal.sqlite3");store.set("priority","backup");}
+ const auto before=read_file(t.root/"worker.json");
+ THROWS(offline_control(t.root,control_request({"config","set","--stdin"},"{\"operator.priority\":\"low\",\"limits.max_jobs\":0}")));
+ CHECK(read_file(t.root/"worker.json")==before);
+ auto listed=offline_control(t.root,control_request({"config","list"}));CHECK(listed.at("live")==false);for(const auto& r:listed.at("settings").as_array())CHECK(r.as_object().at("effective").is_null());
+ CHECK(read_file(t.root/"worker.json")==before);
+ auto valid=offline_control(t.root,control_request({"config","set","--stdin"},"{\"operator.priority\":\"low\",\"limits.cpu_threads\":4}"));CHECK(valid.at("ok")==true);CHECK(load_config(t.root).budget.cpu_threads==4);
+ THROWS(offline_control(t.root,control_request({"resume"})));
+ THROWS(offline_control(t.root,control_request({"config","set","--stdin"},"{\"coordinator_url\":\"https://another.test\"}")));
+ atomic_write(t.root/"credential.dpapi","SENTINEL_PRIVATE_TOKEN_NOT_TO_RETRIEVE");auto auth=offline_control(t.root,control_request({"auth"}));CHECK(auth.at("credential_present")==true);CHECK(json::serialize(auth).find("SENTINEL")==std::string::npos);
+}
+TEST("native idle control client times out without blocking later authenticated callers"){
+ Workspace t;ControlPipe pipe(t.root,[](const json::object&){return json::object{{"schema",1},{"ok",true},{"exit_code",0}};});
+ const auto name=control_pipe_name(t.root);require(WaitNamedPipeW(name.c_str(),2000),"Wait for idle-client test");Handle idle(CreateFileW(name.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_EXISTING,0,nullptr));CHECK(idle);Sleep(2300);idle.reset();
+ CHECK(control_call(t.root,control_request({"status"})).at("ok")==true);
+}
 TEST("native unavailable control is bounded and never creates worker state"){
  Workspace t;auto start=monotonic_ms();THROWS(control_call(t.root,control_request({"resume"})));CHECK(monotonic_ms()-start<4000);CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));
 }

@@ -81,6 +81,18 @@ and floors the ratio at 100 percent. Transfer and verification continue to use
 exact byte totals. Stage generations make a retry reset explicit, and stages
 without a defensible total emit one written explanation rather than a percentage.
 
+## Local control CLI candidate
+
+`OrganizerWorkerCtl.exe` is a separate console client, not a controller launch
+path. An owner-SID authenticated, remote-rejecting named pipe reaches the existing
+controller across logon sessions without window messages or a public listener.
+Tray and CLI share typed handlers and one atomic configuration document; legacy
+SQLite hot preferences migrate once into `worker.json.operator`. Cold file values
+stay pending until an explicit restart; no active jobs are implicitly restarted.
+The viewer and its status files remain observational only. See [CLI reference](cli.md)
+and [verification gates](../verification/cli/REPORT.md); cross-session Windows
+acceptance and real jobs are distinct from portable tests or the idle fixture.
+
 ## Independent concurrent jobs
 
 One logical task is one job; a retry is a different attempt. An offer reserves

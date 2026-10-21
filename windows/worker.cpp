@@ -433,8 +433,6 @@ void Worker::apply_operator_settings(bool apply_pause){
 void Worker::update_settings(const json::object& values){
  std::lock_guard lock(control_mutex_);
  if(auto* paused=values.if_contains("operator.paused");paused&&paused->is_bool()&&!paused->as_bool()&&exit_requested_)throw std::runtime_error("Worker is exiting; restart it to resume");
- // Coordinator scope migration must archive through the existing setup policy.
- if(auto* endpoint=values.if_contains("coordinator_url");endpoint&&*endpoint!=settings_->current().at("coordinator_url"))throw std::runtime_error("Endpoint migration requires stopped-worker setup.cmd -RePair");
  settings_->patch(values);apply_operator_settings(values.contains("operator.paused"));
  state(paused_?"STATE PAUSED":"STATE RESUMED");report_state(paused_||!report_connected_?"paused":"accepting",paused_?"operator":report_connected_?"resumed":"coordinator offline");
 }
