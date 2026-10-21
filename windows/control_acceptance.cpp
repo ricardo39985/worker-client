@@ -1,5 +1,7 @@
 #include "offline_media.hpp"
 #include "control_pipe.hpp"
+#include "headless.hpp"
+#include "ow/control.hpp"
 #include <fstream>
 #include <map>
 namespace ow::win {
@@ -11,7 +13,7 @@ void fixture_child(const Config& c,const std::filesystem::path& dir,const std::v
  for(;;){if(auto code=child.exit_code()){require_fixture(*code==0,"Synthetic converter child failed");return;}if(monotonic_ms()>until)throw std::runtime_error("Synthetic converter child timeout");Sleep(50);}
 }
 }
-json::object OfflineMediaHarness::control_acceptance(Config config){
+json::object OfflineMediaHarness::control_acceptance(Config config,bool restart){
  require_fixture(!std::filesystem::exists(config.root),"Acceptance root must be new");
  require_fixture(config.ffmpeg.is_absolute()&&config.ffmpeg_sha256.size()==64&&sha256_file(config.ffmpeg)==config.ffmpeg_sha256,"Approved converter hash required");
  std::filesystem::create_directories(config.root);config.coordinator="https://fixture.invalid";config.storage_hosts={"fixture.invalid"};config.budget={2048,0,4096,4};config.vram_override_set=true;config.max_jobs=4;
@@ -26,6 +28,9 @@ json::object OfflineMediaHarness::control_acceptance(Config config){
  fixture_child(config,probe,{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",(probe/"result.mp4").wstring(),L"-f",L"null",L"-"});
  const auto source=config.root/"synthetic-source.mp4";
  fixture_child(config,config.root/"generate",{L"-nostdin",L"-v",L"error",L"-y",L"-f",L"lavfi",L"-i",L"testsrc2=size=1280x720:rate=30",L"-frames:v",L"3000",L"-c:v",L"libx264",L"-preset",L"ultrafast",L"-threads",L"1",source.wstring()});
+ if(restart){
+  {Store journal(config.root/"journal.sqlite3");}(void)public_pairing_key(config.root/"pairing-key.dpapi");auto record=json::serialize(json::object{{"coordinator_url",config.coordinator},{"approval_code","fixture-not-an-account"}});auto protected_record=protect(std::span(reinterpret_cast<const std::uint8_t*>(record.data()),record.size()));atomic_write(config.root/"credential.dpapi",std::string(reinterpret_cast<const char*>(protected_record.data()),protected_record.size()));validate_headless_identity(config.root);config.headless=true;
+ }
  std::mutex children_mutex;std::map<std::string,Handle> children;
  config.observe_child=[&](const std::string& id,std::uint32_t pid){std::lock_guard lock(children_mutex);children.emplace(id,Handle(OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,pid)));};
  auto worker=std::unique_ptr<Worker>(new Worker(config,true));worker->offline_source_=source;worker->offline_output_=config.root/"delivered";
@@ -42,7 +47,19 @@ json::object OfflineMediaHarness::control_acceptance(Config config){
  auto tick=[&]{refresh();worker->send_pending(send);if(monotonic_ms()>=next_renew){++renewal;lease("active-a","renew",renewal);lease("reserved-b","renew",renewal);next_renew=monotonic_ms()+1000;}require_fixture(monotonic_ms()<until,"Acceptance coordinator deadline expired");Sleep(50);};
  auto state=[&](const char* phase){atomic_write(config.root/"acceptance-state.json",json::serialize(json::object{{"fixture",true},{"real_coordinator",false},{"phase",phase},{"pid",GetCurrentProcessId()},{"session",[]{DWORD s{};ProcessIdToSessionId(GetCurrentProcessId(),&s);return s;}()},{"observed_at_utc_ms",utc_ms()}}));};
  auto wait=[&](const char* marker){while(!std::filesystem::exists(config.root/marker))tick();};
- refresh();worker->report_state("accepting","fake coordinator transport");state("ready");wait("start");
+ refresh();worker->report_state("accepting","fake coordinator transport");
+ if(restart){
+  offer("active-a");offer("reserved-b");lease("active-a","begin");require_fixture(last_reply.at("accepted").as_bool(),"Active BEGIN rejected");
+  for(;;){{std::lock_guard lock(children_mutex);if(children.contains("active-a"))break;}tick();}
+  auto reply=control_call(config.root,control_request("restart"));require_fixture(reply.at("ok").as_bool(),"Owner authenticated restart rejected");require_fixture(worker->paused()&&!worker->ready_to_exit(),"Restart did not fence live work");
+  {std::lock_guard lock(children_mutex);require_fixture(WaitForSingleObject(children.at("active-a").get(),0)==WAIT_TIMEOUT,"Restart terminated actual admitted child");}
+  require_fixture(!parse(read_file(config.root/"worker.json")).at("operator").at("paused").as_bool(),"Restart overwrote desired pause");lease("reserved-b","begin");require_fixture(!last_reply.at("accepted").as_bool(),"Reserved BEGIN accepted after restart fence");
+  while(!results.contains("active-a")||transmissions["active-a"]<2)tick();
+  auto result=results.at("active-a");require_fixture(text(result,"status",32)=="succeeded","Restarted job did not finish");const auto output=config.root/"delivered/active-a/result.mp4";const auto& metadata=result.at("output").as_object();require_fixture(sha256_file(output)==text(metadata,"sha256",64)&&std::filesystem::file_size(output)==number(metadata,"bytes",UINT64_MAX),"Delivered output hash/size mismatch");fixture_child(config,config.root/"coordinator-decode-restart",{L"-nostdin",L"-v",L"error",L"-xerror",L"-threads",L"1",L"-i",output.wstring(),L"-f",L"null",L"-"});
+  require_fixture(!worker->ready_to_exit(),"Restart exited with durable unacknowledged output");const auto sequence=number(result,"outbox_sequence",INT64_MAX);deliver({{"protocol",1},{"type","result_ack"},{"attempt_id","active-a"},{"outbox_sequence",sequence+1}});require_fixture(!worker->ready_to_exit(),"Wrong ACK allowed restart exit");deliver({{"protocol",1},{"type","result_ack"},{"attempt_id","active-a"},{"outbox_sequence",sequence}});while(!worker->ready_to_exit())tick();
+  require_fixture(worker->store_.unsettled_count()==0&&worker->active_count()==0,"Restart released capacity before terminal durable state");DWORD session{};ProcessIdToSessionId(GetCurrentProcessId(),&session);json::object report{{"fixture",true},{"real_coordinator",false},{"actual_typed_child",true},{"session",session},{"headless_existing_owner_dpapi",true},{"non_elevated",!elevated()},{"restart_admission_fenced",true},{"reserved_begin_rejected",true},{"child_completed_and_decoded",true},{"lease_renewals",renewal},{"outbox_transmissions",transmissions["active-a"]},{"wrong_ack_blocked_exit",true},{"matching_ack_permitted_exit",true},{"desired_pause_preserved",true},{"cold_boot_test",false},{"build_revision",OW_BUILD_REVISION}};atomic_write(config.root/"acceptance-result.json",json::serialize(report));return report;
+ }
+ state("ready");wait("start");
  offer("active-a");offer("reserved-b");lease("active-a","begin");require_fixture(last_reply.at("accepted").as_bool(),"BEGIN A rejected");
  for(;;){{std::lock_guard lock(children_mutex);if(children.contains("active-a"))break;}tick();}
  state("child-active");wait("paused");

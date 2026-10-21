@@ -1,0 +1,16 @@
+#include "platform.hpp"
+#include "control_pipe.hpp"
+#include "ow/protocol.hpp"
+#include <sddl.h>
+#include <iostream>
+// Test-only same-owner privilege reduction; never a product launch/credential path.
+// No account creation/logon, credentials, service or scheduled task.
+int wmain(int argc,wchar_t** argv){using namespace ow;using namespace ow::win;try{
+ if(argc!=4)throw std::runtime_error("Usage: limited-fixture-runner NEW_ROOT APPROVED_FFMPEG SHA256");
+ HANDLE raw{};require(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY|TOKEN_DUPLICATE|TOKEN_ASSIGN_PRIMARY,&raw),"Open own test token");Handle parent(raw);HANDLE reduced{};
+ PSID admin{};require(ConvertStringSidToSidW(L"S-1-5-32-544",&admin),"Test admin SID");SID_AND_ATTRIBUTES disabled{admin,0};auto ok=CreateRestrictedToken(parent.get(),DISABLE_MAX_PRIVILEGE,1,&disabled,0,nullptr,0,nullptr,&reduced);LocalFree(admin);require(ok,"Reduce own test token");Handle token(reduced);
+ TOKEN_ELEVATION e{};DWORD n{};require(GetTokenInformation(token.get(),TokenElevation,&e,sizeof(e),&n),"Read actual limited elevation");if(e.TokenIsElevated)throw std::runtime_error("Privilege reduction did not produce a normal token; acceptance is NOT established");
+ auto exe=executable_directory()/"ow_unattended_fixture.exe";std::wstring command=quote_windows_argument(exe.wstring());for(int i=1;i<argc;i++)command+=L" "+quote_windows_argument(argv[i]);STARTUPINFOW si{};si.cb=sizeof(si);PROCESS_INFORMATION pi{};
+ require(CreateProcessAsUserW(token.get(),exe.c_str(),command.data(),nullptr,nullptr,FALSE,0,nullptr,nullptr,&si,&pi),"Launch same-owner limited fixture");Handle process(pi.hProcess),thread(pi.hThread);if(process_owner_sid(process.get())!=process_owner_sid(GetCurrentProcess())||process_elevated(process.get()))throw std::runtime_error("Actual child owner/elevation mismatch");
+ if(WaitForSingleObject(process.get(),600000)!=WAIT_OBJECT_0)throw std::runtime_error("Fixture still pending at acceptance deadline; no forced process termination");DWORD code{};require(GetExitCodeProcess(process.get(),&code),"Read fixture outcome");return static_cast<int>(code);
+ }catch(const std::exception& e){std::cerr<<"LIMITED_FIXTURE_REJECTED: "<<e.what()<<"\n";return 1;}}

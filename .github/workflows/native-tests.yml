@@ -1,6 +1,11 @@
 name: Manual Windows contracts
 on:
   workflow_dispatch:
+    inputs:
+      run_unattended_media:
+        description: "Run synthetic restart with the already reviewed GPL FFmpeg lock (no production accounts/jobs)"
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -43,4 +48,14 @@ jobs:
         run: |
           $ErrorActionPreference='Stop'
           & ./tests/owner_context_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release')
+      - name: Actual limited-owner headless restart, DPAPI and admitted converter
+        if: ${{ inputs.run_unattended_media }}
+        shell: powershell
+        run: |
+          $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
+          $lock=Get-Content config/dependencies.lock.json -Raw|ConvertFrom-Json
+          $converter=Join-Path $env:RUNNER_TEMP 'ow-approved-ffmpeg.exe'
+          Invoke-WebRequest -Uri $lock.ffmpeg.url -OutFile $converter -UseBasicParsing
+          if((Get-Item $converter).Length -ne $lock.ffmpeg.bytes -or (Get-FileHash $converter -Algorithm SHA256).Hash -ine $lock.ffmpeg.sha256){throw 'Approved converter integrity failure'}
+          & ./tests/unattended_media_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release') -ApprovedFFmpeg $converter -ApprovedSha256 $lock.ffmpeg.sha256
 # Deliberately no push schedule, release, deployment, signing or production secrets.
