@@ -3,6 +3,19 @@
 [CmdletBinding()]param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
+# Public pre-execution boundary; launch callback permits security/persistence tests
+# without starting any engine/admin job or using real credentials.
+function Invoke-WorkerVerifiedImage {
+ param([string]$Root,[string[]]$ApprovedHashes,[string]$OwnerSid,[scriptblock]$Launch)
+ $c=Get-Content -LiteralPath (Join-Path $Root 'current.json') -Raw|ConvertFrom-Json
+ $directory=[IO.Path]::GetFullPath([string]$c.directory);$prefix=[IO.Path]::GetFullPath((Join-Path $Root 'versions'))+[IO.Path]::DirectorySeparatorChar
+ if(-not $directory.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){throw 'Version escaped root'}
+ $exe=Join-Path $directory 'OrganizerWorker.exe'
+ foreach($path in @($directory,$exe)){if((Get-Item -LiteralPath $path).Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Reparse leaf'}}
+ if((Get-FileHash -LiteralPath $exe).Hash -ine $c.sha256){throw 'Image hash differs'}
+ & $Launch $exe
+}
+if($MyInvocation.InvocationName -eq '.'){return}
 if($args.Count){throw 'Headless launcher accepts no arguments'}
 $i=[Security.Principal.WindowsIdentity]::GetCurrent();$p=New-Object Security.Principal.WindowsPrincipal($i)
 if($p.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -or $i.User.Value -in @('S-1-5-18','S-1-5-19','S-1-5-20')){throw 'Headless engine requires the normal LIMITED owner'}

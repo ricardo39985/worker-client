@@ -3,6 +3,7 @@
 #include "control_pipe.hpp"
 #include "headless.hpp"
 #include "owner_state.hpp"
+#include "owner_task.hpp"
 #include <sddl.h>
 #include <future>
 using namespace ow;using namespace ow::win;
@@ -67,6 +68,16 @@ TEST("native idle control client times out without blocking later authenticated 
 }
 TEST("native headless bootstrap fails closed without owner identity and never creates pairing or journal"){
  Workspace t;const auto before=read_file(t.root/"worker.json");CHECK(run_headless(t.root)==4);CHECK(read_file(t.root/"worker.json")==before);CHECK(!std::filesystem::exists(t.root/"credential.dpapi"));CHECK(!std::filesystem::exists(t.root/"pairing-key.dpapi"));CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));
+}
+TEST("machine bootstrap trust cannot be anchored in owner-writable state"){
+ Workspace w;auto file=w.root/"owner-writable-launch.ps1";atomic_write(file,"public synthetic code, no secret");THROWS(verify_protected_bootstrap_path(file));
+ wchar_t system[MAX_PATH]{};CHECK(GetSystemDirectoryW(system,MAX_PATH));verify_protected_bootstrap_path(std::filesystem::path(system)/"kernel32.dll");
+}
+TEST("owner task DACL must give effective non-inheritable full owner and System rights"){
+ auto sid=wide(process_owner_sid(GetCurrentProcess()));auto valid=L"D:P(A;;GA;;;"+sid+L")(A;;GA;;;SY)";validate_owner_task_security(valid);
+ THROWS(validate_owner_task_security(L"D:P(A;;0x00000000;;;"+sid+L")(A;;GA;;;SY)"));
+ THROWS(validate_owner_task_security(L"D:P(A;;GR;;;"+sid+L")(A;;GA;;;SY)"));
+ THROWS(validate_owner_task_security(L"D:P(A;IO;GA;;;"+sid+L")(A;;GA;;;SY)"));
 }
 TEST("native unattended state refuses broad write grants and absent keys never create an identity"){
  Workspace t;const auto key=t.root/"absent-key.dpapi";THROWS(existing_public_pairing_key(key));CHECK(!std::filesystem::exists(key));THROWS(sign_pairing_challenge(key,"fixture-only-challenge"));CHECK(!std::filesystem::exists(key));

@@ -30,12 +30,7 @@ struct Tasks {
  Tasks(){checked(CoCreateInstance(CLSID_TaskScheduler,nullptr,CLSCTX_INPROC_SERVER,IID_PPV_ARGS(&service)),"Task service unavailable");Variant empty;checked(service->Connect(empty.v,empty.v,empty.v,empty.v),"Task service connection denied");checked(service->GetFolder(Bstr(L"\\"),&folder),"Owner task folder unavailable");}
  ComPtr<IRegisteredTask> get(bool required=true){ComPtr<IRegisteredTask> t;auto r=folder->GetTask(Bstr(task_name()),&t);if(FAILED(r)){if(!required&&r==HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND))return {};throw ControlFailure(4,"Unattended task unavailable or unreadable: LOCAL secure enrollment/recovery required");}return t;}
 };
-void task_acl(IRegisteredTask* task){BSTR raw{};checked(task->GetSecurityDescriptor(DACL_SECURITY_INFORMATION,&raw),"Cannot inspect owner task ACL");auto s=take(raw);PSECURITY_DESCRIPTOR sd{};require(ConvertStringSecurityDescriptorToSecurityDescriptorW(s.c_str(),SDDL_REVISION_1,&sd,nullptr),"Read owner task ACL");
- try{BOOL present{},defaulted{};PACL acl{};if(!GetSecurityDescriptorDacl(sd,&present,&acl,&defaulted)||!present||!acl)throw ControlFailure(4,"Owner task has no restrictive DACL");bool have_owner=false,have_system=false;
-  for(DWORD n=0;n<acl->AceCount;n++){void* ptr{};require(GetAce(acl,n,&ptr),"Read task ACE");auto* header=static_cast<ACE_HEADER*>(ptr);if(header->AceType!=ACCESS_ALLOWED_ACE_TYPE)throw ControlFailure(4,"Unexpected task ACE; local review required");auto* ace=static_cast<ACCESS_ALLOWED_ACE*>(ptr);LPWSTR sid{};require(ConvertSidToStringSidW(&ace->SidStart,&sid),"Read task ACE owner");std::wstring value(sid);LocalFree(sid);if((ace->Mask&GENERIC_ALL)==0&&(ace->Mask&FILE_ALL_ACCESS)!=FILE_ALL_ACCESS)throw ControlFailure(4,"Owner task access is incomplete");if(value==owner())have_owner=true;else if(value==L"S-1-5-18")have_system=true;else throw ControlFailure(4,"Task grants another account access");}
-  if(!have_owner||!have_system)throw ControlFailure(4,"Task owner/System permissions missing");LocalFree(sd);
- }catch(...){LocalFree(sd);throw;}
-}
+void task_acl(IRegisteredTask* task){BSTR raw{};checked(task->GetSecurityDescriptor(DACL_SECURITY_INFORMATION,&raw),"Cannot inspect owner task ACL");validate_owner_task_security(take(raw));}
 LaunchTask expected(const std::filesystem::path& root){return {utf8(owner()),TaskLogon::password,true,true,true,true,0,{{utf8(powershell().wstring()),utf8(arguments(root)),utf8(root.wstring())}}};}
 void verify(Tasks& tasks,const std::filesystem::path& root,bool allow_pending=false){
  no_reparse(root);no_reparse(root/"unattended");no_reparse(root/"unattended/launch.ps1");no_reparse(root/"unattended/enrollment.json");

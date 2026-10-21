@@ -47,6 +47,7 @@ std::filesystem::path verified_owner_image(const std::filesystem::path& root,boo
 bool owner_bootstrap_enrolled(const std::filesystem::path& root){auto m=enrollment(root);return m&&text(*m,"state",16)=="enrolled";}
 void complete_owner_pairing(const std::filesystem::path& root){auto m=enrollment(root);if(m&&text(*m,"state",16)=="pairing_repair"){(*m)["state"]="enrolled";atomic_write(root/"unattended/enrollment.json",json::serialize(*m));}}
 void require_normal_owner(){auto sid=process_owner_sid(GetCurrentProcess());if(elevated()||sid=="S-1-5-18"||sid=="S-1-5-19"||sid=="S-1-5-20")throw ControlFailure(4,"Normal non-elevated owner token required; service/admin engine refused");}
+void verify_protected_bootstrap_path(const std::filesystem::path& path){verify_owner_state_path(path);}
 void verify_owner_state_path(const std::filesystem::path& path,bool private_identity){
  auto p=std::filesystem::absolute(path).lexically_normal();if(p.wstring().starts_with(L"\\\\"))throw ControlFailure(4,"Owner state must be a local per-machine path");
  const auto user=process_owner_sid(GetCurrentProcess());bool ancestor=false;

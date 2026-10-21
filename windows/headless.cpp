@@ -2,6 +2,7 @@
 #include "pairing_adapter.hpp"
 #include "control_pipe.hpp"
 #include "owner_state.hpp"
+#include "ow/secret_origin.hpp"
 namespace ow::win {
 void validate_headless_identity(const std::filesystem::path& root){
  require_normal_owner();
@@ -10,9 +11,10 @@ void validate_headless_identity(const std::filesystem::path& root){
   verify_owner_state_path(p,p.filename()=="credential.dpapi"||p.filename()=="pairing-key.dpapi");
  }
  auto cfg=load_config(root);ProtectedPairingSecrets secrets(root);auto saved=secrets.read(SecretSlot::credential);if(!saved)throw std::runtime_error("Existing owner credential is required");
- try{auto record=parse(*saved).as_object();if(text(record,"coordinator_url",1024)!=cfg.coordinator)throw std::runtime_error("Existing identity scope differs");}
- catch(...){SecureZeroMemory(saved->data(),saved->size());throw;}
- SecureZeroMemory(saved->data(),saved->size());(void)existing_public_pairing_key(root/"pairing-key.dpapi");
+ struct SavedWiper {std::string& value;~SavedWiper(){SecureZeroMemory(value.data(),value.size());}} saved_wiper{*saved};
+ std::vector<unsigned char> workspace(2*1024*1024);
+ if(consume_secret_origin(*saved,workspace)!=cfg.coordinator)throw std::runtime_error("Existing identity scope differs");
+ (void)existing_public_pairing_key(root/"pairing-key.dpapi");
 }
 int run_headless(const std::filesystem::path& root) noexcept {
  try{
