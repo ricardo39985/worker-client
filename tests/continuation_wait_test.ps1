@@ -2,6 +2,7 @@ param([Parameter(Mandatory=$true)][string]$Bootstrap,[UInt64]$OldProcessHandle,[
 Set-StrictMode -Version Latest;$ErrorActionPreference='Stop'
 $pin=[pscustomobject]@{handle=$OldProcessHandle;pid=$ExpectedPid;started=$ExpectedStartedTicks}
 . $Bootstrap
+Initialize-WorkerBootstrapInterop
 if($ApprovedImageHash -cnotmatch '\A[a-f0-9]{64}\z'){throw 'Test-only exact approved image hash required'}
 [IO.File]::WriteAllText($ReadyFile,'public test-only waiter ready')
 try{
