@@ -2,6 +2,7 @@ $ErrorActionPreference='Stop'
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot '../scripts/worker-launch-policy.ps1')
 . (Join-Path $PSScriptRoot '../scripts/worker-package.ps1')
+. (Join-Path $PSScriptRoot '../scripts/worker-swap.ps1')
 function Check([bool]$Value,[string]$Reason){if(-not $Value){throw $Reason}}
 # Public SID adapter, not a task/credential or shell executor.
 function Test-WorkerAccountSid([string]$Account,[string]$ExpectedSid){return $Account -ceq $ExpectedSid}
@@ -25,10 +26,12 @@ try{
  $files=[ordered]@{};foreach($name in $names){$path=Join-Path $package $name;[IO.File]::WriteAllText($path,('fixture-'+$name),(New-Object Text.UTF8Encoding($false)));$files[$name]=(Get-FileHash $path -Algorithm SHA256).Hash.ToLowerInvariant()}
  $manifest=[ordered]@{schema=2;revision=('a'*40);files=$files};[IO.File]::WriteAllText((Join-Path $package 'package.json'),($manifest|ConvertTo-Json -Depth 5));[IO.File]::WriteAllText((Join-Path $package 'source-revision.txt'),('a'*40))
  $manifestSha=(Get-FileHash (Join-Path $package 'package.json') -Algorithm SHA256).Hash.ToLowerInvariant();$info=Read-WorkerValidatedPackage $package $manifestSha
- Invoke-WorkerPackageUpdate -Root $installed -Package $package -Info $info -Verify {param($m)foreach($name in @('OrganizerWorkerTray.exe','start-headless.ps1')){if(-not (Test-Path (Join-Path $m.directory $name))){throw 'Headless file not published'}}}|Out-Null
+ $old=Join-Path $installed 'versions/old';[IO.Directory]::CreateDirectory($old)|Out-Null;[IO.File]::WriteAllText((Join-Path $old 'OrganizerWorker.exe'),'old-fixture');[IO.File]::WriteAllText((Join-Path $installed 'current.json'),(@{schema=1;directory=$old;sha256=(Get-FileHash (Join-Path $old 'OrganizerWorker.exe')).Hash.ToLowerInvariant()}|ConvertTo-Json))
+ Invoke-WorkerPackageUpdate -Root $installed -Package $package -PackageManifestSha256 $manifestSha -StopWorker {} -StartWorker {} -VerifyWorker {$m=Get-Content (Join-Path $installed 'current.json') -Raw|ConvertFrom-Json;foreach($name in @('OrganizerWorkerTray.exe','start-headless.ps1')){if(-not (Test-Path (Join-Path $m.directory $name))){throw 'Headless file not published'}}}|Out-Null
  $current=Get-Content (Join-Path $installed 'current.json') -Raw|ConvertFrom-Json
  Check ((Get-FileHash (Join-Path $current.directory 'OrganizerWorkerTray.exe')).Hash -ieq $files['OrganizerWorkerTray.exe']) 'Published tray bytes changed'
  [IO.File]::AppendAllText((Join-Path $package 'OrganizerWorkerTray.exe'),'tamper');$threw=$false;try{Read-WorkerValidatedPackage $package $manifestSha|Out-Null}catch{$threw=$true};Check $threw 'Tampered headless tray accepted'
+ [IO.File]::WriteAllText((Join-Path $package 'OrganizerWorkerTray.exe'),'fixture-OrganizerWorkerTray.exe',(New-Object Text.UTF8Encoding($false)))
  Remove-Item (Join-Path $package 'start-headless.ps1');$threw=$false;try{Read-WorkerValidatedPackage $package $manifestSha|Out-Null}catch{$threw=$true};Check $threw 'Incomplete headless package accepted'
  Check ((Get-FileHash (Join-Path $current.directory 'OrganizerWorkerTray.exe')).Hash -ieq $files['OrganizerWorkerTray.exe']) 'Candidate tampering changed immutable live version'
 }finally{Remove-Item -LiteralPath $temp -Recurse -Force}

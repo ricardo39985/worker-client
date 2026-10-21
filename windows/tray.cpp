@@ -2,6 +2,7 @@
 #include "control_pipe.hpp"
 #include "headless.hpp"
 #include "owner_task.hpp"
+#include "owner_state.hpp"
 #include <shellapi.h>
 #include <memory>
 #include <algorithm>
@@ -57,7 +58,7 @@ int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,PWSTR command,int){
   if(elevated())throw std::runtime_error("Run the worker as your normal Windows user, not Administrator. Setup can install build tools separately.");
   USEROBJECTFLAGS station{};DWORD length=0;if(!GetUserObjectInformationW(GetProcessWindowStation(),UOI_FLAGS,&station,sizeof(station),&length)||!(station.dwFlags&WSF_VISIBLE))throw std::runtime_error("No interactive Windows desktop. SSH can install/update; launch the worker from the signed-in desktop or its interactive logon task.");
   root=data_directory();
-  if(std::filesystem::exists(root/"unattended/enrollment.json")){
+  if(owner_bootstrap_enrolled(root)){
    auto status=owner_lifecycle(root,false,600000);if(status.at("lifecycle_ready")!=true)return 3;
    auto exe=executable_directory()/"OrganizerWorkerTray.exe";auto line=quote_windows_argument(exe.wstring());STARTUPINFOW si{};si.cb=sizeof(si);PROCESS_INFORMATION pi{};require(CreateProcessW(exe.c_str(),line.data(),nullptr,nullptr,FALSE,0,nullptr,root.c_str(),&si,&pi),"Attach enrolled owner tray");CloseHandle(pi.hProcess);CloseHandle(pi.hThread);return 0;
   }

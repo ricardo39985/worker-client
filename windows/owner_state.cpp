@@ -9,6 +9,8 @@ std::filesystem::path verified_owner_image(const std::filesystem::path& root,boo
  verify_owner_state_path(root/"current.json");auto m=parse(read_file(root/"current.json")).as_object();if(number(m,"schema",1)!=1)throw ControlFailure(4,"Unknown owner install manifest");auto dir=std::filesystem::path(wide(text(m,"directory"))).lexically_normal();auto allowed=(std::filesystem::absolute(root).lexically_normal()/"versions").wstring()+L"\\";if(!dir.is_absolute()||dir.wstring().size()<=allowed.size()||_wcsnicmp(dir.c_str(),allowed.c_str(),allowed.size())!=0)throw ControlFailure(4,"Selected image escapes installed owner versions");
  auto exe=dir/"OrganizerWorker.exe";verify_owner_state_path(exe);auto digest=text(m,"sha256",64);if(digest.size()!=64||digest.find_first_not_of("0123456789abcdef")!=std::string::npos||(hash&&sha256_file(exe)!=digest))throw ControlFailure(4,"Actual selected executable hash differs");return exe;
 }
+bool owner_bootstrap_enrolled(const std::filesystem::path& root){return std::filesystem::exists(root/"unattended/enrollment.json");}
+void complete_owner_pairing(const std::filesystem::path&){}
 void require_normal_owner(){auto sid=process_owner_sid(GetCurrentProcess());if(elevated()||sid=="S-1-5-18"||sid=="S-1-5-19"||sid=="S-1-5-20")throw ControlFailure(4,"Normal non-elevated owner token required; service/admin engine refused");}
 void verify_owner_state_path(const std::filesystem::path& path,bool private_identity){
  auto p=std::filesystem::absolute(path).lexically_normal();for(auto q=p;;){auto a=GetFileAttributesW(q.c_str());if(a==INVALID_FILE_ATTRIBUTES||(a&FILE_ATTRIBUTE_REPARSE_POINT))throw ControlFailure(4,"Missing or reparse owner state path");auto parent=q.parent_path();if(parent==q||parent.empty())break;q=std::move(parent);}
