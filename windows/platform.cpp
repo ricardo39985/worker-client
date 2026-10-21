@@ -17,7 +17,8 @@ std::string utf8(const std::wstring& s){if(s.empty())return {};int n=WideCharToM
 Tick monotonic_ms(){return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();}
 std::int64_t utc_ms(){return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();}
 std::filesystem::path data_directory(){PWSTR p=nullptr;HRESULT hr=SHGetKnownFolderPath(FOLDERID_LocalAppData,0,nullptr,&p);if(FAILED(hr))fail("Locate LocalAppData",static_cast<DWORD>(hr));std::filesystem::path out=std::filesystem::path(p)/"OrganizerWorker";CoTaskMemFree(p);return out;}
-std::filesystem::path executable_directory(){std::wstring p(32768,0);DWORD n=GetModuleFileNameW(nullptr,p.data(),static_cast<DWORD>(p.size()));if(!n||n>=p.size())fail("Locate executable");p.resize(n);return std::filesystem::path(p).parent_path();}
+std::filesystem::path executable_path(){std::wstring p(32768,0);DWORD n=GetModuleFileNameW(nullptr,p.data(),static_cast<DWORD>(p.size()));if(!n||n>=p.size())fail("Locate executable");p.resize(n);return std::filesystem::path(p);}
+std::filesystem::path executable_directory(){return executable_path().parent_path();}
 std::string read_file(const std::filesystem::path& p,std::size_t limit){
  std::ifstream f(p,std::ios::binary);if(!f)throw std::runtime_error("Cannot read local file");f.seekg(0,std::ios::end);auto size=f.tellg();if(size<0||static_cast<std::uint64_t>(size)>limit)throw std::runtime_error("Local file exceeds size limit");f.seekg(0);std::string out(static_cast<std::size_t>(size),0);if(!out.empty()&&!f.read(out.data(),static_cast<std::streamsize>(out.size())))throw std::runtime_error("Local file read failed");return out;
 }

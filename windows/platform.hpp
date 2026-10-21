@@ -29,6 +29,7 @@ std::wstring wide(const std::string&);
 std::string utf8(const std::wstring&);
 Tick monotonic_ms();std::int64_t utc_ms();
 std::filesystem::path data_directory();
+std::filesystem::path executable_path();
 std::filesystem::path executable_directory();
 std::string read_file(const std::filesystem::path&,std::size_t limit=256*1024);
 void atomic_write(const std::filesystem::path&,const std::string&);

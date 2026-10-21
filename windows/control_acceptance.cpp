@@ -29,7 +29,7 @@ json::object OfflineMediaHarness::control_acceptance(Config config,bool restart)
  const auto source=config.root/"synthetic-source.mp4";
  fixture_child(config,config.root/"generate",{L"-nostdin",L"-v",L"error",L"-y",L"-f",L"lavfi",L"-i",L"testsrc2=size=1280x720:rate=30",L"-frames:v",L"3000",L"-c:v",L"libx264",L"-preset",L"ultrafast",L"-threads",L"1",source.wstring()});
  if(restart){
-  {Store journal(config.root/"journal.sqlite3");}(void)public_pairing_key(config.root/"pairing-key.dpapi");auto record=json::serialize(json::object{{"coordinator_url",config.coordinator},{"approval_code","fixture-not-an-account"}});auto protected_record=protect(std::span(reinterpret_cast<const std::uint8_t*>(record.data()),record.size()));atomic_write(config.root/"credential.dpapi",std::string(reinterpret_cast<const char*>(protected_record.data()),protected_record.size()));validate_headless_identity(config.root);config.headless=true;
+  {Store journal(config.root/"journal.sqlite3");}(void)public_pairing_key(config.root/"pairing-key.dpapi");auto record=json::serialize(json::object{{"coordinator_url",config.coordinator},{"approval_code","fixture-not-an-account"}});auto protected_record=protect(record);atomic_write(config.root/"credential.dpapi",protected_record);validate_headless_identity(config.root);config.headless=true;
  }
  std::mutex children_mutex;std::map<std::string,Handle> children;
  config.observe_child=[&](const std::string& id,std::uint32_t pid){std::lock_guard lock(children_mutex);children.emplace(id,Handle(OpenProcess(SYNCHRONIZE|PROCESS_QUERY_LIMITED_INFORMATION,FALSE,pid)));};
@@ -51,7 +51,7 @@ json::object OfflineMediaHarness::control_acceptance(Config config,bool restart)
  if(restart){
   offer("active-a");offer("reserved-b");lease("active-a","begin");require_fixture(last_reply.at("accepted").as_bool(),"Active BEGIN rejected");
   for(;;){{std::lock_guard lock(children_mutex);if(children.contains("active-a"))break;}tick();}
-  auto reply=control_call(config.root,control_request("restart"));require_fixture(reply.at("ok").as_bool(),"Owner authenticated restart rejected");require_fixture(worker->paused()&&!worker->ready_to_exit(),"Restart did not fence live work");
+  auto reply=control_call(config.root,control_request({"restart"}));require_fixture(reply.at("ok").as_bool(),"Owner authenticated restart rejected");require_fixture(worker->paused()&&!worker->ready_to_exit(),"Restart did not fence live work");
   {std::lock_guard lock(children_mutex);require_fixture(WaitForSingleObject(children.at("active-a").get(),0)==WAIT_TIMEOUT,"Restart terminated actual admitted child");}
   require_fixture(!parse(read_file(config.root/"worker.json")).at("operator").at("paused").as_bool(),"Restart overwrote desired pause");lease("reserved-b","begin");require_fixture(!last_reply.at("accepted").as_bool(),"Reserved BEGIN accepted after restart fence");
   while(!results.contains("active-a")||transmissions["active-a"]<2)tick();

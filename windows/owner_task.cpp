@@ -59,7 +59,7 @@ json::object inspect_owner_task(const std::filesystem::path& root){Tasks tasks;v
 json::object enroll_owner_task(const std::filesystem::path& root){
  DWORD session{};require(ProcessIdToSessionId(GetCurrentProcessId(),&session),"Read enrollment session");USEROBJECTFLAGS station{};DWORD length{};
  if(!session||!elevated()||!GetUserObjectInformationW(GetProcessWindowStation(),UOI_FLAGS,&station,sizeof(station),&length)||!(station.dwFlags&WSF_VISIBLE))throw ControlFailure(4,"Enrollment requires LOCAL Windows owner UI, elevated for boot-task registration only; never SSH/credentials in arguments");
- no_reparse(root);for(const auto& name:{"worker.json","credential.dpapi","pairing-key.dpapi","journal.sqlite3"})no_reparse(root/name);
+ no_reparse(root);auto selected=verified_owner_image(root);if(_wcsicmp(selected.parent_path().c_str(),executable_directory().c_str())!=0)throw ControlFailure(4,"Enroll only from the installed selected version, never staging/old companion binaries");for(const auto& name:{"worker.json","credential.dpapi","pairing-key.dpapi","journal.sqlite3"})no_reparse(root/name);
  const auto source=executable_directory()/"start-headless.ps1";no_reparse(source);if(sha256_file(source)!=OW_HEADLESS_LAUNCHER_SHA256)throw ControlFailure(4,"Reviewed packaged headless launcher required");
  Tasks tasks;auto existing=tasks.get(false);if(existing)verify(tasks,root,true); // never overwrite an unknown/preexisting task
  const auto directory=root/"unattended";create_private_directory(directory);const auto launcher=directory/"launch.ps1";
@@ -87,7 +87,7 @@ json::object enroll_owner_task(const std::filesystem::path& root){
  verify(tasks,root);auto r=result();r["enrolled"]=true;r["cold_boot_verified"]=false;r["credential_stored_by_windows"]=true;r["owner_step"]= "Run start/restart for in-context checks; fresh approved boot acceptance remains pending";return r;
 }
 json::object owner_lifecycle(const std::filesystem::path& root,bool restart,Tick timeout){
- no_reparse(root);Handle lock(CreateFileW((root/"lifecycle.lock").c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr));if(!lock)throw ControlFailure(3,"Another owner lifecycle operation is in progress");
+ no_reparse(root);auto lock_path=root/"lifecycle.lock";auto attrs=GetFileAttributesW(lock_path.c_str());if(attrs!=INVALID_FILE_ATTRIBUTES)no_reparse(lock_path);else if(GetLastError()!=ERROR_FILE_NOT_FOUND)throw ControlFailure(4,"Cannot inspect lifecycle serialization path");Handle lock(CreateFileW(lock_path.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr));if(!lock)throw ControlFailure(3,"Another owner lifecycle operation is in progress");
  struct Host final:LifecycleHost{
   std::filesystem::path root;Tasks tasks;json::object last;Handle old;bool verified{};std::uint32_t verified_pid{};std::int64_t verified_started{};std::string verified_hash;
   bool restarting{};Tick deadline{};explicit Host(std::filesystem::path p,bool restart,Tick timeout):root(std::move(p)),restarting(restart),deadline(monotonic_ms()+timeout){}
