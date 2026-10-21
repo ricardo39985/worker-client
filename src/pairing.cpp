@@ -8,7 +8,9 @@
 namespace ow {
 void validate_worker_credential(const json::object& value){
  const auto* token=value.if_contains("token");
- if(!token||!token->is_string()||token->as_string().empty()||token->as_string().size()>4096||std::any_of(token->as_string().begin(),token->as_string().end(),[](unsigned char c){return c<=32||c>=127;}))throw PairingActionRequired("Invalid saved worker credential; explicit repair required.");
+ if(!token||!token->is_string())throw PairingActionRequired("Saved worker credential has no valid token field; explicit repair required.");
+ if(token->as_string().empty()||token->as_string().size()>4096)throw PairingActionRequired("Saved worker credential token length is invalid; explicit repair required.");
+ if(std::any_of(token->as_string().begin(),token->as_string().end(),[](unsigned char c){return c<=32||c>=127;}))throw PairingActionRequired("Saved worker credential token contains unsupported bytes; explicit repair required.");
  if(!safe_id(text(value,"worker_id",128)))throw PairingActionRequired("Invalid saved worker identity; explicit repair required.");
 }
 void bind_journal_origin(Store& store,const std::string& endpoint,const std::optional<std::string>& proven) {

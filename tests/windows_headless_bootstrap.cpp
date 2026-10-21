@@ -4,6 +4,7 @@
 #include "control_pipe.hpp"
 #include "ow/control.hpp"
 #include "ow/protocol.hpp"
+#include "ow/pairing.hpp"
 #include "ow/store.hpp"
 #include <sddl.h>
 namespace ow::win {
@@ -30,7 +31,7 @@ void headless_bootstrap_acceptance(const std::filesystem::path& ffmpeg,const std
  struct OwnedRoot {std::filesystem::path path;~OwnedRoot(){std::error_code error;std::filesystem::remove_all(path,error);}} owned_root{root};
  const auto version=root/"versions/bootstrap-fixture";std::filesystem::create_directories(version);const auto exe=version/"OrganizerWorker.exe";std::filesystem::copy_file(source,exe);atomic_write(root/"current.json",json::serialize(json::object{{"schema",1},{"directory",utf8(version.wstring())},{"sha256",sha256_file(exe)}}));
  auto doc=control_defaults();doc["coordinator_url"]="https://fixture.invalid";doc["storage_hosts"]=json::array{"fixture.invalid"};doc["ffmpeg_path"]=utf8(ffmpeg.wstring());doc["ffmpeg_sha256"]=digest;doc["limits"]=json::object{{"ram_mb",2048},{"reserve_ram_mb",0},{"scratch_mb",4096},{"cpu_threads",2},{"max_jobs",2},{"vram_mb",0}};atomic_write(root/"worker.json",json::serialize(doc));atomic_write(root/"instance.lock","");
- {Store journal(root/"journal.sqlite3");journal.set("coordinator_origin","https://fixture.invalid");}(void)public_pairing_key(root/"pairing-key.dpapi");const auto key=sha256_file(root/"pairing-key.dpapi");const auto record=protect(json::serialize(json::object{{"coordinator_url","https://fixture.invalid"},{"worker_id","fixture-worker"},{"token","fixture-not-an-account"}}));atomic_write(root/"credential.dpapi","corrupt-fixture-dpapi");
+ {Store journal(root/"journal.sqlite3");journal.set("coordinator_origin","https://fixture.invalid");}(void)public_pairing_key(root/"pairing-key.dpapi");const auto key=sha256_file(root/"pairing-key.dpapi");const auto credential_json=json::serialize(json::object{{"coordinator_url","https://fixture.invalid"},{"worker_id","fixture-worker"},{"token","fixture-not-an-account"}});const auto record=protect(credential_json);{auto reopened=unprotect(record);try{validate_worker_credential(parse(reopened).as_object());}catch(...){SecureZeroMemory(reopened.data(),reopened.size());throw;}SecureZeroMemory(reopened.data(),reopened.size());}atomic_write(root/"credential.dpapi","corrupt-fixture-dpapi");
  {Engine corrupt(exe,root);check(corrupt.outcome()==4,"Corrupt DPAPI must fail without UI or implicit pairing");check(sha256_file(root/"pairing-key.dpapi")==key,"Rejected DPAPI changed identity");}atomic_write(root/"credential.dpapi",protect(json::serialize(json::object{{"coordinator_url","https://fixture.invalid"},{"worker_id","fixture-worker"}})));{Engine invalid_credential(exe,root);check(invalid_credential.outcome()==4,"Malformed saved credential must not silently begin app pairing");check(sha256_file(root/"pairing-key.dpapi")==key,"Invalid credential changed identity");}atomic_write(root/"credential.dpapi",record);
  std::filesystem::rename(root/"pairing-key.dpapi",root/"fixture-saved-key");{Engine absent(exe,root);check(absent.outcome()==4,"Missing key must reject");check(!std::filesystem::exists(root/"pairing-key.dpapi"),"Missing key silently regenerated");}std::filesystem::rename(root/"fixture-saved-key",root/"pairing-key.dpapi");
  // Independent failure collection: a backend failure MUST fail the whole gate,
