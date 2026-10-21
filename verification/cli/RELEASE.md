@@ -1,4 +1,14 @@
-# PR8 release continuation — source green, rollout waiting for owner Exit
+# PR8 release — BOTH PCs upgraded; production jobs not tested
+
+**Current 2026-10-21 11:48 UTC:** both PCs are independently verified on the SAME
+source529ec104 artifact, correct non-elevated owner/session1, real probes passed,
+coordinator connected, processing ready, unpaused and accepting. Actual SSH0 CLI
+and config readback passed; all release tasks removed. Latest explicit idle-stop
+authority superseded the earlier owner-tray-only blocker. Full actual stop/race,
+artifact, per-PC verification and cleanup evidence: [IDLE-STOP-RELEASE.md](IDLE-STOP-RELEASE.md).
+Real coordinator-accepted job per PC remains **NOT TESTED**; no public workflow
+or charge was invented. The earlier blocker section below is retained historical
+context, not the current outcome.
 
 Rick authorized: **When it is green, merge and deploy on both machines.** This
 supersedes the historical build/test-only boundary, not any safety gate. No
@@ -45,7 +55,7 @@ All completed owned acceptance/build tasks were removed and absence verified.
   `df8389fa247318e07754aaf271eb30965ea1b18c7a396f0c58a79e871e029aa1`.
 - Four executables plus `cli.md`; companion hashes are in `79-merged-package.json`.
 
-## Per-PC rollout: NOT DEPLOYED
+## Historical pre-upgrade blocker at 05:01 UTC (resolved at 11:48)
 
 At 2026-10-21 05:01 UTC both PCs still selected and ran the old worker
 `88d521957987929f3423814a41121f452f7cf58c6760ce9e68be69928a2f8de9`:
@@ -75,5 +85,6 @@ identity/settings. Do not blind-reinstall or replace files by hand.
 
 Real coordinator-accepted nondestructive jobs on each PC remain **NOT TESTED**.
 No authorized production fixture was identified and no public post, backend
-activity or charge was invented to make that check green. Overall rollout is
-**BLOCKED / NOT COMPLETE**, despite all declared pre-merge source gates passing.
+activity or charge was invented to make that check green. At that historical checkpoint rollout was **BLOCKED / NOT COMPLETE** despite
+pre-merge gates passing. The later authorized continuation resolved it and
+verified BOTH installations; production-job acceptance remains separate.

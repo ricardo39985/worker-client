@@ -1,0 +1,79 @@
+{
+    "ok":  true,
+    "worker_pid":  16628,
+    "owner_sid":  "S-1-5-21-2018316448-104147440-857418166-1001",
+    "session":  1,
+    "elevated":  false,
+    "acquisition_gate":  "all_worker_threads_suspended_then_two_readonly_zero_journal_checks_and_native_child_snapshot",
+    "frozen_ms":  62,
+    "targeted_idle_worker_terminated":  true,
+    "console_exited_naturally":  true,
+    "audit":  [
+                  {
+                      "at_utc":  "2026-10-21T11:38:44.0915689Z",
+                      "reserved":  0,
+                      "running":  0,
+                      "pending":  0,
+                      "outbox":  0,
+                      "paused":  false,
+                      "worker_pid":  16628,
+                      "console_pids":  [
+                                           18992
+                                       ],
+                      "tcp_state_counts":  [
+                                               {
+                                                   "Name":  "Bound",
+                                                   "Count":  1
+                                               },
+                                               {
+                                                   "Name":  "Established",
+                                                   "Count":  1
+                                               }
+                                           ]
+                  },
+                  {
+                      "at_utc":  "2026-10-21T11:38:46.3580117Z",
+                      "reserved":  0,
+                      "running":  0,
+                      "pending":  0,
+                      "outbox":  0,
+                      "paused":  false,
+                      "worker_pid":  16628,
+                      "console_pids":  [
+                                           18992
+                                       ],
+                      "tcp_state_counts":  [
+                                               {
+                                                   "Name":  "Bound",
+                                                   "Count":  1
+                                               },
+                                               {
+                                                   "Name":  "Established",
+                                                   "Count":  1
+                                               }
+                                           ]
+                  },
+                  {
+                      "at_utc":  "2026-10-21T11:38:48.6411567Z",
+                      "reserved":  0,
+                      "running":  0,
+                      "pending":  0,
+                      "outbox":  0,
+                      "paused":  false,
+                      "worker_pid":  16628,
+                      "console_pids":  [
+                                           18992
+                                       ],
+                      "tcp_state_counts":  [
+                                               {
+                                                   "Name":  "Bound",
+                                                   "Count":  1
+                                               },
+                                               {
+                                                   "Name":  "Established",
+                                                   "Count":  1
+                                               }
+                                           ]
+                  }
+              ]
+}

@@ -1,0 +1,6 @@
+2026-10-21 11:39:51.639Z WORKER STARTED | counts since this process; H for last 10 outcomes
+2026-10-21 11:39:51.653Z PROBE START
+2026-10-21 11:43:00.325Z PROBE RESULT app_video=1 app_image=1 video=1 image=1 encoders=cpu,qsv,amf
+2026-10-21 11:43:00.325Z PROBE DEVICES schedulable GPUs=2
+2026-10-21 11:43:00.325Z PROBE SCOPE startup samples only; job support may vary
+2026-10-21 11:43:00.654Z STATE CONNECTED

@@ -1,0 +1,30 @@
+{
+  "observed_utc": "2026-10-21T11:48:06.7022838Z",
+  "client_session": 0,
+  "owner_sid": "S-1-5-21-3947802441-3242602464-3093035390-1001",
+  "worker_session": 1,
+  "pid": 19664,
+  "agent_version": "0.1.2",
+  "source": "529ec104931a17ad4997771bb8bfad2eca5bcd2d",
+  "current": {
+    "schema": 1,
+    "directory": "C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-df8389fa247318e0",
+    "sha256": "df8389fa247318e07754aaf271eb30965ea1b18c7a396f0c58a79e871e029aa1"
+  },
+  "live_path": "C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-df8389fa247318e0\\OrganizerWorker.exe",
+  "live_sha256": "df8389fa247318e07754aaf271eb30965ea1b18c7a396f0c58a79e871e029aa1",
+  "connected": true,
+  "paused": false,
+  "accepting": true,
+  "processing_ready": true,
+  "admission_reason": "ready_subject_to_offer_resources",
+  "active_count": 0,
+  "reserved": {
+    "ram_mb": 0,
+    "scratch_mb": 0,
+    "cpu_threads": 0
+  },
+  "pending_results": 0,
+  "owned_tasks": [],
+  "ffmpeg_count": 0
+}

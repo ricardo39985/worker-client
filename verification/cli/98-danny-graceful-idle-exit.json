@@ -1,0 +1,183 @@
+{
+    "ok":  true,
+    "action":  "drain-exit",
+    "graceful_exit":  true,
+    "audit":  [
+                  {
+                      "at_utc":  "2026-10-21T11:22:43.3665596Z",
+                      "worker_pid":  17192,
+                      "owner_sid":  "S-1-5-21-3947802441-3242602464-3093035390-1001",
+                      "session":  1,
+                      "elevated":  false,
+                      "children":  [
+                                       {
+                                           "ProcessId":  18408,
+                                           "ParentProcessId":  17192,
+                                           "Name":  "OrganizerWorkerConsole.exe"
+                                       },
+                                       {
+                                           "ProcessId":  18416,
+                                           "ParentProcessId":  18408,
+                                           "Name":  "conhost.exe"
+                                       }
+                                   ],
+                      "ffmpeg_count":  0,
+                      "maintenance":  [
+
+                                      ],
+                      "reserved":  0,
+                      "running":  0,
+                      "pending":  0,
+                      "outbox":  0,
+                      "journal_paused":  true,
+                      "status_age_s":  26.7413405,
+                      "state":  "  state      paused                   since 21:23:42 (operator)",
+                      "capacity":  [
+
+                                   ],
+                      "tcp_state_counts":  [
+                                               {
+                                                   "Name":  "Bound",
+                                                   "Count":  1
+                                               },
+                                               {
+                                                   "Name":  "Established",
+                                                   "Count":  1
+                                               }
+                                           ],
+                      "tray_handle":  525276
+                  },
+                  {
+                      "at_utc":  "2026-10-21T11:22:48.4084799Z",
+                      "worker_pid":  17192,
+                      "owner_sid":  "S-1-5-21-3947802441-3242602464-3093035390-1001",
+                      "session":  1,
+                      "elevated":  false,
+                      "children":  [
+                                       {
+                                           "ProcessId":  18408,
+                                           "ParentProcessId":  17192,
+                                           "Name":  "OrganizerWorkerConsole.exe"
+                                       },
+                                       {
+                                           "ProcessId":  18416,
+                                           "ParentProcessId":  18408,
+                                           "Name":  "conhost.exe"
+                                       }
+                                   ],
+                      "ffmpeg_count":  0,
+                      "maintenance":  [
+
+                                      ],
+                      "reserved":  0,
+                      "running":  0,
+                      "pending":  0,
+                      "outbox":  0,
+                      "journal_paused":  true,
+                      "status_age_s":  1.6853619,
+                      "state":  "  state      paused                   since 21:23:42 (operator)",
+                      "capacity":  [
+
+                                   ],
+                      "tcp_state_counts":  [
+                                               {
+                                                   "Name":  "Bound",
+                                                   "Count":  1
+                                               },
+                                               {
+                                                   "Name":  "Established",
+                                                   "Count":  1
+                                               }
+                                           ],
+                      "tray_handle":  525276
+                  },
+                  {
+                      "at_utc":  "2026-10-21T11:22:53.3819625Z",
+                      "worker_pid":  17192,
+                      "owner_sid":  "S-1-5-21-3947802441-3242602464-3093035390-1001",
+                      "session":  1,
+                      "elevated":  false,
+                      "children":  [
+                                       {
+                                           "ProcessId":  18408,
+                                           "ParentProcessId":  17192,
+                                           "Name":  "OrganizerWorkerConsole.exe"
+                                       },
+                                       {
+                                           "ProcessId":  18416,
+                                           "ParentProcessId":  18408,
+                                           "Name":  "conhost.exe"
+                                       }
+                                   ],
+                      "ffmpeg_count":  0,
+                      "maintenance":  [
+
+                                      ],
+                      "reserved":  0,
+                      "running":  0,
+                      "pending":  0,
+                      "outbox":  0,
+                      "journal_paused":  true,
+                      "status_age_s":  6.6588275999999995,
+                      "state":  "  state      paused                   since 21:23:42 (operator)",
+                      "capacity":  [
+
+                                   ],
+                      "tcp_state_counts":  [
+                                               {
+                                                   "Name":  "Bound",
+                                                   "Count":  1
+                                               },
+                                               {
+                                                   "Name":  "Established",
+                                                   "Count":  1
+                                               }
+                                           ],
+                      "tray_handle":  525276
+                  },
+                  {
+                      "at_utc":  "2026-10-21T11:22:58.3306653Z",
+                      "worker_pid":  17192,
+                      "owner_sid":  "S-1-5-21-3947802441-3242602464-3093035390-1001",
+                      "session":  1,
+                      "elevated":  false,
+                      "children":  [
+                                       {
+                                           "ProcessId":  18408,
+                                           "ParentProcessId":  17192,
+                                           "Name":  "OrganizerWorkerConsole.exe"
+                                       },
+                                       {
+                                           "ProcessId":  18416,
+                                           "ParentProcessId":  18408,
+                                           "Name":  "conhost.exe"
+                                       }
+                                   ],
+                      "ffmpeg_count":  0,
+                      "maintenance":  [
+
+                                      ],
+                      "reserved":  0,
+                      "running":  0,
+                      "pending":  0,
+                      "outbox":  0,
+                      "journal_paused":  true,
+                      "status_age_s":  11.6083055,
+                      "state":  "  state      paused                   since 21:23:42 (operator)",
+                      "capacity":  [
+
+                                   ],
+                      "tcp_state_counts":  [
+                                               {
+                                                   "Name":  "Bound",
+                                                   "Count":  1
+                                               },
+                                               {
+                                                   "Name":  "Established",
+                                                   "Count":  1
+                                               }
+                                           ],
+                      "tray_handle":  525276
+                  }
+              ]
+}

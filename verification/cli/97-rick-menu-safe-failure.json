@@ -1,0 +1,51 @@
+{
+    "ok":  false,
+    "action":  "drain-exit",
+    "error":  "Exception calling \"Invoke\" with \"0\" argument(s): \"Access is denied\"",
+    "audit":  [
+                  {
+                      "at_utc":  "2026-10-21T11:33:31.2930541Z",
+                      "worker_pid":  16628,
+                      "owner_sid":  "S-1-5-21-2018316448-104147440-857418166-1001",
+                      "session":  1,
+                      "elevated":  false,
+                      "children":  [
+                                       {
+                                           "ProcessId":  18992,
+                                           "ParentProcessId":  16628,
+                                           "Name":  "OrganizerWorkerConsole.exe"
+                                       },
+                                       {
+                                           "ProcessId":  35268,
+                                           "ParentProcessId":  18992,
+                                           "Name":  "conhost.exe"
+                                       }
+                                   ],
+                      "ffmpeg_count":  0,
+                      "maintenance":  [
+
+                                      ],
+                      "reserved":  0,
+                      "running":  0,
+                      "pending":  0,
+                      "outbox":  0,
+                      "journal_paused":  false,
+                      "status_age_s":  6.9631311999999994,
+                      "state":  "  state      accepting                since 20:51:23",
+                      "capacity":  [
+
+                                   ],
+                      "tcp_state_counts":  [
+                                               {
+                                                   "Name":  "Bound",
+                                                   "Count":  1
+                                               },
+                                               {
+                                                   "Name":  "Established",
+                                                   "Count":  1
+                                               }
+                                           ],
+                      "tray_handle":  3344358
+                  }
+              ]
+}

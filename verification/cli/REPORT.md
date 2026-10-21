@@ -1,11 +1,14 @@
 # Local CLI implementation and release record
 
-**Current (2026-10-21):** all declared pre-merge source gates passed on
-`dd08912`; PR8 merged as `529ec104` with the identical tested tree. Exact
-merged-main shared artifact built and hash-verified. Both installed PCs remain
-unchanged: the canonical guard requires the owner to choose actual tray Exit /
-finish current jobs. Overall rollout remains **BLOCKED / NOT COMPLETE**.
-See [current authorized ledger](RELEASE.md) and [acceptance](acceptance.md).
+**Current (2026-10-21 11:48 UTC):** pre-merge gates passed on `dd08912`;
+PR8 merged as `529ec104` with the identical tested tree. SAME exact merged-main
+artifact is now independently verified installed/running on BOTH PCs, correct
+LIMITED owner/session1, actual probes passed, connected/unpaused/accepting, SSH
+CLI/config readback passed, release tasks removed. Latest idle-stop authority
+superseded the earlier owner-tray-only blocker; actual race-safe stop paths and
+per-PC evidence: [IDLE-STOP-RELEASE.md](IDLE-STOP-RELEASE.md).
+Real coordinator-accepted per-PC jobs remain **NOT TESTED**. See
+[current authorized ledger](RELEASE.md) and [acceptance](acceptance.md).
 
 The report below is retained **historical evidence for source458c068**, including
 its then-unimplemented gaps and then-current authorization boundary. Those are

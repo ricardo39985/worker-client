@@ -1,0 +1,23 @@
+{
+    "ok":  true,
+    "host":  "DANNYS-OLD-BUT-",
+    "owner_sid":  "S-1-5-21-3947802441-3242602464-3093035390-1001",
+    "session":  1,
+    "elevated":  false,
+    "revision":  "529ec104931a17ad4997771bb8bfad2eca5bcd2d",
+    "package_manifest_sha256":  "665652f2687f755994e038978f92a2c7f8862bad53b74b9b4285dce4f2b96702",
+    "installed_sha256":  "df8389fa247318e07754aaf271eb30965ea1b18c7a396f0c58a79e871e029aa1",
+    "live_pid":  19664,
+    "live_path":  "C:\\Users\\Danny\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-df8389fa247318e0\\OrganizerWorker.exe",
+    "connected":  true,
+    "paused":  false,
+    "accepting":  true,
+    "processing_ready":  true,
+    "admission_reason":  "ready_subject_to_offer_resources",
+    "all_companion_hashes_match":  true,
+    "settings_count":  14,
+    "protected_identity_and_settings_retained":  true,
+    "console_request_accepted":  true,
+    "observed_at_utc":  "2026-10-21T11:29:58.1358845Z",
+    "production_job":  "NOT_TESTED_NO_AUTHORIZED_NONDESTRUCTIVE_FIXTURE"
+}

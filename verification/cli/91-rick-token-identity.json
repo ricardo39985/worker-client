@@ -1,0 +1,17 @@
+{
+  "observed_utc": "2026-10-21T11:44:10.1479487Z",
+  "current": {
+    "schema": 1,
+    "directory": "C:\\Users\\reald\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-df8389fa247318e0",
+    "sha256": "df8389fa247318e07754aaf271eb30965ea1b18c7a396f0c58a79e871e029aa1"
+  },
+  "pid": 32360,
+  "path": "C:\\Users\\reald\\AppData\\Local\\OrganizerWorker\\versions\\0.1.2-df8389fa247318e0\\OrganizerWorker.exe",
+  "session": 1,
+  "owner_sid": "S-1-5-21-2018316448-104147440-857418166-1001",
+  "token_elevated": false,
+  "live_sha256": "df8389fa247318e07754aaf271eb30965ea1b18c7a396f0c58a79e871e029aa1",
+  "selected_sha256": "df8389fa247318e07754aaf271eb30965ea1b18c7a396f0c58a79e871e029aa1",
+  "source": "529ec104931a17ad4997771bb8bfad2eca5bcd2d",
+  "file_version": null
+}

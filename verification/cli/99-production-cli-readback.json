@@ -1,0 +1,30 @@
+{
+  "danny": {
+    "client_session": 0,
+    "controller_pid_unchanged": true,
+    "source": "529ec104931a17ad4997771bb8bfad2eca5bcd2d",
+    "agent_version": "0.1.2",
+    "connected": true,
+    "processing_ready": true,
+    "paused": false,
+    "accepting": true,
+    "settings_count": 14,
+    "priority_readback": "normal",
+    "idempotent_resume_repeated": true,
+    "production_job": "NOT_TESTED_NO_AUTHORIZED_PRIVATE_FIXTURE"
+  },
+  "rick": {
+    "client_session": 0,
+    "controller_pid_unchanged": true,
+    "source": "529ec104931a17ad4997771bb8bfad2eca5bcd2d",
+    "agent_version": "0.1.2",
+    "connected": true,
+    "processing_ready": true,
+    "paused": false,
+    "accepting": true,
+    "settings_count": 14,
+    "priority_readback": "maximum",
+    "idempotent_resume_repeated": true,
+    "production_job": "NOT_TESTED_NO_AUTHORIZED_PRIVATE_FIXTURE"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "at_utc": "2026-10-21T11:46:52.6962600Z",
+  "removed_exact_owned_helpers": [
+    "idle-legacy.ps1",
+    "idle-gated-stop.ps1"
+  ],
+  "owned_tasks": [],
+  "package_retained": true,
+  "canonical_installer_retained": true
+}

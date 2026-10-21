@@ -27,23 +27,31 @@ Fixture coordinator/storage/pressure injection is not real TLS/coordinator or
 installed-PC job evidence. Public native receipts and limitations are linked
 from RELEASE.md; historical intermediate failures were retained, not skipped.
 
-## Remaining operational acceptance
+## Actual installed-PC acceptance (11:48 UTC)
 
-**Neither installed PC has been updated.** Both verified temporary package
-stages are ready, but the actual canonical guard returns OWNER_EXIT_REQUIRED:
-old trays do not have authenticated CLI. The owner must choose real tray
-**Exit worker / finish current jobs** on each PC. No force-kill or invented
-window-message exit is allowed; closing the console is insufficient.
+**BOTH PCs updated and independently verified** on SAME merged source529ec104
+artifact. Latest Rick authority allowed exact safely-idle targeted stop/restart,
+superseding earlier owner-tray-only blocker. Danny used actual graceful native
+Exit after paused admission/drain. Rick's UI Automation attempt failed safely;
+authorized exact-handle stop used a62ms all-worker-thread suspension gate with
+read-only zero journal/child/result checks to prevent claim races. No active
+jobs, arbitrary PIDs or FFmpeg were terminated. No generic updater protections
+were weakened. Details/receipts: [IDLE-STOP-RELEASE.md](IDLE-STOP-RELEASE.md).
 
-After cooperative owner exit, perform the already-authorized canonical update
-under each existing LIMITED interactive owner; independently verify actual
-selected/live artifact/source/hash, retained settings/credentials/startup,
-fresh probes and coordinator connection/admission, new live CLI. Explicitly
-resume Danny and preserve Rick's fresh prior intent. Allow ten-minute probe
-headroom. Actual per-PC coordinator-accepted jobs require an authorized
-nondestructive workflow and are presently **NOT TESTED**. Interactive viewer
-readback is also post-install, not established by the fake controller.
+Verified on EACH: current.json AND actual live path/source/hash, correct owner
+and non-elevated session1 token, retained identity/settings/limits/startup and
+companions, fresh real CPU/GPU probes and coordinator-connected admission,
+actual authenticated SSH0 status/resume twice/config14 readback. Danny explicitly
+resumed; Rick's fresh accepting intent restored. Both processing ready,
+unpaused and accepting, reservations/pending results0; actual release tasks
+removed. Actual new tray accepted console requests; no separate manual visual
+viewer/console-close inspection is claimed.
 
-Overall rollout remains **BLOCKED / NOT COMPLETE** pending the exact owner UI
-action and subsequent per-PC verification. Merge/code/CI/artifact success is
-not deployment success.
+## Remaining job acceptance
+
+Real coordinator-accepted job per PC remains **NOT TESTED**. Provide/authorize
+one private, non-posting fixture for one coordinator-accepted job per PC, with no
+surprise production change or cost. No authorized fixture was identified and
+none was invented. Synthetic job tests and connected/accepting status are NOT
+production jobs. Deployment verification is complete; that job acceptance is
+separate and still pending.
