@@ -5,17 +5,19 @@ $base=Join-Path $env:TEMP ('ow-enrolled-setup-'+[guid]::NewGuid().ToString('N'))
 [IO.Directory]::CreateDirectory($old)|Out-Null;[IO.Directory]::CreateDirectory($candidate)|Out-Null
 $names=@('OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','OrganizerWorkerTray.exe','cli.md','start-headless.ps1')
 foreach($name in $names){[IO.File]::WriteAllText((Join-Path $old $name),'synthetic-'+$name);Copy-Item (Join-Path $old $name) (Join-Path $candidate $name)}
-@{schema=1;directory=$old;sha256=(Get-FileHash (Join-Path $old 'OrganizerWorker.exe')).Hash.ToLowerInvariant()}|ConvertTo-Json|Set-Content (Join-Path $root 'current.json')
+$files=[ordered]@{};foreach($name in $names){$files[$name]=(Get-FileHash (Join-Path $old $name)).Hash.ToLowerInvariant()}
+$approval=[pscustomobject]@{worker_sha256=$files['OrganizerWorker.exe'];files=[pscustomobject]$files}
+@{schema=1;directory=$old;sha256=$files['OrganizerWorker.exe']}|ConvertTo-Json|Set-Content (Join-Path $root 'current.json')
 [IO.File]::WriteAllText((Join-Path $root 'credential.dpapi'),'SYNTHETIC-SEALED-NOT-A-CREDENTIAL')
 try{
- Assert-WorkerEnrolledSetupVersion $root $candidate
+ Assert-WorkerEnrolledSetupVersion $candidate $approval
  [IO.Directory]::CreateDirectory((Join-Path $root 'unattended'))|Out-Null
  foreach($state in @('enrolled','pairing_repair')){
   @{schema=1;state=$state}|ConvertTo-Json|Set-Content (Join-Path $root 'unattended/enrollment.json')
-  Assert-WorkerEnrolledSetupVersion $root $candidate
+  Assert-WorkerEnrolledSetupVersion $candidate $approval
   foreach($name in @('OrganizerWorker.exe','OrganizerWorkerCtl.exe','start-headless.ps1')){
    [IO.File]::AppendAllText((Join-Path $candidate $name),'foreign-change')
-   $rejected=$false;try{Assert-WorkerEnrolledSetupVersion $root $candidate}catch{$rejected=$true}
+   $rejected=$false;try{Assert-WorkerEnrolledSetupVersion $candidate $approval}catch{$rejected=$true}
    if(-not $rejected){throw ($state+': full setup would archive pairing/publish unapproved '+$name+' before canonical approval')}
    Copy-Item (Join-Path $old $name) (Join-Path $candidate $name) -Force
   }

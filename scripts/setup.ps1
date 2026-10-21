@@ -230,6 +230,22 @@ try {
     try { $script:InstallGuard=[IO.File]::Open($lockFile,[IO.FileMode]::OpenOrCreate,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None) }
     catch { throw 'Worker is running. Use its tray Exit before installing or updating.' }
     $sid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+    $script:ExistingProtectedApproval=$null
+    if((Get-WorkerStartupMode $Root $sid) -eq 'unattended'){
+        $currentPath=Join-Path $Root 'current.json'
+        if(-not (Test-Path -LiteralPath $currentPath -PathType Leaf) -or (Get-Item -LiteralPath $currentPath).Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Enrolled installation selection requires owner recovery; pairing and current version retained'}
+        $installed=Get-Content -LiteralPath $currentPath -Raw|ConvertFrom-Json
+        $oldVersion=[IO.Path]::GetFullPath([string]$installed.directory);$versionRoot=[IO.Path]::GetFullPath((Join-Path $Root 'versions'))+[IO.Path]::DirectorySeparatorChar
+        if(-not $oldVersion.StartsWith($versionRoot,[StringComparison]::OrdinalIgnoreCase)){throw 'Enrolled version escaped private versions directory; no repair/publication'}
+        $oldExe=Join-Path $oldVersion 'OrganizerWorker.exe';$oldCtl=Join-Path $oldVersion 'OrganizerWorkerCtl.exe'
+        if((Get-Item -LiteralPath $oldExe).Attributes -band [IO.FileAttributes]::ReparsePoint -or (Get-WorkerFileSha256 $oldExe) -ine [string]$installed.sha256){throw 'Enrolled selected image cannot be independently verified; no repair/publication'}
+        $enrollmentText=Invoke-WorkerNativeProgress $oldCtl @('--json','enrollment') -Name 'Verify protected existing owner enrollment before full setup' -TimeoutSeconds 30 -CaptureOutput
+        $enrollment=($enrollmentText -join "`n")|ConvertFrom-Json
+        if($enrollment.ok -ne $true -or $enrollment.enrolled -ne $true -or $enrollment.owner_sid -cne $sid){throw 'Protected owner enrollment failed native validation; secure local recovery required'}
+        $package=$enrollment.approved_packages.PSObject.Properties[[string]$installed.sha256]
+        if(-not $package){throw 'Current enrolled image has no protected package approval; current worker retained'}
+        $script:ExistingProtectedApproval=[pscustomobject]@{worker_sha256=[string]$installed.sha256;files=$package.Value.files}
+    }
     $icacls = Join-Path $env:SystemRoot 'System32\icacls.exe'
     Native $icacls @($Root,'/inheritance:r','/grant:r',('*'+$sid+':(OI)(CI)F'),'*S-1-5-18:(OI)(CI)F') -Name 'Protect per-user worker files' -TimeoutSeconds 900
     foreach ($sub in 'versions','jobs','probes','logs') { New-Item -ItemType Directory -Force -Path (Join-Path $Root $sub) | Out-Null }
@@ -373,6 +389,7 @@ try {
             if(-not (Test-Path -LiteralPath (Join-Path $candidate $name) -PathType Leaf)){throw ('Staged companion missing: '+$name)}
             if(Test-Path -LiteralPath $version){if((Get-WorkerFileSha256 (Join-Path $candidate $name)) -cne (Get-WorkerFileSha256 (Join-Path $version $name))){throw 'Existing immutable version differs; preserved without overwrite'}}
         }
+        if($null -ne $script:ExistingProtectedApproval){Assert-WorkerEnrolledSetupVersion -Version $candidate -ApprovedPackage $script:ExistingProtectedApproval | Out-Null}
         if(-not (Test-Path -LiteralPath $version)){[IO.Directory]::Move($candidate,$version)}
     } finally {if(Test-Path -LiteralPath $candidate){Remove-WorkerGeneratedTree $candidate}}
     # Validate candidate configuration without publishing over the installed one.

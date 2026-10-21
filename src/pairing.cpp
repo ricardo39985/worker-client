@@ -6,6 +6,11 @@
 #include <limits>
 
 namespace ow {
+void validate_worker_credential(const json::object& value){
+ const auto* token=value.if_contains("token");
+ if(!token||!token->is_string()||token->as_string().empty()||token->as_string().size()>4096||std::any_of(token->as_string().begin(),token->as_string().end(),[](unsigned char c){return c<=32||c>=127;}))throw PairingActionRequired("Invalid saved worker credential; explicit repair required.");
+ if(!safe_id(text(value,"worker_id",128)))throw PairingActionRequired("Invalid saved worker identity; explicit repair required.");
+}
 void bind_journal_origin(Store& store,const std::string& endpoint,const std::optional<std::string>& proven) {
  auto origin=coordinator_origin(endpoint);
  if(auto bound=store.get("coordinator_origin")) {
@@ -40,9 +45,7 @@ void status(const PairingResponse& r,unsigned expected) {
  if(r.status!=expected)throw std::runtime_error("Worker coordinator returned HTTP "+std::to_string(r.status));
 }
 std::string credential_token(const json::object& value) {
- auto token=text(value,"token",4096);
- if(!safe_id(text(value,"worker_id",128)))throw PairingActionRequired("Invalid worker identity in approval.");
- printable(token,1,"Invalid worker credential in approval.");return token;
+ validate_worker_credential(value);return text(value,"token",4096);
 }
 std::int64_t deadline(const json::object& pending) {
  return static_cast<std::int64_t>(number(pending,"expires_at_ms",INT64_MAX));

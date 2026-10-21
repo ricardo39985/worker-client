@@ -1,5 +1,6 @@
 #include "ow/secret_origin.hpp"
 #include "ow/json.hpp"
+#include "ow/pairing.hpp"
 namespace ow {
 namespace {
 void erase(void* data,std::size_t size) noexcept {
@@ -19,6 +20,6 @@ std::string consume_secret_origin(std::string& plaintext,std::span<unsigned char
  json::storage_ptr storage(&arena);json::parse_options options;options.max_depth=32;
  json::stream_parser parser(storage,options);parser.reset(storage);
  parser.write(plaintext);parser.finish();auto value=parser.release();
- const auto& record=value.as_object();return text(record,"coordinator_url",1024);
+ const auto& record=value.as_object();validate_worker_credential(record);return text(record,"coordinator_url",1024);
 }
 }

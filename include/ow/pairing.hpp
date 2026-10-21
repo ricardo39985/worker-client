@@ -41,6 +41,8 @@ class PairingActionRequired : public std::runtime_error {
 public:
  using std::runtime_error::runtime_error;
 };
+// In-place validation; never copies the bearer while checking its shape.
+void validate_worker_credential(const json::object&);
 struct PairingEnvironment {
  std::function<std::int64_t()> now_ms;
  std::function<void(unsigned)> wait_ms;
