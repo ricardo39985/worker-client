@@ -8,7 +8,7 @@ $p=$null
 try {
     & $CMakeExecutable --install $BuildDirectory --config $Configuration --prefix $package
     if ($LASTEXITCODE -ne 0) { throw 'Candidate packaging failed' }
-    foreach ($file in 'OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','cli.md') {
+    foreach ($file in 'OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','OrganizerWorkerTray.exe','start-headless.ps1','cli.md') {
         if (-not (Test-Path -LiteralPath (Join-Path $package $file))) { throw ('Missing packaged file: '+$file) }
     }
     $ctl=Join-Path $package 'OrganizerWorkerCtl.exe'

@@ -22,6 +22,8 @@ json::object Worker::control(const json::object& request){
  std::lock_guard lock(control_mutex_);if(number(request,"schema",1)!=1)throw std::runtime_error("Control schema mismatch");const auto command=text(request,"command",16);
  if(command=="pause"||command=="drain")pause(true);else if(command=="resume")pause(false);
  else if(command=="exit"){auto mode=text(request,"mode",8);if(mode!="drain"&&mode!="stop")throw std::runtime_error("Explicit exit mode required");exit(mode=="stop");}
+ else if(command=="restart")restart();
+ else if(command=="console"){++viewer_generation_;auto out=response();out["requested"]=true;out["viewer_required"]=config_.headless;return out;}
  else if(command=="config"){
   auto action=text(request,"action",16);if(action=="set")update_settings(request.at("values").as_object());else if(action=="reset")update_settings(reset_values(request));else if(action!="list"&&action!="get")throw std::runtime_error("Unknown config operation");
   auto effective=effective_config_;effective["operator"]=json::object{{"priority",priority_==Priority::maximum?"maximum":priority_==Priority::normal?"normal":priority_==Priority::low?"low":"backup"},{"video_preference",video_==Preference::preferred?"preferred":video_==Preference::allowed?"allowed":"disabled"},{"image_preference",image_==Preference::preferred?"preferred":image_==Preference::allowed?"allowed":"disabled"},{"paused",paused_.load()}};
@@ -32,6 +34,7 @@ json::object Worker::control(const json::object& request){
  else if(command!="status")throw std::runtime_error("Unknown control command");
  auto out=response();out["live"]=true;out["agent_version"]="0.1.2";out["build_revision"]=OW_BUILD_REVISION;out["pid"]=GetCurrentProcessId();out["owner_sid"]=process_owner_sid(GetCurrentProcess());out["process_uptime_ms"]=monotonic_ms()-process_started_;out["connected"]=report_connected_.load();out["paused"]=paused_.load();out["draining"]=exit_requested_.load()||(paused_&&active_count()>0);out["exiting"]=exit_requested_.load();
  auto gate=admission_.start_gate();const auto pending=store_.pending_count();const bool accepting=report_connected_&&!exit_requested_&&gate.accepted&&pending<512;
+ out["headless"]=config_.headless;out["restart_requested"]=restart_requested_.load();out["viewer_generation"]=viewer_generation_.load();out["identity_ready"]=config_.headless;
  out["process_started_at_utc_ms"]=process_started_utc_;const auto contact=last_contact_utc_.load();out["last_coordinator_contact_at_utc_ms"]=contact?json::value(contact):json::value(nullptr);
  json::array profiles;{std::lock_guard state_lock(mutex_);const auto ready=capability_report_.processing_ready();out["processing_ready"]=ready?json::value(*ready):json::value(nullptr);for(const auto& p:hardware_profiles_)profiles.emplace_back(json::object{{"device_id",p.stable_id},{"device_name",p.device_name},{"physical_id",p.physical_id},{"backend",adaptive::backend_token(p.backend)},{"backend_index",p.backend_index},{"codec",p.codec==adaptive::Codec::h264?"h264":"hevc"},{"sampled",true},{"vram_mb",p.vram_mb},{"proven_sessions",p.proven_sessions}});}out["profiles"]=std::move(profiles);
  out["accepting"]=accepting;out["admission_reason"]=!report_connected_?"coordinator_offline":exit_requested_?"exiting":pending>=512?"result_backlog":gate.reason;out["heartbeat"]=heartbeat();out["pending_results"]=pending;

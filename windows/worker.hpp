@@ -20,6 +20,7 @@ struct Config {
  std::filesystem::path root,ffmpeg;
  std::vector<std::string> storage_hosts;
  Resources budget{2048,0,8192,2};
+ bool headless{}; // local bootstrap mode, never accepted from configuration/network
  bool vram_override_set{};
  std::uint64_t reserve_ram_mb{0};std::size_t max_jobs{4};
  std::function<bool()> capacity_foreground; // local measurement port; never parsed from config/network
@@ -60,7 +61,8 @@ class Worker {
  void report_state(std::string name,std::string reason);
  std::jthread network_,watchdog_,hash_watchdog_,recovery_;
  mutable std::mutex mutex_;std::unordered_map<std::string,std::unique_ptr<Running>> running_;
- std::atomic_bool paused_{},exit_requested_{},stop_{},report_connected_{};
+ std::atomic_bool paused_{},exit_requested_{},restart_requested_{},stop_{},report_connected_{};
+ std::atomic<std::uint64_t> viewer_generation_{};
  std::uint64_t hardware_generation_{};
  ProbeRecovery gpu_recovery_;
  ProbeStatus probe_status_;CapabilityReport capability_report_;
@@ -92,7 +94,7 @@ public:
  void pause(bool);bool paused() const{return paused_;}
  void priority(Priority);Priority priority() const{return priority_;}
  void preference(bool video,Preference);Preference preference(bool video) const{return video?video_.load():image_.load();}
- void exit(bool stop_jobs);bool ready_to_exit() const;
+ void exit(bool stop_jobs);void restart();bool ready_to_exit();
  json::object control(const json::object& request);
  std::string status() const;std::size_t active_count() const;
 };

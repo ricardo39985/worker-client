@@ -1,5 +1,6 @@
 #include "worker.hpp"
 #include "control_pipe.hpp"
+#include "headless.hpp"
 #include <shellapi.h>
 #include <memory>
 #include <algorithm>
@@ -45,7 +46,10 @@ LRESULT CALLBACK procedure(HWND h,UINT message,WPARAM w,LPARAM l){
  return DefWindowProcW(h,message,w,l);
 }
 }
-int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,PWSTR,int){
+int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,PWSTR command,int){
+ if(std::wstring_view(command)==L"--headless"){
+  try{require(SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32|LOAD_LIBRARY_SEARCH_USER_DIRS),"Restrict DLL search");return run_headless(data_directory());}catch(...){return 4;}
+ }
  Handle lock;
  try{
   require(SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_SYSTEM32|LOAD_LIBRARY_SEARCH_USER_DIRS),"Restrict DLL search");

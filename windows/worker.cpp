@@ -1,5 +1,6 @@
 #include <cctype>
 #include "worker.hpp"
+#include "ow/lifecycle.hpp"
 #include "ow/media_renditions.hpp"
 #include "ow/adaptive_evidence.hpp"
 #include "ow/device_identity.hpp"
@@ -487,7 +488,8 @@ void Worker::wait_stage(const std::string& attempt,const std::string& stage,Reso
 }
 void Worker::preference(bool video,Preference value){update_settings({{video?"operator.video_preference":"operator.image_preference",pref_name(value)}});}
 void Worker::exit(bool kill){std::lock_guard control_lock(control_mutex_);pause(true);exit_requested_=true;{std::lock_guard lock(mutex_);if(kill)for(auto& [_,r]:running_)r->data->cancel=true;}state(kill?"STATE STOPPING":"STATE DRAINING");report_state("stopping",kill?"operator stop":"operator drain");}
-bool Worker::ready_to_exit() const{if(!exit_requested_)return false;std::lock_guard lock(mutex_);return running_.empty();}
+void Worker::restart(){std::lock_guard lock(control_mutex_);if(exit_requested_&&!restart_requested_)throw std::runtime_error("Explicit operator exit already requested");restart_requested_=true;paused_=true;admission_.pause(true);exit_requested_=true;state("STATE RESTART_DRAIN");report_state("stopping","restart drain; desired admission retained");}
+bool Worker::ready_to_exit(){if(!exit_requested_)return false;std::lock_guard lock(mutex_);return restart_requested_?restart_quiescent(running_.size(),admission_.active().size(),store_.pending_count()):running_.empty();}
 json::object Worker::heartbeat(){
  auto free=available_resources(config_.root,config_.reserve_ram_mb);auto used=admission_.used();json::array active;
  for(const auto& a:admission_.active())active.emplace_back(json::object{{"attempt_id",a.offer.attempt_id},{"state",a.phase==Phase::reserved?"reserved":a.phase==Phase::running?"running":"cancelling"}});

@@ -1,6 +1,7 @@
 #include "test.hpp"
 #include "worker.hpp"
 #include "control_pipe.hpp"
+#include "headless.hpp"
 #include <future>
 using namespace ow;using namespace ow::win;
 namespace {
@@ -61,6 +62,9 @@ TEST("native idle control client times out without blocking later authenticated 
  Workspace t;ControlPipe pipe(t.root,[](const json::object&){return json::object{{"schema",1},{"ok",true},{"exit_code",0}};});
  const auto name=control_pipe_name(t.root);require(WaitNamedPipeW(name.c_str(),2000),"Wait for idle-client test");Handle idle(CreateFileW(name.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_EXISTING,0,nullptr));CHECK(idle);Sleep(2300);idle.reset();
  CHECK(control_call(t.root,control_request({"status"})).at("ok")==true);
+}
+TEST("native headless bootstrap fails closed without owner identity and never creates pairing or journal"){
+ Workspace t;const auto before=read_file(t.root/"worker.json");CHECK(run_headless(t.root)==4);CHECK(read_file(t.root/"worker.json")==before);CHECK(!std::filesystem::exists(t.root/"credential.dpapi"));CHECK(!std::filesystem::exists(t.root/"pairing-key.dpapi"));CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));
 }
 TEST("native unavailable control is bounded and never creates worker state"){
  Workspace t;auto start=monotonic_ms();THROWS(control_call(t.root,control_request({"resume"})));CHECK(monotonic_ms()-start<4000);CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));
