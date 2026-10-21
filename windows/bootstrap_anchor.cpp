@@ -53,6 +53,8 @@ void install_bootstrap_anchor(const std::filesystem::path& selected,const std::s
  if(id.size()!=32||id.find_first_not_of("0123456789abcdef")!=std::string::npos)throw ControlFailure(4,"Enrollment provenance invalid");
  auto source=selected/"start-headless.ps1";verify_owner_state_path(source);if(sha256_file(source)!=OW_HEADLESS_LAUNCHER_SHA256)throw ControlFailure(4,"Only the compiled reviewed launcher can be installed");
  const auto base=bootstrap_anchor_directory();directory(base);directory(bootstrap_launcher_path().parent_path());
+ auto lock_path=base/"approval.lock";if(std::filesystem::exists(lock_path))verify_protected_bootstrap_path(lock_path);else create_file(lock_path,"");
+ Handle approval_lock(CreateFileW(lock_path.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr));if(!approval_lock)throw ControlFailure(3,"Another explicit package/enrollment approval is in progress");
  if(std::filesystem::exists(bootstrap_launcher_path())){verify_protected_bootstrap_path(bootstrap_launcher_path());if(sha256_file(bootstrap_launcher_path())!=OW_HEADLESS_LAUNCHER_SHA256)throw ControlFailure(4,"Unknown protected launcher retained for review");}
  else create_file(bootstrap_launcher_path(),read_file(source));
  auto file=base/"enrollment.json";json::object policy;
