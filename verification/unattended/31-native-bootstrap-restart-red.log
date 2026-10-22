@@ -1,0 +1,604 @@
+﻿2026-10-21T16:03:12.3377376Z Current runner version: '2.338.0'
+2026-10-21T16:03:12.3398057Z ##[group]Runner Image Provisioner
+2026-10-21T16:03:12.3398613Z Hosted Compute Agent
+2026-10-21T16:03:12.3398931Z Version: 20261012.601
+2026-10-21T16:03:12.3399265Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-21T16:03:12.3399676Z Build Date: 2026-10-12T17:48:21Z
+2026-10-21T16:03:12.3400046Z Worker ID: {fde66431-2ab1-4989-99e0-9d1a8eaf511e}
+2026-10-21T16:03:12.3400420Z Region: centralus
+2026-10-21T16:03:12.3400726Z Cloud: Azure
+2026-10-21T16:03:12.3401011Z ##[endgroup]
+2026-10-21T16:03:12.3401762Z ##[group]Operating System
+2026-10-21T16:03:12.3402105Z Microsoft Windows Server 2022
+2026-10-21T16:03:12.3402459Z 10.0.20348
+2026-10-21T16:03:12.3402738Z Datacenter
+2026-10-21T16:03:12.3403010Z ##[endgroup]
+2026-10-21T16:03:12.3403325Z ##[group]Runner Image
+2026-10-21T16:03:12.3403640Z Image: windows-2022
+2026-10-21T16:03:12.3403936Z Version: 20261012.333.1
+2026-10-21T16:03:12.3404804Z Included Software: https://github.com/actions/runner-images/blob/win22/20261012.333/images/windows/Windows2022-Readme.md
+2026-10-21T16:03:12.3405657Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261012.333
+2026-10-21T16:03:12.3406170Z ##[endgroup]
+2026-10-21T16:03:12.3406776Z ##[group]GITHUB_TOKEN Permissions
+2026-10-21T16:03:12.3407970Z Contents: read
+2026-10-21T16:03:12.3408267Z Metadata: read
+2026-10-21T16:03:12.3408664Z ##[endgroup]
+2026-10-21T16:03:12.3410600Z Secret source: Actions
+2026-10-21T16:03:12.3411700Z Cache mode: write
+2026-10-21T16:03:12.3412403Z Prepare workflow directory
+2026-10-21T16:03:12.3643725Z Prepare all required actions
+2026-10-21T16:03:12.3678412Z Getting action download info
+2026-10-21T16:03:12.6105324Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+2026-10-21T16:03:12.6923865Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-21T16:03:12.9201626Z Complete job name: windows
+2026-10-21T16:03:13.0807156Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+2026-10-21T16:03:13.0808049Z with:
+2026-10-21T16:03:13.0808316Z   persist-credentials: false
+2026-10-21T16:03:13.0808608Z   repository: ricardo39985/worker-client
+2026-10-21T16:03:13.0810920Z   token: ***
+2026-10-21T16:03:13.0811151Z   ssh-strict: true
+2026-10-21T16:03:13.0811380Z   ssh-user: git
+2026-10-21T16:03:13.0811599Z   clean: true
+2026-10-21T16:03:13.0811837Z   sparse-checkout-cone-mode: true
+2026-10-21T16:03:13.0812122Z   fetch-depth: 1
+2026-10-21T16:03:13.0812347Z   fetch-tags: false
+2026-10-21T16:03:13.0812581Z   show-progress: true
+2026-10-21T16:03:13.0812816Z   lfs: false
+2026-10-21T16:03:13.0813030Z   submodules: false
+2026-10-21T16:03:13.0813269Z   set-safe-directory: true
+2026-10-21T16:03:13.0813616Z ##[endgroup]
+2026-10-21T16:03:13.1915260Z Syncing repository: ricardo39985/worker-client
+2026-10-21T16:03:13.1916440Z ##[group]Getting Git version info
+2026-10-21T16:03:13.1916827Z Working directory is 'D:\a\worker-client\worker-client'
+2026-10-21T16:03:13.2473846Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-21T16:03:13.5788224Z git version 2.56.0.windows.2
+2026-10-21T16:03:13.5823001Z ##[endgroup]
+2026-10-21T16:03:13.5835480Z Temporarily overriding HOME='D:\a\_temp\09964a73-bc36-4550-b94d-d66f06d65916' before making global git config changes
+2026-10-21T16:03:13.5836231Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T16:03:13.5843806Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\worker-client\worker-client
+2026-10-21T16:03:13.6555484Z Deleting the contents of 'D:\a\worker-client\worker-client'
+2026-10-21T16:03:13.6558802Z ##[group]Initializing the repository
+2026-10-21T16:03:13.6565308Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\worker-client\worker-client
+2026-10-21T16:03:13.7341332Z Initialized empty Git repository in D:/a/worker-client/worker-client/.git/
+2026-10-21T16:03:13.7374819Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/ricardo39985/worker-client
+2026-10-21T16:03:13.7977268Z ##[endgroup]
+2026-10-21T16:03:13.7977839Z ##[group]Disabling automatic garbage collection
+2026-10-21T16:03:13.7978370Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-21T16:03:13.8213319Z ##[endgroup]
+2026-10-21T16:03:13.8213761Z ##[group]Setting up auth
+2026-10-21T16:03:13.8223305Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T16:03:13.8462476Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-21T16:03:15.1325564Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T16:03:15.1560119Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-21T16:03:15.5716001Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-21T16:03:15.5969284Z ##[endgroup]
+2026-10-21T16:03:15.5969893Z ##[group]Fetching the repository
+2026-10-21T16:03:15.5978871Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +73fbde3a7009246d043aa8070645c76c979b5ce1:refs/remotes/origin/feat/unattended-owner
+2026-10-21T16:03:16.8327270Z From https://github.com/ricardo39985/worker-client
+2026-10-21T16:03:16.8327981Z  * [new ref]         73fbde3a7009246d043aa8070645c76c979b5ce1 -> origin/feat/unattended-owner
+2026-10-21T16:03:16.8355215Z ##[endgroup]
+2026-10-21T16:03:16.8357934Z ##[group]Determining the checkout info
+2026-10-21T16:03:16.8358736Z ##[endgroup]
+2026-10-21T16:03:16.8365996Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-21T16:03:16.8739931Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-21T16:03:16.8969456Z ##[group]Checking out the ref
+2026-10-21T16:03:16.8976337Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feat/unattended-owner refs/remotes/origin/feat/unattended-owner
+2026-10-21T16:03:17.0508641Z Switched to a new branch 'feat/unattended-owner'
+2026-10-21T16:03:17.0519309Z branch 'feat/unattended-owner' set up to track 'origin/feat/unattended-owner'.
+2026-10-21T16:03:17.0552807Z ##[endgroup]
+2026-10-21T16:03:17.0883585Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-21T16:03:17.1140219Z 73fbde3a7009246d043aa8070645c76c979b5ce1
+2026-10-21T16:03:17.1169996Z ##[group]Removing auth
+2026-10-21T16:03:17.1176217Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T16:03:17.1403323Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-21T16:03:17.5465794Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T16:03:17.5680296Z http.https://github.com/.extraheader
+2026-10-21T16:03:17.5711752Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-21T16:03:17.5950576Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-21T16:03:18.0039297Z ##[endgroup]
+2026-10-21T16:03:18.0329519Z ##[group]Run $ErrorActionPreference='Stop'
+2026-10-21T16:03:18.0329943Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-10-21T16:03:18.0330309Z [36;1mif('false' -eq 'true' -and 'true' -ne 'true'){throw 'Artifact preparation requires the complete native media/security gates'}[0m
+2026-10-21T16:03:18.0330731Z [36;1mGet-ChildItem scripts,tests -Filter *.ps1 | ForEach-Object {[0m
+2026-10-21T16:03:18.0330978Z [36;1m  $tokens=$null; $errors=$null[0m
+2026-10-21T16:03:18.0331294Z [36;1m  [System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors) | Out-Null[0m
+2026-10-21T16:03:18.0331750Z [36;1m  if ($errors.Count -gt 0) { $errors | Out-String | Write-Error; throw 'PowerShell syntax check failed' }[0m
+2026-10-21T16:03:18.0332036Z [36;1m}[0m
+2026-10-21T16:03:18.0419523Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T16:03:18.0419859Z ##[endgroup]
+2026-10-21T16:03:21.5595873Z ##[group]Run $ErrorActionPreference='Stop'
+2026-10-21T16:03:21.5596177Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-10-21T16:03:21.5596445Z [36;1m$lock=Get-Content config/dependencies.lock.json -Raw | ConvertFrom-Json[0m
+2026-10-21T16:03:21.5596817Z [36;1mif (-not (Get-Command cmake.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CMake' }[0m
+2026-10-21T16:03:21.5654448Z [36;1mif (-not (Get-Command ctest.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CTest' }[0m
+2026-10-21T16:03:21.5654853Z [36;1mInvoke-WebRequest -Uri $lock.boost.url -OutFile boost.tar.gz -UseBasicParsing[0m
+2026-10-21T16:03:21.5655308Z [36;1mif ((Get-FileHash boost.tar.gz -Algorithm SHA256).Hash -ine $lock.boost.sha256) { throw 'Dependency checksum mismatch' }[0m
+2026-10-21T16:03:21.5655626Z [36;1mcmake -E tar xzf boost.tar.gz[0m
+2026-10-21T16:03:21.5655867Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Dependency extraction failed' }[0m
+2026-10-21T16:03:21.5656193Z [36;1m$boost=Join-Path $PWD $lock.boost.directory[0m
+2026-10-21T16:03:21.5656559Z [36;1mcmake -S . -B build-ci -G 'Visual Studio 17 2022' -A x64 "-DOW_BOOST_ROOT=$boost" "-DOW_SOURCE_REVISION=$env:GITHUB_SHA" -DBUILD_TESTING=ON[0m
+2026-10-21T16:03:21.5656942Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Native configure failed' }[0m
+2026-10-21T16:03:21.5657183Z [36;1mcmake --build build-ci --config Release --parallel 2[0m
+2026-10-21T16:03:21.5657426Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }[0m
+2026-10-21T16:03:21.5688445Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T16:03:21.5688708Z ##[endgroup]
+2026-10-21T16:06:26.4875441Z -- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.20348.
+2026-10-21T16:06:36.3645746Z -- The CXX compiler identification is MSVC 19.44.35229.0
+2026-10-21T16:06:36.4832592Z -- Detecting CXX compiler ABI info
+2026-10-21T16:06:37.1696567Z -- Detecting CXX compiler ABI info - done
+2026-10-21T16:06:37.1809838Z -- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+2026-10-21T16:06:37.1822694Z -- Detecting CXX compile features
+2026-10-21T16:06:37.1873187Z -- Detecting CXX compile features - done
+2026-10-21T16:06:40.2849694Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-10-21T16:06:41.9827479Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+2026-10-21T16:06:41.9828133Z -- Looking for pthread_create in pthreads
+2026-10-21T16:06:42.4197544Z -- Looking for pthread_create in pthreads - not found
+2026-10-21T16:06:42.4198129Z -- Looking for pthread_create in pthread
+2026-10-21T16:06:42.8233525Z -- Looking for pthread_create in pthread - not found
+2026-10-21T16:06:42.8332770Z -- Found Threads: TRUE
+2026-10-21T16:06:44.1456891Z -- Configuring done (17.9s)
+2026-10-21T16:06:44.2678298Z -- Generating done (0.1s)
+2026-10-21T16:06:44.2683071Z -- Build files have been written to: D:/a/worker-client/worker-client/build-ci
+2026-10-21T16:06:44.3473716Z MSBuild version 17.14.60+43b635718 for .NET Framework
+2026-10-21T16:06:44.3698581Z 
+2026-10-21T16:06:44.6361546Z   1>Checking Build System
+2026-10-21T16:06:44.8056738Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:06:44.9113846Z   boost_json.cpp
+2026-10-21T16:06:45.1667072Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:06:45.1730451Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:06:45.2210850Z   main.cpp
+2026-10-21T16:06:45.2682876Z   main.cpp
+2026-10-21T16:06:46.2955484Z   progress_test.cpp
+2026-10-21T16:06:46.2965651Z   pipeline_test.cpp
+2026-10-21T16:06:47.9464691Z   encoder_run_test.cpp
+2026-10-21T16:06:50.3532810Z   ow_json.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_json.lib
+2026-10-21T16:06:50.3985871Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:06:50.4653306Z   admission.cpp
+2026-10-21T16:06:51.0566838Z   status_test.cpp
+2026-10-21T16:06:51.1835253Z   store.cpp
+2026-10-21T16:06:52.4690293Z   protocol.cpp
+2026-10-21T16:06:52.5178623Z   stage_timing_test.cpp
+2026-10-21T16:06:52.8561494Z   Generating code
+2026-10-21T16:06:52.8770504Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:06:55.5474275Z   All 3041 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:06:55.5553823Z   Finished generating code
+2026-10-21T16:06:55.7443854Z   ow_pipeline_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_contract_tests.exe
+2026-10-21T16:06:55.7631115Z   Generating code
+2026-10-21T16:06:55.7882451Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:06:56.0104774Z   pairing.cpp
+2026-10-21T16:06:59.1282165Z   adaptive_hardware.cpp
+2026-10-21T16:07:01.9736051Z   control.cpp
+2026-10-21T16:07:02.6800958Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:02.7622103Z   main.cpp
+2026-10-21T16:07:03.1054495Z   All 5170 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:07:03.1275348Z   Finished generating code
+2026-10-21T16:07:03.3260547Z   media_rendition_test.cpp
+2026-10-21T16:07:03.3866425Z   ow_progress_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_progress_contract_tests.exe
+2026-10-21T16:07:03.4536468Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:03.5188796Z   media_rendition_probe.cpp
+2026-10-21T16:07:04.4000376Z   lifecycle.cpp
+2026-10-21T16:07:05.2803876Z   Generating code
+2026-10-21T16:07:05.2911698Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:07:05.3864764Z   ow_core.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_core.lib
+2026-10-21T16:07:06.8324137Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:06.8969560Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:07.0599585Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:07.1361190Z   main.cpp
+2026-10-21T16:07:07.1363969Z   adaptive_evidence_probe.cpp
+2026-10-21T16:07:07.2416791Z   All 2222 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:07:07.2494435Z   Finished generating code
+2026-10-21T16:07:07.3972345Z   ow_rendition_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_contract_tests.exe
+2026-10-21T16:07:07.4595014Z   platform.cpp
+2026-10-21T16:07:07.7136277Z   admission_test.cpp
+2026-10-21T16:07:08.6185908Z   store_test.cpp
+2026-10-21T16:07:09.6058973Z   Generating code
+2026-10-21T16:07:09.6132688Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:07:10.6015034Z   All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:07:10.6045322Z   Finished generating code
+2026-10-21T16:07:10.7283699Z   ow_adaptive_evidence_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_evidence_probe.exe
+2026-10-21T16:07:10.7666281Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:10.7775991Z   protocol_test.cpp
+2026-10-21T16:07:10.8203826Z   main.cpp
+2026-10-21T16:07:11.3231994Z   adaptive_hardware_test.cpp
+2026-10-21T16:07:11.6788342Z   process.cpp
+2026-10-21T16:07:12.8732307Z   pairing_test.cpp
+2026-10-21T16:07:13.8522547Z   http.cpp
+2026-10-21T16:07:14.8344990Z   Generating code
+2026-10-21T16:07:14.8550187Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:07:14.9458885Z   capacity_test.cpp
+2026-10-21T16:07:16.2851877Z   control_test.cpp
+2026-10-21T16:07:17.0615531Z   worker.cpp
+2026-10-21T16:07:19.2539938Z   lifecycle_test.cpp
+2026-10-21T16:07:22.1989508Z D:\a\worker-client\worker-client\windows\worker.cpp(864,289): warning C4456: declaration of 'cancelled' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+2026-10-21T16:07:22.3241309Z       D:\a\worker-client\worker-client\windows\worker.cpp(661,7):
+2026-10-21T16:07:22.4073303Z       see declaration of 'cancelled'
+2026-10-21T16:07:22.5268769Z   
+2026-10-21T16:07:23.5626089Z   Generating code
+2026-10-21T16:07:23.5853116Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:07:23.5859401Z   All 5618 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:07:23.6604990Z   Finished generating code
+2026-10-21T16:07:24.8257804Z   ow_adaptive_hardware_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_hardware_contract_tests.exe
+2026-10-21T16:07:24.9673086Z   probe_recovery.cpp
+2026-10-21T16:07:26.9083089Z   Generating code
+2026-10-21T16:07:27.1121417Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:07:30.0221049Z   All 3936 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:07:30.1335551Z   Finished generating code
+2026-10-21T16:07:30.2952549Z   ow_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_contract_tests.exe
+2026-10-21T16:07:30.4815638Z   All 1980 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:07:30.4872588Z   Finished generating code
+2026-10-21T16:07:30.5145109Z   pairing_adapter.cpp
+2026-10-21T16:07:30.6016730Z   ow_rendition_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_probe.exe
+2026-10-21T16:07:32.1148615Z   hardware.cpp
+2026-10-21T16:07:33.6297000Z   physical_adapters.cpp
+2026-10-21T16:07:35.2700216Z   capacity.cpp
+2026-10-21T16:07:36.5832562Z D:\a\worker-client\worker-client\windows\capacity.cpp(66,45): warning C4456: declaration of 'value' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+2026-10-21T16:07:36.5833228Z       D:\a\worker-client\worker-client\windows\capacity.cpp(56,24):
+2026-10-21T16:07:36.5833482Z       see declaration of 'value'
+2026-10-21T16:07:36.5833657Z   
+2026-10-21T16:07:37.1630891Z   control_pipe.cpp
+2026-10-21T16:07:38.7584517Z   worker_control.cpp
+2026-10-21T16:07:40.8970764Z   headless.cpp
+2026-10-21T16:07:43.0318579Z   owner_task.cpp
+2026-10-21T16:07:44.9361546Z   owner_state.cpp
+2026-10-21T16:07:47.5708973Z   ow_windows.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_windows.lib
+2026-10-21T16:07:47.6269506Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:47.6270702Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:47.6725920Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:47.7174079Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:47.7640521Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:47.8077271Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:47.8534032Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.1867329Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.2361991Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.2824759Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.3287842Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.3782281Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.4235358Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.5306266Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.5738209Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.6198780Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.6651780Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.7123426Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.7612770Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:07:48.8189162Z   tray.cpp
+2026-10-21T16:07:48.8208086Z   windows_limited_fixture_runner.cpp
+2026-10-21T16:07:48.8237430Z   windows_legacy_actor.cpp
+2026-10-21T16:07:51.6808025Z   windows_unattended_fixture.cpp
+2026-10-21T16:07:52.4366900Z   Generating code
+2026-10-21T16:07:52.4667555Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:07:53.3527394Z   Generating code
+2026-10-21T16:07:53.3997997Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:07:53.5659257Z   All 1095 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:07:53.5742421Z   Finished generating code
+2026-10-21T16:07:53.8577353Z   ow_limited_fixture_runner.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_limited_fixture_runner.exe
+2026-10-21T16:07:54.1028162Z   windows_gpu_measurements.cpp
+2026-10-21T16:07:57.2049380Z   windows_headless_bootstrap.cpp
+2026-10-21T16:08:00.7738967Z   control_acceptance.cpp
+2026-10-21T16:08:02.0971656Z   Generating code
+2026-10-21T16:08:02.3105247Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:08.7133725Z   All 11464 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:08.7469266Z   Finished generating code
+2026-10-21T16:08:09.0309611Z   All 3107 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:09.0424281Z   Finished generating code
+2026-10-21T16:08:09.1093630Z   OrganizerWorker.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorker.exe
+2026-10-21T16:08:09.2259718Z   ow_gpu_measurements.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_measurements.exe
+2026-10-21T16:08:09.2724820Z   windows_foreground_probe.cpp
+2026-10-21T16:08:09.2817992Z   windows_control_fixture.cpp
+2026-10-21T16:08:09.7679080Z   Generating code
+2026-10-21T16:08:09.8690245Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:14.3929264Z   Generating code
+2026-10-21T16:08:14.3946710Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:17.0362362Z   All 986 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:17.0385088Z   Finished generating code
+2026-10-21T16:08:18.4512967Z   ow_foreground_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_foreground_probe.exe
+2026-10-21T16:08:20.4617180Z   Generating code
+2026-10-21T16:08:20.5995370Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:22.9639620Z   All 11443 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:23.0297534Z   Finished generating code
+2026-10-21T16:08:24.5217217Z   ow_unattended_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_unattended_fixture.exe
+2026-10-21T16:08:26.5601563Z   Generating code
+2026-10-21T16:08:26.7635619Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:34.0688344Z   All 11079 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:34.1508239Z   Finished generating code
+2026-10-21T16:08:35.6593144Z   ow_control_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_control_fixture.exe
+2026-10-21T16:08:37.0107761Z   attached_tray.cpp
+2026-10-21T16:08:38.4523789Z   console.cpp
+2026-10-21T16:08:40.4765054Z   Generating code
+2026-10-21T16:08:40.5010128Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:41.6106948Z   All 11101 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:41.6108197Z   Finished generating code
+2026-10-21T16:08:41.9098024Z   All 1262 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:41.9169887Z   Finished generating code
+2026-10-21T16:08:42.0059691Z   ow_upgrade_actor.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_upgrade_actor.exe
+2026-10-21T16:08:42.0459644Z   windows_child.cpp
+2026-10-21T16:08:42.1262636Z   OrganizerWorkerTray.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerTray.exe
+2026-10-21T16:08:42.1694146Z   windows_resource_probe.cpp
+2026-10-21T16:08:42.3347224Z   windows_pipeline_smoke.cpp
+2026-10-21T16:08:44.2479986Z   Generating code
+2026-10-21T16:08:44.2646907Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:44.8564898Z   All 761 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:44.8614249Z   Finished generating code
+2026-10-21T16:08:44.9439917Z   Generating code
+2026-10-21T16:08:44.9537186Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:44.9935924Z   ow_test_child.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_test_child.exe
+2026-10-21T16:08:46.4547042Z   Generating code
+2026-10-21T16:08:46.6539075Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:47.9806632Z   All 1621 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:48.0431907Z   Finished generating code
+2026-10-21T16:08:48.3074992Z   OrganizerWorkerConsole.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerConsole.exe
+2026-10-21T16:08:48.5328553Z   All 2157 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:48.5388483Z   Finished generating code
+2026-10-21T16:08:48.6685710Z   ow_resource_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_resource_probe.exe
+2026-10-21T16:08:49.0023250Z   Generating code
+2026-10-21T16:08:49.0502787Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:08:57.7905983Z   All 10953 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:08:57.8210532Z   Finished generating code
+2026-10-21T16:08:58.1122800Z   ow_pipeline_smoke.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_smoke.exe
+2026-10-21T16:08:58.1531086Z   windows_owner_fixture.cpp
+2026-10-21T16:08:58.1571881Z   windows_job_control_fixture.cpp
+2026-10-21T16:08:58.1662256Z   windows_gpu_budget_probe.cpp
+2026-10-21T16:09:00.4020406Z   Generating code
+2026-10-21T16:09:00.4199595Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:09:01.1091770Z   control_acceptance.cpp
+2026-10-21T16:09:01.5771626Z   All 1362 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:09:01.5830920Z   Finished generating code
+2026-10-21T16:09:01.7057587Z   ow_owner_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_owner_fixture.exe
+2026-10-21T16:09:01.9352111Z   Generating code
+2026-10-21T16:09:01.9575591Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:09:04.6044296Z   All 2926 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:09:04.6190654Z   Finished generating code
+2026-10-21T16:09:04.7649155Z   ow_gpu_budget_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_budget_probe.exe
+2026-10-21T16:09:04.8069824Z   windows_gpu_baseline.cpp
+2026-10-21T16:09:04.8125851Z   windows_flex_benchmark.cpp
+2026-10-21T16:09:09.6385910Z   Generating code
+2026-10-21T16:09:09.7015596Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:09:09.8546394Z   offline_media.cpp
+2026-10-21T16:09:17.2983703Z   All 11425 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:09:17.3285208Z   Finished generating code
+2026-10-21T16:09:17.6369662Z   ow_job_control_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_job_control_fixture.exe
+2026-10-21T16:09:18.0592345Z   Generating code
+2026-10-21T16:09:18.1128492Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:09:27.3602026Z   All 11540 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:09:27.3910648Z   Finished generating code
+2026-10-21T16:09:27.6875230Z   ow_flex_benchmark.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_flex_benchmark.exe
+2026-10-21T16:09:27.8551834Z   Generating code
+2026-10-21T16:09:27.8756881Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:09:30.0014352Z   All 3011 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:09:30.0114449Z   Finished generating code
+2026-10-21T16:09:30.1393253Z   ow_gpu_baseline.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_baseline.exe
+2026-10-21T16:09:30.1789184Z   doctor.cpp
+2026-10-21T16:09:30.1813049Z   cli.cpp
+2026-10-21T16:09:30.1856259Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:09:30.2516737Z   main.cpp
+2026-10-21T16:09:30.8104324Z   windows_test.cpp
+2026-10-21T16:09:33.1648879Z   Generating code
+2026-10-21T16:09:33.2175826Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:09:34.3024009Z   windows_control_test.cpp
+2026-10-21T16:09:42.9936554Z   All 10649 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:09:43.0216573Z   Finished generating code
+2026-10-21T16:09:43.2990256Z   OrganizerWorkerDoctor.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerDoctor.exe
+2026-10-21T16:09:43.6600199Z   Generating code
+2026-10-21T16:09:43.7079936Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:09:52.7695618Z   All 10997 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:09:52.7989582Z   Finished generating code
+2026-10-21T16:09:53.0804657Z   OrganizerWorkerCtl.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerCtl.exe
+2026-10-21T16:09:53.4502141Z   Generating code
+2026-10-21T16:09:53.5023646Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T16:10:03.5319470Z   All 11967 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T16:10:03.5642813Z   Finished generating code
+2026-10-21T16:10:03.8719599Z   ow_windows_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_windows_tests.exe
+2026-10-21T16:10:03.9174578Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T16:10:04.0105763Z ##[group]Run ctest --test-dir build-ci -C Release --output-on-failure
+2026-10-21T16:10:04.0106163Z [36;1mctest --test-dir build-ci -C Release --output-on-failure[0m
+2026-10-21T16:10:04.0106466Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Native behavior contracts failed' }[0m
+2026-10-21T16:10:04.0129716Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T16:10:04.0129983Z ##[endgroup]
+2026-10-21T16:10:04.5187940Z Internal ctest changing into directory: D:/a/worker-client/worker-client/build-ci
+2026-10-21T16:10:04.6202204Z Test project D:/a/worker-client/worker-client/build-ci
+2026-10-21T16:10:04.6493912Z       Start  1: ffmpeg_dependency_contracts
+2026-10-21T16:10:05.6664031Z  1/18 Test  #1: ffmpeg_dependency_contracts ......   Passed    1.02 sec
+2026-10-21T16:10:05.6673248Z       Start  2: launcher_package_contracts
+2026-10-21T16:10:05.7597595Z  2/18 Test  #2: launcher_package_contracts .......***Failed    0.09 sec
+2026-10-21T16:10:05.7598328Z CMake Warning (dev) at D:/a/worker-client/worker-client/cmake/HeadlessLauncher.cmake:9 (file):
+2026-10-21T16:10:05.7599034Z   Policy CMP0053 is not set: Simplify variable reference and escape sequence
+2026-10-21T16:10:05.7599502Z   evaluation.  Run "cmake --help-policy CMP0053" for policy details.  Use the
+2026-10-21T16:10:05.7599981Z   cmake_policy command to set the policy and suppress this warning.
+2026-10-21T16:10:05.7600239Z 
+2026-10-21T16:10:05.7600310Z   For input:
+2026-10-21T16:10:05.7600445Z 
+2026-10-21T16:10:05.7600544Z     '@OW_LAUNCHER_LITERAL@'
+2026-10-21T16:10:05.7600716Z 
+2026-10-21T16:10:05.7600849Z   the old evaluation rules produce:
+2026-10-21T16:10:05.7601008Z 
+2026-10-21T16:10:05.7601141Z     '#requires -Version 5.1
+2026-10-21T16:10:05.7601504Z     # Stable owner-only Task Scheduler entry. No arguments, credentials or commands.
+2026-10-21T16:10:05.7601894Z     [CmdletBinding()]param()
+2026-10-21T16:10:05.7602095Z     Set-StrictMode -Version Latest
+2026-10-21T16:10:05.7602356Z     $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
+2026-10-21T16:10:05.7602660Z     if($args.Count){throw 'Headless launcher accepts no arguments'}
+2026-10-21T16:10:05.7607815Z     $i=[Security.Principal.WindowsIdentity]::GetCurrent();$p=New-Object Security.Principal.WindowsPrincipal($i)
+2026-10-21T16:10:05.7608471Z     if($p.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -or $i.User.Value -in @('S-1-5-18','S-1-5-19','S-1-5-20')){throw 'Headless engine requires the normal LIMITED owner'}
+2026-10-21T16:10:05.7609018Z     $root=Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'OrganizerWorker'
+2026-10-21T16:10:05.7637246Z     $enrollment=Join-Path $root 'unattended/enrollment.json'
+2026-10-21T16:10:05.7638081Z     foreach($f in @($root,$enrollment,(Join-Path $root 'current.json'))){$item=Get-Item -LiteralPath $f;if($item.Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Reparse launch state refused'}}
+2026-10-21T16:10:05.7638898Z     $e=Get-Content -LiteralPath $enrollment -Raw|ConvertFrom-Json
+2026-10-21T16:10:05.7639723Z     if($e.schema -ne 1 -or $e.state -cne 'enrolled' -or $e.owner_sid -cne $i.User.Value -or $e.task_name -cne ('OrganizerWorker-Unattended-'+$i.User.Value)){throw 'Existing enrolled owner/profile required'}
+2026-10-21T16:10:05.7640645Z     $c=Get-Content -LiteralPath (Join-Path $root 'current.json') -Raw|ConvertFrom-Json
+2026-10-21T16:10:05.7641425Z     $directory=[IO.Path]::GetFullPath([string]$c.directory);$allowed=[IO.Path]::GetFullPath((Join-Path $root 'versions'))+[IO.Path]::DirectorySeparatorChar
+2026-10-21T16:10:05.7642385Z     if(-not $directory.StartsWith($allowed,[StringComparison]::OrdinalIgnoreCase)){throw 'Installed version escapes owner root'}
+2026-10-21T16:10:05.7642918Z     if((Get-Item -LiteralPath $directory).Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Reparse installed version refused'}
+2026-10-21T16:10:05.7646033Z     $exe=Join-Path $directory 'OrganizerWorker.exe'
+2026-10-21T16:10:05.7646640Z     if((Get-Item -LiteralPath $exe).Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Reparse engine refused'}
+2026-10-21T16:10:05.7647446Z     if($c.sha256 -notmatch '\A[a-f0-9]{64}\z' -or (Get-FileHash -LiteralPath $exe).Hash -ine $c.sha256){throw 'Installed executable hash mismatch'}
+2026-10-21T16:10:05.7648141Z     # Wait the actual no-UI process for its entire lifetime: task retry policy sees
+2026-10-21T16:10:05.7648645Z     # real failures, not a successful detached submission. No profile/DPAPI bypass.
+2026-10-21T16:10:05.7649073Z     $start=New-Object Diagnostics.ProcessStartInfo
+2026-10-21T16:10:05.7649788Z     $start.FileName=$exe;$start.Arguments='--headless';$start.WorkingDirectory=$root;$start.UseShellExecute=$false;$start.CreateNoWindow=$true
+2026-10-21T16:10:05.7650533Z     $child=New-Object Diagnostics.Process;$child.StartInfo=$start
+2026-10-21T16:10:05.7650976Z     if(-not $child.Start()){throw 'Headless process did not start'}
+2026-10-21T16:10:05.7651453Z     try{$child.WaitForExit();$code=$child.ExitCode}finally{$child.Dispose()}
+2026-10-21T16:10:05.7651825Z     exit $code
+2026-10-21T16:10:05.7652025Z     
+2026-10-21T16:10:05.7652184Z     # literal ${UNMODIFIED} @UNMODIFIED@
+2026-10-21T16:10:05.7652443Z     #cmakedefine UNMODIFIED'
+2026-10-21T16:10:05.7652637Z 
+2026-10-21T16:10:05.7652744Z   but the new evaluation rules produce:
+2026-10-21T16:10:05.7652910Z 
+2026-10-21T16:10:05.7653022Z     '@OW_LAUNCHER_LITERAL@'
+2026-10-21T16:10:05.7653172Z 
+2026-10-21T16:10:05.7653343Z   Using the old result for compatibility since the policy is not set.
+2026-10-21T16:10:05.7653773Z This warning is for project developers.  Use -Wno-dev to suppress it.
+2026-10-21T16:10:05.7654062Z 
+2026-10-21T16:10:05.7654323Z CMake Warning (dev) at D:/a/worker-client/worker-client/cmake/HeadlessLauncher.cmake:9 (file):
+2026-10-21T16:10:05.7654899Z   Policy CMP0053 is not set: Simplify variable reference and escape sequence
+2026-10-21T16:10:05.7655386Z   evaluation.  Run "cmake --help-policy CMP0053" for policy details.  Use the
+2026-10-21T16:10:05.7655856Z   cmake_policy command to set the policy and suppress this warning.
+2026-10-21T16:10:05.7656095Z 
+2026-10-21T16:10:05.7656197Z   For input:
+2026-10-21T16:10:05.7656322Z 
+2026-10-21T16:10:05.7656411Z     '@OW_LAUNCHER_LITERAL@'
+2026-10-21T16:10:05.7656573Z 
+2026-10-21T16:10:05.7656678Z   the old evaluation rules produce:
+2026-10-21T16:10:05.7656913Z 
+2026-10-21T16:10:05.7657001Z     '#requires -Version 5.1
+2026-10-21T16:10:05.7657377Z     # Stable owner-only Task Scheduler entry. No arguments, credentials or commands.
+2026-10-21T16:10:05.7657781Z     [CmdletBinding()]param()
+2026-10-21T16:10:05.7658045Z     Set-StrictMode -Version Latest
+2026-10-21T16:10:05.7658452Z     $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
+2026-10-21T16:10:05.7658931Z     if($args.Count){throw 'Headless launcher accepts no arguments'}
+2026-10-21T16:10:05.7659542Z     $i=[Security.Principal.WindowsIdentity]::GetCurrent();$p=New-Object Security.Principal.WindowsPrincipal($i)
+2026-10-21T16:10:05.7660546Z     if($p.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -or $i.User.Value -in @('S-1-5-18','S-1-5-19','S-1-5-20')){throw 'Headless engine requires the normal LIMITED owner'}
+2026-10-21T16:10:05.7661421Z     $root=Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'OrganizerWorker'
+2026-10-21T16:10:05.7661926Z     $enrollment=Join-Path $root 'unattended/enrollment.json'
+2026-10-21T16:10:05.7662712Z     foreach($f in @($root,$enrollment,(Join-Path $root 'current.json'))){$item=Get-Item -LiteralPath $f;if($item.Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Reparse launch state refused'}}
+2026-10-21T16:10:05.7663535Z     $e=Get-Content -LiteralPath $enrollment -Raw|ConvertFrom-Json
+2026-10-21T16:10:05.7664955Z     if($e.schema -ne 1 -or $e.state -cne 'enrolled' -or $e.owner_sid -cne $i.User.Value -or $e.task_name -cne ('OrganizerWorker-Unattended-'+$i.User.Value)){throw 'Existing enrolled owner/profile required'}
+2026-10-21T16:10:05.7665985Z     $c=Get-Content -LiteralPath (Join-Path $root 'current.json') -Raw|ConvertFrom-Json
+2026-10-21T16:10:05.7666809Z     $directory=[IO.Path]::GetFullPath([string]$c.directory);$allowed=[IO.Path]::GetFullPath((Join-Path $root 'versions'))+[IO.Path]::DirectorySeparatorChar
+2026-10-21T16:10:05.7667731Z     if(-not $directory.StartsWith($allowed,[StringComparison]::OrdinalIgnoreCase)){throw 'Installed version escapes owner root'}
+2026-10-21T16:10:05.7668593Z     if((Get-Item -LiteralPath $directory).Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Reparse installed version refused'}
+2026-10-21T16:10:05.7669232Z     $exe=Join-Path $directory 'OrganizerWorker.exe'
+2026-10-21T16:10:05.7669806Z     if((Get-Item -LiteralPath $exe).Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Reparse engine refused'}
+2026-10-21T16:10:05.7670617Z     if($c.sha256 -notmatch '\A[a-f0-9]{64}\z' -or (Get-FileHash -LiteralPath $exe).Hash -ine $c.sha256){throw 'Installed executable hash mismatch'}
+2026-10-21T16:10:05.7671345Z     # Wait the actual no-UI process for its entire lifetime: task retry policy sees
+2026-10-21T16:10:05.7672302Z     # real failures, not a successful detached submission. No profile/DPAPI bypass.
+2026-10-21T16:10:05.7672621Z     $start=New-Object Diagnostics.ProcessStartInfo
+2026-10-21T16:10:05.7673023Z     $start.FileName=$exe;$start.Arguments='--headless';$start.WorkingDirectory=$root;$start.UseShellExecute=$false;$start.CreateNoWindow=$true
+2026-10-21T16:10:05.7673441Z     $child=New-Object Diagnostics.Process;$child.StartInfo=$start
+2026-10-21T16:10:05.7673719Z     if(-not $child.Start()){throw 'Headless process did not start'}
+2026-10-21T16:10:05.7674013Z     try{$child.WaitForExit();$code=$child.ExitCode}finally{$child.Dispose()}
+2026-10-21T16:10:05.7674255Z     exit $code
+2026-10-21T16:10:05.7674416Z     
+2026-10-21T16:10:05.7674579Z     # literal ${UNMODIFIED} @UNMODIFIED@
+2026-10-21T16:10:05.7674787Z     #cmakedefine UNMODIFIED'
+2026-10-21T16:10:05.7674890Z 
+2026-10-21T16:10:05.7674983Z   but the new evaluation rules produce:
+2026-10-21T16:10:05.7675121Z 
+2026-10-21T16:10:05.7675205Z     '@OW_LAUNCHER_LITERAL@'
+2026-10-21T16:10:05.7675314Z 
+2026-10-21T16:10:05.7675426Z   Using the old result for compatibility since the policy is not set.
+2026-10-21T16:10:05.7675717Z This warning is for project developers.  Use -Wno-dev to suppress it.
+2026-10-21T16:10:05.7675896Z 
+2026-10-21T16:10:05.7675966Z Traceback (most recent call last):
+2026-10-21T16:10:05.7676264Z   File "D:\a\worker-client\worker-client\tests\launcher_package_test.py", line 19, in <module>
+2026-10-21T16:10:05.7676766Z     assert outputs[0] == outputs[1] == canonical, "Same reviewed launcher differs by checkout/archive EOL; enrollment breaks on unchanged-source upgrades"
+2026-10-21T16:10:05.7677149Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-21T16:10:05.7677491Z AssertionError: Same reviewed launcher differs by checkout/archive EOL; enrollment breaks on unchanged-source upgrades
+2026-10-21T16:10:05.7677765Z 
+2026-10-21T16:10:05.7677834Z       Start  3: code_package_contracts
+2026-10-21T16:10:06.1098525Z  3/18 Test  #3: code_package_contracts ...........   Passed    0.35 sec
+2026-10-21T16:10:06.1100466Z       Start  4: worker_contracts
+2026-10-21T16:10:06.5311042Z  4/18 Test  #4: worker_contracts .................   Passed    0.42 sec
+2026-10-21T16:10:06.5313299Z       Start  5: pipeline_contracts
+2026-10-21T16:10:06.5379113Z  5/18 Test  #5: pipeline_contracts ...............   Passed    0.01 sec
+2026-10-21T16:10:06.5380983Z       Start  6: rendition_contracts
+2026-10-21T16:10:06.5437136Z  6/18 Test  #6: rendition_contracts ..............   Passed    0.01 sec
+2026-10-21T16:10:06.5439211Z       Start  7: adaptive_hardware_contracts
+2026-10-21T16:10:06.5751988Z  7/18 Test  #7: adaptive_hardware_contracts ......   Passed    0.03 sec
+2026-10-21T16:10:06.5754098Z       Start  8: progress_contracts
+2026-10-21T16:10:06.5986375Z  8/18 Test  #8: progress_contracts ...............   Passed    0.02 sec
+2026-10-21T16:10:06.5988308Z       Start  9: cli_integration_contracts
+2026-10-21T16:10:07.5335112Z  9/18 Test  #9: cli_integration_contracts ........   Passed    0.93 sec
+2026-10-21T16:10:07.5337232Z       Start 10: windows_contracts
+2026-10-21T16:10:12.0451876Z 10/18 Test #10: windows_contracts ................   Passed    4.51 sec
+2026-10-21T16:10:12.0454203Z       Start 11: setup_contracts
+2026-10-21T16:10:13.0770799Z 11/18 Test #11: setup_contracts ..................   Passed    1.03 sec
+2026-10-21T16:10:13.0773137Z       Start 12: setup_progress_contracts
+2026-10-21T16:10:21.6054005Z 12/18 Test #12: setup_progress_contracts .........   Passed    8.53 sec
+2026-10-21T16:10:21.6056247Z       Start 13: setup_converter_contracts
+2026-10-21T16:10:46.3304675Z 13/18 Test #13: setup_converter_contracts ........   Passed   24.72 sec
+2026-10-21T16:10:46.3307154Z       Start 14: owned_script_contracts
+2026-10-21T16:10:46.6984599Z 14/18 Test #14: owned_script_contracts ...........   Passed    0.37 sec
+2026-10-21T16:10:46.6986780Z       Start 15: startup_preservation_contracts
+2026-10-21T16:10:46.9710046Z 15/18 Test #15: startup_preservation_contracts ...   Passed    0.27 sec
+2026-10-21T16:10:46.9712114Z       Start 16: unattended_policy_contracts
+2026-10-21T16:10:47.5260676Z 16/18 Test #16: unattended_policy_contracts ......   Passed    0.55 sec
+2026-10-21T16:10:47.5262537Z       Start 17: updater_control_contracts
+2026-10-21T16:10:47.8957905Z 17/18 Test #17: updater_control_contracts ........   Passed    0.37 sec
+2026-10-21T16:10:47.8961152Z       Start 18: setup_swap_contracts
+2026-10-21T16:10:49.9003583Z 18/18 Test #18: setup_swap_contracts .............   Passed    2.00 sec
+2026-10-21T16:10:49.9009233Z 
+2026-10-21T16:10:49.9009401Z 94% tests passed, 1 tests failed out of 18
+2026-10-21T16:10:49.9009570Z 
+2026-10-21T16:10:49.9009670Z Total Test time (real) =  45.28 sec
+2026-10-21T16:10:49.9009801Z 
+2026-10-21T16:10:49.9009875Z The following tests FAILED:
+2026-10-21T16:10:49.9010939Z 	  2 - launcher_package_contracts (Failed)
+2026-10-21T16:10:49.9013303Z Errors while running CTest
+2026-10-21T16:10:49.9655113Z Native behavior contracts failed
+2026-10-21T16:10:49.9655671Z At D:\a\_temp\9bd5eca9-c930-4e07-aea7-39ad1349b220.ps1:3 char:28
+2026-10-21T16:10:49.9656079Z + if ($LASTEXITCODE -ne 0) { throw 'Native behavior contracts failed' }
+2026-10-21T16:10:49.9656306Z +                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-10-21T16:10:49.9656601Z     + CategoryInfo          : OperationStopped: (Native behavior contracts failed:String) [], RuntimeException
+2026-10-21T16:10:49.9656908Z     + FullyQualifiedErrorId : Native behavior contracts failed
+2026-10-21T16:10:49.9657095Z  
+2026-10-21T16:10:49.9789135Z ##[error]Process completed with exit code 1.
+2026-10-21T16:10:49.9889435Z ##[group]Run $ErrorActionPreference='Stop'
+2026-10-21T16:10:49.9889728Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-10-21T16:10:49.9889998Z [36;1m& ./tests/owner_context_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release')[0m
+2026-10-21T16:10:49.9913984Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T16:10:49.9914222Z ##[endgroup]
+2026-10-21T16:10:50.4074759Z {"rejected":false,"caller_sid":"S-1-5-21-3213014087-2684668049-2838998412-500"}
+2026-10-21T16:10:50.8429991Z {"denied":true,"error":5,"caller_sid":"S-1-5-19","owner_sid":"S-1-5-21-3213014087-2684668049-2838998412-500"}
+2026-10-21T16:10:50.9339024Z {"rejected":true,"caller_sid":"S-1-5-21-3213014087-2684668049-2838998412-500"}
+2026-10-21T16:10:50.9952922Z {"server_sid":"S-1-5-19","client_bytes":0,"connected":true}
+2026-10-21T16:10:51.0887931Z OWNER_CONTEXT_PASS real foreign SID denied; forged server received zero request bytes
+2026-10-21T16:10:51.8454906Z ##[group]Run $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
+2026-10-21T16:10:51.8455504Z [36;1m$ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'[0m
+2026-10-21T16:10:51.8455843Z [36;1m$lock=Get-Content config/dependencies.lock.json -Raw|ConvertFrom-Json[0m
+2026-10-21T16:10:51.8456140Z [36;1m$converter=Join-Path $env:RUNNER_TEMP 'ow-approved-ffmpeg.exe'[0m
+2026-10-21T16:10:51.8456453Z [36;1mInvoke-WebRequest -Uri $lock.ffmpeg.url -OutFile $converter -UseBasicParsing[0m
+2026-10-21T16:10:51.8456958Z [36;1mif((Get-Item $converter).Length -ne $lock.ffmpeg.bytes -or (Get-FileHash $converter -Algorithm SHA256).Hash -ine $lock.ffmpeg.sha256){throw 'Approved converter integrity failure'}[0m
+2026-10-21T16:10:51.8457448Z [36;1m# Metadata only, NOT an elevated encode/engine. Distinguish binary/OS[0m
+2026-10-21T16:10:51.8457760Z [36;1m# compatibility from the subsequent actual LIMITED noninteractive test.[0m
+2026-10-21T16:10:51.8458135Z [36;1m& $converter -hide_banner -version | Select-Object -First 1[0m
+2026-10-21T16:10:51.8458460Z [36;1mif($LASTEXITCODE){throw 'Approved converter cannot initialize on this Windows baseline'}[0m
+2026-10-21T16:10:51.8459070Z [36;1m& ./tests/unattended_media_test.ps1 -BinaryDirectory (Join-Path $PWD 'build-ci/Release') -ApprovedFFmpeg $converter -ApprovedSha256 $lock.ffmpeg.sha256 -ReportPath (Join-Path $PWD 'build-ci/unattended-acceptance.json')[0m
+2026-10-21T16:10:51.8481522Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T16:10:51.8481791Z ##[endgroup]
+2026-10-21T16:10:54.3631873Z ffmpeg version n9.0.2-22-g46d8f462ee-20261001 Copyright (c) 2000-2026 the FFmpeg developers
+2026-10-21T16:10:54.6790519Z UNATTENDED_FIXTURE_REJECTED: Noninteractive limited enrollment must reject without credential UI
+2026-10-21T16:10:54.6848641Z Noninteractive limited enrollment must reject without credential UI
+2026-10-21T16:10:54.7171725Z Actual limited-owner unattended fixture failed; no skipped context/DPAPI/child gates
+2026-10-21T16:10:54.7172291Z At D:\a\worker-client\worker-client\tests\unattended_media_test.ps1:6 char:134
+2026-10-21T16:10:54.7172837Z + ... ite-Output};throw 'Actual limited-owner unattended fixture failed; no ...
+2026-10-21T16:10:54.7173210Z +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-10-21T16:10:54.7173663Z     + CategoryInfo          : OperationStopped: (Actual limited-...API/child gates:String) [], RuntimeException
+2026-10-21T16:10:54.7174141Z     + FullyQualifiedErrorId : Actual limited-owner unattended fixture failed; no skipped context/DPAPI/child gates
+2026-10-21T16:10:54.7174452Z  
+2026-10-21T16:10:54.7338880Z ##[error]Process completed with exit code 1.
+2026-10-21T16:10:54.7485539Z Post job cleanup.
+2026-10-21T16:10:54.8509425Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-21T16:10:54.8726584Z git version 2.56.0.windows.2
+2026-10-21T16:10:54.8768889Z Temporarily overriding HOME='D:\a\_temp\f5a6f9ab-30b7-4ad6-a002-0ae0c2eb8bf0' before making global git config changes
+2026-10-21T16:10:54.8769583Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T16:10:54.8776856Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\worker-client\worker-client
+2026-10-21T16:10:54.9010449Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T16:10:54.9235116Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-21T16:10:55.2696868Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T16:10:55.2899282Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-21T16:10:55.6589651Z Cleaning up orphan processes
+2026-10-21T16:10:55.6754724Z Terminate orphan process: pid (3420) (vctip)
+2026-10-21T16:10:55.6825764Z Terminate orphan process: pid (7824) (MSBuild)
+2026-10-21T16:10:55.6910119Z Terminate orphan process: pid (1336) (conhost)
+2026-10-21T16:10:55.6968600Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,0 +1,41 @@
+FFFF
+======================================================================
+FAIL: test_existing_output_and_operator_data_are_never_overwritten (__main__.PackageContracts.test_existing_output_and_operator_data_are_never_overwritten)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-unattended/tests/package_worker_test.py", line 40, in test_existing_output_and_operator_data_are_never_overwritten
+    self.assertNotEqual(self.run_package().returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_missing_companion_cannot_publish_success (__main__.PackageContracts.test_missing_companion_cannot_publish_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-unattended/tests/package_worker_test.py", line 45, in test_missing_companion_cannot_publish_success
+    self.assertNotEqual(self.run_package().returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_only_code_is_published_with_matching_full_revision_and_manifest (__main__.PackageContracts.test_only_code_is_published_with_matching_full_revision_and_manifest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-unattended/tests/package_worker_test.py", line 28, in test_only_code_is_published_with_matching_full_revision_and_manifest
+    self.assertFalse((self.output / "credential.dpapi").exists(), "private/root extras must not enter an artifact")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : private/root extras must not enter an artifact
+
+======================================================================
+FAIL: test_reparse_symlink_cannot_copy_an_unreviewed_file (__main__.PackageContracts.test_reparse_symlink_cannot_copy_an_unreviewed_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rick/Downloads/worker-client-unattended/tests/package_worker_test.py", line 52, in test_reparse_symlink_cannot_copy_an_unreviewed_file
+    self.assertNotEqual(self.run_package().returncode, 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.093s
+
+FAILED (failures=4)

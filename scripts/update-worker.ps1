@@ -10,13 +10,22 @@ $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
 . (Join-Path $PSScriptRoot 'worker-package.ps1')
 . (Join-Path $PSScriptRoot 'worker-update-policy.ps1')
 . (Join-Path $PSScriptRoot 'setup-policy.ps1')
+. (Join-Path $PSScriptRoot 'worker-launch-policy.ps1')
+. (Join-Path $PSScriptRoot 'setup-startup.ps1')
 $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
 $principal=New-Object Security.Principal.WindowsPrincipal($identity)
 if($principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'Updater requires existing LIMITED owner, not an Administrator token'}
-if(-not $StartupTaskName){$StartupTaskName='OrganizerWorker-'+$identity.User.Value}
+$unattended=(Get-WorkerStartupMode $Root $identity.User.Value) -eq 'unattended';$enrollment=$null
+if($unattended){
+    $selected=Get-Content (Join-Path $Root 'current.json') -Raw|ConvertFrom-Json;Test-WorkerSwapManifest $Root $selected
+    $currentCtl=Join-Path $selected.directory 'OrganizerWorkerCtl.exe'
+    $raw=(& $currentCtl --json enrollment)-join "`n";if($LASTEXITCODE){throw 'Existing unattended enrollment invalid; LOCAL secure recovery required, no fallback/re-pair'};$enrollment=$raw|ConvertFrom-Json
+    $expectedTask='OrganizerWorker-Unattended-'+$identity.User.Value
+    if($StartupTaskName -and $StartupTaskName -cne $expectedTask){throw 'Cannot replace enrolled owner task with another startup action'}
+    $StartupTaskName=$expectedTask
+} elseif(-not $StartupTaskName){$StartupTaskName='OrganizerWorker-'+$identity.User.Value}
 $task=Get-ScheduledTask -TaskName $StartupTaskName -ErrorAction Stop
-if([string]$task.Principal.RunLevel -notin @('Limited','0') -or [string]$task.Principal.LogonType -notin @('Interactive','3') -or
-   -not (Test-WorkerAccountSid -Account $task.Principal.UserId -ExpectedSid $identity.User.Value)){throw 'Existing startup task must belong to this user and be limited/interactive'}
+Assert-WorkerLaunchTask -Task $task -OwnerSid $identity.User.Value -Unattended $unattended -Enrollment $enrollment
 $allowed=[IO.Path]::GetFullPath((Join-Path $Root 'versions'))+[IO.Path]::DirectorySeparatorChar
 $findWorkers={@(Get-Process OrganizerWorker -ErrorAction SilentlyContinue|Where-Object {$_.Path -and $_.Path.StartsWith($allowed,[StringComparison]::OrdinalIgnoreCase)})}
 # Reject unsupported old trays before staging/publishing anything. The owner must
@@ -33,8 +42,11 @@ function Invoke-WorkerJson([string]$Executable,[string[]]$Arguments) {
 }
 if(-not $RecoverOnly){
     $info=Read-WorkerValidatedPackage $Package $PackageManifestSha256
+    if($unattended -and 'start-headless.ps1' -notin @(Get-WorkerPackageNames $info)){throw 'Cannot downgrade an enrolled headless owner to a legacy interactive-only package'}
+    if($unattended){Assert-WorkerApprovedCandidate -Info $info -Enrollment $enrollment} # DATA only; never run candidateCtl to establish its own authority
     # Whitelisted public preferences, read-only SQLite, no credentials/key reads.
-    $inspection=Invoke-WorkerJson (Join-Path $Package 'OrganizerWorkerDoctor.exe') -Arguments @('--operator-settings','--data-root',$Root)
+    $inspectionDoctor=if($unattended){Join-Path $selected.directory 'OrganizerWorkerDoctor.exe'}else{Join-Path $Package 'OrganizerWorkerDoctor.exe'}
+    $inspection=Invoke-WorkerJson $inspectionDoctor -Arguments @('--operator-settings','--data-root',$Root)
     $expectedOperator=$inspection.operator
     if($AdmissionIntent -ne 'preserve'){$expectedOperator.paused=($AdmissionIntent -eq 'paused')}
 }
@@ -53,7 +65,7 @@ $stop={
     if(Get-Process ffmpeg -ErrorAction SilentlyContinue){throw 'Encoder active; defer update without terminating it'}
     $guard=[IO.File]::Open((Join-Path $Root 'instance.lock'),[IO.FileMode]::OpenOrCreate,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None);$guard.Dispose()
     if($retention.operator -and -not $RecoverOnly){
-        $latest=Invoke-WorkerJson (Join-Path $Package 'OrganizerWorkerDoctor.exe') -Arguments @('--operator-settings','--data-root',$Root)
+        $latest=Invoke-WorkerJson $inspectionDoctor -Arguments @('--operator-settings','--data-root',$Root)
         $latest.operator.paused=$retention.paused;$retention.operator=$latest.operator
     }
     Write-Output 'WORKER_STOPPED_COOPERATIVELY=True'
@@ -74,7 +86,7 @@ $verify={
         if(Test-WorkerRuntime -Root $Root -ExpectedExecutable $exe){
             $runtime=Get-Content (Join-Path $Root 'runtime.json') -Raw|ConvertFrom-Json
             $p=Get-Process -Id $runtime.process_id -ErrorAction Stop
-            if($p.SessionId -eq 0){throw 'Worker is not in the owner interactive session'}
+            if(-not $unattended -and $p.SessionId -eq 0){throw 'Legacy worker is not in the owner interactive session'}
             if(Test-Path $ctl){
                 try {
                     if(-not $intentApplied -and $retention.operator){
@@ -83,7 +95,7 @@ $verify={
                     }
                     $status=Invoke-WorkerJson $ctl -Arguments @('--data-root',$Root,'status')
                     $wantPaused=if($retention.operator){[bool]$retention.operator.paused}else{[bool]$status.paused}
-                    if($status.pid -eq $p.Id -and $status.owner_sid -eq $identity.User.Value -and $status.connected -and $status.paused -eq $wantPaused -and ($wantPaused -or $status.accepting)){
+                    if($status.pid -eq $p.Id -and $status.owner_sid -eq $identity.User.Value -and (Test-WorkerLaunchReady -Status $status -Unattended $unattended) -and $status.paused -eq $wantPaused -and ($wantPaused -or $status.accepting)){
                         & $checkIdentity
                         if($retention.operator){$after=Get-Content (Join-Path $Root 'worker.json') -Raw|ConvertFrom-Json;Test-WorkerRetainedConfiguration $beforeConfig $after $retention.operator}
                         Write-Output ('VERIFIED_SHA256='+$c.sha256+' PROCESS_PID='+$p.Id+' SESSION='+$p.SessionId+' CONNECTED=True PAUSED='+$status.paused)

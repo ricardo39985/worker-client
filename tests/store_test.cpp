@@ -14,6 +14,11 @@ TEST("read-only preference inspection cannot create or mutate a journal"){
  {Store s(file,true);CHECK(s.get("paused")=="true");CHECK(s.get("priority")=="backup");THROWS(s.set("paused","false"));THROWS(s.result("a","changed"));CHECK(s.pending_count()==1);}
  {Store s(file);CHECK(s.get("paused")=="true");CHECK(s.pending_count()==1);}
 }
+TEST("restart fence includes durable reservations while expiry or completion publication is in flight"){
+ Store s(":memory:");CHECK(s.unsettled_count()==0);CHECK(s.reserve("r","job","fingerprint"));CHECK(s.pending_count()==0);CHECK(s.unsettled_count()==1);
+ CHECK(s.start("r"));CHECK(s.unsettled_count()==1);s.result("r","body");CHECK(s.unsettled_count()==1);auto row=s.pending().front();CHECK(!s.acknowledge(row.sequence,"wrong"));CHECK(s.unsettled_count()==1);CHECK(s.acknowledge(row.sequence,"r"));CHECK(s.unsettled_count()==0);
+ CHECK(s.reserve("d","denied","fp"));CHECK(s.decline_reserved("d","profile_unavailable"));CHECK(s.unsettled_count()==0);
+}
 TEST("accepted attempt and pending result survive journal reopen"){
  Temp t;{Store s(t.path/"journal.db");CHECK(s.reserve("a","job-a","payload"));CHECK(s.start("a"));s.result("a","result");}
  Store s(t.path/"journal.db");auto p=s.pending();CHECK(p.size()==1);CHECK(p[0].body=="result");CHECK(!s.reserve("a","job-a","payload"));

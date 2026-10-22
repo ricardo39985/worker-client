@@ -1,5 +1,27 @@
 # Candidate status — 0.1.2
 
+## Current unattended-owner candidate
+
+[Architecture, local secure enrollment and acceptance](unattended-owner.md).
+Prior product529/CLI is installed on both PCs (see the final CLI release receipts),
+but new headless owner-task enrollment, new artifact installation and genuine
+before-owner-login hardware/DPAPI/TLS acceptance are NOT established. Owner-away:
+no reboot/logoff/lock/shutdown/suspend/session disconnect or production lifecycle
+experiment. Exact source head `34fc659` passed the full manual Windows build,
+24/24 native suites, real foreign-owner denial/forged-server zero-byte gate,
+actual restricted-owner current-profile DPAPI/headless restart and synthetic typed
+media/lease/ACK fixture, plus exact-source code-only packaging. Linux Release and
+full C++ ASan/UBSan suites were 8/8 immediately before the final evidence-only
+commits; no product source changed afterward. The short-retention artifact was
+downloaded and all seven payload hashes and source archive rechecked. It is not
+fresh boot, actual Password-task registration, TLS/coordinator or production-job
+proof. Prior package gate failures are in the ledger. Both existing sshd services independently verified Automatic/Running
+with the pinned key; no SSH configuration/restart was needed. SSH is not worker
+readiness. Read [current verification ledger](../verification/unattended/REPORT.md)
+for exact source/test gates; retain red runs, never treat a successful task submit
+or processing_ready=false as ready. Historical snapshots below are not current
+unattended or production-job claims.
+
 Local CLI candidate: [reference/parity matrix](cli.md),
 [gate ledger](../verification/cli/REPORT.md),
 [unverified acceptance](../verification/cli/acceptance.md).

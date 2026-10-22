@@ -9,7 +9,12 @@ The launcher verifies the installed worker hash, exact process image and process
 creation time recorded in runtime.json. A stale PID alone cannot establish launch.
 Its readiness marker means the controller started, not that pairing, converters,
 models or job dispatch are ready. Closing the console does not exit the tray.
-A real Windows sign-in is required; this is not a boot service running as SYSTEM.
+A real Windows sign-in is required for that LEGACY tray mode. The separate
+[unattended-owner candidate](unattended-owner.md) uses a real no-UI engine and
+explicit local Windows Password/Limited enrollment; not SYSTEM, S4U or autologon.
+`-NonInteractive` below suppresses installer prompts; it does NOT enroll a boot
+credential or establish before-login operation. No reboot/logoff/lock or production
+lifecycle experiment is permitted while the owner is away.
 
 The setup flow requests explicit Microsoft license acknowledgment before offering
 elevation solely for missing build tools. Parent setup resumes as the original
@@ -37,9 +42,30 @@ share those private backups or restore them into a different server scope.
 `scripts/update-worker.ps1 -Package <verified-directory> -PackageManifestSha256 <sha256>`
 updates binaries without changing configuration, pairing or startup registration.
 The operator must authorize stopping an idle worker and provide a Windows-gated
-package. `package.json` records the full source revision and SHA256 of all three
-worker executables; its hash is supplied separately from the transferred package.
+package. `package.json` records the full source revision and SHA256 of every companion.
+Legacy schema1 includes four executables/reference; schema2 adds the fifth
+attached-tray executable and fixed headless launcher (seven files total); its hash is supplied separately from the transferred package.
 No downloads, dependency changes or first-time setup occur in this path.
+
+For an already enrolled worker, both the updater and full setup require the complete
+seven-file candidate to match an explicit package approval stored in the protected
+machine anchor. Full setup verifies that approval as data before probing/executing
+the candidate or changing pairing/config/current-version state. A source rebuild
+that differs from the approved hashes is rejected; it never launches the candidate
+or stops/replaces the current engine to establish trust. Independently review the
+code-only package and its full manifest SHA-256, then have the same owner perform
+explicit local elevated approval with the protected fixed launcher:
+
+```powershell
+& '<protected Program Files bootstrap launcher>' -Mode Approve `
+  -Package '<verified package directory>' `
+  -PackageManifestSha256 '<reviewed package.json SHA-256>'
+```
+
+Approval is metadata-only; it does not create a task, enroll a password, run
+candidate tools, or approve a changed bootstrap launcher. Launcher-policy changes
+need separate secure local migration review. If approval is unavailable, retain the
+current engine and use the approved existing package; do not bypass this gate.
 
 The updater stages and verifies a complete immutable version directory before
 stopping the idle controller. It flushes the previous manifest to a recovery
@@ -51,8 +77,11 @@ at the filesystem boundary; the normal updater stops only its installed worker.
 The running executable is never overwritten.
 
 The recovery copy remains until the selected process, readiness marker and fresh
-connected/accepting status are verified through the existing limited interactive
-startup task. A caught publication or launch failure restores the exact old
+connected/accepting status are verified through the retained startup mode:
+legacy LIMITED/Interactive or the independently validated exact owner
+Password/Limited boot task. Enrolled updates require actual headless identity,
+non-elevated token and processing_ready=true; false never means ready. Candidate
+launcher/task policy mismatch refuses the update before stopping the old engine. A caught publication or launch failure restores the exact old
 manifest and verifies the old version again. Power loss or forced installer
 termination retains `current.rollback.json`; another update refuses to overwrite
 it. Rerun `scripts/update-worker.ps1 -RecoverOnly` to restore and verify the old
@@ -87,8 +116,11 @@ files carry a full-file manifest; altered, missing or extra files trigger fresh
 extraction. Failed extraction preserves the previous dependency directory.
 Build failures receive one fresh generated-build retry; failing behavior tests
 are never skipped. Converter probe failures receive one pinned verification
-retry unless an explicit external converter was supplied. Startup failures use
-SID identity verification and a normal-user Startup shortcut fallback. Persistent
+retry unless an explicit external converter was supplied. Legacy startup failures use SID identity verification and a NEW normal-user
+Startup shortcut only when no prior task/shortcut would be overwritten. Unknown
+preexisting registrations/scripts are retained/refused, never Force-replaced or
+unregistered. Valid existing registration is reused. Enrolled startup never falls
+back to interactive/S4U; native owner task validation/recovery is required. Persistent
 errors stop with the failing step and write both source and installed reports.
 
 The retained FFmpeg executable replaces the expiring upstream ZIP. Its download
@@ -100,7 +132,8 @@ real conversion probes are still mandatory. Healthy approved existing converters
 are retained. Forced repair verifies the same pinned executable. Downloads retain the maximum of three
 checksum-verified attempts; persistent failures require rerunning setup.
 
-For unattended operation, after reviewing the relevant terms and hosts:
+For noninteractive INSTALLER use, after reviewing the relevant terms and hosts
+(this is NOT password-backed unattended runtime enrollment):
 
 ```powershell
 .\setup.cmd -Server https://your-coordinator.example -NonInteractive -InstallMissing -AcceptToolLicenses -AcceptConversionLicense -AcceptStorageHosts
@@ -125,6 +158,27 @@ repairs affect generated dependencies/builds/startup; they do not silently delet
 keys, journals or result outboxes, override operator limits, or change coordinators.
 The x64/build-19041 minimum and real Windows OS component requirements remain;
 unsupported OS/architecture needs a compatible release, not an unsafe DLL download.
+
+## Enrolled pairing maintenance and artifact integrity
+
+The source installer stages and checks all seven candidate files, never overwrites
+an existing immutable version, rejects reparse paths, and installs helper scripts
+new-only or reuses exact reviewed bytes. The known old launcher is retained for
+compatibility; use the new installed CLI for owner task activation over SSH.
+Source full setup still has the documented per-file (not whole-installer)
+publication boundary; canonical binary upgrades use the shared rollback swap.
+
+Explicit stopped-owner `-RePair` retains the Windows boot registration/credential
+but marks the public enrollment `pairing_repair`. Only this explicit maintenance
+(or pending/cancelled enrollment) permits legacy pairing UI. Successful pairing
+restores `enrolled` using the same provenance/id; safe restart returns to the
+headless task. A missing/corrupt identity on ordinary headless startup NEVER
+silently re-pairs. Secure Windows password renewal is separate from app pairing.
+
+Generated headless launcher bytes are canonical LF before hashing/installing, so
+git checkout CRLF versus archive LF cannot invalidate an unchanged enrolled action.
+Actual script policy changes still require explicit secure local migration review;
+no unknown old launcher or task is clobbered to make an upgrade pass.
 
 ## Memory availability
 

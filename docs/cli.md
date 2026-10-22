@@ -1,4 +1,4 @@
-# Local worker CLI (source candidate, not installed)
+# Local worker CLI
 
 `OrganizerWorkerCtl.exe` is a console client, not another worker. Its installed
 reference is `cli.md` beside the executable; `docs/...` references in help/text
@@ -6,17 +6,18 @@ refer to the source checkout. You can read the installed reference over SSH with
 `Get-Content -LiteralPath (Join-Path $current.directory 'cli.md')` after resolving
 `$current` as below. Closing it
 cannot terminate the controller or jobs. It requires the **updated controller**;
-older installations have no control pipe. Installing this candidate requires
-separate operator permission. It cannot resume Danny's currently installed old
-worker without a separately approved upgrade. No live worker action accompanies
-this source change.
+pre-CLI installations have no control pipe. The previous CLI release was verified
+and deployed on both PCs; see [receipts](../verification/cli/RELEASE.md). New
+unattended lifecycle/enrollment below is a separate implementation candidate,
+not an installed or cold-boot-accepted upgrade. No live action accompanies docs.
 
 ## SSH / PowerShell
 
 Run as the same Windows account that owns the signed-in worker. SSH session 0
 is intended to contact that account's controller in interactive session 1: the
-named pipe is owner-scoped, not window/session-scoped. Actual SSH/logon-token
-acceptance is still an open staging gate; do not read this as a Danny PC test. A different account, including a
+named pipe is owner-scoped, not window/session-scoped. Actual prior SSH0 to
+LIMITED interactive1 acceptance is recorded in the release receipts; it is NOT
+new unattended boot acceptance. A different account, including a
 separate administrator account, is deliberately not an implicit delegate.
 Elevation is unnecessary. No password, token or signed URL belongs in arguments.
 
@@ -76,6 +77,10 @@ A versioned source archive without Git metadata reports `source-archive`.
 | Command | Observable effect |
 |---|---|
 | `status` | Fresh live structured state, never a cached status-file claim |
+| `start [--wait-seconds N]` | Candidate: idempotent enrolled owner-task activation, actual bounded headless readiness |
+| `restart [--wait-seconds N]` | Candidate: fence admission, finish reservations/jobs/results through matching ACK, preserve desired pause, replace safely |
+| `enrollment` | Candidate: inspect exact owner Password/Limited task policy; NOT a fresh-logon proof |
+| `enroll` | Candidate: LOCAL same-owner elevated secure Windows UI only; credentials never accepted as arguments/stdin |
 | `pause` | Persist pause, reject offers and reserved BEGIN; preserve running jobs |
 | `drain` | Same non-exiting pause; running jobs finish normally |
 | `resume` | Explicitly clear operator pause; repeated calls never toggle |
@@ -86,7 +91,7 @@ A versioned source archive without Git metadata reports `source-archive`.
 | `exit drain` | Pause and finish existing jobs, then exit |
 | `exit stop` | Explicit cancellation; capacity stays held until process-tree termination |
 | `auth` | Credential-file presence plus the live public, expiring approval label when pending; never private enrollment material/token retrieval |
-| `console` | Ask the interactive controller to open its independent viewer |
+| `console` | Ask interactive controller/optional attached tray to open an independent viewer; no headless UI |
 | `logs` | Return the existing log/data path, without shell execution |
 | `history` | Read existing last-outcome report, separate from live jobs |
 
@@ -110,6 +115,10 @@ There is no automatic fallback from live failure to disk edits. For disposable
 live test workers, `--data-root C:\absolute\local\root` selects only the pipe
 namespace: no path is transmitted to the server. Custom roots are prohibited
 with `--offline`; normal runtime always targets the installed owner root.
+`start/restart/enroll/enrollment` never accept custom-root/offline activation.
+Lifecycle waits1..1800seconds (defaults start600/restart1800); task submission is
+not readiness. See [secure owner enrollment and acceptance](unattended-owner.md).
+The internal authenticated restart fence is not permission for arbitrary commands.
 
 ## Complete settings / tray / setup parity inventory
 
@@ -168,7 +177,9 @@ running process's startup snapshot; no job or process is silently restarted.
 Resource/hardware admission, leases and cancel-to-drain accounting are unchanged.
 External file edits while running are not supported (setup already requires the
 instance lock). Existing installer schema/current.json and per-user startup are
-unchanged; CMake installs the companion and reference with the other executables.
+retained; the unattended candidate adds an independently enrolled limited owner
+boot task and optional separate tray. CMake installs all companions, reference
+and reviewed fixed headless launcher; no installer silently acquires credentials.
 Setup preserves added `operator` fields on upgrades. Old binaries predate the
 migration and do not read `operator`; downgrades require an explicit settings
 migration, not a claimed transparent hot-preference rollback.
@@ -181,12 +192,14 @@ Everyone, Authenticated Users, admin-group or machine-wide control grant. Same
 owner across SSH/desktop logon sessions is supported by design; an alternate
 account is not. No public HTTP listener, admin runtime, delegated file path,
 arbitrary command or secret-retrieval operation is provided. ACL rejection and
-same-owner cross-session use still require actual Windows acceptance evidence;
-Linux tests cannot establish them.
+same-owner cross-session use have prior actual Windows acceptance receipts;
+new headless/profile/task/boot behavior has separate gates. Linux tests cannot
+establish Windows behavior.
 
 ## Verification boundary
 
-See `verification/cli/REPORT.md` for exact executed checks. The native CLI
+See `verification/cli/REPORT.md` and `RELEASE.md` for prior executed CLI checks;
+[unattended acceptance](unattended-owner.md) is separate. The native CLI
 integration fixture uses a real headless controller, real owner pipe and real
 persistence, but **no coordinator or jobs**. It is not proof of Danny's worker
 upgrade, production connection, remote job execution or cross-session SSH.

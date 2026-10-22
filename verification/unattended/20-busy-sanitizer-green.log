@@ -1,0 +1,35 @@
+-- Configuring done (3.0s)
+-- Generating done (0.2s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-unattended/build-unattended-sanitize
+[  7%] Built target ow_pipeline_contract_tests
+[ 13%] Built target ow_json
+[ 18%] Built target ow_rendition_probe
+[ 26%] Built target ow_rendition_contract_tests
+[ 42%] Built target ow_progress_contract_tests
+[ 44%] Building CXX object CMakeFiles/ow_core.dir/src/lifecycle.cpp.o
+[ 47%] Linking CXX static library libow_core.a
+[ 63%] Built target ow_core
+[ 65%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 68%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/lifecycle_test.cpp.o
+[ 73%] Built target ow_adaptive_hardware_contract_tests
+[ 76%] Linking CXX executable ow_adaptive_evidence_probe
+[ 78%] Built target ow_adaptive_evidence_probe
+[ 81%] Linking CXX executable ow_contract_tests
+[100%] Built target ow_contract_tests
+Test project /home/rick/Downloads/worker-client-unattended/build-unattended-sanitize
+    Start 1: ffmpeg_dependency_contracts
+1/6 Test #1: ffmpeg_dependency_contracts ......   Passed    0.45 sec
+    Start 2: worker_contracts
+2/6 Test #2: worker_contracts .................   Passed    0.20 sec
+    Start 3: pipeline_contracts
+3/6 Test #3: pipeline_contracts ...............   Passed    0.05 sec
+    Start 4: rendition_contracts
+4/6 Test #4: rendition_contracts ..............   Passed    0.09 sec
+    Start 5: adaptive_hardware_contracts
+5/6 Test #5: adaptive_hardware_contracts ......   Passed    0.12 sec
+    Start 6: progress_contracts
+6/6 Test #6: progress_contracts ...............   Passed    0.88 sec
+
+100% tests passed, 0 tests failed out of 6
+
+Total Test time (real) =   1.80 sec

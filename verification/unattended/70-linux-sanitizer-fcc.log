@@ -1,0 +1,21 @@
+Test project /home/rick/Downloads/worker-client-unattended/build-sanitize-fcc
+    Start 1: ffmpeg_dependency_contracts
+1/8 Test #1: ffmpeg_dependency_contracts ......   Passed    0.19 sec
+    Start 2: launcher_package_contracts
+2/8 Test #2: launcher_package_contracts .......   Passed    0.05 sec
+    Start 3: code_package_contracts
+3/8 Test #3: code_package_contracts ...........   Passed    0.17 sec
+    Start 4: worker_contracts
+4/8 Test #4: worker_contracts .................   Passed    0.12 sec
+    Start 5: pipeline_contracts
+5/8 Test #5: pipeline_contracts ...............   Passed    0.03 sec
+    Start 6: rendition_contracts
+6/8 Test #6: rendition_contracts ..............   Passed    0.05 sec
+    Start 7: adaptive_hardware_contracts
+7/8 Test #7: adaptive_hardware_contracts ......   Passed    0.09 sec
+    Start 8: progress_contracts
+8/8 Test #8: progress_contracts ...............   Passed    0.54 sec
+
+100% tests passed, 0 tests failed out of 8
+
+Total Test time (real) =   1.24 sec

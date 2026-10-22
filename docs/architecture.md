@@ -32,6 +32,26 @@ Build Tools bootstrap follows Microsoft's signed VS2022 channel, not a perfectly
 reproducible fixed compiler build. The OS services follow installed Windows
 updates; their availability and relevant behavior are checked at runtime.
 
+## Unattended existing-owner candidate
+
+[Full lifecycle, credential and acceptance contract](unattended-owner.md).
+`--headless` validates the existing normal-owner profile/DPAPI/state and selected
+image before starting the same Worker/lock/owner-only pipe; no UI or implicit
+pairing. A separately enrolled Windows Password/Limited boot task runs one fixed
+reviewed launcher. The optional `OrganizerWorkerTray.exe` only attaches; it never
+owns jobs and logoff/close cannot forward a stop. Legacy interactive startup
+remains preserved, not a before-login claim. No SYSTEM/admin engine, S4U, autologon,
+foreign-SID migration, arbitrary privileged broker or plaintext credential path.
+
+Restart admission fencing is transient, distinct from durable desired pause.
+Exit waits actual child trees, admitted work and journaled reservation/running/
+pending states through matching outbox ACK. Journal rows close the expiry-to-result
+publication race even if the admission map is already empty. Bounded pending is
+not permission to kill/re-run work. Actual owner/image/hash/token, connected and
+processing_ready=true are required; task submission is not readiness. This source
+policy still requires real Windows enrollment and separately approved fresh-boot
+hardware/profile/TLS acceptance. No such boot action is authorized now.
+
 ## Console lifetime
 
 OrganizerWorker.exe is a GUI-subsystem tray/controller executable. It starts
@@ -42,7 +62,8 @@ The tray can reopen a viewer, pause new starts, change preference/priority, open
 logs, and finish-or-stop on exit. The controller must run as the signed-in,
 non-elevated Windows user. SSH can build or update it but cannot create a visible
 tray in its service session. Optional startup is an interactive logon task,
-not a boot service; user sign-in is required.
+not a boot service; user sign-in is required for that LEGACY mode. The new
+headless entry above is separate and must pass its own gates.
 
 The controller's durable log supplies the console's events and progress. Atomic
 read-only status/history files supply the latest idle frame and requested recent
@@ -83,8 +104,9 @@ without a defensible total emit one written explanation rather than a percentage
 
 ## Local control CLI candidate
 
-`OrganizerWorkerCtl.exe` is a separate console client, not a controller launch
-path. An owner-SID authenticated, remote-rejecting named pipe reaches the existing
+`OrganizerWorkerCtl.exe` is a separate console client, never a second engine.
+Candidate `start/restart` activate only the exact enrolled owner task with bounded
+actual readiness; ordinary status/config/control still require the live pipe. An owner-SID authenticated, remote-rejecting named pipe reaches the existing
 controller across logon sessions without window messages or a public listener.
 Tray and CLI share typed handlers and one atomic configuration document; legacy
 SQLite hot preferences migrate once into `worker.json.operator`. Cold file values

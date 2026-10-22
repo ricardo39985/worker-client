@@ -1,0 +1,757 @@
+﻿2026-10-21T14:32:01.3768581Z Current runner version: '2.338.0'
+2026-10-21T14:32:01.3787998Z ##[group]Runner Image Provisioner
+2026-10-21T14:32:01.3788610Z Hosted Compute Agent
+2026-10-21T14:32:01.3789085Z Version: 20261012.601
+2026-10-21T14:32:01.3789563Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-21T14:32:01.3790240Z Build Date: 2026-10-12T17:48:21Z
+2026-10-21T14:32:01.3790743Z Worker ID: {db5b0efc-e39d-4f5e-987c-6c2ab9993d95}
+2026-10-21T14:32:01.3791245Z Region: westus3
+2026-10-21T14:32:01.3791624Z Cloud: Azure
+2026-10-21T14:32:01.3791990Z ##[endgroup]
+2026-10-21T14:32:01.3792930Z ##[group]Operating System
+2026-10-21T14:32:01.3793396Z Microsoft Windows Server 2022
+2026-10-21T14:32:01.3793816Z 10.0.20348
+2026-10-21T14:32:01.3794182Z Datacenter
+2026-10-21T14:32:01.3794549Z ##[endgroup]
+2026-10-21T14:32:01.3794934Z ##[group]Runner Image
+2026-10-21T14:32:01.3795354Z Image: windows-2022
+2026-10-21T14:32:01.3795742Z Version: 20261012.333.1
+2026-10-21T14:32:01.3796920Z Included Software: https://github.com/actions/runner-images/blob/win22/20261012.333/images/windows/Windows2022-Readme.md
+2026-10-21T14:32:01.3798008Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261012.333
+2026-10-21T14:32:01.3798707Z ##[endgroup]
+2026-10-21T14:32:01.3799468Z ##[group]GITHUB_TOKEN Permissions
+2026-10-21T14:32:01.3801076Z Contents: read
+2026-10-21T14:32:01.3801487Z Metadata: read
+2026-10-21T14:32:01.3801868Z ##[endgroup]
+2026-10-21T14:32:01.3803417Z Secret source: Actions
+2026-10-21T14:32:01.3804071Z Cache mode: write
+2026-10-21T14:32:01.3804551Z Prepare workflow directory
+2026-10-21T14:32:01.4081182Z Prepare all required actions
+2026-10-21T14:32:01.4130354Z Getting action download info
+2026-10-21T14:32:01.8050887Z Download action repository 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' (SHA:11bd71901bbe5b1630ceea73d27597364c9af683)
+2026-10-21T14:32:02.0070021Z Complete job name: windows
+2026-10-21T14:32:02.1681196Z ##[group]Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+2026-10-21T14:32:02.1682143Z with:
+2026-10-21T14:32:02.1682457Z   persist-credentials: false
+2026-10-21T14:32:02.1682843Z   repository: ricardo39985/worker-client
+2026-10-21T14:32:02.1686200Z   token: ***
+2026-10-21T14:32:02.1686507Z   ssh-strict: true
+2026-10-21T14:32:02.1686808Z   ssh-user: git
+2026-10-21T14:32:02.1687100Z   clean: true
+2026-10-21T14:32:02.1687413Z   sparse-checkout-cone-mode: true
+2026-10-21T14:32:02.1687793Z   fetch-depth: 1
+2026-10-21T14:32:02.1688098Z   fetch-tags: false
+2026-10-21T14:32:02.1688420Z   show-progress: true
+2026-10-21T14:32:02.1688736Z   lfs: false
+2026-10-21T14:32:02.1689020Z   submodules: false
+2026-10-21T14:32:02.1689332Z   set-safe-directory: true
+2026-10-21T14:32:02.1689863Z ##[endgroup]
+2026-10-21T14:32:02.2817878Z Syncing repository: ricardo39985/worker-client
+2026-10-21T14:32:02.2819209Z ##[group]Getting Git version info
+2026-10-21T14:32:02.2819767Z Working directory is 'D:\a\worker-client\worker-client'
+2026-10-21T14:32:02.3513166Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-21T14:32:02.8619342Z git version 2.56.0.windows.2
+2026-10-21T14:32:02.8649199Z ##[endgroup]
+2026-10-21T14:32:02.8662834Z Temporarily overriding HOME='D:\a\_temp\57a1caaa-f04c-485e-bdf6-b808a2c8f19d' before making global git config changes
+2026-10-21T14:32:02.8663856Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T14:32:02.8672051Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\worker-client\worker-client
+2026-10-21T14:32:03.0686906Z Deleting the contents of 'D:\a\worker-client\worker-client'
+2026-10-21T14:32:03.0690912Z ##[group]Initializing the repository
+2026-10-21T14:32:03.0702435Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\worker-client\worker-client
+2026-10-21T14:32:03.5228807Z Initialized empty Git repository in D:/a/worker-client/worker-client/.git/
+2026-10-21T14:32:03.5264727Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/ricardo39985/worker-client
+2026-10-21T14:32:03.5871211Z ##[endgroup]
+2026-10-21T14:32:03.5871655Z ##[group]Disabling automatic garbage collection
+2026-10-21T14:32:03.5877815Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-21T14:32:03.6097032Z ##[endgroup]
+2026-10-21T14:32:03.6097421Z ##[group]Setting up auth
+2026-10-21T14:32:03.6105675Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T14:32:03.6327399Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-21T14:32:05.6357267Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T14:32:05.6581079Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-21T14:32:06.0311513Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-21T14:32:06.0549196Z ##[endgroup]
+2026-10-21T14:32:06.0549867Z ##[group]Fetching the repository
+2026-10-21T14:32:06.0559383Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +41ac67d51724a3e90c295e7fdea570f18d045a43:refs/remotes/origin/feat/unattended-owner
+2026-10-21T14:32:08.0058158Z From https://github.com/ricardo39985/worker-client
+2026-10-21T14:32:08.0058775Z  * [new ref]         41ac67d51724a3e90c295e7fdea570f18d045a43 -> origin/feat/unattended-owner
+2026-10-21T14:32:08.0079870Z ##[endgroup]
+2026-10-21T14:32:08.0082309Z ##[group]Determining the checkout info
+2026-10-21T14:32:08.0083397Z ##[endgroup]
+2026-10-21T14:32:08.0090389Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-21T14:32:08.0437486Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-21T14:32:08.0681582Z ##[group]Checking out the ref
+2026-10-21T14:32:08.0688085Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feat/unattended-owner refs/remotes/origin/feat/unattended-owner
+2026-10-21T14:32:08.2550422Z Switched to a new branch 'feat/unattended-owner'
+2026-10-21T14:32:08.2563888Z branch 'feat/unattended-owner' set up to track 'origin/feat/unattended-owner'.
+2026-10-21T14:32:08.2598736Z ##[endgroup]
+2026-10-21T14:32:08.2921885Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-21T14:32:08.3125167Z 41ac67d51724a3e90c295e7fdea570f18d045a43
+2026-10-21T14:32:08.3152834Z ##[group]Removing auth
+2026-10-21T14:32:08.3158969Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T14:32:08.3391793Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-21T14:32:08.7139112Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T14:32:08.7335426Z http.https://github.com/.extraheader
+2026-10-21T14:32:08.7358405Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-21T14:32:08.7580397Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-21T14:32:09.1193508Z ##[endgroup]
+2026-10-21T14:32:09.1447556Z ##[group]Run $ErrorActionPreference='Stop'
+2026-10-21T14:32:09.1448524Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-10-21T14:32:09.1448829Z [36;1mGet-ChildItem scripts,tests -Filter *.ps1 | ForEach-Object {[0m
+2026-10-21T14:32:09.1449147Z [36;1m  $tokens=$null; $errors=$null[0m
+2026-10-21T14:32:09.1449572Z [36;1m  [System.Management.Automation.Language.Parser]::ParseFile($_.FullName,[ref]$tokens,[ref]$errors) | Out-Null[0m
+2026-10-21T14:32:09.1450125Z [36;1m  if ($errors.Count -gt 0) { $errors | Out-String | Write-Error; throw 'PowerShell syntax check failed' }[0m
+2026-10-21T14:32:09.1450466Z [36;1m}[0m
+2026-10-21T14:32:09.1699651Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T14:32:09.1699999Z ##[endgroup]
+2026-10-21T14:32:14.2924748Z ##[group]Run $ErrorActionPreference='Stop'
+2026-10-21T14:32:14.2925091Z [36;1m$ErrorActionPreference='Stop'[0m
+2026-10-21T14:32:14.2925451Z [36;1m$lock=Get-Content config/dependencies.lock.json -Raw | ConvertFrom-Json[0m
+2026-10-21T14:32:14.2925980Z [36;1mif (-not (Get-Command cmake.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CMake' }[0m
+2026-10-21T14:32:14.2926558Z [36;1mif (-not (Get-Command ctest.exe -ErrorAction SilentlyContinue)) { throw 'Hosted runner is missing CTest' }[0m
+2026-10-21T14:32:14.2927044Z [36;1mInvoke-WebRequest -Uri $lock.boost.url -OutFile boost.tar.gz -UseBasicParsing[0m
+2026-10-21T14:32:14.2927560Z [36;1mif ((Get-FileHash boost.tar.gz -Algorithm SHA256).Hash -ine $lock.boost.sha256) { throw 'Dependency checksum mismatch' }[0m
+2026-10-21T14:32:14.2927964Z [36;1mcmake -E tar xzf boost.tar.gz[0m
+2026-10-21T14:32:14.2928236Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Dependency extraction failed' }[0m
+2026-10-21T14:32:14.2928586Z [36;1m$boost=Join-Path $PWD $lock.boost.directory[0m
+2026-10-21T14:32:14.2928994Z [36;1mcmake -S . -B build-ci -G 'Visual Studio 17 2022' -A x64 "-DOW_BOOST_ROOT=$boost" -DBUILD_TESTING=ON[0m
+2026-10-21T14:32:14.2929437Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Native configure failed' }[0m
+2026-10-21T14:32:14.2929759Z [36;1mcmake --build build-ci --config Release --parallel 2[0m
+2026-10-21T14:32:14.2930080Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }[0m
+2026-10-21T14:32:14.2958469Z shell: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE -command ". '{0}'"
+2026-10-21T14:32:14.2958816Z ##[endgroup]
+2026-10-21T14:35:44.7925032Z -- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.20348.
+2026-10-21T14:35:55.9474172Z -- The CXX compiler identification is MSVC 19.44.35229.0
+2026-10-21T14:35:56.0678010Z -- Detecting CXX compiler ABI info
+2026-10-21T14:35:56.9097846Z -- Detecting CXX compiler ABI info - done
+2026-10-21T14:35:56.9204623Z -- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+2026-10-21T14:35:56.9214135Z -- Detecting CXX compile features
+2026-10-21T14:35:56.9271743Z -- Detecting CXX compile features - done
+2026-10-21T14:36:01.0430928Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+2026-10-21T14:36:02.8979388Z -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+2026-10-21T14:36:02.8979941Z -- Looking for pthread_create in pthreads
+2026-10-21T14:36:03.6431195Z -- Looking for pthread_create in pthreads - not found
+2026-10-21T14:36:03.6431641Z -- Looking for pthread_create in pthread
+2026-10-21T14:36:04.1118898Z -- Looking for pthread_create in pthread - not found
+2026-10-21T14:36:04.1235086Z -- Found Threads: TRUE
+2026-10-21T14:36:05.5203882Z -- Configuring done (21.0s)
+2026-10-21T14:36:05.6727039Z -- Generating done (0.2s)
+2026-10-21T14:36:05.6732911Z -- Build files have been written to: D:/a/worker-client/worker-client/build-ci
+2026-10-21T14:36:05.7582358Z MSBuild version 17.14.60+43b635718 for .NET Framework
+2026-10-21T14:36:05.7826213Z 
+2026-10-21T14:36:06.2736352Z   1>Checking Build System
+2026-10-21T14:36:06.4635107Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:06.5762317Z   boost_json.cpp
+2026-10-21T14:36:06.8693394Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:06.8984771Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:06.9298940Z   main.cpp
+2026-10-21T14:36:07.0083783Z   main.cpp
+2026-10-21T14:36:08.2315035Z   progress_test.cpp
+2026-10-21T14:36:08.2338897Z   pipeline_test.cpp
+2026-10-21T14:36:10.9049551Z   encoder_run_test.cpp
+2026-10-21T14:36:14.0945469Z   ow_json.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_json.lib
+2026-10-21T14:36:14.1512976Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:14.2168468Z   admission.cpp
+2026-10-21T14:36:14.7064641Z   status_test.cpp
+2026-10-21T14:36:15.0738493Z   store.cpp
+2026-10-21T14:36:15.6294222Z   Generating code
+2026-10-21T14:36:15.6463050Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:36:17.3824366Z   protocol.cpp
+2026-10-21T14:36:17.4248569Z   stage_timing_test.cpp
+2026-10-21T14:36:18.6699071Z   All 3041 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:36:18.6771729Z   Finished generating code
+2026-10-21T14:36:18.9333306Z   ow_pipeline_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_contract_tests.exe
+2026-10-21T14:36:19.7726170Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:20.0381875Z   Generating code
+2026-10-21T14:36:20.0577874Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:36:20.9584799Z   pairing.cpp
+2026-10-21T14:36:24.7355943Z   adaptive_hardware.cpp
+2026-10-21T14:36:25.9042684Z   main.cpp
+2026-10-21T14:36:27.3262050Z   media_rendition_test.cpp
+2026-10-21T14:36:27.9494339Z   control.cpp
+2026-10-21T14:36:28.5813495Z   All 5170 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:36:28.6013219Z   Finished generating code
+2026-10-21T14:36:28.8425146Z   ow_progress_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_progress_contract_tests.exe
+2026-10-21T14:36:28.9193479Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:28.9904758Z   media_rendition_probe.cpp
+2026-10-21T14:36:30.2146208Z   Generating code
+2026-10-21T14:36:30.2212956Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:36:31.2071681Z   lifecycle.cpp
+2026-10-21T14:36:33.0313019Z   All 2222 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:36:33.0352653Z   Finished generating code
+2026-10-21T14:36:33.0962931Z   ow_core.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_core.lib
+2026-10-21T14:36:33.1477647Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:33.1849587Z   ow_rendition_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_contract_tests.exe
+2026-10-21T14:36:33.2013810Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:33.2598974Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:33.3042687Z   Generating code
+2026-10-21T14:36:33.3124155Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:36:33.3369447Z   main.cpp
+2026-10-21T14:36:33.4107142Z   adaptive_evidence_probe.cpp
+2026-10-21T14:36:34.5292319Z   admission_test.cpp
+2026-10-21T14:36:35.7382798Z   All 1980 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:36:35.7423359Z   Finished generating code
+2026-10-21T14:36:35.8902999Z   ow_rendition_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_rendition_probe.exe
+2026-10-21T14:36:35.9480338Z   platform.cpp
+2026-10-21T14:36:36.0573637Z   store_test.cpp
+2026-10-21T14:36:37.3059018Z   Generating code
+2026-10-21T14:36:37.3109073Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:36:38.3238163Z   All 1147 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:36:38.3259778Z   Finished generating code
+2026-10-21T14:36:38.5161363Z   ow_adaptive_evidence_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_evidence_probe.exe
+2026-10-21T14:36:38.5697747Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:36:38.6449618Z   main.cpp
+2026-10-21T14:36:38.7475325Z   protocol_test.cpp
+2026-10-21T14:36:39.3316021Z   adaptive_hardware_test.cpp
+2026-10-21T14:36:41.2956300Z   pairing_test.cpp
+2026-10-21T14:36:41.4428839Z   process.cpp
+2026-10-21T14:36:43.6836147Z   Generating code
+2026-10-21T14:36:43.7105497Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:36:43.8930637Z   capacity_test.cpp
+2026-10-21T14:36:45.4389424Z   http.cpp
+2026-10-21T14:36:45.5952258Z   control_test.cpp
+2026-10-21T14:36:48.9697458Z   lifecycle_test.cpp
+2026-10-21T14:36:49.4004976Z   worker.cpp
+2026-10-21T14:36:53.4543798Z   Generating code
+2026-10-21T14:36:53.4798414Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:36:53.7126991Z   All 5618 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:36:53.9044826Z   Finished generating code
+2026-10-21T14:36:54.9181948Z D:\a\worker-client\worker-client\windows\worker.cpp(862,289): warning C4456: declaration of 'cancelled' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+2026-10-21T14:36:55.0431978Z       D:\a\worker-client\worker-client\windows\worker.cpp(659,7):
+2026-10-21T14:36:55.1214989Z       see declaration of 'cancelled'
+2026-10-21T14:36:55.2462770Z   
+2026-10-21T14:36:56.9512345Z   ow_adaptive_hardware_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_adaptive_hardware_contract_tests.exe
+2026-10-21T14:36:58.1236020Z   probe_recovery.cpp
+2026-10-21T14:36:59.5612131Z   All 3929 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:36:59.5805524Z   Finished generating code
+2026-10-21T14:36:59.7976005Z   ow_contract_tests.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_contract_tests.exe
+2026-10-21T14:37:01.6244854Z   pairing_adapter.cpp
+2026-10-21T14:37:03.5656577Z   hardware.cpp
+2026-10-21T14:37:05.4604968Z   physical_adapters.cpp
+2026-10-21T14:37:07.4772926Z   capacity.cpp
+2026-10-21T14:37:09.1332153Z D:\a\worker-client\worker-client\windows\capacity.cpp(66,45): warning C4456: declaration of 'value' hides previous local declaration [D:\a\worker-client\worker-client\build-ci\ow_windows.vcxproj]
+2026-10-21T14:37:09.1332930Z       D:\a\worker-client\worker-client\windows\capacity.cpp(56,24):
+2026-10-21T14:37:09.1333270Z       see declaration of 'value'
+2026-10-21T14:37:09.1333509Z   
+2026-10-21T14:37:09.8231262Z   control_pipe.cpp
+2026-10-21T14:37:11.8308155Z   worker_control.cpp
+2026-10-21T14:37:14.4862116Z   headless.cpp
+2026-10-21T14:37:17.0691292Z   owner_task.cpp
+2026-10-21T14:37:19.4371396Z   owner_state.cpp
+2026-10-21T14:37:22.3985053Z   ow_windows.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_windows.lib
+2026-10-21T14:37:22.4754428Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.4758005Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.5321397Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.5322187Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.5858411Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.7090035Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.7557362Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.8047882Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.8514015Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.8984082Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.9443253Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:22.9955342Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:23.0412445Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:23.0930834Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:23.0931927Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:23.1447221Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:23.1905099Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:23.2362018Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:23.6540100Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:37:23.7133323Z   tray.cpp
+2026-10-21T14:37:23.7145660Z   windows_limited_fixture_runner.cpp
+2026-10-21T14:37:23.7181912Z   windows_legacy_actor.cpp
+2026-10-21T14:37:26.4148248Z   windows_unattended_fixture.cpp
+2026-10-21T14:37:27.5440274Z   Generating code
+2026-10-21T14:37:27.5669642Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:37:28.1619285Z   Generating code
+2026-10-21T14:37:28.3700666Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:37:28.7426123Z   All 1081 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:37:28.7494463Z   Finished generating code
+2026-10-21T14:37:29.6205206Z   ow_limited_fixture_runner.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_limited_fixture_runner.exe
+2026-10-21T14:37:30.9992592Z   windows_headless_bootstrap.cpp
+2026-10-21T14:37:31.3096899Z   windows_gpu_measurements.cpp
+2026-10-21T14:37:35.7653474Z   control_acceptance.cpp
+2026-10-21T14:37:40.1731758Z   Generating code
+2026-10-21T14:37:40.7124596Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:37:44.4247246Z   All 11443 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:37:44.4871144Z   Finished generating code
+2026-10-21T14:37:44.9242824Z   OrganizerWorker.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorker.exe
+2026-10-21T14:37:45.5210351Z   Generating code
+2026-10-21T14:37:45.5884186Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:37:45.8053932Z   All 3105 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:37:45.8158262Z   Finished generating code
+2026-10-21T14:37:46.5345047Z   ow_gpu_measurements.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_measurements.exe
+2026-10-21T14:37:47.7710820Z   windows_foreground_probe.cpp
+2026-10-21T14:37:49.1155748Z   windows_control_fixture.cpp
+2026-10-21T14:37:54.7785706Z   Generating code
+2026-10-21T14:37:54.8880386Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:37:57.7037928Z   All 986 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:37:57.7661623Z   Finished generating code
+2026-10-21T14:37:58.2474760Z   ow_foreground_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_foreground_probe.exe
+2026-10-21T14:37:58.8476600Z   Generating code
+2026-10-21T14:37:58.9063015Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:38:00.3317900Z   All 11423 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:00.4048277Z   Finished generating code
+2026-10-21T14:38:01.5046116Z   ow_unattended_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_unattended_fixture.exe
+2026-10-21T14:38:03.5381150Z   Generating code
+2026-10-21T14:38:03.7100085Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:38:14.8409158Z   All 11054 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:14.9707987Z   Finished generating code
+2026-10-21T14:38:16.4410064Z   ow_control_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_control_fixture.exe
+2026-10-21T14:38:17.7723763Z   attached_tray.cpp
+2026-10-21T14:38:18.9451636Z   console.cpp
+2026-10-21T14:38:20.8000589Z   All 11076 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:20.8405459Z   Finished generating code
+2026-10-21T14:38:21.2145156Z   ow_upgrade_actor.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_upgrade_actor.exe
+2026-10-21T14:38:21.2639282Z   windows_child.cpp
+2026-10-21T14:38:21.2703031Z   Generating code
+2026-10-21T14:38:21.2895430Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:38:22.8727489Z   All 1258 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:22.8786663Z   Finished generating code
+2026-10-21T14:38:23.0436377Z   OrganizerWorkerTray.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerTray.exe
+2026-10-21T14:38:23.0888242Z   windows_resource_probe.cpp
+2026-10-21T14:38:23.2582671Z   Generating code
+2026-10-21T14:38:23.2723379Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:38:26.0366121Z   Generating code
+2026-10-21T14:38:26.0524467Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:38:26.8955676Z   All 761 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:26.8992632Z   Finished generating code
+2026-10-21T14:38:27.0174536Z   ow_test_child.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_test_child.exe
+2026-10-21T14:38:27.1351916Z   All 1621 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:27.1398629Z   Finished generating code
+2026-10-21T14:38:27.1999874Z   Generating code
+2026-10-21T14:38:27.2149434Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:38:28.2974299Z   OrganizerWorkerConsole.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerConsole.exe
+2026-10-21T14:38:28.8732126Z   All 2157 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:28.8786593Z   Finished generating code
+2026-10-21T14:38:29.0075368Z   ow_resource_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_resource_probe.exe
+2026-10-21T14:38:29.0514036Z   windows_pipeline_smoke.cpp
+2026-10-21T14:38:29.0558292Z   windows_owner_fixture.cpp
+2026-10-21T14:38:29.9021616Z   windows_job_control_fixture.cpp
+2026-10-21T14:38:31.7858399Z   Generating code
+2026-10-21T14:38:31.8081651Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:38:33.4679280Z   All 1358 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:33.4763525Z   Finished generating code
+2026-10-21T14:38:33.6303159Z   ow_owner_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_owner_fixture.exe
+2026-10-21T14:38:33.9345361Z   control_acceptance.cpp
+2026-10-21T14:38:34.1000287Z   Generating code
+2026-10-21T14:38:34.1732151Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:38:45.8592749Z   All 10827 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:45.8878472Z   Finished generating code
+2026-10-21T14:38:46.1924961Z   ow_pipeline_smoke.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_pipeline_smoke.exe
+2026-10-21T14:38:46.6100645Z   Generating code
+2026-10-21T14:38:46.6691234Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:38:57.5355298Z   All 11405 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:38:57.5648342Z   Finished generating code
+2026-10-21T14:38:57.8860690Z   ow_job_control_fixture.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_job_control_fixture.exe
+2026-10-21T14:38:57.9316856Z   windows_gpu_budget_probe.cpp
+2026-10-21T14:38:57.9401232Z   windows_gpu_baseline.cpp
+2026-10-21T14:38:57.9447179Z   windows_flex_benchmark.cpp
+2026-10-21T14:39:01.4217038Z   Generating code
+2026-10-21T14:39:01.4525123Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:39:01.9829737Z   offline_media.cpp
+2026-10-21T14:39:04.7253025Z   All 3009 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:39:04.7357506Z   Finished generating code
+2026-10-21T14:39:04.9107138Z   ow_gpu_baseline.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_baseline.exe
+2026-10-21T14:39:05.1609966Z   Generating code
+2026-10-21T14:39:05.1859627Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:39:07.9796797Z   All 2924 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:39:07.9891271Z   Finished generating code
+2026-10-21T14:39:08.1352881Z   ow_gpu_budget_probe.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_gpu_budget_probe.exe
+2026-10-21T14:39:08.5378116Z   Generating code
+2026-10-21T14:39:08.5943114Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:39:19.5192867Z   All 11516 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:39:19.5485284Z   Finished generating code
+2026-10-21T14:39:19.8672262Z   ow_flex_benchmark.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\ow_flex_benchmark.exe
+2026-10-21T14:39:19.9158517Z   doctor.cpp
+2026-10-21T14:39:19.9216148Z   cli.cpp
+2026-10-21T14:39:19.9255145Z   Building Custom Rule D:/a/worker-client/worker-client/CMakeLists.txt
+2026-10-21T14:39:19.9898017Z   main.cpp
+2026-10-21T14:39:20.6484735Z   windows_test.cpp
+2026-10-21T14:39:23.9001137Z   Generating code
+2026-10-21T14:39:23.9558797Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:39:24.8277349Z   windows_control_test.cpp
+2026-10-21T14:39:28.8285550Z D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750): error C2678: binary '==': no operator found which takes a left-hand operand of type 'std::string' (or there is no acceptable conversion) [D:\a\worker-client\worker-client\build-ci\ow_windows_tests.vcxproj]
+2026-10-21T14:39:28.8726363Z       C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\guiddef.h(192,15):
+2026-10-21T14:39:28.9708694Z       could be 'bool operator ==(const GUID &,const GUID &)'
+2026-10-21T14:39:29.0324386Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:29.0458390Z           'bool operator ==(const GUID &,const GUID &)': cannot convert argument 1 from 'boost::json::value' to 'const GUID &'
+2026-10-21T14:39:29.0628812Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:29.1747241Z               Reason: cannot convert from 'boost::json::value' to 'const GUID'
+2026-10-21T14:39:29.2352472Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:29.2353886Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:29.2366145Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\thread(267,36):
+2026-10-21T14:39:29.2506874Z       or       'bool std::operator ==(std::thread::id,std::thread::id) noexcept' [found using argument-dependent lookup]
+2026-10-21T14:39:29.3762545Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:29.4387503Z           'bool std::operator ==(std::thread::id,std::thread::id) noexcept': cannot convert argument 1 from 'boost::json::value' to 'std::thread::id'
+2026-10-21T14:39:29.4406897Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:29.5795752Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:29.6422702Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\storage_ptr.hpp(441,1):
+2026-10-21T14:39:29.7827676Z       or       'bool boost::json::operator ==(const boost::json::storage_ptr &,const boost::json::storage_ptr &) noexcept' [found using argument-dependent lookup]
+2026-10-21T14:39:29.8452037Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:29.8453533Z           'bool boost::json::operator ==(const boost::json::storage_ptr &,const boost::json::storage_ptr &) noexcept': cannot convert argument 1 from 'boost::json::value' to 'const boost::json::storage_ptr &'
+2026-10-21T14:39:29.8454944Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:29.9880111Z               Reason: cannot convert from 'boost::json::value' to 'const boost::json::storage_ptr'
+2026-10-21T14:39:30.0464407Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:30.0465333Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:30.1894154Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(3053,5):
+2026-10-21T14:39:30.2363564Z       or       'bool boost::json::operator ==(const boost::json::value &,const boost::json::value &) noexcept' [found using argument-dependent lookup]
+2026-10-21T14:39:30.3978124Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:30.4302340Z           'bool boost::json::operator ==(const boost::json::value &,const boost::json::value &) noexcept': cannot convert argument 2 from 'std::string' to 'const boost::json::value &'
+2026-10-21T14:39:30.4402176Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:30.5956484Z               Reason: cannot convert from 'std::string' to 'const boost::json::value'
+2026-10-21T14:39:30.6268841Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:30.6269809Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:30.6428407Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\variant(1650,39):
+2026-10-21T14:39:30.7995797Z       or       'bool std::operator ==(std::monostate,std::monostate) noexcept' [found using argument-dependent lookup]
+2026-10-21T14:39:30.8152567Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:30.8305706Z           'bool std::operator ==(std::monostate,std::monostate) noexcept': cannot convert argument 1 from 'boost::json::value' to 'std::monostate'
+2026-10-21T14:39:30.8461455Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:31.0024784Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:31.0181080Z       C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\guiddef.h(192,15):
+2026-10-21T14:39:31.0337548Z       or 'bool operator ==(const GUID &,const GUID &)' [synthesized expression 'y == x']
+2026-10-21T14:39:31.0471629Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:31.2061144Z           'bool operator ==(const GUID &,const GUID &)': cannot convert argument 1 from 'std::string' to 'const GUID &'
+2026-10-21T14:39:31.2065462Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:31.2221263Z               Reason: cannot convert from 'std::string' to 'const GUID'
+2026-10-21T14:39:31.2378130Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:31.4098396Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:31.4254266Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\thread(267,36):
+2026-10-21T14:39:31.4419163Z       or 'bool std::operator ==(std::thread::id,std::thread::id) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:31.6128063Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:31.6348318Z           'bool std::operator ==(std::thread::id,std::thread::id) noexcept': cannot convert argument 1 from 'std::string' to 'std::thread::id'
+2026-10-21T14:39:31.6494489Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:31.8315692Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:31.8589910Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\storage_ptr.hpp(441,1):
+2026-10-21T14:39:32.0348693Z       or 'bool boost::json::operator ==(const boost::json::storage_ptr &,const boost::json::storage_ptr &) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:32.0478477Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:32.2392130Z           'bool boost::json::operator ==(const boost::json::storage_ptr &,const boost::json::storage_ptr &) noexcept': cannot convert argument 1 from 'std::string' to 'const boost::json::storage_ptr &'
+2026-10-21T14:39:32.3858661Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:32.4418273Z               Reason: cannot convert from 'std::string' to 'const boost::json::storage_ptr'
+2026-10-21T14:39:32.6449499Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:32.7211594Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:32.7213282Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\value.hpp(3053,5):
+2026-10-21T14:39:32.8041111Z       or 'bool boost::json::operator ==(const boost::json::value &,const boost::json::value &) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:32.8043923Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:32.8481059Z           'bool boost::json::operator ==(const boost::json::value &,const boost::json::value &) noexcept': cannot convert argument 1 from 'std::string' to 'const boost::json::value &'
+2026-10-21T14:39:32.8482318Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:32.9105689Z               Reason: cannot convert from 'std::string' to 'const boost::json::value'
+2026-10-21T14:39:33.0045175Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:33.0361697Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:33.1142708Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\variant(1650,39):
+2026-10-21T14:39:33.2085097Z       or 'bool std::operator ==(std::monostate,std::monostate) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:33.2241412Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:33.3182238Z           'bool std::operator ==(std::monostate,std::monostate) noexcept': cannot convert argument 1 from 'std::string' to 'std::monostate'
+2026-10-21T14:39:33.4117325Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:33.4272414Z               No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+2026-10-21T14:39:33.5218613Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\utility(503,27):
+2026-10-21T14:39:33.6153748Z       or       'bool std::operator ==(const std::pair<_Ty1,_Ty2> &,const std::pair<_Uty1,_Uty2> &)'
+2026-10-21T14:39:33.6254858Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:33.7254263Z           'bool std::operator ==(const std::pair<_Ty1,_Ty2> &,const std::pair<_Uty1,_Uty2> &)': could not deduce template argument for 'const std::pair<_Ty1,_Ty2> &' from 'boost::json::value'
+2026-10-21T14:39:33.8041204Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\tuple(844,27):
+2026-10-21T14:39:33.8189647Z       or       'bool std::operator ==(const std::tuple<_Types...> &,const std::tuple<_Types...> &)'
+2026-10-21T14:39:33.9143730Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.0067390Z           'bool std::operator ==(const std::tuple<_Types...> &,const std::tuple<_Types...> &)': could not deduce template argument for 'const std::tuple<_Types...> &' from 'boost::json::value'
+2026-10-21T14:39:34.0222754Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xutility(1896,30):
+2026-10-21T14:39:34.1012547Z       or       'bool std::operator ==(const std::reverse_iterator<_BidIt> &,const std::reverse_iterator<_BidIt2> &) noexcept(<expr>)'
+2026-10-21T14:39:34.1013861Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1015434Z           'bool std::operator ==(const std::reverse_iterator<_BidIt> &,const std::reverse_iterator<_BidIt2> &) noexcept(<expr>)': could not deduce template argument for 'const std::reverse_iterator<_BidIt> &' from 'boost::json::value'
+2026-10-21T14:39:34.1017222Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xutility(4458,30):
+2026-10-21T14:39:34.1018399Z       or       'bool std::operator ==(const std::move_iterator<_Iter> &,const std::move_iterator<_Iter2> &) noexcept(<expr>)'
+2026-10-21T14:39:34.1019398Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1021081Z           'bool std::operator ==(const std::move_iterator<_Iter> &,const std::move_iterator<_Iter2> &) noexcept(<expr>)': could not deduce template argument for 'const std::move_iterator<_Iter> &' from 'boost::json::value'
+2026-10-21T14:39:34.1027950Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xmemory(1050,30):
+2026-10-21T14:39:34.1029164Z       or       'bool std::operator ==(const std::allocator<_Ty> &,const std::allocator<_Other> &) noexcept'
+2026-10-21T14:39:34.1030100Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1031693Z           'bool std::operator ==(const std::allocator<_Ty> &,const std::allocator<_Other> &) noexcept': could not deduce template argument for 'const std::allocator<_Ty> &' from 'boost::json::value'
+2026-10-21T14:39:34.1033552Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\list(1890,17):
+2026-10-21T14:39:34.1034794Z       or       'bool std::operator ==(const std::list<_Ty,_Alloc> &,const std::list<_Ty,_Alloc> &)'
+2026-10-21T14:39:34.1035616Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1036753Z           'bool std::operator ==(const std::list<_Ty,_Alloc> &,const std::list<_Ty,_Alloc> &)': could not deduce template argument for 'const std::list<_Ty,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1038362Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\vector(2266,30):
+2026-10-21T14:39:34.1039356Z       or       'bool std::operator ==(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)'
+2026-10-21T14:39:34.1040221Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1042695Z           'bool std::operator ==(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)': could not deduce template argument for 'const std::vector<_Ty,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1044238Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\unordered_map(536,17):
+2026-10-21T14:39:34.1045518Z       or       'bool std::operator ==(const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)'
+2026-10-21T14:39:34.1046598Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1048129Z           'bool std::operator ==(const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)': could not deduce template argument for 'const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1049897Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\unordered_map(908,17):
+2026-10-21T14:39:34.1051815Z       or       'bool std::operator ==(const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)'
+2026-10-21T14:39:34.1053071Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1054795Z           'bool std::operator ==(const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)': could not deduce template argument for 'const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1056741Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\functional(1284,17):
+2026-10-21T14:39:34.1057972Z       or       'bool std::operator ==(const std::function<_Fty> &,std::nullptr_t) noexcept'
+2026-10-21T14:39:34.1058873Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1060071Z           'bool std::operator ==(const std::function<_Fty> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::function<_Fty> &' from 'boost::json::value'
+2026-10-21T14:39:34.1061385Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\iterator(304,17):
+2026-10-21T14:39:34.1062609Z       or       'bool std::operator ==(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &) noexcept'
+2026-10-21T14:39:34.1063639Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1065118Z           'bool std::operator ==(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &) noexcept': could not deduce template argument for 'const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &' from 'boost::json::value'
+2026-10-21T14:39:34.1066939Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\iterator(486,17):
+2026-10-21T14:39:34.1068027Z       or       'bool std::operator ==(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)'
+2026-10-21T14:39:34.1068986Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1070551Z           'bool std::operator ==(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)': could not deduce template argument for 'const std::istreambuf_iterator<_Elem,_Traits> &' from 'boost::json::value'
+2026-10-21T14:39:34.1072152Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\__msvc_string_view.hpp(1823,27):
+2026-10-21T14:39:34.1073343Z       or       'bool std::operator ==(const std::basic_string_view<_Elem,_Traits>,const type_identity<std::basic_string_view<_Elem,_Traits>>::type) noexcept'
+2026-10-21T14:39:34.1074553Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1076710Z           'bool std::operator ==(const std::basic_string_view<_Elem,_Traits>,const type_identity<std::basic_string_view<_Elem,_Traits>>::type) noexcept': could not deduce template argument for 'const std::basic_string_view<_Elem,_Traits>' from 'boost::json::value'
+2026-10-21T14:39:34.1078444Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xstring(3257,30):
+2026-10-21T14:39:34.1079562Z       or       'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &) noexcept'
+2026-10-21T14:39:34.1080549Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1081977Z           'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &) noexcept': could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1083575Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xstring(3263,30):
+2026-10-21T14:39:34.1084566Z       or       'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *const ) noexcept'
+2026-10-21T14:39:34.1085443Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1086773Z           'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *const ) noexcept': could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1088727Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(1880,17):
+2026-10-21T14:39:34.1089722Z       or       'bool std::operator ==(const std::shared_ptr<_Ty> &,const std::shared_ptr<_Ty0> &) noexcept'
+2026-10-21T14:39:34.1090573Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1091811Z           'bool std::operator ==(const std::shared_ptr<_Ty> &,const std::shared_ptr<_Ty0> &) noexcept': could not deduce template argument for 'const std::shared_ptr<_Ty> &' from 'boost::json::value'
+2026-10-21T14:39:34.1093129Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(1917,17):
+2026-10-21T14:39:34.1094671Z       or       'bool std::operator ==(const std::shared_ptr<_Ty> &,std::nullptr_t) noexcept'
+2026-10-21T14:39:34.1095452Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1096608Z           'bool std::operator ==(const std::shared_ptr<_Ty> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::shared_ptr<_Ty> &' from 'boost::json::value'
+2026-10-21T14:39:34.1097882Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(3666,30):
+2026-10-21T14:39:34.1098860Z       or       'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,const std::unique_ptr<_Ty2,_Dx2> &)'
+2026-10-21T14:39:34.1099742Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1100961Z           'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,const std::unique_ptr<_Ty2,_Dx2> &)': could not deduce template argument for 'const std::unique_ptr<_Ty,_Dx> &' from 'boost::json::value'
+2026-10-21T14:39:34.1102445Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(3712,30):
+2026-10-21T14:39:34.1103325Z       or       'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,std::nullptr_t) noexcept'
+2026-10-21T14:39:34.1104060Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1105376Z           'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::unique_ptr<_Ty,_Dx> &' from 'boost::json::value'
+2026-10-21T14:39:34.1106707Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\forward_list(1589,17):
+2026-10-21T14:39:34.1107737Z       or       'bool std::operator ==(const std::forward_list<_Ty,_Alloc> &,const std::forward_list<_Ty,_Alloc> &)'
+2026-10-21T14:39:34.1108589Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1109840Z           'bool std::operator ==(const std::forward_list<_Ty,_Alloc> &,const std::forward_list<_Ty,_Alloc> &)': could not deduce template argument for 'const std::forward_list<_Ty,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1111249Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(647,27):
+2026-10-21T14:39:34.1112221Z       or       'bool std::operator ==(const std::optional<_Ty> &,const std::optional<_Ty2> &) noexcept(<expr>)'
+2026-10-21T14:39:34.1113034Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1114219Z           'bool std::operator ==(const std::optional<_Ty> &,const std::optional<_Ty2> &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty> &' from 'boost::json::value'
+2026-10-21T14:39:34.1115572Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(763,27):
+2026-10-21T14:39:34.1116462Z       or       'bool std::operator ==(const std::optional<_Ty> &,std::nullopt_t) noexcept'
+2026-10-21T14:39:34.1117250Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1118379Z           'bool std::operator ==(const std::optional<_Ty> &,std::nullopt_t) noexcept': could not deduce template argument for 'const std::optional<_Ty> &' from 'boost::json::value'
+2026-10-21T14:39:34.1119623Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(852,27):
+2026-10-21T14:39:34.1120571Z       or       'bool std::operator ==(const std::optional<_Ty> &,const _Ty2 &) noexcept(<expr>)'
+2026-10-21T14:39:34.1121356Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1122488Z           'bool std::operator ==(const std::optional<_Ty> &,const _Ty2 &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty> &' from 'boost::json::value'
+2026-10-21T14:39:34.1123740Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(861,27):
+2026-10-21T14:39:34.1125047Z       or       'bool std::operator ==(const _Ty1 &,const std::optional<_Ty2> &) noexcept(<expr>)'
+2026-10-21T14:39:34.1125857Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1126972Z           'bool std::operator ==(const _Ty1 &,const std::optional<_Ty2> &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty2> &' from 'std::string'
+2026-10-21T14:39:34.1128088Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\string.hpp(2081,1):
+2026-10-21T14:39:34.1129172Z       or       'std::enable_if<string_and_stringlike<T,U>::value||string_and_stringlike<U,T>::value,bool>::type boost::json::operator ==(const T &,const U &) noexcept'
+2026-10-21T14:39:34.1130356Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1131606Z           Failed to specialize function template 'std::enable_if<string_and_stringlike<T,U>::value||string_and_stringlike<U,T>::value,bool>::type boost::json::operator ==(const T &,const U &) noexcept'
+2026-10-21T14:39:34.1132822Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1133527Z               With the following template arguments:
+2026-10-21T14:39:34.1134199Z                   D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1135806Z                   'T=boost::json::value'
+2026-10-21T14:39:34.1136521Z                   D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1137166Z                   'U=std::string'
+2026-10-21T14:39:34.1137770Z               D:\a\worker-client\worker-client\boost_1_89_0\boost\json\string.hpp(2080,9):
+2026-10-21T14:39:34.1138625Z               'boost::json::detail::string_comp_op_requirement' : Failed to specialize alias template
+2026-10-21T14:39:34.1139555Z                   D:\a\worker-client\worker-client\boost_1_89_0\boost\json\detail\string_impl.hpp(379,16):
+2026-10-21T14:39:34.1140489Z                   'type': is not a member of any direct or indirect base class of 'std::enable_if<false,bool>'
+2026-10-21T14:39:34.1141433Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\array(777,30):
+2026-10-21T14:39:34.1142392Z       or       'bool std::operator ==(const std::array<_Ty,_Size> &,const std::array<_Ty,_Size> &)'
+2026-10-21T14:39:34.1143228Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1144418Z           'bool std::operator ==(const std::array<_Ty,_Size> &,const std::array<_Ty,_Size> &)': could not deduce template argument for 'const std::array<_Ty,_Size> &' from 'boost::json::value'
+2026-10-21T14:39:34.1145700Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\variant(1300,27):
+2026-10-21T14:39:34.1146727Z       or       'bool std::operator ==(const std::variant<_Types...> &,const std::variant<_Types...> &) noexcept(<expr>)'
+2026-10-21T14:39:34.1147600Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1148863Z           'bool std::operator ==(const std::variant<_Types...> &,const std::variant<_Types...> &) noexcept(<expr>)': could not deduce template argument for 'const std::variant<_Types...> &' from 'boost::json::value'
+2026-10-21T14:39:34.1150222Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\map(400,17):
+2026-10-21T14:39:34.1151174Z       or       'bool std::operator ==(const std::map<_Kty,_Ty,_Pr,_Alloc> &,const std::map<_Kty,_Ty,_Pr,_Alloc> &)'
+2026-10-21T14:39:34.1152025Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1153228Z           'bool std::operator ==(const std::map<_Kty,_Ty,_Pr,_Alloc> &,const std::map<_Kty,_Ty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::map<_Kty,_Ty,_Pr,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1154620Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\map(631,17):
+2026-10-21T14:39:34.1155626Z       or       'bool std::operator ==(const std::multimap<_Kty,_Ty,_Pr,_Alloc> &,const std::multimap<_Kty,_Ty,_Pr,_Alloc> &)'
+2026-10-21T14:39:34.1156510Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1157802Z           'bool std::operator ==(const std::multimap<_Kty,_Ty,_Pr,_Alloc> &,const std::multimap<_Kty,_Ty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::multimap<_Kty,_Ty,_Pr,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1160440Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\set(209,17):
+2026-10-21T14:39:34.1165684Z       or       'bool std::operator ==(const std::set<_Kty,_Pr,_Alloc> &,const std::set<_Kty,_Pr,_Alloc> &)'
+2026-10-21T14:39:34.1166991Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1168952Z           'bool std::operator ==(const std::set<_Kty,_Pr,_Alloc> &,const std::set<_Kty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::set<_Kty,_Pr,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1170633Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\set(424,17):
+2026-10-21T14:39:34.1171720Z       or       'bool std::operator ==(const std::multiset<_Kty,_Pr,_Alloc> &,const std::multiset<_Kty,_Pr,_Alloc> &)'
+2026-10-21T14:39:34.1172658Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1173978Z           'bool std::operator ==(const std::multiset<_Kty,_Pr,_Alloc> &,const std::multiset<_Kty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::multiset<_Kty,_Pr,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1175465Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\deque(1793,17):
+2026-10-21T14:39:34.1176539Z       or       'bool std::operator ==(const std::deque<_Ty,_Alloc> &,const std::deque<_Ty,_Alloc> &)'
+2026-10-21T14:39:34.1178045Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1180489Z           'bool std::operator ==(const std::deque<_Ty,_Alloc> &,const std::deque<_Ty,_Alloc> &)': could not deduce template argument for 'const std::deque<_Ty,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1182364Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\utility(503,27):
+2026-10-21T14:39:34.1183472Z       or 'bool std::operator ==(const std::pair<_Ty1,_Ty2> &,const std::pair<_Uty1,_Uty2> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1184533Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1185793Z           'bool std::operator ==(const std::pair<_Ty1,_Ty2> &,const std::pair<_Uty1,_Uty2> &)': could not deduce template argument for 'const std::pair<_Ty1,_Ty2> &' from 'std::string'
+2026-10-21T14:39:34.1187154Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\tuple(844,27):
+2026-10-21T14:39:34.1188286Z       or 'bool std::operator ==(const std::tuple<_Types...> &,const std::tuple<_Types...> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1189263Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1190460Z           'bool std::operator ==(const std::tuple<_Types...> &,const std::tuple<_Types...> &)': could not deduce template argument for 'const std::tuple<_Types...> &' from 'std::string'
+2026-10-21T14:39:34.1191820Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xutility(1896,30):
+2026-10-21T14:39:34.1193083Z       or 'bool std::operator ==(const std::reverse_iterator<_BidIt> &,const std::reverse_iterator<_BidIt2> &) noexcept(<expr>)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1194267Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1195569Z           'bool std::operator ==(const std::reverse_iterator<_BidIt> &,const std::reverse_iterator<_BidIt2> &) noexcept(<expr>)': could not deduce template argument for 'const std::reverse_iterator<_BidIt> &' from 'std::string'
+2026-10-21T14:39:34.1197182Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xutility(4458,30):
+2026-10-21T14:39:34.1198469Z       or 'bool std::operator ==(const std::move_iterator<_Iter> &,const std::move_iterator<_Iter2> &) noexcept(<expr>)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1199757Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1201123Z           'bool std::operator ==(const std::move_iterator<_Iter> &,const std::move_iterator<_Iter2> &) noexcept(<expr>)': could not deduce template argument for 'const std::move_iterator<_Iter> &' from 'std::string'
+2026-10-21T14:39:34.1202645Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xmemory(1050,30):
+2026-10-21T14:39:34.1203929Z       or 'bool std::operator ==(const std::allocator<_Ty> &,const std::allocator<_Other> &) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1204972Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1206310Z           'bool std::operator ==(const std::allocator<_Ty> &,const std::allocator<_Other> &) noexcept': could not deduce template argument for 'const std::allocator<_Ty> &' from 'std::string'
+2026-10-21T14:39:34.1207734Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\list(1890,17):
+2026-10-21T14:39:34.1209400Z       or 'bool std::operator ==(const std::list<_Ty,_Alloc> &,const std::list<_Ty,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1210374Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1211598Z           'bool std::operator ==(const std::list<_Ty,_Alloc> &,const std::list<_Ty,_Alloc> &)': could not deduce template argument for 'const std::list<_Ty,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1212974Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\vector(2266,30):
+2026-10-21T14:39:34.1214204Z       or 'bool std::operator ==(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1215232Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1216451Z           'bool std::operator ==(const std::vector<_Ty,_Alloc> &,const std::vector<_Ty,_Alloc> &)': could not deduce template argument for 'const std::vector<_Ty,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1217746Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\unordered_map(536,17):
+2026-10-21T14:39:34.1219014Z       or 'bool std::operator ==(const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1220136Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1221634Z           'bool std::operator ==(const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)': could not deduce template argument for 'const std::unordered_map<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1223410Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\unordered_map(908,17):
+2026-10-21T14:39:34.1224692Z       or 'bool std::operator ==(const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1225813Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1227303Z           'bool std::operator ==(const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &,const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &)': could not deduce template argument for 'const std::unordered_multimap<_Kty,_Ty,_Hasher,_Keyeq,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1228987Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\functional(1284,17):
+2026-10-21T14:39:34.1232133Z       or 'bool std::operator ==(const std::function<_Fty> &,std::nullptr_t) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1233107Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1234304Z           'bool std::operator ==(const std::function<_Fty> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::function<_Fty> &' from 'std::string'
+2026-10-21T14:39:34.1235636Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\iterator(304,17):
+2026-10-21T14:39:34.1237149Z       or 'bool std::operator ==(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1238320Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1239846Z           'bool std::operator ==(const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &,const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &) noexcept': could not deduce template argument for 'const std::istream_iterator<_Ty,_Elem,_Traits,_Diff> &' from 'std::string'
+2026-10-21T14:39:34.1269715Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\iterator(486,17):
+2026-10-21T14:39:34.1271012Z       or 'bool std::operator ==(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1272146Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1273524Z           'bool std::operator ==(const std::istreambuf_iterator<_Elem,_Traits> &,const std::istreambuf_iterator<_Elem,_Traits> &)': could not deduce template argument for 'const std::istreambuf_iterator<_Elem,_Traits> &' from 'std::string'
+2026-10-21T14:39:34.1276227Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\__msvc_string_view.hpp(1823,27):
+2026-10-21T14:39:34.1278107Z       or 'bool std::operator ==(const std::basic_string_view<_Elem,_Traits>,const type_identity<std::basic_string_view<_Elem,_Traits>>::type) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1279257Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1280712Z           'bool std::operator ==(const std::basic_string_view<_Elem,_Traits>,const type_identity<std::basic_string_view<_Elem,_Traits>>::type) noexcept': could not deduce template argument for 'const std::basic_string_view<_Elem,_Traits>' from 'std::string'
+2026-10-21T14:39:34.1282397Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xstring(3257,30):
+2026-10-21T14:39:34.1283621Z       or 'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1284672Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1286099Z           'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const std::basic_string<_Elem,_Traits,_Alloc> &) noexcept': could not deduce template argument for 'const std::basic_string<_Elem,_Traits,_Alloc> &' from 'boost::json::value'
+2026-10-21T14:39:34.1287764Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\xstring(3263,30):
+2026-10-21T14:39:34.1288915Z       or 'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *const ) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1289902Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1291130Z           'bool std::operator ==(const std::basic_string<_Elem,_Traits,_Alloc> &,const _Elem *const ) noexcept': could not deduce template argument for 'const _Elem *const ' from 'boost::json::value'
+2026-10-21T14:39:34.1292658Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(1880,17):
+2026-10-21T14:39:34.1293777Z       or 'bool std::operator ==(const std::shared_ptr<_Ty> &,const std::shared_ptr<_Ty0> &) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1294725Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1295895Z           'bool std::operator ==(const std::shared_ptr<_Ty> &,const std::shared_ptr<_Ty0> &) noexcept': could not deduce template argument for 'const std::shared_ptr<_Ty> &' from 'std::string'
+2026-10-21T14:39:34.1297296Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(1917,17):
+2026-10-21T14:39:34.1298344Z       or 'bool std::operator ==(const std::shared_ptr<_Ty> &,std::nullptr_t) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1299221Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1300330Z           'bool std::operator ==(const std::shared_ptr<_Ty> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::shared_ptr<_Ty> &' from 'std::string'
+2026-10-21T14:39:34.1301584Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(3666,30):
+2026-10-21T14:39:34.1302667Z       or 'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,const std::unique_ptr<_Ty2,_Dx2> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1303571Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1304740Z           'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,const std::unique_ptr<_Ty2,_Dx2> &)': could not deduce template argument for 'const std::unique_ptr<_Ty,_Dx> &' from 'std::string'
+2026-10-21T14:39:34.1306025Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\memory(3712,30):
+2026-10-21T14:39:34.1307067Z       or 'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,std::nullptr_t) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1307946Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1309080Z           'bool std::operator ==(const std::unique_ptr<_Ty,_Dx> &,std::nullptr_t) noexcept': could not deduce template argument for 'const std::unique_ptr<_Ty,_Dx> &' from 'std::string'
+2026-10-21T14:39:34.1310384Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\forward_list(1589,17):
+2026-10-21T14:39:34.1312211Z       or 'bool std::operator ==(const std::forward_list<_Ty,_Alloc> &,const std::forward_list<_Ty,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1313191Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1314424Z           'bool std::operator ==(const std::forward_list<_Ty,_Alloc> &,const std::forward_list<_Ty,_Alloc> &)': could not deduce template argument for 'const std::forward_list<_Ty,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1315817Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(647,27):
+2026-10-21T14:39:34.1316915Z       or 'bool std::operator ==(const std::optional<_Ty> &,const std::optional<_Ty2> &) noexcept(<expr>)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1317862Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1320697Z           'bool std::operator ==(const std::optional<_Ty> &,const std::optional<_Ty2> &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty> &' from 'std::string'
+2026-10-21T14:39:34.1323859Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(763,27):
+2026-10-21T14:39:34.1324990Z       or 'bool std::operator ==(const std::optional<_Ty> &,std::nullopt_t) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1326079Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1327191Z           'bool std::operator ==(const std::optional<_Ty> &,std::nullopt_t) noexcept': could not deduce template argument for 'const std::optional<_Ty> &' from 'std::string'
+2026-10-21T14:39:34.1328458Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(852,27):
+2026-10-21T14:39:34.1330196Z       or 'bool std::operator ==(const std::optional<_Ty> &,const _Ty2 &) noexcept(<expr>)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1331112Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1332258Z           'bool std::operator ==(const std::optional<_Ty> &,const _Ty2 &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty> &' from 'std::string'
+2026-10-21T14:39:34.1333499Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\optional(861,27):
+2026-10-21T14:39:34.1334538Z       or 'bool std::operator ==(const _Ty1 &,const std::optional<_Ty2> &) noexcept(<expr>)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1335559Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1336697Z           'bool std::operator ==(const _Ty1 &,const std::optional<_Ty2> &) noexcept(<expr>)': could not deduce template argument for 'const std::optional<_Ty2> &' from 'boost::json::value'
+2026-10-21T14:39:34.1337806Z       D:\a\worker-client\worker-client\boost_1_89_0\boost\json\string.hpp(2081,1):
+2026-10-21T14:39:34.1338924Z       or 'std::enable_if<string_and_stringlike<T,U>::value||string_and_stringlike<U,T>::value,bool>::type boost::json::operator ==(const T &,const U &) noexcept' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1340012Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1341151Z           Failed to specialize function template 'std::enable_if<string_and_stringlike<T,U>::value||string_and_stringlike<U,T>::value,bool>::type boost::json::operator ==(const T &,const U &) noexcept'
+2026-10-21T14:39:34.1342274Z               D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1342840Z               With the following template arguments:
+2026-10-21T14:39:34.1343409Z                   D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1343965Z                   'T=std::string'
+2026-10-21T14:39:34.1344498Z                   D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1345042Z                   'U=boost::json::value'
+2026-10-21T14:39:34.1345578Z               D:\a\worker-client\worker-client\boost_1_89_0\boost\json\string.hpp(2080,9):
+2026-10-21T14:39:34.1346337Z               'boost::json::detail::string_comp_op_requirement' : Failed to specialize alias template
+2026-10-21T14:39:34.1347174Z                   D:\a\worker-client\worker-client\boost_1_89_0\boost\json\detail\string_impl.hpp(379,16):
+2026-10-21T14:39:34.1348001Z                   'type': is not a member of any direct or indirect base class of 'std::enable_if<false,bool>'
+2026-10-21T14:39:34.1348897Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\array(777,30):
+2026-10-21T14:39:34.1349865Z       or 'bool std::operator ==(const std::array<_Ty,_Size> &,const std::array<_Ty,_Size> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1350680Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1351812Z           'bool std::operator ==(const std::array<_Ty,_Size> &,const std::array<_Ty,_Size> &)': could not deduce template argument for 'const std::array<_Ty,_Size> &' from 'std::string'
+2026-10-21T14:39:34.1353118Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\variant(1300,27):
+2026-10-21T14:39:34.1354198Z       or 'bool std::operator ==(const std::variant<_Types...> &,const std::variant<_Types...> &) noexcept(<expr>)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1355123Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1356243Z           'bool std::operator ==(const std::variant<_Types...> &,const std::variant<_Types...> &) noexcept(<expr>)': could not deduce template argument for 'const std::variant<_Types...> &' from 'std::string'
+2026-10-21T14:39:34.1358176Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\map(400,17):
+2026-10-21T14:39:34.1359197Z       or 'bool std::operator ==(const std::map<_Kty,_Ty,_Pr,_Alloc> &,const std::map<_Kty,_Ty,_Pr,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1360073Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1361186Z           'bool std::operator ==(const std::map<_Kty,_Ty,_Pr,_Alloc> &,const std::map<_Kty,_Ty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::map<_Kty,_Ty,_Pr,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1362388Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\map(631,17):
+2026-10-21T14:39:34.1363432Z       or 'bool std::operator ==(const std::multimap<_Kty,_Ty,_Pr,_Alloc> &,const std::multimap<_Kty,_Ty,_Pr,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1364341Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1365540Z           'bool std::operator ==(const std::multimap<_Kty,_Ty,_Pr,_Alloc> &,const std::multimap<_Kty,_Ty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::multimap<_Kty,_Ty,_Pr,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1366841Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\set(209,17):
+2026-10-21T14:39:34.1367803Z       or 'bool std::operator ==(const std::set<_Kty,_Pr,_Alloc> &,const std::set<_Kty,_Pr,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1368629Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1369689Z           'bool std::operator ==(const std::set<_Kty,_Pr,_Alloc> &,const std::set<_Kty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::set<_Kty,_Pr,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1370869Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\set(424,17):
+2026-10-21T14:39:34.1371893Z       or 'bool std::operator ==(const std::multiset<_Kty,_Pr,_Alloc> &,const std::multiset<_Kty,_Pr,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1372773Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1373919Z           'bool std::operator ==(const std::multiset<_Kty,_Pr,_Alloc> &,const std::multiset<_Kty,_Pr,_Alloc> &)': could not deduce template argument for 'const std::multiset<_Kty,_Pr,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1375156Z       C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\include\deque(1793,17):
+2026-10-21T14:39:34.1376120Z       or 'bool std::operator ==(const std::deque<_Ty,_Alloc> &,const std::deque<_Ty,_Alloc> &)' [synthesized expression 'y == x']
+2026-10-21T14:39:34.1377027Z           D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1378143Z           'bool std::operator ==(const std::deque<_Ty,_Alloc> &,const std::deque<_Ty,_Alloc> &)': could not deduce template argument for 'const std::deque<_Ty,_Alloc> &' from 'std::string'
+2026-10-21T14:39:34.1379237Z       D:\a\worker-client\worker-client\tests\windows_control_test.cpp(81,750):
+2026-10-21T14:39:34.1380072Z       while trying to match the argument list '(boost::json::value, std::string)'
+2026-10-21T14:39:34.1380684Z   
+2026-10-21T14:39:35.1947803Z   All 10523 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:39:35.2229917Z   Finished generating code
+2026-10-21T14:39:35.5203818Z   OrganizerWorkerDoctor.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerDoctor.exe
+2026-10-21T14:39:35.9448933Z   Generating code
+2026-10-21T14:39:36.0023656Z   Previous IPDB not found, fall back to full compilation.
+2026-10-21T14:39:46.7666209Z   All 10978 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+2026-10-21T14:39:46.7960018Z   Finished generating code
+2026-10-21T14:39:47.1009573Z   OrganizerWorkerCtl.vcxproj -> D:\a\worker-client\worker-client\build-ci\Release\OrganizerWorkerCtl.exe
+2026-10-21T14:39:47.4244484Z Native compilation failed
+2026-10-21T14:39:47.4245029Z At D:\a\_temp\c6930b24-638a-47ae-b2a0-a664dcb69112.ps1:14 char:28
+2026-10-21T14:39:47.4245574Z + if ($LASTEXITCODE -ne 0) { throw 'Native compilation failed' }
+2026-10-21T14:39:47.4246039Z +                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-10-21T14:39:47.4246590Z     + CategoryInfo          : OperationStopped: (Native compilation failed:String) [], RuntimeException
+2026-10-21T14:39:47.4247171Z     + FullyQualifiedErrorId : Native compilation failed
+2026-10-21T14:39:47.4247555Z  
+2026-10-21T14:39:47.4404969Z ##[error]Process completed with exit code 1.
+2026-10-21T14:39:47.5214260Z Post job cleanup.
+2026-10-21T14:39:47.6432044Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-21T14:39:47.6646916Z git version 2.56.0.windows.2
+2026-10-21T14:39:47.6705139Z Temporarily overriding HOME='D:\a\_temp\adf76a71-6dcc-4c82-960f-27085d3b0f39' before making global git config changes
+2026-10-21T14:39:47.6706042Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T14:39:47.6714352Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\worker-client\worker-client
+2026-10-21T14:39:47.6963006Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T14:39:47.7200596Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-21T14:39:48.1182276Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T14:39:48.1408883Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-21T14:39:48.5547730Z Cleaning up orphan processes
+2026-10-21T14:39:48.5731196Z Terminate orphan process: pid (5108) (vctip)
+2026-10-21T14:39:48.5771669Z Terminate orphan process: pid (7824) (MSBuild)
+2026-10-21T14:39:48.5884641Z Terminate orphan process: pid (7704) (conhost)
+2026-10-21T14:39:48.6069177Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

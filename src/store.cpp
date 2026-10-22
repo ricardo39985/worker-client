@@ -57,6 +57,7 @@ void Store::result(const std::string& id,const std::string& body){
  Statement o(db_,"INSERT INTO outbox(attempt_id,body) VALUES(?,?)");o.bind(1,id);o.bind(2,body);o.step();exec("COMMIT");
  }catch(...){exec("ROLLBACK");throw;}
 }
+std::uint64_t Store::unsettled_count(){std::lock_guard lock(mutex_);Statement s(db_,"SELECT COUNT(*) FROM attempts WHERE state IN ('reserved','running','pending') OR EXISTS (SELECT 1 FROM outbox WHERE attempt_id=attempts.id)");s.step();return static_cast<std::uint64_t>(s.integer(0));}
 std::uint64_t Store::pending_count(){std::lock_guard lock(mutex_);Statement s(db_,"SELECT COUNT(*) FROM outbox");s.step();return static_cast<std::uint64_t>(s.integer(0));}
 std::vector<Pending> Store::pending(){std::lock_guard lock(mutex_);Statement s(db_,"SELECT sequence,attempt_id,body FROM outbox ORDER BY sequence LIMIT 128");std::vector<Pending> out;while(s.step())out.push_back({s.integer(0),s.string(1),s.string(2)});return out;}
 bool Store::acknowledge(std::int64_t seq,const std::string& id){

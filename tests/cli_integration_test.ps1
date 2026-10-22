@@ -8,12 +8,17 @@ $p=$null
 try {
     & $CMakeExecutable --install $BuildDirectory --config $Configuration --prefix $package
     if ($LASTEXITCODE -ne 0) { throw 'Candidate packaging failed' }
-    foreach ($file in 'OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','cli.md') {
+    foreach ($file in 'OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','OrganizerWorkerTray.exe','start-headless.ps1','cli.md') {
         if (-not (Test-Path -LiteralPath (Join-Path $package $file))) { throw ('Missing packaged file: '+$file) }
     }
     $ctl=Join-Path $package 'OrganizerWorkerCtl.exe'
     & $ctl --help
     if ($LASTEXITCODE -ne 0) { throw 'CLI help failed' }
+    foreach($badArgs in @(@('--json','start','--wait-seconds','0'),@('--json','restart','--wait-seconds','1801'),@('--json','enroll','--password','fixture-invalid-not-a-secret'),@('--json','enrollment','--data-root',$root),@('--json','restart','--offline'),@('--json','start','--data-root',$root))){
+        & $ctl @badArgs|Out-Null
+        if($LASTEXITCODE -ne 2){throw 'Lifecycle accepted credential/custom-root/offline/unbounded input'}
+    }
+    if(Test-Path -LiteralPath $root){throw 'Rejected lifecycle arguments created worker state'}
     $p=Start-Process -FilePath $fixture -ArgumentList ('"'+$root+'"') -PassThru -NoNewWindow
     # Windows PowerShell 5.1 Start-Process may return only a PID-backed Process.
     # Own its handle while alive so ExitCode remains available after exit.

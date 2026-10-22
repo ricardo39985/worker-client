@@ -1,6 +1,10 @@
 #include "test.hpp"
 #include "worker.hpp"
 #include "control_pipe.hpp"
+#include "headless.hpp"
+#include "owner_state.hpp"
+#include "owner_task.hpp"
+#include <sddl.h>
 #include <future>
 using namespace ow;using namespace ow::win;
 namespace {
@@ -62,6 +66,51 @@ TEST("native idle control client times out without blocking later authenticated 
  const auto name=control_pipe_name(t.root);require(WaitNamedPipeW(name.c_str(),2000),"Wait for idle-client test");Handle idle(CreateFileW(name.c_str(),GENERIC_READ|GENERIC_WRITE,0,nullptr,OPEN_EXISTING,0,nullptr));CHECK(idle);Sleep(2300);idle.reset();
  CHECK(control_call(t.root,control_request({"status"})).at("ok")==true);
 }
+TEST("native headless bootstrap fails closed without owner identity and never creates pairing or journal"){
+ Workspace t;const auto before=read_file(t.root/"worker.json");CHECK(run_headless(t.root)==4);CHECK(read_file(t.root/"worker.json")==before);CHECK(!std::filesystem::exists(t.root/"credential.dpapi"));CHECK(!std::filesystem::exists(t.root/"pairing-key.dpapi"));CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));
+}
+TEST("machine bootstrap trust cannot be anchored in owner-writable state"){
+ Workspace w;auto file=w.root/"owner-writable-launch.ps1";atomic_write(file,"public synthetic code, no secret");THROWS(verify_protected_bootstrap_path(file));
+ wchar_t system[MAX_PATH]{};CHECK(GetSystemDirectoryW(system,MAX_PATH));verify_protected_bootstrap_path(std::filesystem::path(system)/"kernel32.dll");
+}
+TEST("owner task DACL must give effective non-inheritable full owner and System rights"){
+ auto sid=wide(process_owner_sid(GetCurrentProcess()));auto valid=L"D:P(A;;GA;;;"+sid+L")(A;;GA;;;SY)";validate_owner_task_security(valid);
+ THROWS(validate_owner_task_security(L"D:P(A;;0x00000000;;;"+sid+L")(A;;GA;;;SY)"));
+ THROWS(validate_owner_task_security(L"D:P(A;;GR;;;"+sid+L")(A;;GA;;;SY)"));
+ THROWS(validate_owner_task_security(L"D:P(A;IO;GA;;;"+sid+L")(A;;GA;;;SY)"));
+}
+TEST("native unattended state refuses broad write grants and absent keys never create an identity"){
+ Workspace t;const auto key=t.root/"absent-key.dpapi";THROWS(existing_public_pairing_key(key));CHECK(!std::filesystem::exists(key));THROWS(sign_pairing_challenge(key,"fixture-only-challenge"));CHECK(!std::filesystem::exists(key));
+ auto sddl=L"D:P(A;OICI;FA;;;"+wide(process_owner_sid(GetCurrentProcess()))+L")(A;OICI;FA;;;WD)";PSECURITY_DESCRIPTOR sd{};require(ConvertStringSecurityDescriptorToSecurityDescriptorW(sddl.c_str(),SDDL_REVISION_1,&sd,nullptr),"Fixture DACL");BOOL ok=SetFileSecurityW(t.root.c_str(),DACL_SECURITY_INFORMATION|PROTECTED_DACL_SECURITY_INFORMATION,sd);LocalFree(sd);CHECK(ok);THROWS(verify_owner_state_path(t.root));
+ auto child=t.root/"private-child";std::filesystem::create_directory(child);auto private_acl=L"D:P(A;OICI;FA;;;"+wide(process_owner_sid(GetCurrentProcess()))+L")(A;OICI;FA;;;SY)";sd=nullptr;require(ConvertStringSecurityDescriptorToSecurityDescriptorW(private_acl.c_str(),SDDL_REVISION_1,&sd,nullptr),"Private child DACL");ok=SetFileSecurityW(child.c_str(),DACL_SECURITY_INFORMATION|PROTECTED_DACL_SECURITY_INFORMATION,sd);LocalFree(sd);CHECK(ok);THROWS(verify_owner_state_path(child)); // writable/delete-child ancestor must not bypass a private leaf
+}
+TEST("native selected image cannot escape versions or use a reparse manifest"){
+ Workspace t;auto dir=t.root/"versions/good";std::filesystem::create_directories(dir);atomic_write(dir/"OrganizerWorker.exe","fixture-image");auto current=json::object{{"schema",1},{"directory",utf8(dir.wstring())},{"sha256",sha256_file(dir/"OrganizerWorker.exe")}};atomic_write(t.root/"current.json",json::serialize(current));CHECK(verified_owner_image(t.root)==dir/"OrganizerWorker.exe");
+ auto outside=t.root/"outside";std::filesystem::create_directory(outside);atomic_write(outside/"OrganizerWorker.exe","fixture-image");current["directory"]=utf8((t.root/"versions/../outside").wstring());atomic_write(t.root/"current.json",json::serialize(current));THROWS(verified_owner_image(t.root));
+ current["directory"]=utf8(dir.wstring());atomic_write(t.root/"manifest-target.json",json::serialize(current));std::filesystem::remove(t.root/"current.json");require(CreateSymbolicLinkW((t.root/"current.json").c_str(),(t.root/"manifest-target.json").c_str(),0),"Native reparse manifest fixture requires symlink privilege");THROWS(verified_owner_image(t.root));
+}
+TEST("cancelled enrollment preserves legacy startup and explicit pairing maintenance returns to enrolled mode"){
+ Workspace t;CHECK(!owner_bootstrap_enrolled(t.root));std::filesystem::create_directory(t.root/"unattended");auto path=t.root/"unattended/enrollment.json";const auto sid=process_owner_sid(GetCurrentProcess());json::object marker{{"schema",1},{"owner_sid",sid},{"task_name","OrganizerWorker-Unattended-"+sid},{"enrollment_id",std::string(32,'a')},{"state","pending"}};atomic_write(path,json::serialize(marker));CHECK(!owner_bootstrap_enrolled(t.root));marker["state"]="enrolled";atomic_write(path,json::serialize(marker));CHECK(owner_bootstrap_enrolled(t.root));marker["state"]="pairing_repair";atomic_write(path,json::serialize(marker));CHECK(!owner_bootstrap_enrolled(t.root));complete_owner_pairing(t.root);CHECK(owner_bootstrap_enrolled(t.root));CHECK(text(parse(read_file(path)).as_object(),"enrollment_id")==std::string(32,'a'));marker["owner_sid"]="S-1-5-19";atomic_write(path,json::serialize(marker));THROWS(owner_bootstrap_enrolled(t.root));
+}
 TEST("native unavailable control is bounded and never creates worker state"){
  Workspace t;auto start=monotonic_ms();THROWS(control_call(t.root,control_request({"resume"})));CHECK(monotonic_ms()-start<4000);CHECK(!std::filesystem::exists(t.root/"journal.sqlite3"));
+}
+
+TEST("native restart fences admission but preserves durable desired pause across replacement"){
+ Workspace t;
+ {Worker worker(load_config(t.root));ControlPipe pipe(t.root,[&](const json::object& r){return worker.control(r);});
+  auto r=control_call(t.root,json::object{{"schema",1},{"command","restart"}});CHECK(r.at("ok")==true);CHECK(r.at("exiting")==true);CHECK(r.at("paused")==true);
+  auto doc=parse(read_file(t.root/"worker.json")).as_object();CHECK(doc.at("operator").as_object().at("paused")==false);
+  CHECK(control_call(t.root,json::object{{"schema",1},{"command","restart"}}).at("ok")==true);
+  CHECK(worker.ready_to_exit());
+ }
+ Worker replacement(load_config(t.root));CHECK(!replacement.paused());
+}
+TEST("native restart waits journal reservations even between expiry and result publication"){
+ Workspace t;Worker worker(load_config(t.root));Store journal(t.root/"journal.sqlite3");CHECK(journal.reserve("inflight","job","fp"));worker.control(json::object{{"schema",1},{"command","restart"}});CHECK(!worker.ready_to_exit());CHECK(journal.decline_reserved("inflight","never_started"));CHECK(worker.ready_to_exit());
+}
+TEST("native restart refuses to exit before matching durable result acknowledgment"){
+ Workspace t;Worker worker(load_config(t.root));Store journal(t.root/"journal.sqlite3");CHECK(journal.reserve("restart-attempt","restart-job","synthetic-fingerprint"));CHECK(journal.start("restart-attempt"));journal.result("restart-attempt","synthetic-result");
+ auto r=worker.control(json::object{{"schema",1},{"command","restart"}});CHECK(r.at("exiting")==true);CHECK(!worker.ready_to_exit());
+ auto p=journal.pending().front();CHECK(!journal.acknowledge(p.sequence,"wrong-attempt"));CHECK(!worker.ready_to_exit());CHECK(journal.acknowledge(p.sequence,p.attempt_id));CHECK(worker.ready_to_exit());
 }

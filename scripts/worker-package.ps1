@@ -1,12 +1,19 @@
 # Immutable package staging and shared transactional publication for production
 # updater and isolated legacy upgrade contracts. Host stop/start/readiness ports
 # are required; no alternate pointer/file-copy bypass exists.
+function Get-WorkerPackageNames($Info) {
+    $schema=if($Info.PSObject.Properties['schema']){[int]$Info.schema}else{1}
+    if($schema -notin @(1,2)){throw 'Unknown worker package schema'}
+    $names=@('OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','cli.md')
+    if($schema -eq 2){$names+=@('OrganizerWorkerTray.exe','start-headless.ps1')}
+    return $names
+}
 function Read-WorkerValidatedPackage {
     param([string]$Package,[string]$PackageManifestSha256)
     if($PackageManifestSha256 -notmatch '\A[a-fA-F0-9]{64}\z' -or (Get-FileHash (Join-Path $Package 'package.json')).Hash -ine $PackageManifestSha256){throw 'Verified package manifest SHA256 required'}
     $info=Get-Content (Join-Path $Package 'package.json') -Raw|ConvertFrom-Json
     if($info.revision -notmatch '\A[a-f0-9]{40}\z'){throw 'Full source revision required'}
-    $names=@('OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','cli.md')
+    $names=@(Get-WorkerPackageNames $info)
     foreach($name in $names){
         $expected=[string]$info.files.$name
         if($expected -notmatch '\A[a-fA-F0-9]{64}\z' -or (Get-FileHash (Join-Path $Package $name)).Hash -ine $expected){throw ('Package SHA256 mismatch: '+$name)}
@@ -19,7 +26,7 @@ function Invoke-WorkerPackageUpdate {
     if(-not $StopWorker -or -not $StartWorker -or -not $VerifyWorker){throw 'Cooperative stop/start/readiness ports are required'}
     if([IO.File]::Exists((Join-Path $Root 'current.rollback.json'))){throw 'Interrupted update pending; recover before another install'}
     $info=Read-WorkerValidatedPackage $Package $PackageManifestSha256
-    $names=@('OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','cli.md')
+    $names=@(Get-WorkerPackageNames $info)
     $sha=([string]$info.files.'OrganizerWorker.exe').ToLowerInvariant()
     $version=Join-Path $Root ('versions\0.1.2-'+$sha.Substring(0,16))
     if(Test-Path $version){

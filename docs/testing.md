@@ -1,5 +1,51 @@
 # Test policy and evidence
 
+## Unattended-owner candidate gates
+
+Latest exact code head `f9edbb0` passed Release Linux and full C++ ASan/UBSan
+(8/8 each), actual MSVC Release and all24 CTest contracts, real foreign-owner
+deny/forged-server zero-byte test, and the actual restricted-owner/session2
+headless media fixture: current-profile DPAPI, protected bootstrap entry/restart,
+real typed child encode/decode/hash, restart admission fencing, 67 lease renewals,
+reserved-BEGIN veto/expiry, durable result retry, wrong-ACK blocking and matching
+ACK completion. The harness reported `real_coordinator=false`,
+`password_task_registration=false`, and `cold_boot_test=false`. This is synthetic
+and current-profile acceptance only—not a fresh boot, real coordinator job or
+installed-PC acceptance. See run39690433869 and retained receipt63 after it is
+committed. A final code-only package and fresh independent security review remain
+separate gates.
+
+[Current retained red/green ledger](../verification/unattended/REPORT.md) and
+[secure local owner enrollment/boot boundaries](unattended-owner.md). New source
+is not an installed or genuinely before-login-verified worker. The prior14-suite
+native green atf531dd5 is an earlier checkpoint; expanded TDD failures are retained
+and must be fixed before final release, not waived.
+
+Run portable Release with `scripts/test.sh`. Sanitizers use Debug,
+`OW_SANITIZE=ON`, `OW_ENABLE_IPO=OFF`, leak detection/halt-on-error. All C++ contract
+targets are instrumented, not Python dependency tests. Native MSVC/PowerShell and
+foreign-owner/security tests remain separate Windows gates.
+
+The **manual-only** native workflow has an explicit `run_unattended_media=true`
+input for the already reviewed locked GPL converter. Its disposable fixed fixture
+reduces only its own existing-owner token using documented LUA_TOKEN and verifies
+actual TokenElevation/SID; no account/password/session-ID/OS/SSH configuration
+change. It refuses an existing default owner root, so must NEVER overwrite either
+installed PC. It checks actual headless executable no-UI rejection, current-profile
+DPAPI, real CPU probe and restart/exit process outcomes. A separate synthetic
+coordinator drives real typed children, leases, fencing, hashes/decode, durable
+retry and wrong/matchingACK. It does not establish Windows password task
+registration, fresh boot/profile, real TLS/coordinator jobs or physical GPUs.
+
+All independent compiled contract/security/media groups run even if another
+behavior group fails; each failure still fails the job. Missing prerequisites
+remain explicit failures/pending gates, never fake passed CPU/GPU or weakened
+native guard. Actual per-PC password-backed limited task/profile/DPAPI/TLS/hardware
+readback and a separately approved fresh boot with no owner interactive session
+are REQUIRED before a before-login claim. No reboot/logoff/lock/session disruption
+or production lifecycle experiment while the owner is away. Authorized private
+non-posting real coordinator jobs are still a distinct gate.
+
 Local CLI candidate gates are in [verification/cli/REPORT.md](../verification/cli/REPORT.md).
 The new native contracts exercise the owner pipe, anonymous denial, typed/atomic
 configuration, tray roundtrip, legacy migration and a packaged real CLI with an

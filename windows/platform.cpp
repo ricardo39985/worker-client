@@ -17,7 +17,12 @@ std::string utf8(const std::wstring& s){if(s.empty())return {};int n=WideCharToM
 Tick monotonic_ms(){return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();}
 std::int64_t utc_ms(){return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();}
 std::filesystem::path data_directory(){PWSTR p=nullptr;HRESULT hr=SHGetKnownFolderPath(FOLDERID_LocalAppData,0,nullptr,&p);if(FAILED(hr))fail("Locate LocalAppData",static_cast<DWORD>(hr));std::filesystem::path out=std::filesystem::path(p)/"OrganizerWorker";CoTaskMemFree(p);return out;}
-std::filesystem::path executable_directory(){std::wstring p(32768,0);DWORD n=GetModuleFileNameW(nullptr,p.data(),static_cast<DWORD>(p.size()));if(!n||n>=p.size())fail("Locate executable");p.resize(n);return std::filesystem::path(p).parent_path();}
+std::filesystem::path executable_path(){std::wstring p(32768,0);DWORD n=GetModuleFileNameW(nullptr,p.data(),static_cast<DWORD>(p.size()));if(!n||n>=p.size())fail("Locate executable");p.resize(n);return std::filesystem::path(p);}
+std::filesystem::path executable_directory(){return executable_path().parent_path();}
+std::wstring current_desktop_path(){
+ auto name=[](HANDLE object){DWORD bytes{};GetUserObjectInformationW(object,UOI_NAME,nullptr,0,&bytes);if(!bytes||bytes>65536)throw std::runtime_error("Current process desktop is unavailable");std::wstring value(bytes/sizeof(wchar_t),0);require(GetUserObjectInformationW(object,UOI_NAME,value.data(),bytes,&bytes),"Read current desktop identity");value.resize(wcslen(value.c_str()));return value;};
+ return name(GetProcessWindowStation())+L"\\"+name(GetThreadDesktop(GetCurrentThreadId()));
+}
 std::string read_file(const std::filesystem::path& p,std::size_t limit){
  std::ifstream f(p,std::ios::binary);if(!f)throw std::runtime_error("Cannot read local file");f.seekg(0,std::ios::end);auto size=f.tellg();if(size<0||static_cast<std::uint64_t>(size)>limit)throw std::runtime_error("Local file exceeds size limit");f.seekg(0);std::string out(static_cast<std::size_t>(size),0);if(!out.empty()&&!f.read(out.data(),static_cast<std::streamsize>(out.size())))throw std::runtime_error("Local file read failed");return out;
 }
@@ -54,22 +59,24 @@ class Key {
  BCRYPT_ALG_HANDLE alg_{};
 public:
  BCRYPT_KEY_HANDLE key{};
- explicit Key(const std::filesystem::path& file){
+ explicit Key(const std::filesystem::path& file,bool allow_create=true){
  crypto(BCryptOpenAlgorithmProvider(&alg_,BCRYPT_ECDSA_P256_ALGORITHM,nullptr,0),"Open pairing identity");
  try{if(std::filesystem::exists(file)){auto b=unprotect(read_file(file));auto status=BCryptImportKeyPair(alg_,nullptr,BCRYPT_ECCPRIVATE_BLOB,&key,reinterpret_cast<PUCHAR>(b.data()),static_cast<ULONG>(b.size()),0);SecureZeroMemory(b.data(),b.size());crypto(status,"Load pairing identity");}
- else{crypto(BCryptGenerateKeyPair(alg_,&key,256,0),"Generate pairing key");crypto(BCryptFinalizeKeyPair(key,0),"Finalize pairing key");auto b=export_blob(BCRYPT_ECCPRIVATE_BLOB);atomic_write(file,protect(b));SecureZeroMemory(b.data(),b.size());}}
+ else{if(!allow_create)throw std::runtime_error("Existing owner key is required; implicit pairing disabled");crypto(BCryptGenerateKeyPair(alg_,&key,256,0),"Generate pairing key");crypto(BCryptFinalizeKeyPair(key,0),"Finalize pairing key");auto b=export_blob(BCRYPT_ECCPRIVATE_BLOB);atomic_write(file,protect(b));SecureZeroMemory(b.data(),b.size());}}
  catch(...){if(key)BCryptDestroyKey(key);BCryptCloseAlgorithmProvider(alg_,0);throw;}}
  ~Key(){if(key)BCryptDestroyKey(key);if(alg_)BCryptCloseAlgorithmProvider(alg_,0);}
  std::string export_blob(LPCWSTR type){ULONG n=0;crypto(BCryptExportKey(key,nullptr,type,nullptr,0,&n,0),"Export key length");std::string out(n,0);crypto(BCryptExportKey(key,nullptr,type,reinterpret_cast<PUCHAR>(out.data()),n,&n,0),"Export key");out.resize(n);return out;}
 };
+std::string existing_public_pairing_key(const std::filesystem::path& p){Key k(p,false);return base64(k.export_blob(BCRYPT_ECCPUBLIC_BLOB));}
 std::string public_pairing_key(const std::filesystem::path& p){Key k(p);return base64(k.export_blob(BCRYPT_ECCPUBLIC_BLOB));}
 std::string sign_pairing_challenge(const std::filesystem::path& p,const std::string& challenge){
- Key key(p);BCRYPT_ALG_HANDLE algorithm{};BCRYPT_HASH_HANDLE hash{};crypto(BCryptOpenAlgorithmProvider(&algorithm,BCRYPT_SHA256_ALGORITHM,nullptr,0),"Open challenge hash");
+ Key key(p,false);BCRYPT_ALG_HANDLE algorithm{};BCRYPT_HASH_HANDLE hash{};crypto(BCryptOpenAlgorithmProvider(&algorithm,BCRYPT_SHA256_ALGORITHM,nullptr,0),"Open challenge hash");
  try{crypto(BCryptCreateHash(algorithm,&hash,nullptr,0,nullptr,0,0),"Create challenge hash");crypto(BCryptHashData(hash,reinterpret_cast<PUCHAR>(const_cast<char*>(challenge.data())),static_cast<ULONG>(challenge.size()),0),"Hash challenge");std::array<unsigned char,32> digest{};crypto(BCryptFinishHash(hash,digest.data(),32,0),"Finish challenge hash");BCryptDestroyHash(hash);hash=nullptr;BCryptCloseAlgorithmProvider(algorithm,0);algorithm=nullptr;ULONG n=0;crypto(BCryptSignHash(key.key,nullptr,digest.data(),32,nullptr,0,&n,0),"Signature length");std::string signature(n,0);crypto(BCryptSignHash(key.key,nullptr,digest.data(),32,reinterpret_cast<PUCHAR>(signature.data()),n,&n,0),"Sign pairing challenge");signature.resize(n);return base64(signature);}
  catch(...){if(hash)BCryptDestroyHash(hash);if(algorithm)BCryptCloseAlgorithmProvider(algorithm,0);throw;}
 }
 Resources available_resources(const std::filesystem::path& path,std::uint64_t reserve){MEMORYSTATUSEX memory{};memory.dwLength=sizeof(memory);require(GlobalMemoryStatusEx(&memory),"Read available memory");ULARGE_INTEGER disk{};require(GetDiskFreeSpaceExW(path.c_str(),&disk,nullptr,nullptr),"Read available disk");auto free=memory.ullAvailPhys/(1024*1024);return {free>reserve?free-reserve:0,0,disk.QuadPart/(1024*1024),GetActiveProcessorCount(ALL_PROCESSOR_GROUPS)};}
-bool elevated(){HANDLE raw{};require(OpenProcessToken(GetCurrentProcess(),TOKEN_QUERY,&raw),"Read current token");Handle h(raw);TOKEN_ELEVATION e{};DWORD n=0;require(GetTokenInformation(h.get(),TokenElevation,&e,sizeof(e),&n),"Read privilege level");return e.TokenIsElevated!=0;}
+bool process_elevated(HANDLE process){HANDLE raw{};require(OpenProcessToken(process,TOKEN_QUERY,&raw),"Read current token");Handle h(raw);TOKEN_ELEVATION e{};DWORD n=0;require(GetTokenInformation(h.get(),TokenElevation,&e,sizeof(e),&n),"Read privilege level");return e.TokenIsElevated!=0;}
+bool elevated(){return process_elevated(GetCurrentProcess());}
 void Log::open(){file_.reset(CreateFileW(path_.c_str(),FILE_APPEND_DATA,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,nullptr,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr));if(!file_)fail("Open worker log");}
 void Log::write(const std::string& message){
  std::lock_guard lock(mutex_);LARGE_INTEGER size{};if(GetFileSizeEx(file_.get(),&size)&&size.QuadPart>5*1024*1024){file_.reset();auto old=path_;old+=L".1";DeleteFileW(old.c_str());MoveFileExW(path_.c_str(),old.c_str(),MOVEFILE_REPLACE_EXISTING);open();}

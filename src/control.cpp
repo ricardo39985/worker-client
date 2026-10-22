@@ -51,7 +51,7 @@ json::object control_request(const std::vector<std::string>& a,const std::string
   if(a[1]=="set"&&a.size()==3&&a[2]=="--stdin"){std::string_view bytes=input;if(bytes.starts_with("\xef\xbb\xbf"))bytes.remove_prefix(3);r["values"]=parse(bytes,control_config_limit).as_object();return r;}
   if(a[1]=="reset"&&a.size()>2){json::array names;for(std::size_t i=2;i<a.size();++i){known(a[i]);names.emplace_back(a[i]);}r["names"]=std::move(names);return r;}
  }else if(a[0]=="exit"&&a.size()==2&&(a[1]=="drain"||a[1]=="stop")){r["mode"]=a[1];return r;}
- else if(a.size()==1&&(a[0]=="status"||a[0]=="pause"||a[0]=="drain"||a[0]=="resume"||a[0]=="console"||a[0]=="logs"||a[0]=="history"||a[0]=="auth"))return r;
+ else if(a.size()==1&&(a[0]=="status"||a[0]=="restart"||a[0]=="pause"||a[0]=="drain"||a[0]=="resume"||a[0]=="console"||a[0]=="logs"||a[0]=="history"||a[0]=="auth"))return r;
  throw std::runtime_error("Unknown command/arguments; use --help");
 }
 json::object validate_control_request(const json::object& r){
@@ -69,6 +69,8 @@ json::object validate_control_request(const json::object& r){
 }
 std::string control_help(){return
  "OrganizerWorkerCtl [--json] [--offline] [--data-root LIVE_ROOT] COMMAND\n"
+ "  start | restart            Enrolled owner task; bounded readiness / safe ACK drain\n"
+ "  enroll                     LOCAL secure Windows credential UI; never stdin/argv\n"
  "  status                     Fresh live state, jobs, connection and version\n"
  "  pause | drain | resume     Explicit idempotent admission controls\n"
  "  config list | get NAME     Types, defaults, current/effective/restart flags\n"

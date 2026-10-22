@@ -170,3 +170,17 @@ function Convert-WorkerToolchainInstances([string]$Json) {
         $instance
     }
 }
+
+function Assert-WorkerEnrolledSetupVersion {
+    param([string]$Version,$ApprovedPackage)
+    if(-not $ApprovedPackage -or -not $ApprovedPackage.files){throw 'Protected package approval required before probing/publishing a version for an enrolled worker'}
+    $names=@('OrganizerWorker.exe','OrganizerWorkerConsole.exe','OrganizerWorkerDoctor.exe','OrganizerWorkerCtl.exe','OrganizerWorkerTray.exe','cli.md','start-headless.ps1')
+    if(@($ApprovedPackage.files.PSObject.Properties).Count -ne $names.Count){throw 'Approved package companion inventory differs; current worker retained'}
+    $workerHash=(Get-WorkerFileSha256 (Join-Path $Version 'OrganizerWorker.exe')).ToLowerInvariant()
+    if($workerHash -cne [string]$ApprovedPackage.worker_sha256){throw 'Protected package approval required before probing/publishing a version for an enrolled worker'}
+    foreach($name in $names){
+        $expected=[string]$ApprovedPackage.files.$name
+        if($name -cnotin @($ApprovedPackage.files.PSObject.Properties.Name) -or $expected -cnotmatch '\A[a-f0-9]{64}\z' -or (Get-WorkerFileSha256 (Join-Path $Version $name)).ToLowerInvariant() -cne $expected){throw ('Protected package companion differs; current worker retained: '+$name)}
+    }
+    return $true
+}
