@@ -9,28 +9,26 @@ authorized, is LOCAL secure UI only—never chat/scripts/argv/env/files. See
 
 ## Latest exact-code acceptance
 
-The latest completed full gate was Windows run `39699676289` at exact source
-`e66225ca0f567d4a1d2a5801f4585fcbf45247bf`: MSVC Release, all24 registered native
+The latest full gate was Windows workflow `39701967950` at exact source
+`34fc6593af8d18b49ed4ab91ab44868202d0ede9`: MSVC Release, all24 registered native
 behavior suites, actual foreign-owner denial and forged-server zero-request-byte
-security gate, actual restricted same-owner/non-elevated/headless media fixture and
+security gate, restricted same-owner/non-elevated/headless media fixture and
 code-only packaging all passed. The fixture exercised current-profile DPAPI,
 protected bootstrap entry, restart continuation, actual typed FFmpeg child,
 hash/decode, admission fencing, desired pause preservation, 52 lease renewals,
 reserved BEGIN rejection/expiry, durable retry, wrong-ACK exit blocking and
 matching-ACK exit. It explicitly reports `real_coordinator=false`,
-`password_task_registration=false`, `cold_boot_test=false`. See retained job log73
-and exact artifact verification
-[74-code-only-artifact-e662-verification.md](74-code-only-artifact-e662-verification.md).
-The artifact has seven checked payload hashes and a verified source archive; its
-receipt says no task registration, cold boot, production job or PC installation.
-This is not fresh-boot, password-task-registration, actual TLS/coordinator or
-production-job proof.
+`password_task_registration=false`, `cold_boot_test=false`. See log75 and
+[76-code-only-artifact-34fc-verification.md](76-code-only-artifact-34fc-verification.md).
+The downloaded artifact has seven independently checked payload hashes and a
+verified source archive; receipt says no task registration, cold boot, production
+job or PC installation. This is not fresh-boot, password-task-registration, actual
+TLS/coordinator or production-job proof.
 
-Linux Release CTest and full C++ ASan/UBSan each pass8/8 on exact docs/evidence
-head `fcc5351` (logs69/70). Previous focused Windows policy run39692970248 at
-`f9edbb0` passed; focused tests are not release acceptance. A subsequent ledger
-commit will be documentation/evidence-only; rerun all required gates on the final
-source revision before release. Fresh independent security review remains open.
+Linux Release CTest and full C++ ASan/UBSan each pass8/8 at docs/evidence head
+`fcc5351` (logs69/70); no product code changed after that Linux run. Prior focused
+Windows policy run39692970248 at `f9edbb0` passed; focused tests are not release
+acceptance. Fresh independent security review against current source is still open.
 
 ## Current code-only package gate
 
@@ -60,11 +58,12 @@ being considered a release candidate.
 
 No secure local owner password/task enrollment, fresh zero-interactive-user boot,
 physical GPU capability probe, real coordinator/TLS job, PC install, reboot or
-merge has occurred. No release artifact is currently claimed. Fresh independent
-security review is still open. Merge requires that review and all exact-final-source
-gates; PC activity requires the owner present and separate explicit authorization.
-Do not infer successful production integration from this synthetic fixture or
-protocol documents.
+merge has occurred. A short-retention code-only CI artifact is not a product
+release. The prior independent static review at `f531dd5` has not been freshly
+rechecked against this head. Merge requires current-source independent review and
+all exact-final-source gates; PC activity requires the owner present and separate
+explicit authorization. Do not infer production integration from the synthetic
+fixture or protocol documents.
 
 ## Retained causal failures and actual greens
 
