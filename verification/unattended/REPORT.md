@@ -1,6 +1,6 @@
 # Unattended owner lifecycle — current gate ledger
 
-**Not merged, packaged, installed, enrolled, fresh-boot-verified or production-tested.**
+**Not merged, installed, enrolled, fresh-boot-verified or production-tested.** A short-retention, code-only CI artifact was prepared and independently rehashed; it is not an install or product release.
 Draft PR9 branch `feat/unattended-owner`. Prior product529/bookkeeping086 remains
 unchanged on both PCs. Owner AWAY: no reboot/logoff/lock/shutdown/suspend/session
 disconnect or production lifecycle experiment. Windows password enrollment, when
@@ -9,26 +9,26 @@ authorized, is LOCAL secure UI only—never chat/scripts/argv/env/files. See
 
 ## Latest exact-code acceptance
 
-Code head `f9edbb0` was built by manual Windows run `39690433869`: MSVC Release
-succeeded; all24 registered native behavior suites passed; actual foreign-owner
-deny and forged-server zero-request-byte security gate passed; actual restricted
-same-owner/non-elevated/headless media fixture passed. The fixture exercised
-current-profile DPAPI, fixed protected bootstrap entry, restart continuation,
-actual typed FFmpeg child, hash/decode, admission fencing, desired pause
-preservation, 67 lease renewals, reserved BEGIN rejection/expiry, durable retry,
-wrong ACK exit blocking and matching ACK exit. Exact log is
-[63-native-media-green.log](63-native-media-green.log). Its receipt states
+The latest completed full gate was manual Windows run `39697201776` at
+`478c68f39abafef3046741cf70f2168dcf6f9fa1`: MSVC Release, all24 registered native
+behavior suites, actual foreign-owner denial and forged-server zero-request-byte
+security gate, and actual restricted same-owner/non-elevated/headless media fixture
+all passed. The fixture exercised current-profile DPAPI, protected bootstrap entry,
+restart continuation, actual typed FFmpeg child, hash/decode, admission fencing,
+desired pause preservation, 52 lease renewals, reserved BEGIN rejection/expiry,
+durable retry, wrong-ACK exit blocking and matching-ACK exit. It explicitly reports
 `real_coordinator=false`, `password_task_registration=false`, `cold_boot_test=false`.
-It is not fresh-boot, Password-task-registration, actual TLS/coordinator or
+See retained job log71 and the exact artifact verification at
+[72-code-only-artifact-478-verification.md](72-code-only-artifact-478-verification.md).
+This is not fresh-boot, password-task-registration, actual TLS/coordinator or
 production-job proof.
 
-Exact code head `f9edbb0` also passed Linux Release CTest8/8 and full C++
-ASan/UBSan CTest8/8; logs50/51. Focused Windows filesystem/lifetime/package/task
-policy tests passed at `b8f17dd` (run39670908222, log54); they are not release
-acceptance. Full source build/media last succeeded at f9edbb0; this report/docs
-commit that follows contains no product-code change, so rerun final-source gates
-and code-only artifact after this evidence-ledger edit before treating it as a
-release candidate. Fresh independent security review remains open.
+Linux Release CTest and full C++ ASan/UBSan each pass8/8 on exact documentation
+head `fcc5351` (logs69/70). Previous focused Windows policy run39692970248 at
+`f9edbb0` passed; focused tests are not release acceptance. The current branch
+head is `fcc5351`, docs/evidence-only atop tested code; its full exact-source
+Windows/package rerun must still pass before calling the current branch a final
+candidate. Fresh independent security review remains open.
 
 ## Current code-only package gate
 
@@ -44,10 +44,15 @@ limited runner's persisted acceptance JSON came from the inner control fixture
 before outer bootstrap/station properties were added. Stdout had them, persisted
 package proof did not. Log68 retains this distinct failure. `478c68f` now atomically
 rewrites the same acceptance receipt with the exact verified outer properties;
-no gate is weakened and media itself must still pass. Workflow `39697201776` is the
-full native/media/package run at `478c68f`; await its result before any artifact
-claim. Linux Release/sanitizers passed8/8 at `892525d` (logs66/67); subsequent code
-changes are Windows-only receipt preservation.
+no gate is weakened and media itself must still pass. Workflow `39697201776` passed all steps at `478c68f` and produced the code-only
+artifact `worker-owner-478c68f39abafef3046741cf70f2168dcf6f9fa1-39697201776`
+(artifact id12392720725, three-day retention). I downloaded it and rechecked the
+manifest hash, all seven package hashes, exact revision/tree, source archive hash
+and ZIP integrity/1,254 entries. The receipt is explicit that no password task,
+cold boot, production job or PC installation occurred. Verification details are
+in log71 and document72. No release or installation is claimed. The current
+`fcc5351` source adds only reports and Linux logs after that tested code; a fresh
+full native/media/package workflow on this exact head remains required.
 
 ## Owner-only / production gates remain closed
 

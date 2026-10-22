@@ -7,14 +7,14 @@ Prior product529/CLI is installed on both PCs (see the final CLI release receipt
 but new headless owner-task enrollment, new artifact installation and genuine
 before-owner-login hardware/DPAPI/TLS acceptance are NOT established. Owner-away:
 no reboot/logoff/lock/shutdown/suspend/session disconnect or production lifecycle
-experiment. Exact source head `f9edbb0` passed Linux Release and full C++
+experiment. Exact source head `478c68f` passed Linux Release and full C++
 ASan/UBSan8/8 each, MSVC/24 native contracts, foreign-owner/forged-server zero-byte
 security, and actual restricted-owner current-profile DPAPI/headless restart and
-synthetic typed media/lease/ACK acceptance. This is not fresh boot, actual
-Password-task registration, TLS/coordinator or production-job proof. The code-only package gate's actual-media checks pass; prior package attempts
-failed because the persisted receipt omitted outer bootstrap/station proof,
-retained in the unattended gate ledger. A third exact-source package rerun is
-underway after correcting that persisted receipt; no artifact is yet claimed. Both existing sshd services independently verified Automatic/Running
+synthetic typed media/lease/ACK acceptance. Its short-retention code-only artifact
+was downloaded and all seven payload hashes and source archive were rechecked.
+This is not fresh boot, actual Password-task registration, TLS/coordinator or
+production-job proof. The latest evidence/docs-only head requires a full exact-source
+workflow rerun. Prior package gate failures are retained in the ledger. Both existing sshd services independently verified Automatic/Running
 with the pinned key; no SSH configuration/restart was needed. SSH is not worker
 readiness. Read [current verification ledger](../verification/unattended/REPORT.md)
 for exact source/test gates; retain red runs, never treat a successful task submit
