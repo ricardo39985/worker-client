@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "test.hpp"
 #include "ow/protocol.hpp"
+#include "ow/gemma.hpp"
 using namespace ow;
 namespace {
 json::object offer_message(){return {{"protocol",1},{"type","offer"},{"job_id","job-a"},{"attempt_id","attempt-a"},{"capability","conversion.video.h264"},{"offer_ttl_ms",10000},{"timeout_ms",30000},{"resources",{{"ram_mb",1024},{"vram_mb",0},{"scratch_mb",100},{"cpu_threads",2}}},{"input",{{"url","https://media.example.test/in?sig=abc"},{"sha256",std::string(64,'a')},{"bytes",1024}}},{"output",{{"put_url","https://media.example.test/out?sig=def"},{"max_bytes",100000}}}};}
@@ -11,6 +12,23 @@ TEST("media transfer requires exact approved HTTPS host"){
 }
 TEST("well formed offer translates to validated typed job"){
  auto s=decode_offer(offer_message(),500,{"media.example.test"});CHECK(s.offer.attempt_id=="attempt-a");CHECK(s.offer.reserve_until==10500);CHECK(s.offer.resources.cpu_threads==2);
+}
+TEST("Gemma accepts only the new pinned segmented profile and bounded typed modalities"){
+ auto m=offer_message();m["capability"]=gemma::capability;
+ m["parameters"]=json::object{{"profile",gemma::profile},{"modality","video"}};
+ m["resources"].as_object()["ram_mb"]=4096;
+ m["resources"].as_object()["scratch_mb"]=256;
+ auto s=decode_offer(m,0,{"media.example.test"});CHECK(s.embedding_modality=="video");CHECK(output_name(s)=="result.json");
+ m["parameters"].as_object()["profile"]="embeddinggemma2-q8-b11475-768-v1";THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["parameters"].as_object()["profile"]=gemma::profile;m["parameters"].as_object()["modality"]="shell";THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["parameters"].as_object()["modality"]="image";m["parameters"].as_object()["command"]="calc.exe";THROWS(decode_offer(m,0,{"media.example.test"}));
+}
+TEST("Gemma rejects legacy capability and inadequate media resources"){
+ auto m=offer_message();m["capability"]="inference.embeddinggemma2.v1";THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["capability"]=gemma::capability;m["parameters"]=json::object{{"profile",gemma::profile},{"modality","video"}};
+ THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["resources"].as_object()["ram_mb"]=4096;m["resources"].as_object()["scratch_mb"]=256;
+ m["input"].as_object()["bytes"]=104857601;THROWS(decode_offer(m,0,{"media.example.test"}));
 }
 TEST("wire requests cannot smuggle arbitrary commands as capabilities"){
  auto m=offer_message();m["capability"]="powershell";THROWS(decode_offer(m,0,{"media.example.test"}));

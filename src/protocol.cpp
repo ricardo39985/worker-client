@@ -1,5 +1,6 @@
 #include "ow/protocol.hpp"
 #include "ow/media_renditions.hpp"
+#include "ow/gemma.hpp"
 #include <algorithm>
 #include <cctype>
 #include <cstdint>
@@ -28,13 +29,21 @@ JobSpec decode_offer(const json::object& m,Tick now,const std::vector<std::strin
  JobSpec s;s.offer.job_id=text(m,"job_id",128);s.offer.attempt_id=text(m,"attempt_id",128);s.offer.capability=text(m,"capability",128);
  if(!safe_id(s.offer.job_id)||!safe_id(s.offer.attempt_id))throw std::runtime_error("invalid job identity");
  const bool media_video=s.offer.capability=="media.video.renditions.v1",media_image=s.offer.capability=="media.image.renditions.v1";
- if(!media_video&&!media_image&&s.offer.capability!="conversion.video.h264"&&s.offer.capability!="conversion.image.jpeg")throw std::runtime_error("capability is not installed in this build");
+ const bool embedding=s.offer.capability==gemma::capability;
+ if(!embedding&&!media_video&&!media_image&&s.offer.capability!="conversion.video.h264"&&s.offer.capability!="conversion.image.jpeg")throw std::runtime_error("capability is not installed in this build");
  auto r=m.at("resources").as_object();s.offer.resources={number(r,"ram_mb",1024*1024),number(r,"vram_mb",1024*1024),number(r,"scratch_mb",1024*1024),number(r,"cpu_threads",64)};
  if(s.offer.resources.ram_mb<((media_video||s.offer.capability=="conversion.video.h264")?512u:256u)||s.offer.resources.vram_mb!=0||!s.offer.resources.cpu_threads)throw std::runtime_error("resource declaration incompatible with adapter");
  auto ttl=number(m,"offer_ttl_ms",60000);if(ttl<1000)throw std::runtime_error("invalid offer TTL");s.offer.reserve_until=now+static_cast<Tick>(ttl);
  const auto& in=m.at("input").as_object();s.input_url=text(in,"url");s.input_sha256=text(in,"sha256",64);s.input_bytes=number(in,"bytes",1024ull*1024*1024);
  const auto& out=m.at("output").as_object();s.output_max_bytes=number(out,"max_bytes",1024ull*1024*1024);
  if(!s.input_bytes||!s.output_max_bytes||!allowed_url(s.input_url,hosts))throw std::runtime_error("unapproved input endpoint or byte limit");
+ if(embedding){
+  const auto& parameters=m.at("parameters").as_object();s.embedding_modality=text(parameters,"modality",16);
+  if(parameters.size()!=2||text(parameters,"profile")!=gemma::profile||!gemma::modality(s.embedding_modality))throw std::runtime_error("Gemma parameters differ from installed profile");
+  if(s.input_bytes>104857600||s.output_max_bytes>gemma::result_limit||(s.embedding_modality=="text"&&s.input_bytes>32768)||
+     s.offer.resources.ram_mb<(s.embedding_modality=="text"?1024u:4096u)||s.offer.resources.cpu_threads>8||s.offer.resources.scratch_mb<256)
+   throw std::runtime_error("Gemma resource declaration exceeds installed profile");
+ }
  if(media_video||media_image){
   if(s.input_bytes>104857600||s.output_max_bytes>104857600)throw std::runtime_error("app media exceeds installed profile bounds");
   if(media_video){auto& parameters=m.at("parameters").as_object();auto* audio=parameters.if_contains("copy_audio");if(!audio||!audio->is_bool()||parameters.size()!=1)throw std::runtime_error("invalid typed app parameters");s.copy_audio=audio->as_bool();}
@@ -53,7 +62,7 @@ JobSpec decode_offer(const json::object& m,Tick now,const std::vector<std::strin
  // every execution-affecting field. The coordinator must retry with the same spec.
  auto identity=m;identity.erase("offer_ttl_ms");identity.erase("message_id");s.offer.fingerprint=json::serialize(identity);return s;
 }
-std::string output_name(const JobSpec& s){return s.offer.capability=="conversion.video.h264"?"result.mp4":"result.jpg";}
+std::string output_name(const JobSpec& s){return s.offer.capability==gemma::capability?"result.json":s.offer.capability=="conversion.video.h264"?"result.mp4":"result.jpg";}
 std::vector<std::wstring> ffmpeg_arguments(const JobSpec& s,const std::filesystem::path& w){
  if(s.offer.capability!="conversion.video.h264"&&s.offer.capability!="conversion.image.jpeg")throw std::runtime_error("unsupported converter");
  auto n=std::to_wstring(s.offer.resources.cpu_threads);

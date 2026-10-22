@@ -438,7 +438,7 @@ void Worker::update_settings(const json::object& values){
 }
 void Worker::pause(bool p){update_settings({{"operator.paused",p}});}
 void Worker::priority(Priority p){update_settings({{"operator.priority",priority_name(p)}});}
-void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);}
+void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);admission_.capability(gemma::capability,verified_gemma_.load()&&gemma_dispatch_.load(),Preference::allowed);}
 adaptive::Scheduler::Reservation Worker::reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,Resources& cost,const std::string& attempt,const std::string& stage,bool cpu_only,std::uint32_t width,std::uint32_t height,std::uint64_t minimum_ram){
  std::lock_guard lock(mutex_);if(!adaptive_scheduler_)return {};
  if(monotonic_ms()>=cached_capacity_until_){
@@ -493,10 +493,12 @@ json::object Worker::heartbeat(){
  for(const auto& a:admission_.active())active.emplace_back(json::object{{"attempt_id",a.offer.attempt_id},{"state",a.phase==Phase::reserved?"reserved":a.phase==Phase::running?"running":"cancelling"}});
  bool video,image,app_video,app_image;
  {std::lock_guard lock(mutex_);video=capability_report_.video();image=capability_report_.image();app_video=capability_report_.app_video();app_image=capability_report_.app_image();}
- return {{"protocol",1},{"type","heartbeat"},{"status",paused_?"paused":"ready"},{"priority",priority_name(priority_)},{"active",std::move(active)},
+ json::object result{{"protocol",1},{"type","heartbeat"},{"status",paused_?"paused":"ready"},{"priority",priority_name(priority_)},{"active",std::move(active)},
  {"available",{{"ram_mb",free.ram_mb},{"vram_mb",0},{"scratch_mb",free.scratch_mb},{"cpu_threads",free.cpu_threads}}},
  {"reserved",{{"ram_mb",used.ram_mb},{"scratch_mb",used.scratch_mb},{"cpu_threads",used.cpu_threads}}},
  {"capabilities",{{"conversion.video.h264",{{"verified",video},{"preference",pref_name(video_)}}},{"conversion.image.jpeg",{{"verified",image},{"preference",pref_name(image_)}}},{"media.video.renditions.v1",{{"verified",app_video},{"preference",pref_name(video_)}}},{"media.image.renditions.v1",{{"verified",app_image},{"preference",pref_name(image_)}}}}}};
+ if(verified_gemma_&&gemma_dispatch_)result.at("capabilities").as_object()[gemma::capability]=json::object{{"verified",true},{"preference","allowed"},{"profile",gemma::profile},{"modalities",json::array{"text","image","video","audio"}}};
+ return result;
 }
 std::string Worker::paired_token(){
  ProtectedPairingSecrets secrets(config_.root);
@@ -545,6 +547,18 @@ void Worker::network(){
    if(!probe.reason.empty())safe_log("PROBE DETAIL "+probe.reason);
    {std::lock_guard report_lock(report_mutex_);readings_.encoders=capability_report_.encoders();if(readings_.encoders->empty())readings_.encoders="none";}
   }
+  try {
+   gemma_runtime_=load_gemma(config_.root);
+   if(gemma_runtime_){
+    if(!verified_video_||!verified_image_)throw std::runtime_error("Verified FFmpeg is required for Gemma media preparation");
+    if(config_.budget.ram_mb<4096||available_resources(config_.root,config_.reserve_ram_mb).ram_mb<4096)throw std::runtime_error("Gemma probe requires 4096 MiB available within the configured budget");
+    const auto workspace=config_.root/"probes"/("gemma-"+random_hex(8));std::filesystem::create_directories(workspace);
+    try{run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,"",[this]{return stop_||exit_requested_;},{4096,0,256,1},Priority::low,true);}
+    catch(...){std::error_code error;std::filesystem::remove_all(workspace,error);throw;}
+    std::error_code error;std::filesystem::remove_all(workspace,error);gemma_dispatch_=gemma_runtime_->advertise;verified_gemma_=true;
+    safe_log(std::string("GEMMA PROBE verified | text image video audio | ")+gemma::profile+(gemma_runtime_->advertise?" | dispatch enabled":" | dispatch disabled pending coordinator rollout"));
+   }
+  }catch(const std::exception&){verified_gemma_=false;safe_log("GEMMA PROBE unavailable | local runtime, integrity or modality probe failed; conversion remains available");}
   apply_preferences();
   recovery_=std::jthread([this]{recover_gpus();});
  }catch(const std::exception& e){
@@ -809,7 +823,14 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    std::error_code e;if(std::filesystem::remove(output,e))admission_.release_scratch(id,s.output_max_bytes/(1024*1024));
    return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
   };
-  if(!s.artifacts.empty()){
+  if(s.offer.capability==gemma::capability){
+   if(!verified_gemma_||!gemma_runtime_||!gemma_runtime_->advertise)throw std::runtime_error("Gemma capability unavailable");
+   phase("local Gemma multimodal inference");
+   try{run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,s.embedding_modality,cancelled,s.offer.resources,desktop_priority(priority_.load()));}
+   catch(...){if(!cancelled()){verified_gemma_=false;apply_preferences();}throw;}
+   if(admission_.release_compute(id))data->compute_handoff=true;
+   result["output"]=upload("result.json",s.output_url,"application/json");
+  }else if(!s.artifacts.empty()){
    const bool video=s.offer.capability=="media.video.renditions.v1";bool poster_ready=false;
    if(video){
     phase("inspect source video timing");

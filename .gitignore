@@ -14,3 +14,7 @@ verification/windows-runtime*.json
 runtime.json
 pairing-backups/
 install-check-*/
+__pycache__/
+*.pyc
+*.gguf
+gemma.json
