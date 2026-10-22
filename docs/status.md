@@ -7,14 +7,16 @@ Prior product529/CLI is installed on both PCs (see the final CLI release receipt
 but new headless owner-task enrollment, new artifact installation and genuine
 before-owner-login hardware/DPAPI/TLS acceptance are NOT established. Owner-away:
 no reboot/logoff/lock/shutdown/suspend/session disconnect or production lifecycle
-experiment. Exact source head `478c68f` passed Linux Release and full C++
-ASan/UBSan8/8 each, MSVC/24 native contracts, foreign-owner/forged-server zero-byte
-security, and actual restricted-owner current-profile DPAPI/headless restart and
-synthetic typed media/lease/ACK acceptance. Its short-retention code-only artifact
-was downloaded and all seven payload hashes and source archive were rechecked.
-This is not fresh boot, actual Password-task registration, TLS/coordinator or
-production-job proof. The latest evidence/docs-only head requires a full exact-source
-workflow rerun. Prior package gate failures are retained in the ledger. Both existing sshd services independently verified Automatic/Running
+experiment. Exact source head `e66225c` passed the full manual Windows build,
+24/24 native suites, real foreign-owner denial/forged-server zero-byte gate,
+actual restricted-owner current-profile DPAPI/headless restart and synthetic typed
+media/lease/ACK fixture, plus exact-source code-only packaging. Linux Release and
+full C++ ASan/UBSan suites were 8/8 on the immediately preceding docs/evidence-only
+head. The short-retention artifact was downloaded and all seven payload hashes and
+source archive rechecked. It is not fresh boot, actual Password-task registration,
+TLS/coordinator or production-job proof. A later report/evidence-only commit requires
+its own final-source workflow before release. Prior package gate failures are in
+the ledger. Both existing sshd services independently verified Automatic/Running
 with the pinned key; no SSH configuration/restart was needed. SSH is not worker
 readiness. Read [current verification ledger](../verification/unattended/REPORT.md)
 for exact source/test gates; retain red runs, never treat a successful task submit

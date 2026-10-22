@@ -9,26 +9,28 @@ authorized, is LOCAL secure UI only—never chat/scripts/argv/env/files. See
 
 ## Latest exact-code acceptance
 
-The latest completed full gate was manual Windows run `39697201776` at
-`478c68f39abafef3046741cf70f2168dcf6f9fa1`: MSVC Release, all24 registered native
+The latest completed full gate was Windows run `39699676289` at exact source
+`e66225ca0f567d4a1d2a5801f4585fcbf45247bf`: MSVC Release, all24 registered native
 behavior suites, actual foreign-owner denial and forged-server zero-request-byte
-security gate, and actual restricted same-owner/non-elevated/headless media fixture
-all passed. The fixture exercised current-profile DPAPI, protected bootstrap entry,
-restart continuation, actual typed FFmpeg child, hash/decode, admission fencing,
-desired pause preservation, 52 lease renewals, reserved BEGIN rejection/expiry,
-durable retry, wrong-ACK exit blocking and matching-ACK exit. It explicitly reports
-`real_coordinator=false`, `password_task_registration=false`, `cold_boot_test=false`.
-See retained job log71 and the exact artifact verification at
-[72-code-only-artifact-478-verification.md](72-code-only-artifact-478-verification.md).
+security gate, actual restricted same-owner/non-elevated/headless media fixture and
+code-only packaging all passed. The fixture exercised current-profile DPAPI,
+protected bootstrap entry, restart continuation, actual typed FFmpeg child,
+hash/decode, admission fencing, desired pause preservation, 52 lease renewals,
+reserved BEGIN rejection/expiry, durable retry, wrong-ACK exit blocking and
+matching-ACK exit. It explicitly reports `real_coordinator=false`,
+`password_task_registration=false`, `cold_boot_test=false`. See retained job log73
+and exact artifact verification
+[74-code-only-artifact-e662-verification.md](74-code-only-artifact-e662-verification.md).
+The artifact has seven checked payload hashes and a verified source archive; its
+receipt says no task registration, cold boot, production job or PC installation.
 This is not fresh-boot, password-task-registration, actual TLS/coordinator or
 production-job proof.
 
-Linux Release CTest and full C++ ASan/UBSan each pass8/8 on exact documentation
+Linux Release CTest and full C++ ASan/UBSan each pass8/8 on exact docs/evidence
 head `fcc5351` (logs69/70). Previous focused Windows policy run39692970248 at
-`f9edbb0` passed; focused tests are not release acceptance. The current branch
-head is `fcc5351`, docs/evidence-only atop tested code; its full exact-source
-Windows/package rerun must still pass before calling the current branch a final
-candidate. Fresh independent security review remains open.
+`f9edbb0` passed; focused tests are not release acceptance. A subsequent ledger
+commit will be documentation/evidence-only; rerun all required gates on the final
+source revision before release. Fresh independent security review remains open.
 
 ## Current code-only package gate
 
@@ -44,15 +46,15 @@ limited runner's persisted acceptance JSON came from the inner control fixture
 before outer bootstrap/station properties were added. Stdout had them, persisted
 package proof did not. Log68 retains this distinct failure. `478c68f` now atomically
 rewrites the same acceptance receipt with the exact verified outer properties;
-no gate is weakened and media itself must still pass. Workflow `39697201776` passed all steps at `478c68f` and produced the code-only
-artifact `worker-owner-478c68f39abafef3046741cf70f2168dcf6f9fa1-39697201776`
-(artifact id12392720725, three-day retention). I downloaded it and rechecked the
-manifest hash, all seven package hashes, exact revision/tree, source archive hash
-and ZIP integrity/1,254 entries. The receipt is explicit that no password task,
-cold boot, production job or PC installation occurred. Verification details are
-in log71 and document72. No release or installation is claimed. The current
-`fcc5351` source adds only reports and Linux logs after that tested code; a fresh
-full native/media/package workflow on this exact head remains required.
+no gate is weakened and media itself must still pass. Workflow `39697201776` passed all steps at `478c68f` and produced a verified
+code-only artifact; workflow `39699676289` then repeated every step at exact
+source `e66225ca0f567d4a1d2a5801f4585fcbf45247bf` and retained the final tested
+code-only artifact `worker-owner-e66225ca0f567d4a1d2a5801f4585fcbf45247bf-39699676289`
+(artifact id12392709270, short retention). Downloaded artifact hashes and ZIP
+integrity were checked. `65` and `68` retain the two package receipt red gates and
+subsequent causal fixes. No PC installation or product release is claimed. Any
+new source/evidence commit after `e66225c` requires exact-final-source gates before
+being considered a release candidate.
 
 ## Owner-only / production gates remain closed
 
