@@ -11,9 +11,10 @@ experiment. Exact source head `f9edbb0` passed Linux Release and full C++
 ASan/UBSan8/8 each, MSVC/24 native contracts, foreign-owner/forged-server zero-byte
 security, and actual restricted-owner current-profile DPAPI/headless restart and
 synthetic typed media/lease/ACK acceptance. This is not fresh boot, actual
-Password-task registration, TLS/coordinator or production-job proof. The code-only
-package step is being rerun after its metadata proof fix; no artifact is yet
-claimed. Both existing sshd services independently verified Automatic/Running
+Password-task registration, TLS/coordinator or production-job proof. The code-only package gate's actual-media checks pass; prior package attempts
+failed because the persisted receipt omitted outer bootstrap/station proof,
+retained in the unattended gate ledger. A third exact-source package rerun is
+underway after correcting that persisted receipt; no artifact is yet claimed. Both existing sshd services independently verified Automatic/Running
 with the pinned key; no SSH configuration/restart was needed. SSH is not worker
 readiness. Read [current verification ledger](../verification/unattended/REPORT.md)
 for exact source/test gates; retain red runs, never treat a successful task submit

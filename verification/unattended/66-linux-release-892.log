@@ -1,0 +1,91 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found SQLite3: /usr/lib/x86_64-linux-gnu/libsqlite3.so (found suitable version "3.46.1", minimum required is "3.22")
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rick/Downloads/worker-client-unattended/build-release-892
+[  5%] Building CXX object CMakeFiles/ow_json.dir/src/boost_json.cpp.o
+[  5%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/main.cpp.o
+[  7%] Building CXX object CMakeFiles/ow_pipeline_contract_tests.dir/tests/pipeline_test.cpp.o
+[ 10%] Linking CXX executable ow_pipeline_contract_tests
+[ 10%] Built target ow_pipeline_contract_tests
+[ 12%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/main.cpp.o
+[ 15%] Building CXX object CMakeFiles/ow_rendition_contract_tests.dir/tests/media_rendition_test.cpp.o
+[ 17%] Linking CXX static library libow_json.a
+[ 17%] Built target ow_json
+[ 20%] Building CXX object CMakeFiles/ow_rendition_probe.dir/tests/media_rendition_probe.cpp.o
+[ 22%] Linking CXX executable ow_rendition_contract_tests
+[ 25%] Linking CXX executable ow_rendition_probe
+[ 25%] Built target ow_rendition_probe
+[ 27%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/main.cpp.o
+[ 30%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/progress_test.cpp.o
+[ 30%] Built target ow_rendition_contract_tests
+[ 32%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/encoder_run_test.cpp.o
+[ 35%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/status_test.cpp.o
+[ 37%] Building CXX object CMakeFiles/ow_progress_contract_tests.dir/tests/stage_timing_test.cpp.o
+[ 40%] Building CXX object CMakeFiles/ow_core.dir/src/admission.cpp.o
+[ 42%] Linking CXX executable ow_progress_contract_tests
+/home/rick/Downloads/worker-client-unattended/src/admission.cpp: In member function ‘ow::Decision ow::Admission::offer(const ow::Offer&, ow::Tick, ow::Resources)’:
+/home/rick/Downloads/worker-client-unattended/src/admission.cpp:54:76: warning: missing initializer for member ‘ow::Active::stages’ [-Wmissing-field-initializers]
+   54 |  active_.emplace(o.attempt_id,Active{o,Phase::reserved,{},o.reserve_until,0});return {true,"ready"};
+      |                                                                            ^
+[ 45%] Building CXX object CMakeFiles/ow_core.dir/src/store.cpp.o
+[ 47%] Building CXX object CMakeFiles/ow_core.dir/src/protocol.cpp.o
+[ 50%] Building CXX object CMakeFiles/ow_core.dir/src/pairing.cpp.o
+[ 52%] Building CXX object CMakeFiles/ow_core.dir/src/adaptive_hardware.cpp.o
+/home/rick/Downloads/worker-client-unattended/src/adaptive_hardware.cpp: In constructor ‘ow::adaptive::Scheduler::Scheduler(ow::adaptive::Limits, std::vector<ow::adaptive::Profile>)’:
+/home/rick/Downloads/worker-client-unattended/src/adaptive_hardware.cpp:231:44: warning: missing initializer for member ‘ow::adaptive::Device::exclusion_reason’ [-Wmissing-field-initializers]
+  231 |   if(found==devices.end())devices.push_back({p.stable_id,p.backend,p.driver_version,0,true,p.adapter_index,p.device_name,p.backend_index,p.backend_identity_verified,p.physical_id});
+      |                           ~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 55%] Building CXX object CMakeFiles/ow_core.dir/src/control.cpp.o
+[ 57%] Building CXX object CMakeFiles/ow_core.dir/src/lifecycle.cpp.o
+[ 60%] Building CXX object CMakeFiles/ow_core.dir/src/secret_origin.cpp.o
+[ 62%] Linking CXX static library libow_core.a
+[ 62%] Built target ow_core
+[ 65%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/main.cpp.o
+[ 65%] Built target ow_progress_contract_tests
+[ 67%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/main.cpp.o
+[ 70%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/admission_test.cpp.o
+[ 72%] Building CXX object CMakeFiles/ow_adaptive_hardware_contract_tests.dir/tests/adaptive_hardware_test.cpp.o
+[ 75%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/store_test.cpp.o
+[ 77%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/protocol_test.cpp.o
+[ 80%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/pairing_test.cpp.o
+[ 82%] Linking CXX executable ow_adaptive_hardware_contract_tests
+[ 85%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/capacity_test.cpp.o
+[ 87%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/control_test.cpp.o
+[ 90%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/lifecycle_test.cpp.o
+[ 92%] Building CXX object CMakeFiles/ow_contract_tests.dir/tests/secret_origin_test.cpp.o
+[ 95%] Linking CXX executable ow_contract_tests
+[ 95%] Built target ow_adaptive_hardware_contract_tests
+[ 97%] Building CXX object CMakeFiles/ow_adaptive_evidence_probe.dir/tests/adaptive_evidence_probe.cpp.o
+[ 97%] Built target ow_contract_tests
+[100%] Linking CXX executable ow_adaptive_evidence_probe
+[100%] Built target ow_adaptive_evidence_probe
+Test project /home/rick/Downloads/worker-client-unattended/build-release-892
+    Start 1: ffmpeg_dependency_contracts
+1/8 Test #1: ffmpeg_dependency_contracts ......   Passed    0.16 sec
+    Start 2: launcher_package_contracts
+2/8 Test #2: launcher_package_contracts .......   Passed    0.05 sec
+    Start 3: code_package_contracts
+3/8 Test #3: code_package_contracts ...........   Passed    0.17 sec
+    Start 4: worker_contracts
+4/8 Test #4: worker_contracts .................   Passed    0.02 sec
+    Start 5: pipeline_contracts
+5/8 Test #5: pipeline_contracts ...............   Passed    0.00 sec
+    Start 6: rendition_contracts
+6/8 Test #6: rendition_contracts ..............   Passed    0.00 sec
+    Start 7: adaptive_hardware_contracts
+7/8 Test #7: adaptive_hardware_contracts ......   Passed    0.02 sec
+    Start 8: progress_contracts
+8/8 Test #8: progress_contracts ...............   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 8
+
+Total Test time (real) =   0.44 sec

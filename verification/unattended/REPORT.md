@@ -38,9 +38,16 @@ failed because the acceptance receipt omitted the already runtime-checked
 `noninteractive_window_station` boolean. No artifact was produced. Log65 retains
 the real package-policy failure. Test fixture `63340ac` now records that property
 only after `windows_unattended_fixture.cpp` verifies the actual station flags.
-Workflow `39695571198` is the full native/media/package rerun at `63340ac`; wait
-for exact outcome before claiming an artifact. Linux Release/sanitizers are 8/8
-at `bbeca99`; only Windows test-fixture receipt code changed at `63340ac`.
+Workflow `39695571198` at `63340ac` again passed build, 24/24 native tests,
+owner-security denial and media fixture, but the package gate still failed: the
+limited runner's persisted acceptance JSON came from the inner control fixture
+before outer bootstrap/station properties were added. Stdout had them, persisted
+package proof did not. Log68 retains this distinct failure. `478c68f` now atomically
+rewrites the same acceptance receipt with the exact verified outer properties;
+no gate is weakened and media itself must still pass. Workflow `39697201776` is the
+full native/media/package run at `478c68f`; await its result before any artifact
+claim. Linux Release/sanitizers passed8/8 at `892525d` (logs66/67); subsequent code
+changes are Windows-only receipt preservation.
 
 ## Owner-only / production gates remain closed
 
