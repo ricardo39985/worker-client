@@ -129,3 +129,18 @@ starts and probes a fresh host. The controller also kills the host on shutdown.
 Process reuse, cancellation/restart, child-tree cleanup, finite normalized results
 and permanent memory accounting have separate contracts. Real latency and Windows
 execution must be recorded after native testing and deployment.
+
+## Negotiated small-query transport
+
+A verified resident query capability advertises `inline_query:true`. Only this
+capability may receive at most 500 UTF-8 query bytes in `input.inline_text`; the
+normal immutable input SHA-256 and byte count are still verified before inference.
+Only a negotiated query may return `{query:{schema:2,profile,vector}}` on the
+existing authenticated outbound WebSocket. The normalized 768-value document is
+at most 65536 bytes and remains below the 256 KiB control-frame limit. Media
+retains bounded HTTPS transfers. Peers without the optional flag keep the existing
+query file path; no profile change or reindex is required.
+
+The coordinator/validator retain lease, actor, source and durable result/ACK fences.
+Terminal server offers and worker identity fingerprints omit private inline text.
+No new public listener or external inference endpoint is introduced.

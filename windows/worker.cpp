@@ -499,7 +499,7 @@ json::object Worker::heartbeat(){
  {"capabilities",{{"conversion.video.h264",{{"verified",video},{"preference",pref_name(video_)}}},{"conversion.image.jpeg",{{"verified",image},{"preference",pref_name(image_)}}},{"media.video.renditions.v1",{{"verified",app_video},{"preference",pref_name(video_)}}},{"media.image.renditions.v1",{{"verified",app_image},{"preference",pref_name(image_)}}}}}};
  if(verified_gemma_&&gemma_dispatch_){
   result.at("capabilities").as_object()[gemma::capability]=json::object{{"verified",true},{"preference","allowed"},{"profile",gemma::profile},{"modalities",json::array{"text","image","video","audio"}}};
-  result.at("capabilities").as_object()[gemma::query_capability]=json::object{{"verified",true},{"preference","allowed"},{"profile",gemma::profile},{"modalities",json::array{"text"}}};
+  result.at("capabilities").as_object()[gemma::query_capability]=json::object{{"verified",true},{"preference","allowed"},{"profile",gemma::profile},{"modalities",json::array{"text"}},{"inline_query",true}};
  }
  return result;
 }
@@ -687,7 +687,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   phase("prepare source.bin workspace");
   if(std::filesystem::exists(workspace))throw std::runtime_error("Attempt workspace already exists; refusing unsafe reuse");std::filesystem::create_directories(workspace);
   Http http;phase("download source.bin",s.input_bytes);
-  {StageTimer timing("download","source.bin",timing_sink,timing_wall_us,thread_cpu_us);if(offline_source_.empty())http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);else{std::filesystem::copy_file(offline_source_,workspace/"source.bin");if(std::filesystem::file_size(workspace/"source.bin")!=s.input_bytes)throw std::runtime_error("Offline input size differs");bytes_progress(s.input_bytes);}}
+  {StageTimer timing("download","source.bin",timing_sink,timing_wall_us,thread_cpu_us);if(!s.inline_query.empty()){atomic_write(workspace/"source.bin",s.inline_query);bytes_progress(s.input_bytes);}else if(offline_source_.empty())http.download(s.input_url,workspace/"source.bin",s.input_bytes,cancelled,bytes_progress);else{std::filesystem::copy_file(offline_source_,workspace/"source.bin");if(std::filesystem::file_size(workspace/"source.bin")!=s.input_bytes)throw std::runtime_error("Offline input size differs");bytes_progress(s.input_bytes);}}
   phase("verify source.bin sha256",s.input_bytes);
   {StageTimer timing("input_hash","source.bin",timing_sink,timing_wall_us,thread_cpu_us);if(sha256_file(workspace/"source.bin",bytes_progress)!=s.input_sha256)throw std::runtime_error("Input integrity check failed");}
   if(cancelled())throw std::runtime_error("Job cancelled before conversion");
@@ -841,7 +841,8 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    }else run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,s.embedding_modality,cancelled,s.offer.resources,desktop_priority(priority_.load()));}
    catch(...){if(!cancelled()&&s.offer.capability!=gemma::query_capability){verified_gemma_=false;apply_preferences();}throw;}
    if(admission_.release_compute(id))data->compute_handoff=true;
-   result["output"]=upload("result.json",s.output_url,"application/json");
+   if(!s.inline_query.empty())result["query"]=parse(read_file(workspace/"result.json",65536)).as_object();
+   else result["output"]=upload("result.json",s.output_url,"application/json");
   }else if(!s.artifacts.empty()){
    const bool video=s.offer.capability=="media.video.renditions.v1";bool poster_ready=false;
    if(video){

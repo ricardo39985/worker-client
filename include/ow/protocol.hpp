@@ -11,7 +11,7 @@ struct JobSpec {
  std::uint64_t input_bytes{},output_max_bytes{},timeout_ms{};
  std::vector<ArtifactTarget> artifacts;
  bool copy_audio{};
- std::string embedding_modality;
+ std::string embedding_modality,inline_query;
 };
 Tick lease_deadline(Tick server_utc,Tick expires_utc,Tick local_utc,Tick monotonic_now);
 bool allowed_url(const std::string& url,const std::vector<std::string>& hosts);

@@ -100,3 +100,16 @@ TEST("app jobs refuse arbitrary output roles and mixed media type declarations")
  m["output"].as_object()["artifacts"].as_object()["execute"]=json::object{};THROWS(decode_offer(m,0,{"media.example.test"}));
 }
 
+
+TEST("inline text is bounded and accepted only for the typed search query capability"){
+ auto m=offer_message();m["capability"]=gemma::query_capability;
+ m["parameters"]=json::object{{"profile",gemma::profile},{"modality","text"}};
+ m["resources"].as_object()["ram_mb"]=4096;m["resources"].as_object()["scratch_mb"]=256;
+ m["output"].as_object()["max_bytes"]=65536;m["input"].as_object()["bytes"]=5;
+ m["input"].as_object()["inline_text"]="pasta";
+ auto spec=decode_offer(m,0,{"media.example.test"});CHECK(spec.inline_query=="pasta");
+ CHECK(spec.offer.fingerprint.find("pasta")==std::string::npos);
+ m["input"].as_object()["bytes"]=4;THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["input"].as_object()["bytes"]=501;m["input"].as_object()["inline_text"]=std::string(501,'a');THROWS(decode_offer(m,0,{"media.example.test"}));
+ m=offer_message();m["input"].as_object()["inline_text"]="pasta";THROWS(decode_offer(m,0,{"media.example.test"}));
+}

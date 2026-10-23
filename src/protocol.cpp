@@ -37,6 +37,11 @@ JobSpec decode_offer(const json::object& m,Tick now,const std::vector<std::strin
  const auto& in=m.at("input").as_object();s.input_url=text(in,"url");s.input_sha256=text(in,"sha256",64);s.input_bytes=number(in,"bytes",1024ull*1024*1024);
  const auto& out=m.at("output").as_object();s.output_max_bytes=number(out,"max_bytes",1024ull*1024*1024);
  if(!s.input_bytes||!s.output_max_bytes||!allowed_url(s.input_url,hosts))throw std::runtime_error("unapproved input endpoint or byte limit");
+ if(in.if_contains("inline_text")){
+  if(!query)throw std::runtime_error("Inline text requires query capability");
+  s.inline_query=text(in,"inline_text",500);
+  if(s.inline_query.empty()||s.inline_query.size()!=s.input_bytes)throw std::runtime_error("Inline query bytes differ");
+ }
  if(embedding){
   const auto& parameters=m.at("parameters").as_object();s.embedding_modality=text(parameters,"modality",16);
   if(parameters.size()!=2||text(parameters,"profile")!=gemma::profile||!gemma::modality(s.embedding_modality))throw std::runtime_error("Gemma parameters differ from installed profile");
@@ -61,7 +66,11 @@ JobSpec decode_offer(const json::object& m,Tick now,const std::vector<std::strin
  s.timeout_ms=number(m,"timeout_ms",3600000);if(s.timeout_ms<1000)throw std::runtime_error("invalid task timeout");
  // Identity fingerprint excludes time-limited offer delivery metadata, but includes
  // every execution-affecting field. The coordinator must retry with the same spec.
- auto identity=m;identity.erase("offer_ttl_ms");identity.erase("message_id");s.offer.fingerprint=json::serialize(identity);return s;
+ auto identity=m;identity.erase("offer_ttl_ms");identity.erase("message_id");
+ // The immutable SHA-256 and byte count bind inline text without retaining the
+ // private query itself in the durable identity journal.
+ if(!s.inline_query.empty())identity.at("input").as_object()["inline_text"]="<sha256-bound-query>";
+ s.offer.fingerprint=json::serialize(identity);return s;
 }
 std::string output_name(const JobSpec& s){return gemma::inference(s.offer.capability)?"result.json":s.offer.capability=="conversion.video.h264"?"result.mp4":"result.jpg";}
 std::vector<std::wstring> ffmpeg_arguments(const JobSpec& s,const std::filesystem::path& w){
