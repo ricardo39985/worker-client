@@ -438,7 +438,7 @@ void Worker::update_settings(const json::object& values){
 }
 void Worker::pause(bool p){update_settings({{"operator.paused",p}});}
 void Worker::priority(Priority p){update_settings({{"operator.priority",priority_name(p)}});}
-void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);for(const auto* cap:{gemma::capability,gemma::query_capability})admission_.capability(cap,verified_gemma_.load()&&gemma_dispatch_.load(),Preference::allowed);}
+void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);for(const auto* cap:{gemma::capability,gemma::query_capability})admission_.capability(cap,gemma::capability_available(cap,gemma_dispatch_.load(),verified_gemma_.load(),verified_gemma_query_.load()),Preference::allowed);}
 adaptive::Scheduler::Reservation Worker::reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,Resources& cost,const std::string& attempt,const std::string& stage,bool cpu_only,std::uint32_t width,std::uint32_t height,std::uint64_t minimum_ram){
  std::lock_guard lock(mutex_);if(!adaptive_scheduler_)return {};
  if(monotonic_ms()>=cached_capacity_until_){
@@ -497,8 +497,10 @@ json::object Worker::heartbeat(){
  {"available",{{"ram_mb",free.ram_mb},{"vram_mb",0},{"scratch_mb",free.scratch_mb},{"cpu_threads",free.cpu_threads}}},
  {"reserved",{{"ram_mb",used.ram_mb},{"scratch_mb",used.scratch_mb},{"cpu_threads",used.cpu_threads}}},
  {"capabilities",{{"conversion.video.h264",{{"verified",video},{"preference",pref_name(video_)}}},{"conversion.image.jpeg",{{"verified",image},{"preference",pref_name(image_)}}},{"media.video.renditions.v1",{{"verified",app_video},{"preference",pref_name(video_)}}},{"media.image.renditions.v1",{{"verified",app_image},{"preference",pref_name(image_)}}}}}};
- if(verified_gemma_&&gemma_dispatch_){
+ if(gemma::capability_available(gemma::capability,gemma_dispatch_,verified_gemma_,verified_gemma_query_)){
   result.at("capabilities").as_object()[gemma::capability]=json::object{{"verified",true},{"preference","allowed"},{"profile",gemma::profile},{"modalities",json::array{"text","image","video","audio"}}};
+ }
+ if(gemma::capability_available(gemma::query_capability,gemma_dispatch_,verified_gemma_,verified_gemma_query_)){
   result.at("capabilities").as_object()[gemma::query_capability]=json::object{{"verified",true},{"preference","allowed"},{"profile",gemma::profile},{"modalities",json::array{"text"}},{"inline_query",true}};
  }
  return result;
@@ -562,12 +564,13 @@ void Worker::network(){
     if(gemma_runtime_->advertise){
      if(!admission_.reserve_resident_memory(GemmaQuery::memory_mb))throw std::runtime_error("Resident query memory exceeds configured budget");
      gemma_query_=std::make_unique<GemmaQuery>(*gemma_runtime_,config_.root,Resources{GemmaQuery::memory_mb,0,256,std::min<std::uint64_t>(8,config_.budget.cpu_threads)},desktop_priority(priority_.load()),[this]{return stop_||exit_requested_;});
+     verified_gemma_query_=true;
      safe_log("GEMMA QUERY ready | resident text model | 2048 MiB memory reserved");
     }
     gemma_dispatch_=gemma_runtime_->advertise;verified_gemma_=true;
     safe_log(std::string("GEMMA PROBE verified | text image video audio | ")+gemma::profile+(gemma_runtime_->advertise?" | dispatch enabled":" | dispatch disabled pending coordinator rollout"));
    }
-  }catch(const std::exception&){verified_gemma_=false;safe_log("GEMMA PROBE unavailable | local runtime, integrity or modality probe failed; conversion remains available");}
+  }catch(const std::exception&){verified_gemma_=false;verified_gemma_query_=false;safe_log("GEMMA PROBE unavailable | local runtime, integrity or modality probe failed; conversion remains available");}
   apply_preferences();
   recovery_=std::jthread([this]{recover_gpus();});
  }catch(const std::exception& e){
@@ -833,13 +836,32 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
   };
   if(gemma::inference(s.offer.capability)){
-   if(!verified_gemma_||!gemma_runtime_||!gemma_runtime_->advertise)throw std::runtime_error("Gemma capability unavailable");
+   if(!gemma_runtime_||!gemma::capability_available(s.offer.capability,gemma_runtime_->advertise,verified_gemma_,verified_gemma_query_))throw std::runtime_error("Gemma capability unavailable");
    phase("local Gemma multimodal inference");
    try{if(s.offer.capability==gemma::query_capability){
     if(!gemma_query_)throw std::runtime_error("Resident query model unavailable");
     gemma_query_->encode(workspace,cancelled,desktop_priority(priority_.load()));
    }else run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,s.embedding_modality,cancelled,s.offer.resources,desktop_priority(priority_.load()));}
-   catch(...){if(!cancelled()&&s.offer.capability!=gemma::query_capability){verified_gemma_=false;apply_preferences();}throw;}
+   catch(...){
+    const auto original=std::current_exception();
+    if(!cancelled()){
+     if(s.offer.capability==gemma::query_capability){verified_gemma_query_=false;apply_preferences();}
+     else{
+      verified_gemma_=false;apply_preferences();
+      // The failed attempt still owns its compute/memory escrow. A small actual
+      // modality probe distinguishes a bad input from unavailable local runtime.
+      // It never replaces the failed result or publishes a partial embedding.
+      const auto health=workspace/("health-"+random_hex(8));
+      try{
+       std::filesystem::create_directories(health);phase("rechecking local Gemma after media failure");
+       run_gemma(*gemma_runtime_,config_.ffmpeg,health,"",cancelled,s.offer.resources,desktop_priority(priority_.load()),true);
+       if(!cancelled()){verified_gemma_=true;safe_log("GEMMA MEDIA recovery verified | original attempt remains failed");}
+      }catch(...){safe_log("GEMMA MEDIA recovery unavailable | query health is independent");}
+      std::error_code error;std::filesystem::remove_all(health,error);apply_preferences();
+     }
+    }
+    std::rethrow_exception(original);
+   }
    if(admission_.release_compute(id))data->compute_handoff=true;
    if(!s.inline_query.empty())result["query"]=parse(read_file(workspace/"result.json",65536)).as_object();
    else result["output"]=upload("result.json",s.output_url,"application/json");
@@ -951,7 +973,7 @@ void Worker::watchdog(){
   }
   if(ffmpeg_hash_changed_.exchange(false)){
    {std::lock_guard lock(mutex_);++hardware_generation_;hardware_profiles_.clear();if(adaptive_scheduler_)adaptive_scheduler_->invalidate_all();if(auto record=capability_report_.disabled())safe_log(*record);safe_log("PROBE DEVICES schedulable GPUs=0");}
-   verified_video_=false;verified_image_=false;verified_media_video_=false;verified_media_image_=false;apply_preferences();
+   verified_video_=false;verified_image_=false;verified_media_video_=false;verified_media_image_=false;verified_gemma_=false;apply_preferences();
    safe_log("ADAPTIVE INVALIDATION: approved FFmpeg changed or became unreadable; converter capabilities disabled until a fresh probe");
   }
   if(now>=next_inventory){

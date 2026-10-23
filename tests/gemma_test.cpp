@@ -24,3 +24,12 @@ TEST("Gemma rejects source changes partial coverage and nonunit vectors"){
  doc=fixture();doc.at("entries").as_array()[1].as_object()["start_ms"]=21000;THROWS(gemma::validate_result(doc,std::string(64,'a'),"video"));
  doc=fixture();doc.at("entries").as_array()[0].as_object().at("vector").as_array()[0]=0.5;THROWS(gemma::validate_result(doc,std::string(64,'a'),"video"));
 }
+
+TEST("a failed media lane cannot disable independently verified search queries"){
+ CHECK(gemma::capability_available(gemma::query_capability,true,false,true));
+ CHECK(!gemma::capability_available(gemma::capability,true,false,true));
+ CHECK(gemma::capability_available(gemma::capability,true,true,false));
+ CHECK(!gemma::capability_available(gemma::query_capability,true,true,false));
+ CHECK(!gemma::capability_available(gemma::query_capability,false,true,true));
+ CHECK(!gemma::capability_available("unprobed",true,true,true));
+}

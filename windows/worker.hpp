@@ -73,7 +73,7 @@ class Worker {
  std::atomic_bool ffmpeg_hash_changed_{};
  std::unique_ptr<GemmaQuery> gemma_query_;
  std::atomic_bool results_ready_{};
- std::optional<GemmaRuntime> gemma_runtime_;std::atomic_bool verified_gemma_{},gemma_dispatch_{};
+ std::optional<GemmaRuntime> gemma_runtime_;std::atomic_bool verified_gemma_{},verified_gemma_query_{},gemma_dispatch_{};
  std::unordered_map<std::string,JobSpec> offered_; // network thread only
  std::vector<adaptive::Profile> hardware_profiles_;
  std::unique_ptr<adaptive::Scheduler> adaptive_scheduler_;

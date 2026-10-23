@@ -5,6 +5,10 @@
 namespace ow::gemma {
 inline constexpr const char* capability="inference.embeddinggemma2.v2";
 inline constexpr const char* query_capability="inference.embeddinggemma2.query.v1";
+// Independently proven lanes must not inherit an unrelated input's failure.
+inline bool capability_available(const std::string& cap,bool enabled,bool media_verified,bool query_verified){
+ return enabled&&((cap==capability&&media_verified)||(cap==query_capability&&query_verified));
+}
 inline bool inference(const std::string& cap){return cap==capability||cap==query_capability;}
 inline constexpr const char* profile="embeddinggemma2-q8-b11475-768-segments-v2";
 inline constexpr std::size_t result_limit=8*1024*1024;

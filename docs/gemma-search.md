@@ -144,3 +144,15 @@ query file path; no profile change or reindex is required.
 The coordinator/validator retain lease, actor, source and durable result/ACK fences.
 Terminal server offers and worker identity fingerprints omit private inline text.
 No new public listener or external inference endpoint is introduced.
+
+## Independent inference health
+
+The resident query model and media inference advertise separate verified health.
+A media input failure cannot disable a separately proven text-query model. The
+failed attempt retains its original failure. Before releasing its held compute
+and memory budget, it runs a bounded actual modality probe. A successful probe
+restores media admission; a failed/canceled probe leaves media unavailable.
+There is no unbudgeted background retry or partial result publication. A genuine
+query failure disables query admission independently; cancellation retains the
+existing contained restart behavior. Approved FFmpeg changes disable media
+inference with the converter capabilities, while text-only queries remain separate.
