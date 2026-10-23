@@ -16,6 +16,11 @@ bool safe_id(const std::string& s){
 Admission::Admission(Resources b,std::size_t m):budget_(b),max_jobs_(m){
  if(!m||m>64||!b.ram_mb||!b.cpu_threads)throw std::invalid_argument("invalid host resource budget");
 }
+bool Admission::reserve_resident_memory(std::uint64_t mb){
+ std::lock_guard lock(mutex_);
+ if(!active_.empty()||!mb||!fits(Resources{mb,0,0,0},budget_,used_))return false;
+ used_.ram_mb+=mb;return true;
+}
 void Admission::capability(std::string name,bool verified,Preference preference){
  std::lock_guard lock(mutex_);capabilities_.insert_or_assign(std::move(name),Capability{verified,preference});
 }

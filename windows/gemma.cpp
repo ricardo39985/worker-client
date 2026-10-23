@@ -22,6 +22,48 @@ std::optional<GemmaRuntime> load_gemma(const std::filesystem::path& owner_root){
  if(auto* value=doc.if_contains("advertise"))runtime.advertise=value->as_bool();
  verify(runtime);return runtime;
 }
+GemmaQuery::GemmaQuery(const GemmaRuntime& runtime,const std::filesystem::path& root,Resources limits,Priority priority,const std::function<bool()>& cancelled)
+ :runtime_(runtime),workspace_(root/"query-model"/("session-"+random_hex(8))),limits_(limits),priority_(priority){
+ try{start(cancelled);}catch(...){stop();std::error_code error;std::filesystem::remove_all(workspace_,error);throw;}
+}
+GemmaQuery::~GemmaQuery(){stop();std::error_code error;std::filesystem::remove_all(workspace_,error);}
+void GemmaQuery::stop() noexcept {try{if(child_)child_->stop();}catch(...){}child_.reset();}
+void GemmaQuery::start(const std::function<bool()>& cancelled){
+ verify(runtime_);std::filesystem::create_directories(workspace_);
+ std::error_code error;std::filesystem::remove(workspace_/"ready.json",error);
+ child_=std::make_unique<Child>(runtime_.python,std::vector<std::wstring>{L"-I",runtime_.script.wstring(),L"--runtime-root",runtime_.root.wstring(),L"--output",(workspace_/"ready.json").wstring(),L"--threads",std::to_wstring(limits_.cpu_threads),L"serve-query"},workspace_,limits_,priority_);
+ const auto until=monotonic_ms()+120000;
+ for(;;){
+  if(cancelled()||monotonic_ms()>=until)throw std::runtime_error("Resident query startup cancelled or timed out");
+  if(child_->exit_code())throw std::runtime_error("Resident query process unavailable");
+  if(std::filesystem::exists(workspace_/"ready.json")){
+   gemma::validate_query(parse(read_file(workspace_/"ready.json",65536)).as_object());return;
+  }
+  Sleep(10);
+ }
+}
+void GemmaQuery::encode(const std::filesystem::path& attempt,const std::function<bool()>& cancelled,Priority priority){
+ std::lock_guard lock(mutex_);
+ if(cancelled())throw std::runtime_error("Query cancelled before inference");
+ if(!child_||child_->exit_code()){stop();try{start(cancelled);}catch(...){stop();throw;}}
+ child_->priority(priority);
+ const auto identity=random_hex(16);const auto request=workspace_/(identity+".query"),result=workspace_/(identity+".result"),failure=workspace_/(identity+".error");
+ struct Cleanup {std::vector<std::filesystem::path> paths;~Cleanup(){std::error_code e;for(const auto& p:paths)std::filesystem::remove(p,e);}} cleanup{{request,result,failure}};
+ const auto source=read_file(attempt/"source.bin",4096);if(source.empty())throw std::runtime_error("Empty query");
+ atomic_write(request,source);const auto until=monotonic_ms()+120000;
+ try{
+  for(;;){
+   if(cancelled()||monotonic_ms()>=until)throw std::runtime_error("Resident query cancelled or timed out");
+   if(child_->exit_code()||std::filesystem::exists(failure))throw std::runtime_error("Resident query unavailable");
+   if(std::filesystem::exists(result)){
+    auto bytes=read_file(result,65536);gemma::validate_query(parse(bytes).as_object());
+    if(cancelled())throw std::runtime_error("Query cancelled before publication");
+    atomic_write(attempt/"result.json",bytes);return;
+   }
+   Sleep(10);
+  }
+ }catch(...){stop();throw;} // Drain the complete tree before releasing this query's CPU reservation.
+}
 GemmaExecution run_gemma(const GemmaRuntime& runtime,const std::filesystem::path& ffmpeg,const std::filesystem::path& workspace,
  const std::string& modality,const std::function<bool()>& cancelled,Resources resources,Priority priority,bool probe,bool query){
  verify(runtime);

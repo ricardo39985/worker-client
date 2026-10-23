@@ -558,7 +558,13 @@ void Worker::network(){
     const auto workspace=config_.root/"probes"/("gemma-"+random_hex(8));std::filesystem::create_directories(workspace);
     try{run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,"",[this]{return stop_||exit_requested_;},{4096,0,256,1},Priority::low,true);}
     catch(...){std::error_code error;std::filesystem::remove_all(workspace,error);throw;}
-    std::error_code error;std::filesystem::remove_all(workspace,error);gemma_dispatch_=gemma_runtime_->advertise;verified_gemma_=true;
+    std::error_code error;std::filesystem::remove_all(workspace,error);
+    if(gemma_runtime_->advertise){
+     if(!admission_.reserve_resident_memory(GemmaQuery::memory_mb))throw std::runtime_error("Resident query memory exceeds configured budget");
+     gemma_query_=std::make_unique<GemmaQuery>(*gemma_runtime_,config_.root,Resources{GemmaQuery::memory_mb,0,256,std::min<std::uint64_t>(8,config_.budget.cpu_threads)},desktop_priority(priority_.load()),[this]{return stop_||exit_requested_;});
+     safe_log("GEMMA QUERY ready | resident text model | 2048 MiB memory reserved");
+    }
+    gemma_dispatch_=gemma_runtime_->advertise;verified_gemma_=true;
     safe_log(std::string("GEMMA PROBE verified | text image video audio | ")+gemma::profile+(gemma_runtime_->advertise?" | dispatch enabled":" | dispatch disabled pending coordinator rollout"));
    }
   }catch(const std::exception&){verified_gemma_=false;safe_log("GEMMA PROBE unavailable | local runtime, integrity or modality probe failed; conversion remains available");}
@@ -829,8 +835,11 @@ void Worker::execute(std::shared_ptr<TaskData> data){
   if(gemma::inference(s.offer.capability)){
    if(!verified_gemma_||!gemma_runtime_||!gemma_runtime_->advertise)throw std::runtime_error("Gemma capability unavailable");
    phase("local Gemma multimodal inference");
-   try{run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,s.embedding_modality,cancelled,s.offer.resources,desktop_priority(priority_.load()),false,s.offer.capability==gemma::query_capability);}
-   catch(...){if(!cancelled()){verified_gemma_=false;apply_preferences();}throw;}
+   try{if(s.offer.capability==gemma::query_capability){
+    if(!gemma_query_)throw std::runtime_error("Resident query model unavailable");
+    gemma_query_->encode(workspace,cancelled,desktop_priority(priority_.load()));
+   }else run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,s.embedding_modality,cancelled,s.offer.resources,desktop_priority(priority_.load()));}
+   catch(...){if(!cancelled()&&s.offer.capability!=gemma::query_capability){verified_gemma_=false;apply_preferences();}throw;}
    if(admission_.release_compute(id))data->compute_handoff=true;
    result["output"]=upload("result.json",s.output_url,"application/json");
   }else if(!s.artifacts.empty()){

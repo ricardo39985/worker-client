@@ -231,3 +231,12 @@ TEST("competing local RAM increases cannot oversubscribe host capacity"){
  a.expire(6000);CHECK(a.used().ram_mb==1536);
  CHECK(!a.reserve_ram("a",1100,cap,6001));CHECK(a.finish("a"));CHECK(a.finish("b"));CHECK(a.used().ram_mb==0);
 }
+
+TEST("resident model memory stays charged across job completion and bounds admission") {
+ Admission a(budget,8);ready(a);
+ CHECK(a.reserve_resident_memory(2500));CHECK(a.used().ram_mb==2500);
+ CHECK(!a.offer(task("large",{2000,0,100,2}),0,budget).accepted);
+ CHECK(a.offer(task(),0,budget).accepted);CHECK(a.begin("a","t",5000,1)==Start::started);
+ CHECK(!a.reserve_resident_memory(1));CHECK(a.cancel("a"));CHECK(a.finish("a"));
+ CHECK(a.used()==Resources{2500,0,0,0});CHECK(!a.reserve_resident_memory(2000));
+}

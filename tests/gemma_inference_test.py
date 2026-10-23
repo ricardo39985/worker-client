@@ -6,12 +6,40 @@ import tempfile
 import unittest
 import shutil
 import subprocess
+import threading
+import json
+import time
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
-from gemma_inference import segments, checked_vector, validate_model_directory, embed_file, block_external_connections
+from gemma_inference import segments, checked_vector, validate_model_directory, embed_file, block_external_connections, serve_queries
 
 
 class LocalGemma(unittest.TestCase):
+    def test_resident_queries_reuse_one_model_and_reject_oversize_without_encoding(self):
+        class Encoder:
+            def __init__(self): self.inputs=[]
+            def encode(self,text):
+                self.inputs.append(text)
+                return [1.0]+[0.0]*767
+        with tempfile.TemporaryDirectory() as directory:
+            root=pathlib.Path(directory);model=Encoder();stop=threading.Event()
+            thread=threading.Thread(target=serve_queries,args=(model,root,stop.is_set))
+            thread.start()
+            try:
+                for identity,text in [('a'*32,'pasta'),('b'*32,'tomato'),('c'*32,'x'*4097)]:
+                    pending=root/(identity+'.pending');pending.write_text(text);pending.replace(root/(identity+'.query'))
+                    until=time.monotonic()+3
+                    while not (root/(identity+'.result')).exists() and not (root/(identity+'.error')).exists():
+                        if time.monotonic()>until:self.fail('Resident query did not settle')
+                        time.sleep(.01)
+                self.assertEqual(model.inputs,['task: search result | query: pasta','task: search result | query: tomato'])
+                result=json.loads((root/('a'*32+'.result')).read_text())
+                self.assertEqual(result['vector'],[1.0]+[0.0]*767)
+                self.assertNotIn('pasta',json.dumps(result))
+                self.assertTrue((root/('c'*32+'.error')).exists())
+            finally:stop.set();thread.join(3)
+            self.assertFalse(thread.is_alive())
+
     def test_video_sections_cover_late_content_and_partial_final_section(self):
         self.assertEqual(segments(65.5), [(0, 20), (20, 40), (40, 60), (60, 65.5)])
         self.assertEqual(segments(0.25), [(0, 0.25)])

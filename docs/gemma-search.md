@@ -106,3 +106,26 @@ metadata, uses neutral filenames, embeds the clip, then places the same visuals
 after 20 seconds of unrelated color footage and checks that the requested subject
 ranks above the unrelated section. It never downloads fixtures or touches the
 coordinator. This is a local recognition test, not app end-to-end acceptance.
+
+## Resident query model
+
+The controller starts one text-only query host after its actual modality probe.
+A real warmup embedding must pass before inference is advertised. The host and
+its llama child remain inside a controller-owned Windows Job with a 2048 MiB
+commit limit and at most eight CPU threads. Resident memory is charged against
+admission for the controller lifetime; a running query still holds its ordinary
+CPU/job reservation. Media continues in a separate per-attempt tree.
+
+Query RPC is bounded owner-local file exchange in a random session directory,
+not a new public listener. The model's existing loopback API remains random-token
+protected. Each request uses an internal random ID; vectors retain the same profile,
+query prefix and independent coordinator validation/publication fences. No query
+text, token, vector or signed URL is logged. Runtime/model integrity is checked
+once when the host starts, rather than loading/hashing weights for every query.
+
+Queries serialize through one resident model. Cancellation stops and drains its
+whole process tree before the attempt releases capacity; the next valid query
+starts and probes a fresh host. The controller also kills the host on shutdown.
+Process reuse, cancellation/restart, child-tree cleanup, finite normalized results
+and permanent memory accounting have separate contracts. Real latency and Windows
+execution must be recorded after native testing and deployment.

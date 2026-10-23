@@ -273,12 +273,41 @@ def probe_model(model, ffmpeg, ffprobe, workspace):
             "image_vectors_differ": True, "dimensions": len(query)}
 
 
+def write_result(path, result):
+    encoded=json.dumps(result,allow_nan=False,separators=(",",":"))
+    pending=path.with_suffix(path.suffix+".pending")
+    pending.write_text(encoded,encoding="utf-8")
+    os.replace(pending,path)
+
+
+def serve_queries(model, directory, stopped=lambda:False):
+    """Owner-local bounded file RPC. The controller owns lifetime and leases."""
+    directory=Path(directory)
+    while not stopped():
+        for request in list(directory.glob("*.query"))[:64]:
+            identity=request.stem
+            if len(identity)!=32 or any(c not in "0123456789abcdef" for c in identity):
+                continue
+            try:
+                if not 0<request.stat().st_size<=4096:raise ValueError("Query size")
+                text=request.read_text(encoding="utf-8")
+                if not text.strip():raise ValueError("Empty query")
+                vector=checked_vector(model.encode("task: search result | query: "+text))
+                write_result(directory/(identity+".result"),{"schema":2,"profile":PROFILE,"vector":vector})
+            except Exception:
+                write_result(directory/(identity+".error"),{"error":"local_query_failed"})
+            finally:
+                request.unlink(missing_ok=True)
+        time.sleep(.01)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runtime-root", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--threads", type=int, default=1, choices=range(1, 9))
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("serve-query")
     query = sub.add_parser("query")
     query.add_argument("--text-file", required=True, type=Path)
     asset = sub.add_parser("asset")
@@ -295,6 +324,12 @@ def main():
     with tempfile.TemporaryDirectory(prefix="gemma-", dir=args.output.resolve().parent) as temporary:
         multimodal = args.command == "probe" or (args.command == "asset" and args.modality != "text")
         with Model(args.runtime_root, temporary, args.threads, multimodal=multimodal) as model:
+            if args.command == "serve-query":
+                # Real startup query warms kernels before capability advertisement.
+                write_result(args.output,{"schema":2,"profile":PROFILE,
+                    "vector":model.encode("task: search result | query: warmup")})
+                serve_queries(model,args.output.resolve().parent)
+                return
             if args.command == "probe":
                 result = probe_model(model, args.ffmpeg, args.ffprobe, temporary)
             elif args.command == "query":

@@ -235,3 +235,29 @@ TEST("native Job Object cap rejects old footprint and admits workload budget whi
   child.stop();
  }
 }
+
+TEST("resident query process is reused and cancellation drains its tree before restart") {
+ Temp owner,first,second;const auto exe=executable_directory()/"ow_test_child.exe";
+ const auto script=owner.path/"fixture.py";atomic_write(script,"fixture");
+ GemmaRuntime runtime{exe,script,owner.path,exe,sha256_file(exe),sha256_file(script),sha256_file(exe),true};
+ DWORD last=0,leaf=0;
+ {
+  GemmaQuery model(runtime,owner.path,{256,0,256,2},Priority::low,[]{return false;});
+  auto directory=std::filesystem::directory_iterator(owner.path/"query-model")->path();
+  const auto original=wait_pid(directory/"model.pid");
+  atomic_write(first.path/"source.bin","pasta");model.encode(first.path,[]{return false;},Priority::low);
+  atomic_write(second.path/"source.bin","tomato");model.encode(second.path,[]{return false;},Priority::low);
+  CHECK(wait_pid(directory/"model.pid")==original);
+  gemma::validate_query(parse(read_file(second.path/"result.json")).as_object());
+  std::filesystem::remove(first.path/"result.json");
+  atomic_write(first.path/"source.bin","stall");const auto started=monotonic_ms();
+  THROWS(model.encode(first.path,[&]{return monotonic_ms()-started>100;},Priority::low));
+  Handle old(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,FALSE,original));DWORD status=0;
+  if(old){CHECK(GetExitCodeProcess(old.get(),&status));CHECK(status!=STILL_ACTIVE);}
+  CHECK(!std::filesystem::exists(first.path/"result.json"));
+  std::filesystem::remove(directory/"leaf.pid");
+  model.encode(second.path,[]{return false;},Priority::low);
+  last=wait_pid(directory/"model.pid");leaf=wait_pid(directory/"leaf.pid");CHECK(last!=original);
+ }
+ for(const auto pid:{last,leaf}){Handle process(OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,FALSE,pid));DWORD status=0;if(process){CHECK(GetExitCodeProcess(process.get(),&status));CHECK(status!=STILL_ACTIVE);}}
+}

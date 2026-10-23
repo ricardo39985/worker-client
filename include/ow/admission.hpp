@@ -38,6 +38,8 @@ class Admission {
 public:
     Admission(Resources budget, std::size_t max_jobs);
     void capability(std::string name, bool verified, Preference preference);
+    // Controller-owned model memory remains charged for the process lifetime.
+    bool reserve_resident_memory(std::uint64_t mb);
     void pause(bool value);
     void defer_new_starts(std::string reason);
     Decision start_gate() const; // fresh local admission gate, not a promise for any particular offer
