@@ -52,11 +52,13 @@ foreach($property in $lock.model.files.PSObject.Properties){
     $url='https://huggingface.co/'+$lock.model.repository+'/resolve/'+$lock.model.revision+'/'+$property.Name
     Get-PinnedFile $url $property.Value (Join-Path $models $property.Name)
 }
-$engine=Join-Path $destination 'gemma_inference.py'
+$engineHash=(Get-FileHash (Join-Path $PSScriptRoot 'gemma_inference.py')).Hash.ToLowerInvariant()
+$engine=Join-Path $destination ('gemma_inference-'+$engineHash.Substring(0,16)+'.py')
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'gemma_inference.py') -Destination $engine -Force
 $probe=Join-Path $destination 'probe.json'
-& $Python -I $engine --runtime-root $destination --output $probe probe --ffmpeg $Ffmpeg --ffprobe $Ffprobe
-if($LASTEXITCODE){throw 'Real local Gemma probe failed; capability remains disabled'}
+$arguments=@('-I',('"'+$engine+'"'),'--runtime-root',('"'+$destination+'"'),'--output',('"'+$probe+'"'),'probe','--ffmpeg',('"'+$Ffmpeg+'"'),'--ffprobe',('"'+$Ffprobe+'"'))
+$process=Start-Process -FilePath $Python -ArgumentList $arguments -WindowStyle Hidden -Wait -PassThru -RedirectStandardOutput (Join-Path $destination 'setup-probe.stdout.log') -RedirectStandardError (Join-Path $destination 'setup-probe.stderr.log')
+if($process.ExitCode){throw 'Real local Gemma probe failed; capability remains disabled'}
 $evidence=Get-Content $probe -Raw|ConvertFrom-Json
 if($evidence.profile -ne $lock.profile -or -not $evidence.image_vectors_differ -or $evidence.dimensions -ne 768){throw 'Gemma probe evidence differs'}
 $config=@{schema=1;enabled=$true;advertise=$false;profile=$lock.profile;runtime_root=$destination;python=$Python;

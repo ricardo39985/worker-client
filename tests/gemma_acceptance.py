@@ -10,9 +10,10 @@ from pathlib import Path
 import sys
 import tempfile
 import time
+import subprocess
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from gemma_inference import Model, PROFILE, block_external_connections, digest, embed_file, tool
+from gemma_inference import Model, PROFILE, block_external_connections, digest, embed_file, tool, checked_vector
 
 
 def main():
@@ -39,8 +40,15 @@ def main():
               "-filter_complex_threads", "1", "-filter_complex",
               "[1:v]scale=320:240:force_original_aspect_ratio=decrease,pad=320:240:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=1,setpts=PTS-STARTPTS[v];[0:v][v]concat=n=2:v=1:a=0[out]",
               "-map", "[out]", "-an", "-map_metadata", "-1", "-c:v", "libx264", "-threads", "1", str(later)])
+        query_file = root / "q.txt"
+        query_file.write_text(args.query, encoding="utf-8")
+        query_output = root / "q.json"
+        subprocess.run([sys.executable, "-I", str(Path(__file__).resolve().parents[1] / "scripts" / "gemma_inference.py"),
+                        "--runtime-root", str(args.runtime_root), "--output", str(query_output), "--threads", str(args.threads),
+                        "query", "--text-file", str(query_file)], check=True, timeout=180,
+                       creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+        query = checked_vector(json.loads(query_output.read_text(encoding="utf-8"))["vector"])
         with Model(args.runtime_root, root, threads=args.threads) as model:
-            query = model.encode("task: search result | query: " + args.query)
             original = embed_file(model, source, "video", args.ffmpeg, args.ffprobe, root)
             delayed = embed_file(model, later, "video", args.ffmpeg, args.ffprobe, root)
         def score(entry):
@@ -54,6 +62,7 @@ def main():
                   "original_scores": original_scores, "delayed_scores": delayed_scores,
                   "sections": [{k: entry[k] for k in ("modality", "start_ms", "end_ms")} for entry in delayed["entries"]],
                   "audio_used": False, "caption_or_filename_text_used": False,
+                  "query_encoder": "text-only adapter CLI, documented query prefix",
                   "external_inference_connections_allowed": False,
                   "elapsed_seconds": round(time.monotonic() - started, 3),
                   "scope": "Local worker recognition only; no production posts, legacy assets or app search were touched"}

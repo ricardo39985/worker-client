@@ -113,7 +113,8 @@ class Model:
             args += ["--no-mmproj"]
         self.log = open(self.workspace / "gemma-runtime.log", "wb")
         self.process = subprocess.Popen(args, cwd=self.root / "runtime", stdin=subprocess.DEVNULL,
-                                        stdout=self.log, stderr=subprocess.STDOUT)
+                                        stdout=self.log, stderr=subprocess.STDOUT,
+                                        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
         try:
             until = time.monotonic() + 120
             while time.monotonic() < until:
@@ -175,7 +176,8 @@ class Model:
 
 def tool(args, timeout=120):
     result = subprocess.run(args, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE, timeout=timeout)
+                            stderr=subprocess.PIPE, timeout=timeout,
+                            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     if result.returncode:
         raise RuntimeError("Local media preparation failed")
     if len(result.stdout) > 1024 * 1024:
