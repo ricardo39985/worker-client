@@ -36,7 +36,7 @@ def main():
         tool([str(args.ffmpeg), "-nostdin", "-v", "error", "-y", "-protocol_whitelist", "file",
               "-f", "lavfi", "-i", "color=c=blue:s=320x240:r=1:d=20", "-i", str(source),
               "-filter_complex_threads", "1", "-filter_complex",
-              "[1:v]scale=320:240:force_original_aspect_ratio=decrease,pad=320:240:(ow-iw)/2:(oh-ih)/2,fps=1,setpts=PTS-STARTPTS[v];[0:v][v]concat=n=2:v=1:a=0[out]",
+              "[1:v]scale=320:240:force_original_aspect_ratio=decrease,pad=320:240:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=1,setpts=PTS-STARTPTS[v];[0:v][v]concat=n=2:v=1:a=0[out]",
               "-map", "[out]", "-an", "-map_metadata", "-1", "-c:v", "libx264", "-threads", "1", str(later)])
         with Model(args.runtime_root, root) as model:
             query = model.encode("task: search result | query: " + args.query)
