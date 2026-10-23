@@ -1,5 +1,12 @@
 # Organizer Windows worker — 0.1.2 source candidate
 
+Optional local EmbeddingGemma 2 inference is described in
+[local multimodal search](docs/gemma-search.md). It uses pinned local CPU weights,
+indexes video sections and audio separately, and requires real modality probes.
+Its new v2 capability is disabled for dispatch until the companion coordinator
+supports it. Existing v1 embedding backlog is not accepted. App search and legacy
+backfill are separate rollout steps; no external AI API is used by this adapter.
+
 Worker-flex stage-concurrency checkpoint: [implementation, enforced/sampled limits and gates](verification/worker-flex-r2/REPORT.md).
 Linux Release and both-PC MSVC/native suites pass. Throughput, foreground impact,
 exact-asset replay and rollout acceptance remain separate open gates. The operator

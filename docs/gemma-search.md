@@ -74,8 +74,21 @@ The controller still exposes no inbound model listener outside loopback.
 
 ## Validation
 
+`OrganizerWorkerDoctor.exe --json --probe-gemma` runs the real multimodal probe
+inside the same Windows Job containment used by worker attempts. It reports
+elapsed time and peak committed memory across the contained process tree. Run
+it under the normal owner, with enough configured/free memory, outside active
+jobs. This does not enqueue work, advertise inference, or contact an AI provider.
+
 `python -m unittest discover -s tests -p gemma_inference_test.py` checks bounds,
 offline networking, normalization and real FFmpeg section preparation without
 downloading a model. CTest covers typed offers, old-profile rejection, source
 identity and section persistence shape. Real recognition, memory, Windows child
 containment, coordinator acceptance and app search are separate acceptance gates.
+
+For an explicit recognition check, `tests/gemma_acceptance.py` accepts provisioned
+local model/tool paths and an owner-supplied video. It strips audio and container
+metadata, uses neutral filenames, embeds the clip, then places the same visuals
+after 20 seconds of unrelated color footage and checks that the requested subject
+ranks above the unrelated section. It never downloads fixtures or touches the
+coordinator. This is a local recognition test, not app end-to-end acceptance.
