@@ -32,6 +32,7 @@ TEST("Gemma rejects legacy capability and inadequate media resources"){
 }
 TEST("search query offers use a separate bounded typed capability"){
  auto m=offer_message();m["capability"]="inference.embeddinggemma2.query.v1";
+ m["output"].as_object()["max_bytes"]=65536;
  m["parameters"]=json::object{{"profile",gemma::profile},{"modality","text"}};
  m["resources"].as_object()["ram_mb"]=4096;m["resources"].as_object()["scratch_mb"]=256;
  auto s=decode_offer(m,0,{"media.example.test"});CHECK(output_name(s)=="result.json");

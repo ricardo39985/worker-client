@@ -77,6 +77,15 @@ It loads only the text backbone, which shares the media vector space. This is
 an operator test entrypoint, not yet an app search endpoint or public service.
 The controller still exposes no inbound model listener outside loopback.
 
+The coordinator can execute queries through the separately typed capability
+`inference.embeddinggemma2.query.v1`, with the same profile and exact parameters
+`{profile,modality:"text"}`. Input is at most 4096 bytes and output at most 65536
+bytes, shaped exactly as `{schema:2,profile,vector}`. It uses the query prefix and
+text-only backbone. Both capabilities remain off until `advertise` is enabled
+after the companion coordinator deploys; ordinary document input does not serve
+as a query embedding. The coordinator reserves a distinct query lane within
+the shared machine budgets so long indexing jobs cannot occupy that lane.
+
 ## Validation
 
 `OrganizerWorkerDoctor.exe --json --probe-gemma` runs the real multimodal probe

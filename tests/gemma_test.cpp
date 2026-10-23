@@ -12,6 +12,12 @@ json::object fixture(){
 TEST("Gemma accepts complete full-duration normalized section results"){
  auto doc=fixture();gemma::validate_result(doc,std::string(64,'a'),"video");
 }
+TEST("Gemma query output rejects document-shaped results and nonunit vectors"){
+ auto doc=fixture();THROWS(gemma::validate_query(doc));
+ json::object query{{"schema",2},{"profile",gemma::profile},{"vector",doc.at("entries").as_array()[0].as_object().at("vector")}};
+ gemma::validate_query(query);
+ query.at("vector").as_array()[0]=0.5;THROWS(gemma::validate_query(query));
+}
 TEST("Gemma rejects source changes partial coverage and nonunit vectors"){
  auto doc=fixture();THROWS(gemma::validate_result(doc,std::string(64,'b'),"video"));
  doc.at("entries").as_array().pop_back();THROWS(gemma::validate_result(doc,std::string(64,'a'),"video"));
