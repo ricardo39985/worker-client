@@ -438,7 +438,7 @@ void Worker::update_settings(const json::object& values){
 }
 void Worker::pause(bool p){update_settings({{"operator.paused",p}});}
 void Worker::priority(Priority p){update_settings({{"operator.priority",priority_name(p)}});}
-void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);admission_.capability(gemma::capability,verified_gemma_.load()&&gemma_dispatch_.load(),Preference::allowed);}
+void Worker::apply_preferences(){admission_.capability("conversion.video.h264",verified_video_.load(),video_);admission_.capability("conversion.image.jpeg",verified_image_.load(),image_);admission_.capability("media.video.renditions.v1",verified_media_video_.load(),video_);admission_.capability("media.image.renditions.v1",verified_media_image_.load(),image_);for(const auto* cap:{gemma::capability,gemma::query_capability})admission_.capability(cap,verified_gemma_.load()&&gemma_dispatch_.load(),Preference::allowed);}
 adaptive::Scheduler::Reservation Worker::reserve_hardware_profiles(const std::vector<adaptive::Codec>& codecs,Resources& cost,const std::string& attempt,const std::string& stage,bool cpu_only,std::uint32_t width,std::uint32_t height,std::uint64_t minimum_ram){
  std::lock_guard lock(mutex_);if(!adaptive_scheduler_)return {};
  if(monotonic_ms()>=cached_capacity_until_){
@@ -497,7 +497,10 @@ json::object Worker::heartbeat(){
  {"available",{{"ram_mb",free.ram_mb},{"vram_mb",0},{"scratch_mb",free.scratch_mb},{"cpu_threads",free.cpu_threads}}},
  {"reserved",{{"ram_mb",used.ram_mb},{"scratch_mb",used.scratch_mb},{"cpu_threads",used.cpu_threads}}},
  {"capabilities",{{"conversion.video.h264",{{"verified",video},{"preference",pref_name(video_)}}},{"conversion.image.jpeg",{{"verified",image},{"preference",pref_name(image_)}}},{"media.video.renditions.v1",{{"verified",app_video},{"preference",pref_name(video_)}}},{"media.image.renditions.v1",{{"verified",app_image},{"preference",pref_name(image_)}}}}}};
- if(verified_gemma_&&gemma_dispatch_)result.at("capabilities").as_object()[gemma::capability]=json::object{{"verified",true},{"preference","allowed"},{"profile",gemma::profile},{"modalities",json::array{"text","image","video","audio"}}};
+ if(verified_gemma_&&gemma_dispatch_){
+  result.at("capabilities").as_object()[gemma::capability]=json::object{{"verified",true},{"preference","allowed"},{"profile",gemma::profile},{"modalities",json::array{"text","image","video","audio"}}};
+  result.at("capabilities").as_object()[gemma::query_capability]=json::object{{"verified",true},{"preference","allowed"},{"profile",gemma::profile},{"modalities",json::array{"text"}}};
+ }
  return result;
 }
 std::string Worker::paired_token(){
@@ -823,10 +826,10 @@ void Worker::execute(std::shared_ptr<TaskData> data){
    std::error_code e;if(std::filesystem::remove(output,e))admission_.release_scratch(id,s.output_max_bytes/(1024*1024));
    return json::object{{"sha256",hash},{"bytes",bytes},{"content_type",mime}};
   };
-  if(s.offer.capability==gemma::capability){
+  if(gemma::inference(s.offer.capability)){
    if(!verified_gemma_||!gemma_runtime_||!gemma_runtime_->advertise)throw std::runtime_error("Gemma capability unavailable");
    phase("local Gemma multimodal inference");
-   try{run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,s.embedding_modality,cancelled,s.offer.resources,desktop_priority(priority_.load()));}
+   try{run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,s.embedding_modality,cancelled,s.offer.resources,desktop_priority(priority_.load()),false,s.offer.capability==gemma::query_capability);}
    catch(...){if(!cancelled()){verified_gemma_=false;apply_preferences();}throw;}
    if(admission_.release_compute(id))data->compute_handoff=true;
    result["output"]=upload("result.json",s.output_url,"application/json");

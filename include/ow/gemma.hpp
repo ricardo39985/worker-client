@@ -4,6 +4,8 @@
 #include <map>
 namespace ow::gemma {
 inline constexpr const char* capability="inference.embeddinggemma2.v2";
+inline constexpr const char* query_capability="inference.embeddinggemma2.query.v1";
+inline bool inference(const std::string& cap){return cap==capability||cap==query_capability;}
 inline constexpr const char* profile="embeddinggemma2-q8-b11475-768-segments-v2";
 inline constexpr std::size_t result_limit=8*1024*1024;
 inline bool modality(const std::string& value){return value=="text"||value=="image"||value=="video"||value=="audio";}
@@ -32,5 +34,9 @@ inline void validate_result(const json::object& doc,const std::string& source,co
  }
  if(!ends.contains(expected_modality))throw std::runtime_error("Gemma primary modality missing");
  for(const auto& [_,end]:ends)if(end!=duration)throw std::runtime_error("Gemma section coverage is incomplete");
+}
+inline void validate_query(const json::object& doc){
+ if(doc.size()!=3||number(doc,"schema",2)!=2||text(doc,"profile")!=profile)throw std::runtime_error("Gemma query result differs");
+ validate_vector(doc.at("vector"));
 }
 }

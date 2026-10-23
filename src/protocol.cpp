@@ -29,7 +29,7 @@ JobSpec decode_offer(const json::object& m,Tick now,const std::vector<std::strin
  JobSpec s;s.offer.job_id=text(m,"job_id",128);s.offer.attempt_id=text(m,"attempt_id",128);s.offer.capability=text(m,"capability",128);
  if(!safe_id(s.offer.job_id)||!safe_id(s.offer.attempt_id))throw std::runtime_error("invalid job identity");
  const bool media_video=s.offer.capability=="media.video.renditions.v1",media_image=s.offer.capability=="media.image.renditions.v1";
- const bool embedding=s.offer.capability==gemma::capability;
+ const bool query=s.offer.capability==gemma::query_capability,embedding=gemma::inference(s.offer.capability);
  if(!embedding&&!media_video&&!media_image&&s.offer.capability!="conversion.video.h264"&&s.offer.capability!="conversion.image.jpeg")throw std::runtime_error("capability is not installed in this build");
  auto r=m.at("resources").as_object();s.offer.resources={number(r,"ram_mb",1024*1024),number(r,"vram_mb",1024*1024),number(r,"scratch_mb",1024*1024),number(r,"cpu_threads",64)};
  if(s.offer.resources.ram_mb<((media_video||s.offer.capability=="conversion.video.h264")?512u:256u)||s.offer.resources.vram_mb!=0||!s.offer.resources.cpu_threads)throw std::runtime_error("resource declaration incompatible with adapter");
@@ -40,6 +40,7 @@ JobSpec decode_offer(const json::object& m,Tick now,const std::vector<std::strin
  if(embedding){
   const auto& parameters=m.at("parameters").as_object();s.embedding_modality=text(parameters,"modality",16);
   if(parameters.size()!=2||text(parameters,"profile")!=gemma::profile||!gemma::modality(s.embedding_modality))throw std::runtime_error("Gemma parameters differ from installed profile");
+  if(query&&(s.embedding_modality!="text"||s.input_bytes>4096||s.output_max_bytes>65536))throw std::runtime_error("Gemma query bounds differ");
   if(s.input_bytes>104857600||s.output_max_bytes>gemma::result_limit||(s.embedding_modality=="text"&&s.input_bytes>32768)||
      s.offer.resources.ram_mb<(s.embedding_modality=="text"?1024u:4096u)||s.offer.resources.cpu_threads>8||s.offer.resources.scratch_mb<256)
    throw std::runtime_error("Gemma resource declaration exceeds installed profile");
@@ -62,7 +63,7 @@ JobSpec decode_offer(const json::object& m,Tick now,const std::vector<std::strin
  // every execution-affecting field. The coordinator must retry with the same spec.
  auto identity=m;identity.erase("offer_ttl_ms");identity.erase("message_id");s.offer.fingerprint=json::serialize(identity);return s;
 }
-std::string output_name(const JobSpec& s){return s.offer.capability==gemma::capability?"result.json":s.offer.capability=="conversion.video.h264"?"result.mp4":"result.jpg";}
+std::string output_name(const JobSpec& s){return gemma::inference(s.offer.capability)?"result.json":s.offer.capability=="conversion.video.h264"?"result.mp4":"result.jpg";}
 std::vector<std::wstring> ffmpeg_arguments(const JobSpec& s,const std::filesystem::path& w){
  if(s.offer.capability!="conversion.video.h264"&&s.offer.capability!="conversion.image.jpeg")throw std::runtime_error("unsupported converter");
  auto n=std::to_wstring(s.offer.resources.cpu_threads);

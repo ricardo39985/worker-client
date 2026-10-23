@@ -30,6 +30,14 @@ TEST("Gemma rejects legacy capability and inadequate media resources"){
  m["resources"].as_object()["ram_mb"]=4096;m["resources"].as_object()["scratch_mb"]=256;
  m["input"].as_object()["bytes"]=104857601;THROWS(decode_offer(m,0,{"media.example.test"}));
 }
+TEST("search query offers use a separate bounded typed capability"){
+ auto m=offer_message();m["capability"]="inference.embeddinggemma2.query.v1";
+ m["parameters"]=json::object{{"profile",gemma::profile},{"modality","text"}};
+ m["resources"].as_object()["ram_mb"]=4096;m["resources"].as_object()["scratch_mb"]=256;
+ auto s=decode_offer(m,0,{"media.example.test"});CHECK(output_name(s)=="result.json");
+ m["parameters"].as_object()["modality"]="video";THROWS(decode_offer(m,0,{"media.example.test"}));
+ m["parameters"].as_object()["modality"]="text";m["input"].as_object()["bytes"]=4097;THROWS(decode_offer(m,0,{"media.example.test"}));
+}
 TEST("wire requests cannot smuggle arbitrary commands as capabilities"){
  auto m=offer_message();m["capability"]="powershell";THROWS(decode_offer(m,0,{"media.example.test"}));
 }

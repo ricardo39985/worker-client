@@ -23,14 +23,15 @@ std::optional<GemmaRuntime> load_gemma(const std::filesystem::path& owner_root){
  verify(runtime);return runtime;
 }
 GemmaExecution run_gemma(const GemmaRuntime& runtime,const std::filesystem::path& ffmpeg,const std::filesystem::path& workspace,
- const std::string& modality,const std::function<bool()>& cancelled,Resources resources,Priority priority,bool probe){
+ const std::string& modality,const std::function<bool()>& cancelled,Resources resources,Priority priority,bool probe,bool query){
  verify(runtime);
  if(cancelled())throw std::runtime_error("Gemma cancelled before inference");
  std::vector<std::wstring> args{L"-I",runtime.script.wstring(),L"--runtime-root",runtime.root.wstring(),
   L"--output",(workspace/"result.json").wstring(),L"--threads",std::to_wstring(std::min<std::uint64_t>(8,resources.cpu_threads))};
  if(probe)args.push_back(L"probe");
+ else if(query)args.insert(args.end(),{L"query",L"--text-file",(workspace/"source.bin").wstring()});
  else {args.insert(args.end(),{L"asset",L"--source",(workspace/"source.bin").wstring(),L"--modality",wide(modality)});}
- args.insert(args.end(),{L"--ffmpeg",ffmpeg.wstring(),L"--ffprobe",runtime.ffprobe.wstring()});
+ if(!query)args.insert(args.end(),{L"--ffmpeg",ffmpeg.wstring(),L"--ffprobe",runtime.ffprobe.wstring()});
  Child child(runtime.python,args,workspace,resources,priority);
  const auto started=monotonic_ms(),until=started+(probe?300000:3600000);
  for(;;){
@@ -45,7 +46,8 @@ GemmaExecution run_gemma(const GemmaRuntime& runtime,const std::filesystem::path
  if(probe){
   if(number(document,"schema",2)!=2||text(document,"profile")!=gemma::profile||number(document,"dimensions",768)!=768||!document.at("image_vectors_differ").as_bool())throw std::runtime_error("Gemma capability probe differs");
   const auto& modalities=document.at("modalities").as_array();if(modalities!=json::array{"text","image","video","audio"})throw std::runtime_error("Gemma modality probe is incomplete");
- }else gemma::validate_result(document,sha256_file(workspace/"source.bin"),modality);
+ }else if(query)gemma::validate_query(document);
+ else gemma::validate_result(document,sha256_file(workspace/"source.bin"),modality);
  return {peak,monotonic_ms()-started};
 }
 }
