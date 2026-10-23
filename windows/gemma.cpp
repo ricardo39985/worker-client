@@ -22,7 +22,7 @@ std::optional<GemmaRuntime> load_gemma(const std::filesystem::path& owner_root){
  if(auto* value=doc.if_contains("advertise"))runtime.advertise=value->as_bool();
  verify(runtime);return runtime;
 }
-void run_gemma(const GemmaRuntime& runtime,const std::filesystem::path& ffmpeg,const std::filesystem::path& workspace,
+GemmaExecution run_gemma(const GemmaRuntime& runtime,const std::filesystem::path& ffmpeg,const std::filesystem::path& workspace,
  const std::string& modality,const std::function<bool()>& cancelled,Resources resources,Priority priority,bool probe){
  verify(runtime);
  if(cancelled())throw std::runtime_error("Gemma cancelled before inference");
@@ -32,7 +32,7 @@ void run_gemma(const GemmaRuntime& runtime,const std::filesystem::path& ffmpeg,c
  else {args.insert(args.end(),{L"asset",L"--source",(workspace/"source.bin").wstring(),L"--modality",wide(modality)});}
  args.insert(args.end(),{L"--ffmpeg",ffmpeg.wstring(),L"--ffprobe",runtime.ffprobe.wstring()});
  Child child(runtime.python,args,workspace,resources,priority);
- const auto until=monotonic_ms()+(probe?300000:3600000);
+ const auto started=monotonic_ms(),until=started+(probe?300000:3600000);
  for(;;){
   if(cancelled()||monotonic_ms()>=until)throw std::runtime_error("Gemma inference cancelled or timed out");
   if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Gemma inference failed; capability unavailable");break;}
@@ -40,11 +40,12 @@ void run_gemma(const GemmaRuntime& runtime,const std::filesystem::path& ffmpeg,c
   if(!error&&bytes>5*1024*1024)throw std::runtime_error("Gemma inference log exceeds budget");
   Sleep(100);
  }
- child.stop();
+ const auto peak=child.peak_commit_mb();child.stop();
  auto document=parse(read_file(workspace/"result.json",gemma::result_limit),gemma::result_limit).as_object();
  if(probe){
   if(number(document,"schema",2)!=2||text(document,"profile")!=gemma::profile||number(document,"dimensions",768)!=768||!document.at("image_vectors_differ").as_bool())throw std::runtime_error("Gemma capability probe differs");
   const auto& modalities=document.at("modalities").as_array();if(modalities!=json::array{"text","image","video","audio"})throw std::runtime_error("Gemma modality probe is incomplete");
  }else gemma::validate_result(document,sha256_file(workspace/"source.bin"),modality);
+ return {peak,monotonic_ms()-started};
 }
 }

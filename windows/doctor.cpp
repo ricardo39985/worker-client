@@ -6,9 +6,9 @@ using namespace ow;using namespace ow::win;
 int wmain(int argc,wchar_t** argv){
  json::object report{{"agent_version","0.1.2"},{"runtime_healthy",false},{"processing_ready",nullptr},{"probe_evidence","not_run"}};
  try{
-  bool probe=false,network=false,bind_journal=false,operator_settings=false;auto root=data_directory();for(int i=1;i<argc;++i){std::wstring a=argv[i];if(a==L"--json")continue;else if(a==L"--operator-settings")operator_settings=true;else if(a==L"--probe-ffmpeg")probe=true;else if(a==L"--check-coordinator")network=true;else if(a==L"--bind-journal")bind_journal=true;else if(a==L"--data-root"&&i+1<argc)root=argv[++i];else throw std::runtime_error("Unknown doctor argument");}
+  bool probe=false,gemma_probe=false,network=false,bind_journal=false,operator_settings=false;auto root=data_directory();for(int i=1;i<argc;++i){std::wstring a=argv[i];if(a==L"--json")continue;else if(a==L"--operator-settings")operator_settings=true;else if(a==L"--probe-ffmpeg")probe=true;else if(a==L"--probe-gemma")gemma_probe=true;else if(a==L"--check-coordinator")network=true;else if(a==L"--bind-journal")bind_journal=true;else if(a==L"--data-root"&&i+1<argc)root=argv[++i];else throw std::runtime_error("Unknown doctor argument");}
   if(operator_settings){
-   if(probe||network||bind_journal)throw std::runtime_error("Preference inspection cannot combine with mutating/probe modes");
+   if(probe||gemma_probe||network||bind_journal)throw std::runtime_error("Preference inspection cannot combine with mutating/probe modes");
    auto doc=validate_control_config(parse(read_file(root/"worker.json")).as_object());
    if(std::filesystem::exists(root/"journal.sqlite3")){Store journal(root/"journal.sqlite3",true);doc=load_control_document(root,journal,false);}
    const auto& op=doc.at("operator").as_object();json::object visible;for(const auto& name:{"priority","video_preference","image_preference","paused"})visible[name]=op.at(name);
@@ -25,6 +25,16 @@ int wmain(int argc,wchar_t** argv){
   report["runtime_healthy"]=true;
   if(std::filesystem::exists(root/"worker.json")){
    auto c=load_config(root);report["configuration_valid"]=true;
+   if(gemma_probe){
+    if(elevated())throw std::runtime_error("Gemma probe requires the normal owner token");
+    const auto runtime=load_gemma(root);if(!runtime)throw std::runtime_error("Gemma runtime is not provisioned/enabled");
+    if(c.budget.ram_mb<4096||free.ram_mb<4096||sha256_file(c.ffmpeg)!=c.ffmpeg_sha256)throw std::runtime_error("Gemma probe requires valid media preparation and 4096 MiB available RAM");
+    const auto workspace=root/"probes"/("gemma-doctor-"+random_hex(8));std::filesystem::create_directories(workspace);
+    try{const auto result=run_gemma(*runtime,c.ffmpeg,workspace,"",[]{return false;},{4096,0,256,1},Priority::low,true);
+     report["gemma"]={{"verified",true},{"profile",gemma::profile},{"peak_commit_mib",result.peak_commit_mb},{"elapsed_ms",result.elapsed_ms},{"dispatch_enabled",runtime->advertise}};
+    }catch(...){std::error_code error;std::filesystem::remove_all(workspace,error);throw;}
+    std::error_code error;std::filesystem::remove_all(workspace,error);
+   }
    if(bind_journal){
     std::optional<std::string> proven;ProtectedPairingSecrets identity(root);
     if(auto credential=identity.read(SecretSlot::credential))proven=text(parse(*credential).as_object(),"coordinator_url",1024);
