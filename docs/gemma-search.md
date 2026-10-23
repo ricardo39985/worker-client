@@ -50,7 +50,12 @@ and DNS; the model receives local paths with offline mode. No source URL, captio
 image or query is sent to an external AI service. Only setup downloads models.
 
 Images preserve aspect within 512x512. Videos are processed in consecutive
-20-second sections across their full duration, sampling one frame per second.
+20-second sections across their full duration. Every one-second sample is
+inspected at 32x32 grayscale resolution. The model receives regular samples at
+five-second intervals, the final sample, and up to two strong scene transitions
+(mean pixel change at least 12 percent), at most seven frames per section. This
+bounds inference work while retaining temporal coverage. It cannot guarantee
+recognition of every brief appearance; labeled retrieval evaluation is required.
 Video audio is explicitly processed separately, as mono 16 kHz PCM. Audio-only
 sources use the same section coverage. Sources over one hour fail explicitly;
 they are not marked indexed after only a prefix. Each section yields one visual
@@ -63,6 +68,17 @@ finite normalized 768-dimensional `vector`. At most 360 entries and 8 MiB are
 accepted. The client verifies complete contiguous coverage and source checksum
 before upload. The coordinator must independently validate these contracts.
 It remains the authority for publication and access permissions.
+
+Media inference uses a 2,048-token context/batch and a maximum 140 vision tokens
+per image. Seven frames plus markers fit that context; audio is encoded in a
+separate request for each at-most-20-second section. Text and resident-query
+contexts retain 8,192 tokens and their existing input bounds. Weights, shared
+vector coordinates, profile, result schema and section coverage stay compatible;
+existing embeddings remain searchable without automatic reindexing. The media
+job reservation remains 4,096 MiB. The actual startup probe now exercises a full
+20-second visual/audio section, including a brief contrasting scene, within that
+budget. Startup/Doctor use up to eight configured CPU threads at low priority;
+they never raise the machine's configured CPU ceiling.
 
 The measured visual acceptance used eight CPU threads. A one-thread run exceeded
 the bounded 120-second local model request timeout on a 20-frame section. The
@@ -156,3 +172,20 @@ There is no unbudgeted background retry or partial result publication. A genuine
 query failure disables query admission independently; cancellation retains the
 existing contained restart behavior. Approved FFmpeg changes disable media
 inference with the converter capabilities, while text-only queries remain separate.
+
+## Efficiency acceptance
+
+Compare configurations on the same labeled local clips, including a subject late
+in the video, a brief appearance and unrelated footage. Record cold model load,
+per-asset processing, peak contained commit and retrieval scores. A lower-memory
+configuration is not evidence of equivalent recognition by itself. Negative-query
+filter calibration remains a separate gate; do not derive a production threshold
+from a small efficiency corpus. Failed or incomplete sampling analysis fails the
+attempt and cannot publish a partial indexed result.
+
+Models still drain with their attempt; no unaccounted resident media service was
+added. Queries retain their separately reserved resident host. Source/model hashes,
+offline inference, full-duration section validation and publication fences remain
+in force. Safe local model failures retain HTTP status without response content;
+the native process boundary records exit code, peak commit and the offered limit.
+No source content, request bodies, tokens or signed URLs belong in those logs.

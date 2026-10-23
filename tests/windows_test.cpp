@@ -236,6 +236,20 @@ TEST("native Job Object cap rejects old footprint and admits workload budget whi
  }
 }
 
+TEST("failed local inference retains bounded memory diagnostics without source content") {
+ Temp owner,attempt;const auto exe=executable_directory()/"ow_test_child.exe";
+ const auto script=owner.path/"fixture.py";atomic_write(script,"fixture");
+ atomic_write(attempt.path/"source.bin","sensitive-input");
+ GemmaRuntime runtime{exe,script,owner.path,exe,sha256_file(exe),sha256_file(script),sha256_file(exe),true};
+ std::string reason;
+ try{run_gemma(runtime,{},attempt.path,"video",[]{return false;},{256,0,256,2},Priority::low);}catch(const std::exception& e){reason=e.what();}
+ CHECK(reason.find("exit=1")!=std::string::npos);
+ CHECK(reason.find("limit_mb=256")!=std::string::npos);
+ CHECK(reason.find("peak_commit_mb=")!=std::string::npos);
+ CHECK(reason.find("sensitive-input")==std::string::npos);
+ CHECK(!std::filesystem::exists(attempt.path/"result.json"));
+}
+
 TEST("resident query process is reused and cancellation drains its tree before restart") {
  Temp owner,first,second;const auto exe=executable_directory()/"ow_test_child.exe";
  const auto script=owner.path/"fixture.py";atomic_write(script,"fixture");

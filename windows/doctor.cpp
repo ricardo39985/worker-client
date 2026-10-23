@@ -30,7 +30,7 @@ int wmain(int argc,wchar_t** argv){
     const auto runtime=load_gemma(root);if(!runtime)throw std::runtime_error("Gemma runtime is not provisioned/enabled");
     if(c.budget.ram_mb<4096||free.ram_mb<4096||sha256_file(c.ffmpeg)!=c.ffmpeg_sha256)throw std::runtime_error("Gemma probe requires valid media preparation and 4096 MiB available RAM");
     const auto workspace=root/"probes"/("gemma-doctor-"+random_hex(8));std::filesystem::create_directories(workspace);
-    try{const auto result=run_gemma(*runtime,c.ffmpeg,workspace,"",[]{return false;},{4096,0,256,1},Priority::low,true);
+    try{const auto result=run_gemma(*runtime,c.ffmpeg,workspace,"",[]{return false;},{4096,0,256,std::min<std::uint64_t>(8,c.budget.cpu_threads)},Priority::low,true);
      report["gemma"]={{"verified",true},{"profile",gemma::profile},{"peak_commit_mib",result.peak_commit_mb},{"elapsed_ms",result.elapsed_ms},{"dispatch_enabled",runtime->advertise}};
     }catch(...){std::error_code error;std::filesystem::remove_all(workspace,error);throw;}
     std::error_code error;std::filesystem::remove_all(workspace,error);

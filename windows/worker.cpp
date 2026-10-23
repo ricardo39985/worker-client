@@ -558,7 +558,7 @@ void Worker::network(){
     if(!verified_video_||!verified_image_)throw std::runtime_error("Verified FFmpeg is required for Gemma media preparation");
     if(config_.budget.ram_mb<4096||available_resources(config_.root,config_.reserve_ram_mb).ram_mb<4096)throw std::runtime_error("Gemma probe requires 4096 MiB available within the configured budget");
     const auto workspace=config_.root/"probes"/("gemma-"+random_hex(8));std::filesystem::create_directories(workspace);
-    try{run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,"",[this]{return stop_||exit_requested_;},{4096,0,256,1},Priority::low,true);}
+    try{run_gemma(*gemma_runtime_,config_.ffmpeg,workspace,"",[this]{return stop_||exit_requested_;},{4096,0,256,std::min<std::uint64_t>(8,config_.budget.cpu_threads)},Priority::low,true);}
     catch(...){std::error_code error;std::filesystem::remove_all(workspace,error);throw;}
     std::error_code error;std::filesystem::remove_all(workspace,error);
     if(gemma_runtime_->advertise){

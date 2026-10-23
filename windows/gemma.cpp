@@ -78,7 +78,11 @@ GemmaExecution run_gemma(const GemmaRuntime& runtime,const std::filesystem::path
  const auto started=monotonic_ms(),until=started+(probe?300000:3600000);
  for(;;){
   if(cancelled()||monotonic_ms()>=until)throw std::runtime_error("Gemma inference cancelled or timed out");
-  if(auto code=child.exit_code()){if(*code)throw std::runtime_error("Gemma inference failed; capability unavailable");break;}
+  if(auto code=child.exit_code()){
+   if(*code)throw std::runtime_error("Gemma inference failed (exit="+std::to_string(*code)+
+      ", peak_commit_mb="+std::to_string(child.peak_commit_mb())+", limit_mb="+std::to_string(resources.ram_mb)+")");
+   break;
+  }
   std::error_code error;const auto bytes=std::filesystem::file_size(workspace/"process.log",error);
   if(!error&&bytes>5*1024*1024)throw std::runtime_error("Gemma inference log exceeds budget");
   Sleep(100);

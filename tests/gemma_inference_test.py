@@ -11,10 +11,38 @@ import json
 import time
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "scripts"))
+import gemma_inference as gemma
 from gemma_inference import segments, checked_vector, validate_model_directory, embed_file, block_external_connections, serve_queries
 
 
 class LocalGemma(unittest.TestCase):
+    def test_representative_frames_keep_temporal_coverage_and_brief_scene(self):
+        frames=list(range(20));black=bytes(1024);white=bytes([255])*1024
+        still=gemma.representative_frames(frames,[black]*20)
+        self.assertEqual(still,[0,5,10,15,19])
+        brief=[white if 11<=i<=12 else black for i in frames]
+        selected=gemma.representative_frames(frames,brief)
+        self.assertTrue({0,5,10,11,13,15,19}==set(selected))
+        self.assertEqual(selected,sorted(selected))
+        self.assertLessEqual(len(selected),7)
+        self.assertEqual(gemma.representative_frames([0],[black]),[0])
+        self.assertEqual(gemma.representative_frames([0,1],[black,white]),[0,1])
+
+    def test_representative_sampling_rejects_incomplete_or_unbounded_analysis(self):
+        for frames,planes in [([],[]),([0],[]),([0],[b'bad']),
+                              (list(range(21)),[bytes(1024)]*21)]:
+            with self.subTest(frames=len(frames)),self.assertRaises(ValueError):
+                gemma.representative_frames(frames,planes)
+
+    def test_model_request_failure_reports_only_safe_status_not_response_content(self):
+        model=gemma.Model.__new__(gemma.Model)
+        model.request=lambda *args:(500,b'{"error":{"message":"private source text https://secret.invalid/token"}}')
+        with self.assertRaises(RuntimeError) as raised:
+            model.encode("private search query")
+        self.assertIn("HTTP 500",str(raised.exception))
+        self.assertNotIn("private",str(raised.exception))
+        self.assertNotIn("secret.invalid",str(raised.exception))
+
     def test_resident_queries_reuse_one_model_and_reject_oversize_without_encoding(self):
         class Encoder:
             def __init__(self): self.inputs=[]
@@ -82,6 +110,23 @@ class LocalGemma(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 block_external_connections("socket.getaddrinfo", (address, 443))
 
+    @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "Existing media tools required")
+    def test_real_brief_scene_survives_representative_sampling_and_full_coverage(self):
+        class Encoder:
+            def __init__(self):self.requests=[]
+            def encode(self,content):
+                self.requests.append(content)
+                return [1.0]+[0.0]*767
+        with tempfile.TemporaryDirectory() as temporary:
+            root=pathlib.Path(temporary);source=root/"source.mp4"
+            subprocess.run([shutil.which("ffmpeg"),"-nostdin","-v","error","-f","lavfi","-i",
+                "color=c=black:s=64x64:r=1,drawbox=color=white:t=fill:enable='between(t,11,12)'",
+                "-t","21","-an","-c:v","libx264","-threads","1",str(source)],check=True)
+            model=Encoder();result=embed_file(model,source,"video",shutil.which("ffmpeg"),shutil.which("ffprobe"),root)
+            self.assertEqual([len(x) for x in model.requests],[7,1])
+            self.assertEqual([(x["start_ms"],x["end_ms"]) for x in result["entries"]],[(0,20000),(20000,21000)])
+            self.assertEqual({x["modality"] for x in result["entries"]},{"video"})
+
     @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "Existing FFmpeg/FFprobe required; never downloaded by tests")
     def test_real_video_preparation_covers_later_sections_without_inventing_audio(self):
         class Encoder:
@@ -98,7 +143,7 @@ class LocalGemma(unittest.TestCase):
             result = embed_file(encoder, source, "video", shutil.which("ffmpeg"), shutil.which("ffprobe"), root)
             self.assertEqual([(x["start_ms"], x["end_ms"]) for x in result["entries"]], [(0, 20000), (20000, 21000)])
             self.assertEqual({x["modality"] for x in result["entries"]}, {"video"})
-            self.assertEqual([len(request) for request in encoder.requests], [20, 1])
+            self.assertEqual([len(request) for request in encoder.requests], [5, 1])
             self.assertTrue(all(part["type"] == "image_url" for request in encoder.requests for part in request))
 
 

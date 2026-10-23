@@ -27,6 +27,12 @@ MODEL_FILES = {
 }
 
 
+class ModelRequestError(RuntimeError):
+    def __init__(self, status):
+        # Response bodies can contain private input. Retain only the HTTP status.
+        super().__init__("Local Gemma embedding request failed (HTTP " + str(int(status)) + ")")
+
+
 def segments(duration, seconds=20):
     if type(duration) not in (int, float) or not math.isfinite(duration) or not 0 < duration <= 3600:
         raise ValueError("Media duration must be positive and at most one hour")
@@ -100,15 +106,17 @@ class Model:
         with socket.socket() as reservation:
             reservation.bind(("127.0.0.1", 0))
             self.port = reservation.getsockname()[1]
+        context = "2048" if self.multimodal else "8192"
         args = [str(self.root / "runtime" / "llama-server.exe"),
                 "--model", str(self.models / "embeddinggemma-2-Q8_0.gguf"),
-                "--embedding", "--pooling", "mean", "--ctx-size", "8192",
-                "--batch-size", "8192", "--ubatch-size", "8192", "--parallel", "1",
+                "--embedding", "--pooling", "mean", "--ctx-size", context,
+                "--batch-size", context, "--ubatch-size", context, "--parallel", "1",
                 "--threads", str(self.threads), "--n-gpu-layers", "0", "--no-mmproj-offload",
                 "--host", "127.0.0.1", "--port", str(self.port), "--api-key", self.token,
                 "--offline", "--log-disable"]
         if self.multimodal:
-            args += ["--mmproj", str(self.models / "mmproj-embeddinggemma-2-Q8_0.gguf")]
+            args += ["--mmproj", str(self.models / "mmproj-embeddinggemma-2-Q8_0.gguf"),
+                     "--image-min-tokens", "70", "--image-max-tokens", "140"]
         else:
             args += ["--no-mmproj"]
         self.log = open(self.workspace / "gemma-runtime.log", "wb")
@@ -151,7 +159,7 @@ class Model:
         value = content if isinstance(content, str) else {"content": content}
         status, data = self.request("POST", "/v1/embeddings", {"input": [value]})
         if status != 200:
-            raise RuntimeError("Local Gemma embedding request failed")
+            raise ModelRequestError(status)
         rows = json.loads(data)["data"]
         if len(rows) != 1:
             raise ValueError("Unexpected embedding count")
@@ -190,6 +198,25 @@ def image_part(path):
     if not data or len(data) > 1024 * 1024:
         raise ValueError("Prepared image exceeds limit")
     return {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64," + base64.b64encode(data).decode("ascii")}}
+
+
+def representative_frames(frames, grayscale):
+    """Retain regular coverage, the endpoint and two strong scene transitions.
+
+    Every one-second sample is inspected; at most seven images enter the model.
+    This is bounded sampling, not a guarantee of detecting every brief object.
+    """
+    if not 1 <= len(frames) <= 20 or len(grayscale) != len(frames):
+        raise ValueError("Incomplete video sampling analysis")
+    if any(not isinstance(plane, bytes) or len(plane) != 1024 for plane in grayscale):
+        raise ValueError("Invalid video sampling analysis")
+    selected = set(range(0, len(frames), 5)) | {len(frames) - 1}
+    changes = sorted(((sum(abs(a - b) for a, b in zip(grayscale[i - 1], grayscale[i]))
+                       / 1024 / 255, i) for i in range(1, len(frames))), reverse=True)
+    for score, index in changes[:2]:
+        if score >= 0.12:
+            selected.add(index)
+    return [frames[i] for i in sorted(selected)]
 
 
 def embed_file(model, source, modality, ffmpeg, ffprobe, workspace):
@@ -231,6 +258,11 @@ def embed_file(model, source, modality, ffmpeg, ffprobe, workspace):
                     frames = sorted(section.glob("*.jpg"))
                     if not frames:
                         raise ValueError("Video section produced no frames")
+                    analysis = tool(base + ["-i", str(section / "%03d.jpg"), "-vf",
+                                           "scale=32:32,format=gray", "-frames:v", str(len(frames)),
+                                           "-f", "rawvideo", "pipe:1"])
+                    planes = [analysis[i:i + 1024] for i in range(0, len(analysis), 1024)]
+                    frames = representative_frames(frames, planes)
                     entries.append({"modality": "video", "start_ms": round(start * 1000),
                                     "end_ms": round(end * 1000),
                                     "vector": model.encode([image_part(frame) for frame in frames])})
@@ -264,8 +296,9 @@ def probe_model(model, ffmpeg, ffprobe, workspace):
         raise ValueError("Image input is being ignored")
     video = Path(workspace) / "probe.mp4"
     tool([str(ffmpeg), "-nostdin", "-v", "error", "-y", "-f", "lavfi", "-i",
-          "color=c=red:s=64x64:r=1", "-f", "lavfi", "-i", "sine=frequency=440:sample_rate=16000",
-          "-t", "1", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-threads", "1", "-c:a", "aac", str(video)])
+          "color=c=red:s=64x64:r=1,drawbox=color=white:t=fill:enable='between(t,11,12)'",
+          "-f", "lavfi", "-i", "sine=frequency=440:sample_rate=16000",
+          "-t", "20", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-threads", "1", "-c:a", "aac", str(video)])
     result = embed_file(model, video, "video", ffmpeg, ffprobe, workspace)
     if {entry["modality"] for entry in result["entries"]} != {"video", "audio"}:
         raise ValueError("Multimodal probe is incomplete")
@@ -353,5 +386,6 @@ if __name__ == "__main__":
         main()
     except Exception as error:
         # No source text, media, signed URLs, model request bodies or API keys.
-        print("Local Gemma failed: " + type(error).__name__, file=sys.stderr)
+        detail = str(error) if isinstance(error, ModelRequestError) else type(error).__name__
+        print("Local Gemma failed: " + detail, file=sys.stderr)
         sys.exit(1)

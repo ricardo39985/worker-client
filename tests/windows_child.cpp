@@ -1,11 +1,13 @@
 #include "platform.hpp"
 #include "ow/protocol.hpp"
 #include <fstream>
+#include <iostream>
 using namespace ow;using namespace ow::win;
 int wmain(int argc,wchar_t** argv){
  try{
-  bool query_host=false;std::filesystem::path ready;
-  for(int n=1;n<argc;++n){if(std::wstring(argv[n])==L"serve-query")query_host=true;if(std::wstring(argv[n])==L"--output"&&n+1<argc)ready=argv[n+1];}
+  bool query_host=false,asset=false;std::filesystem::path ready;
+  for(int n=1;n<argc;++n){if(std::wstring(argv[n])==L"serve-query")query_host=true;if(std::wstring(argv[n])==L"asset")asset=true;if(std::wstring(argv[n])==L"--output"&&n+1<argc)ready=argv[n+1];}
+  if(asset){std::cerr<<"Local Gemma failed: model request HTTP 500\n";return 1;}
   if(query_host){
    std::ofstream("model.pid")<<GetCurrentProcessId()<<'\n';
    const auto exe=executable_directory()/"ow_test_child.exe";auto command=quote_windows_argument(exe.wstring())+L" --leaf";
