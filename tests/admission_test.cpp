@@ -1,5 +1,6 @@
 #include "test.hpp"
 #include "ow/admission.hpp"
+#include "ow/result_delivery.hpp"
 #include <thread>
 #include <atomic>
 #include <limits>
@@ -239,4 +240,10 @@ TEST("resident model memory stays charged across job completion and bounds admis
  CHECK(a.offer(task(),0,budget).accepted);CHECK(a.begin("a","t",5000,1)==Start::started);
  CHECK(!a.reserve_resident_memory(1));CHECK(a.cancel("a"));CHECK(a.finish("a"));
  CHECK(a.used()==Resources{2500,0,0,0});CHECK(!a.reserve_resident_memory(2000));
+}
+
+TEST("new durable results are sent immediately while retries retain their bounded cadence") {
+ ResultDelivery delivery;CHECK(delivery.due(0,false));CHECK(!delivery.due(1,false));
+ CHECK(delivery.due(40,true));CHECK(!delivery.due(41,false));CHECK(delivery.due(2040,false));
+ ResultDelivery reconnected;CHECK(reconnected.due(41,false));
 }

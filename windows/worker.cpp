@@ -580,14 +580,14 @@ void Worker::network(){
  try{
   auto token=paired_token();if(stop_||exit_requested_)return;Http http;check_protocol(http.request("GET",config_.coordinator+"/v1/worker/protocol"));WebSocket socket(config_.coordinator+"/v1/worker/connect",token);SecureZeroMemory(token.data(),token.size());
   socket.send(json::serialize(json::object{{"protocol",1},{"type","hello"},{"agent_version","0.1.2"},{"state",heartbeat()}}));
-  state(connected_once_?"STATE RECONNECTED":"STATE CONNECTED");report_connected_=true;last_contact_utc_=utc_ms();if(!paused_&&!exit_requested_)report_state("accepting","connected");connected_once_=true;backoff=1000;Tick next_heartbeat=0,next_results=0,next_status=monotonic_ms()+10000;
+  state(connected_once_?"STATE RECONNECTED":"STATE CONNECTED");report_connected_=true;last_contact_utc_=utc_ms();if(!paused_&&!exit_requested_)report_state("accepting","connected");connected_once_=true;backoff=1000;Tick next_heartbeat=0,next_status=monotonic_ms()+10000;ResultDelivery result_delivery;
   while(!stop_){
    auto now=monotonic_ms();if(now>=next_heartbeat){
     // Specs for expired unstarted offers are not an unbounded in-memory queue.
     for(auto it=offered_.begin();it!=offered_.end();){if(it->second.offer.reserve_until<=now)it=offered_.erase(it);else ++it;}
     socket.send(json::serialize(heartbeat()));next_heartbeat=now+5000;
    }
-   if(now>=next_results){send_pending([&](const std::string& body){socket.send(body);});next_results=now+2000;}
+   if(result_delivery.due(now,results_ready_.exchange(false))){send_pending([&](const std::string& body){socket.send(body);});}
    if(now>=next_status){
     const auto active=active_count(),pending=store_.pending_count();auto record=connectionActivityRecord(active,pending);
     if(record!=last_activity_){if(active||pending||!last_activity_.empty())safe_log(record);last_activity_=record;}
@@ -893,7 +893,7 @@ void Worker::execute(std::shared_ptr<TaskData> data){
  }catch(const std::exception& e){for(auto& progress:data->rendition_progress)progress.finish(false,monotonic_ms());data->progress.finish(false,monotonic_ms());data->transfer_progress.finish(false,monotonic_ms());result["status"]="failed";result["reason"]=std::string(e.what());const bool cancelled=data->cancel||stop_||monotonic_ms()>=data->hard_deadline;outcome=cancelled?JobOutcome::cancelled:JobOutcome::failed;outcome_reason=e.what();}
  // Media is not needed after an attempt: authoritative output is in object
  // storage, and any accepted completion is durably represented in the outbox.
- try{store_.result(id,json::serialize(result));safe_log("RESULT PENDING ACK "+id+" "+std::string(result.at("status").as_string()));}catch(...){paused_=true;admission_.pause(true);safe_log("STATE JOURNAL_FAILURE");report_state("paused","journal failure");}
+ try{store_.result(id,json::serialize(result));results_ready_=true;safe_log("RESULT PENDING ACK "+id+" "+std::string(result.at("status").as_string()));}catch(...){paused_=true;admission_.pause(true);safe_log("STATE JOURNAL_FAILURE");report_state("paused","journal failure");}
  std::error_code error;
  try{
   if(result.at("status").as_string()!="succeeded"&&std::filesystem::exists(workspace/"process.log")){

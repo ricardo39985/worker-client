@@ -11,6 +11,7 @@
 #include "capacity.hpp"
 #include "ow/control.hpp"
 #include "gemma.hpp"
+#include "ow/result_delivery.hpp"
 #include <array>
 #include <thread>
 #include <atomic>
@@ -71,6 +72,7 @@ class Worker {
  std::atomic_bool verified_video_{},verified_image_{},verified_media_video_{},verified_media_image_{};std::string status_{"STARTING"};
  std::atomic_bool ffmpeg_hash_changed_{};
  std::unique_ptr<GemmaQuery> gemma_query_;
+ std::atomic_bool results_ready_{};
  std::optional<GemmaRuntime> gemma_runtime_;std::atomic_bool verified_gemma_{},gemma_dispatch_{};
  std::unordered_map<std::string,JobSpec> offered_; // network thread only
  std::vector<adaptive::Profile> hardware_profiles_;
