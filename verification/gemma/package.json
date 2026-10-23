@@ -1,0 +1,10 @@
+﻿{
+    "revision":  "9994395231e64fe48d0454a1269db614ada3e92a",
+    "files":  {
+                  "OrganizerWorker.exe":  "0ef241d05f72dd65289cb8992587d7b40873f892e7c354d9ed6797ff8b5a7447",
+                  "OrganizerWorkerConsole.exe":  "b17084e975698d27c5dd2566d7d4da2c701edad3a317883db155360dcfb85853",
+                  "OrganizerWorkerDoctor.exe":  "2f89c281a3e83d0979cd029d663f93fc5b928322ec93d91fea625fa477cf1ab3",
+                  "OrganizerWorkerCtl.exe":  "cea06d46b1e0251fc84518e094f70f4bf4f19bce6668d22a102036ac8f15e43a",
+                  "cli.md":  "cd46052f6faf8f17aead817739d3d7bec42ab695ef84972130871c0c1d079ad7"
+              }
+}

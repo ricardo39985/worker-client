@@ -1,5 +1,10 @@
 # Candidate status — 0.1.2
 
+Current local Gemma work: [worker implementation and rollout boundary](gemma-search.md),
+[actual Danny verification](../verification/gemma/REPORT.md). This ledger distinguishes
+local multimodal inference from the remaining coordinator and app search integration.
+Older module-specific installation claims below are historical snapshots.
+
 Local CLI candidate: [reference/parity matrix](cli.md),
 [gate ledger](../verification/cli/REPORT.md),
 [unverified acceptance](../verification/cli/acceptance.md).

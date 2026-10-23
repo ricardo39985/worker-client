@@ -1,0 +1,19 @@
+{
+    "ok":  true,
+    "observed_at":  "2026-10-23T00:39:01.5182945Z",
+    "revision":  "9994395231e64fe48d0454a1269db614ada3e92a",
+    "worker_sha256":  "0ef241d05f72dd65289cb8992587d7b40873f892e7c354d9ed6797ff8b5a7447",
+    "pid":  30460,
+    "session":  1,
+    "actual_owner_matches":  true,
+    "actual_token_elevated":  false,
+    "connected":  true,
+    "paused":  true,
+    "processing_ready":  true,
+    "active_count":  0,
+    "pending_results":  0,
+    "gemma_startup_verified":  true,
+    "gemma_dispatch_enabled":  false,
+    "rollback_pending":  false,
+    "protected_identity_and_settings_retained":  true
+}

@@ -1,0 +1,11 @@
+{
+    "manifest_sha256":  "ce296827834534b07801e9e42efac602a43c9e7739ebc8f5c042eb018d937b77",
+    "observed_at":  "2026-10-23T00:38:24.4605242Z",
+    "limited_owner":  true,
+    "connected":  true,
+    "pid":  30460,
+    "ok":  true,
+    "revision":  "9994395231e64fe48d0454a1269db614ada3e92a",
+    "worker_sha256":  "0ef241d05f72dd65289cb8992587d7b40873f892e7c354d9ed6797ff8b5a7447",
+    "paused":  true
+}

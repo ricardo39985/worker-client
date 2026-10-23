@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "ok": true,
+  "profile": "embeddinggemma2-q8-b11475-768-segments-v2",
+  "fixture_sha256": "5cf36241df2e9c3e096b9e159dd4bab3343aad7624c1e2eb76bf2cf549289b77",
+  "query": "pasta",
+  "cpu_threads": 8,
+  "original_scores": [
+    0.6338884218866037
+  ],
+  "delayed_scores": [
+    0.6191827318083214,
+    0.6237443489530843
+  ],
+  "sections": [
+    {
+      "modality": "video",
+      "start_ms": 0,
+      "end_ms": 20000
+    },
+    {
+      "modality": "video",
+      "start_ms": 20000,
+      "end_ms": 25000
+    }
+  ],
+  "audio_used": false,
+  "caption_or_filename_text_used": false,
+  "external_inference_connections_allowed": false,
+  "elapsed_seconds": 43.212,
+  "scope": "Local worker recognition only; no production posts, legacy assets or app search were touched"
+}

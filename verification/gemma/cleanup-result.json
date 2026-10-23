@@ -1,0 +1,47 @@
+{
+    "removed_owned_helpers":  [
+                                  {
+                                      "sha256":  "712fe85f7d0a9066a45de6014f626c5898b8b9656ae36de924f5c6a517a73889",
+                                      "name":  "deploy-limited.ps1"
+                                  },
+                                  {
+                                      "sha256":  "99b19b7fb41b5a4a746da1e8c7fb719aefd86273d33eae21c7720fca550f4f19",
+                                      "name":  "deploy-run.ps1"
+                                  },
+                                  {
+                                      "sha256":  "412ececfc0cbe76db9574ee0c19178208577e435c70d12cc25856825c5f069eb",
+                                      "name":  "recover-limited.ps1"
+                                  },
+                                  {
+                                      "sha256":  "b260079a0ab62e2d7450825037ad8924353cbdba09597b4acf7ef85cd9779763",
+                                      "name":  "finalize-recovery.ps1"
+                                  },
+                                  {
+                                      "sha256":  "6781a1ae5d03cbabe84f70719e8a1f3f819af84b4c3e59b1575fed863eb02d20",
+                                      "name":  "detached.py"
+                                  },
+                                  {
+                                      "sha256":  "ce97604630c6645543ab4ae1585ef3e681c11890cab8009144997940dad151bd",
+                                      "name":  "inspect-tray-limited.ps1"
+                                  }
+                              ],
+    "remaining_owned_tasks":  [
+
+                              ],
+    "production_startup_task_preserved":  true,
+    "ok":  true,
+    "removed_tasks":  [
+                          "OrganizerGemmaSetup-20261022",
+                          "OrganizerGemmaTests-20261022",
+                          "OrganizerGemmaFinalTests-20261022",
+                          "OrganizerGemmaReleaseTests-20261022",
+                          "OrganizerGemmaNativeProbe-20261022",
+                          "OrganizerGemmaRecognition-20261022",
+                          "OrganizerGemmaDeploy-20261022",
+                          "OrganizerGemmaTrayInspection-20261022",
+                          "OrganizerGemmaRecovery-20261022",
+                          "OrganizerGemmaRecoveryFinalize-20261022"
+                      ],
+    "package_runtime_and_evidence_retained":  true,
+    "observed_at":  "2026-10-23T00:39:45.5170445Z"
+}

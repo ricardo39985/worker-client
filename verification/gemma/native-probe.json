@@ -1,0 +1,13 @@
+{
+    "configuration_valid":  true,
+    "gemma":  {
+                  "verified":  true,
+                  "profile":  "embeddinggemma2-q8-b11475-768-segments-v2",
+                  "peak_commit_mib":  2533,
+                  "elapsed_ms":  44127,
+                  "dispatch_enabled":  false
+              },
+    "revision":  "eed97fe2f8931f0cb866a306c853a59f988848dc",
+    "runtime_healthy":  true,
+    "elevated":  false
+}

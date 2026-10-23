@@ -64,6 +64,11 @@ accepted. The client verifies complete contiguous coverage and source checksum
 before upload. The coordinator must independently validate these contracts.
 It remains the authority for publication and access permissions.
 
+The measured visual acceptance used eight CPU threads. A one-thread run exceeded
+the bounded 120-second local model request timeout on a 20-frame section. The
+initial coordinator rollout should reserve the tested eight-thread media budget;
+the smaller startup probe does not qualify full sections at every thread count.
+
 ## Search-query probe
 
 The adapter's `query` command reads a UTF-8 local query file (at most 4096 bytes)
